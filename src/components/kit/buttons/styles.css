@@ -1,0 +1,12 @@
+.button-with-loading .content {
+  display: flex;
+  align-items: center;
+}
+.button-with-loading .circle-clipper .circle {
+  border-width: 2px;
+}
+.button-with-loading .preloader-wrapper.active {
+  margin-right: 10px;
+  height: 18px;
+  width: 18px;
+}

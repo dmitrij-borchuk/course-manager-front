@@ -1,4 +1,4 @@
-import gql from "graphql-tag";
+import gql from 'graphql-tag'
 
 export const queryAll = gql`
   query Students {
@@ -6,4 +6,4 @@ export const queryAll = gql`
       id
     }
   }
-`;
+`

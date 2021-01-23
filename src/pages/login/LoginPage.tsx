@@ -6,6 +6,7 @@ import { useLoginMutation, UsersPermissionsLoginInput } from '../../api'
 import { parseError } from '../../utils/error'
 import { ROUTES } from '../../constants'
 import { Login } from '../../components/login/Login'
+import { setAuthData } from '../../services/auth'
 
 export const LoginPage = () => {
   const { addToast } = useToasts()
@@ -16,12 +17,21 @@ export const LoginPage = () => {
   const onLoginSubmit = useCallback(
     async (data: UsersPermissionsLoginInput) => {
       try {
-        await login({
+        const response = await login({
           variables: {
             input: data,
           },
         })
-        history.push(ROUTES.ROOT)
+
+        if (response.data?.login.jwt) {
+          setAuthData(response.data?.login.jwt)
+          history.push(ROUTES.ROOT)
+        } else {
+          addToast(formatMessage({ id: 'Auth.form.error.500' }), {
+            appearance: 'error',
+            autoDismiss: true,
+          })
+        }
       } catch (error) {
         const massages = parseError(error).map((key) => formatMessage({ id: key }))
         addToast(massages.join(';'), {

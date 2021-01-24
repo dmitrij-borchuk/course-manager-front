@@ -1,6 +1,6 @@
 export function setAuthData(jwt: string) {
-  localStorage.setItem('lernify.auth.jwt', jwt)
+  localStorage.setItem('learnify.auth.jwt', jwt)
 }
 export function getAuthData(): string {
-  return localStorage.getItem('lernify.auth.jwt') || ''
+  return localStorage.getItem('learnify.auth.jwt') || ''
 }

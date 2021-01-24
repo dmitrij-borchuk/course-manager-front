@@ -1,9 +1,22 @@
-import React from 'react'
+import React, { ReactNode } from 'react'
 import './styles.css'
 
+type Color = 'primary' | 'secondary' | 'textGray' | 'textLight' | 'text' | 'alert' | 'warning'
+type Size = '16' | '25' | '34' | '43' | '52' | '63'
 type HeadingType = React.HTMLAttributes<HTMLHeadingElement>
 type ParagraphType = React.HTMLAttributes<HTMLParagraphElement>
 type TextType = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'body'
+
+const color2className: Record<Color, string> = {
+  primary: 'color-primary',
+  secondary: 'color-secondary',
+  textGray: 'color-text-gray',
+  textLight: 'color-text-light',
+  text: 'color-text',
+  alert: 'color-alert',
+  warning: 'color-warning',
+}
+
 const components: Record<TextType, React.ComponentType<HeadingType | ParagraphType>> = {
   h1: ({ children, ...props }: HeadingType) => {
     return (
@@ -57,11 +70,20 @@ const components: Record<TextType, React.ComponentType<HeadingType | ParagraphTy
 }
 
 interface Props {
-  children: string
+  children: string | ReactNode
   type?: TextType
   className?: string
+  size?: Size
+  color?: 'primary' | 'secondary' | 'textGray' | 'textLight' | 'text' | 'alert' | 'warning'
 }
-export const Text: React.FC<Props> = ({ children, type = 'body', className = '' }) => {
+export const Text: React.FC<Props> = ({ children, type = 'body', className = '', size, color }) => {
   const Component = components[type]
-  return <Component className={className}>{children}</Component>
+  return (
+    <Component
+      className={`${color ? color2className[color] : ''} ${className}`}
+      style={{ fontSize: size ? `${size}px` : undefined }}
+    >
+      {children}
+    </Component>
+  )
 }

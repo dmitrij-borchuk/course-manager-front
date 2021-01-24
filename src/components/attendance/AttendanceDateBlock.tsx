@@ -5,10 +5,11 @@ import { AttendanceMeter } from './AttendanceMeter'
 
 interface Props {
   date: Date
+  className?: string
 }
-export const AttendanceDateBlock: React.FC<Props> = ({ date }) => {
+export const AttendanceDateBlock: React.FC<Props> = ({ date, className }) => {
   return (
-    <div className="flex">
+    <div className={`${className} flex`}>
       <div className="flex flex-col items-center mr-3 w-8">
         <Text size="25" color="primary">
           {date.getDate()}

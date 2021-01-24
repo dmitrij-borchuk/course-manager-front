@@ -1,0 +1,7 @@
+.attendance-meter {
+  background-color: var(--color-text-gray);
+  color: var(--color-text-light);
+}
+.attendance-meter .attendance-progress {
+  background-color: var(--color-secondary);
+}

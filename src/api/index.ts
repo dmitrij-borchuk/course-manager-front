@@ -1530,12 +1530,24 @@ export enum CacheControlScope {
   Private = 'PRIVATE'
 }
 
+export type AttendancesQueryVariables = Exact<{
+  where?: Maybe<Scalars['JSON']>;
+}>;
+
+
+export type AttendancesQuery = { __typename?: 'Query', attendances?: Maybe<Array<Maybe<{ __typename?: 'Attendance', id: string, date: any, group?: Maybe<{ __typename?: 'Group', id: string, name: string }>, student?: Maybe<{ __typename?: 'Student', id: string, name: string }> }>>> };
+
 export type LoginMutationVariables = Exact<{
   input: UsersPermissionsLoginInput;
 }>;
 
 
 export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'UsersPermissionsLoginPayload', jwt?: Maybe<string>, user: { __typename?: 'UsersPermissionsMe', id: string, email: string, username: string, role?: Maybe<{ __typename?: 'UsersPermissionsMeRole', id: string, name: string }> } } };
+
+export type GroupsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GroupsQuery = { __typename?: 'Query', groups?: Maybe<Array<Maybe<{ __typename?: 'Group', id: string, name: string, teacher?: Maybe<{ __typename?: 'Teacher', id: string, name: string }>, students?: Maybe<Array<Maybe<{ __typename?: 'Student', id: string, name: string }>>> }>>> };
 
 export type StudentsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1548,6 +1560,48 @@ export type TeachersQueryVariables = Exact<{ [key: string]: never; }>;
 export type TeachersQuery = { __typename?: 'Query', teachers?: Maybe<Array<Maybe<{ __typename?: 'Teacher', id: string }>>> };
 
 
+export const AttendancesDocument = gql`
+    query Attendances($where: JSON) {
+  attendances(where: $where) {
+    id
+    group {
+      id
+      name
+    }
+    date
+    student {
+      id
+      name
+    }
+  }
+}
+    `;
+
+/**
+ * __useAttendancesQuery__
+ *
+ * To run a query within a React component, call `useAttendancesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAttendancesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAttendancesQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useAttendancesQuery(baseOptions?: Apollo.QueryHookOptions<AttendancesQuery, AttendancesQueryVariables>) {
+        return Apollo.useQuery<AttendancesQuery, AttendancesQueryVariables>(AttendancesDocument, baseOptions);
+      }
+export function useAttendancesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AttendancesQuery, AttendancesQueryVariables>) {
+          return Apollo.useLazyQuery<AttendancesQuery, AttendancesQueryVariables>(AttendancesDocument, baseOptions);
+        }
+export type AttendancesQueryHookResult = ReturnType<typeof useAttendancesQuery>;
+export type AttendancesLazyQueryHookResult = ReturnType<typeof useAttendancesLazyQuery>;
+export type AttendancesQueryResult = Apollo.QueryResult<AttendancesQuery, AttendancesQueryVariables>;
 export const LoginDocument = gql`
     mutation Login($input: UsersPermissionsLoginInput!) {
   login(input: $input) {
@@ -1589,6 +1643,47 @@ export function useLoginMutation(baseOptions?: Apollo.MutationHookOptions<LoginM
 export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>;
 export type LoginMutationResult = Apollo.MutationResult<LoginMutation>;
 export type LoginMutationOptions = Apollo.BaseMutationOptions<LoginMutation, LoginMutationVariables>;
+export const GroupsDocument = gql`
+    query Groups {
+  groups {
+    id
+    name
+    teacher {
+      id
+      name
+    }
+    students {
+      id
+      name
+    }
+  }
+}
+    `;
+
+/**
+ * __useGroupsQuery__
+ *
+ * To run a query within a React component, call `useGroupsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGroupsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGroupsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGroupsQuery(baseOptions?: Apollo.QueryHookOptions<GroupsQuery, GroupsQueryVariables>) {
+        return Apollo.useQuery<GroupsQuery, GroupsQueryVariables>(GroupsDocument, baseOptions);
+      }
+export function useGroupsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GroupsQuery, GroupsQueryVariables>) {
+          return Apollo.useLazyQuery<GroupsQuery, GroupsQueryVariables>(GroupsDocument, baseOptions);
+        }
+export type GroupsQueryHookResult = ReturnType<typeof useGroupsQuery>;
+export type GroupsLazyQueryHookResult = ReturnType<typeof useGroupsLazyQuery>;
+export type GroupsQueryResult = Apollo.QueryResult<GroupsQuery, GroupsQueryVariables>;
 export const StudentsDocument = gql`
     query Students {
   students {

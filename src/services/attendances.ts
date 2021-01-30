@@ -27,7 +27,7 @@ function getTimelineData(from: Date, to: Date, attendances: AttendanceItem[], gr
     const date = new Date(att.date)
     return getAttendanceDateKey(date)
   })
-  const days = datesInRange(from, to)
+  const days = datesInRange(from, to).reverse()
 
   return days.map((day) => {
     return getBlockData(new Date(day), attByDate[getAttendanceDateKey(day)] || [], groups)

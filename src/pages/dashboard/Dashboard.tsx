@@ -5,7 +5,7 @@ import { useAttendanceGrouping } from '../../services/attendances'
 
 const oneDay = 1000 * 60 * 60 * 24
 const now = Date.now()
-const fromDate = new Date(now - oneDay * 10)
+const fromDate = new Date(now - oneDay * 6)
 const toDate = new Date(now - oneDay * 0)
 
 export function DashboardPage() {

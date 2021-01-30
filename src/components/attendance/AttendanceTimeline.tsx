@@ -1,5 +1,6 @@
 import React from 'react'
 import { Divider } from 'react-materialize'
+import List from 'react-virtualized/dist/commonjs/List'
 import { AttendanceDateBlock } from './AttendanceDateBlock'
 
 interface Props {
@@ -14,7 +15,7 @@ export const AttendanceTimeLine: React.FC<Props> = ({ className = '', items = []
     <div className={`${className} space-y-6 mt-3`}>
       {/* TODO: what if no items */}
       {items.map((item) => (
-        <div>
+        <div key={item.date.toISOString()}>
           <AttendanceDateBlock className="w-full" date={item.date} items={item.items} />
           <div className="mt-3 absolute left-0 w-full">
             <Divider />

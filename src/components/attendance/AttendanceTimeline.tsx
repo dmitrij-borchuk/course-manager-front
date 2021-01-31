@@ -1,6 +1,5 @@
 import React from 'react'
 import { Divider } from 'react-materialize'
-import List from 'react-virtualized/dist/commonjs/List'
 import { AttendanceDateBlock } from './AttendanceDateBlock'
 
 interface Props {

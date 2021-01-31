@@ -1,6 +1,7 @@
 import { Container } from 'react-materialize'
 import { AttendanceTimeLine } from '../attendance/AttendanceTimeline'
 import { Header } from '../kit/header/Header'
+import { DashboardMenu } from '../dashboardMenu/DashboardMenu'
 
 type AttendanceTimeLineProps = React.ComponentProps<typeof AttendanceTimeLine>
 
@@ -15,6 +16,9 @@ export const Dashboard: React.FC<Props> = ({ className = '', items }) => {
       <Container>
         <AttendanceTimeLine items={items} />
       </Container>
+
+      {/* Fab */}
+      <DashboardMenu />
     </div>
   )
 }

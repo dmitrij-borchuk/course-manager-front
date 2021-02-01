@@ -3,6 +3,7 @@ export const ROUTES = {
   ROOT: '/',
 
   // Teachers
+  TEACHERS_ROOT: '/teachers',
   TEACHERS_LIST: '/teachers',
   TEACHERS_ADD: '/teachers/add',
 }

@@ -1,6 +1,7 @@
 import React from 'react'
 import { FormattedMessage } from 'react-intl'
 import { Icon, Navbar, NavItem } from 'react-materialize'
+import { ROUTES } from '../../../constants'
 
 // TODO: use logo
 
@@ -21,6 +22,9 @@ export const Header = () => {
     >
       <NavItem href="/">
         <FormattedMessage id="header.nav.dashboard" />
+      </NavItem>
+      <NavItem href={ROUTES.TEACHERS_LIST}>
+        <FormattedMessage id="header.nav.teachers" />
       </NavItem>
     </Navbar>
   )

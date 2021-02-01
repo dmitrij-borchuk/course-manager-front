@@ -1557,7 +1557,7 @@ export type StudentsQuery = { __typename?: 'Query', students?: Maybe<Array<Maybe
 export type TeachersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type TeachersQuery = { __typename?: 'Query', teachers?: Maybe<Array<Maybe<{ __typename?: 'Teacher', id: string }>>> };
+export type TeachersQuery = { __typename?: 'Query', teachers?: Maybe<Array<Maybe<{ __typename?: 'Teacher', id: string, name: string, description?: Maybe<string>, avatar?: Maybe<{ __typename?: 'UploadFile', url: string }> }>>> };
 
 export type CreateTeacherMutationVariables = Exact<{
   input?: Maybe<CreateTeacherInput>;
@@ -1727,6 +1727,11 @@ export const TeachersDocument = gql`
     query Teachers {
   teachers {
     id
+    name
+    avatar {
+      url
+    }
+    description
   }
 }
     `;

@@ -4,6 +4,11 @@ export const queryAll = gql`
   query Teachers {
     teachers {
       id
+      name
+      avatar {
+        url
+      }
+      description
     }
   }
 `

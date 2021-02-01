@@ -1559,6 +1559,13 @@ export type TeachersQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type TeachersQuery = { __typename?: 'Query', teachers?: Maybe<Array<Maybe<{ __typename?: 'Teacher', id: string }>>> };
 
+export type CreateTeacherMutationVariables = Exact<{
+  input?: Maybe<CreateTeacherInput>;
+}>;
+
+
+export type CreateTeacherMutation = { __typename?: 'Mutation', createTeacher?: Maybe<{ __typename?: 'createTeacherPayload', teacher?: Maybe<{ __typename?: 'Teacher', id: string, name: string, description?: Maybe<string> }> }> };
+
 
 export const AttendancesDocument = gql`
     query Attendances($where: JSON) {
@@ -1748,6 +1755,42 @@ export function useTeachersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<T
 export type TeachersQueryHookResult = ReturnType<typeof useTeachersQuery>;
 export type TeachersLazyQueryHookResult = ReturnType<typeof useTeachersLazyQuery>;
 export type TeachersQueryResult = Apollo.QueryResult<TeachersQuery, TeachersQueryVariables>;
+export const CreateTeacherDocument = gql`
+    mutation CreateTeacher($input: createTeacherInput) {
+  createTeacher(input: $input) {
+    teacher {
+      id
+      name
+      description
+    }
+  }
+}
+    `;
+export type CreateTeacherMutationFn = Apollo.MutationFunction<CreateTeacherMutation, CreateTeacherMutationVariables>;
+
+/**
+ * __useCreateTeacherMutation__
+ *
+ * To run a mutation, you first call `useCreateTeacherMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateTeacherMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createTeacherMutation, { data, loading, error }] = useCreateTeacherMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateTeacherMutation(baseOptions?: Apollo.MutationHookOptions<CreateTeacherMutation, CreateTeacherMutationVariables>) {
+        return Apollo.useMutation<CreateTeacherMutation, CreateTeacherMutationVariables>(CreateTeacherDocument, baseOptions);
+      }
+export type CreateTeacherMutationHookResult = ReturnType<typeof useCreateTeacherMutation>;
+export type CreateTeacherMutationResult = Apollo.MutationResult<CreateTeacherMutation>;
+export type CreateTeacherMutationOptions = Apollo.BaseMutationOptions<CreateTeacherMutation, CreateTeacherMutationVariables>;
 
       export interface PossibleTypesResultData {
         possibleTypes: {

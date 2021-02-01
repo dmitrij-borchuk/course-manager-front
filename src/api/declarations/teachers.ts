@@ -1,4 +1,4 @@
-import gql from "graphql-tag";
+import gql from 'graphql-tag'
 
 export const queryAll = gql`
   query Teachers {
@@ -6,4 +6,16 @@ export const queryAll = gql`
       id
     }
   }
-`;
+`
+
+export const createTeacher = gql`
+  mutation CreateTeacher($input: createTeacherInput) {
+    createTeacher(input: $input) {
+      teacher {
+        id
+        name
+        description
+      }
+    }
+  }
+`

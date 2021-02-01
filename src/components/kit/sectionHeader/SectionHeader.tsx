@@ -2,13 +2,11 @@ import React from 'react'
 import { Text } from '../text/Text'
 import './styles.css'
 
-interface Props {
-  text: string
-}
-export const SectionHeader: React.FC<Props> = ({ text }) => {
+interface Props {}
+export const SectionHeader: React.FC<Props> = ({ children }) => {
   return (
     <Text type="h4" className="section-header">
-      {text}
+      {children}
     </Text>
   )
 }

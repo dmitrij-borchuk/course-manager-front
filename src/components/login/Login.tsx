@@ -22,7 +22,7 @@ export const Login: React.FC<Props> = ({ onSubmit, loading = false }) => {
 
   return (
     <div className="login-wrapper">
-      <SectionHeader text="Login" />
+      <SectionHeader>Login</SectionHeader>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Input
           id="identifier"

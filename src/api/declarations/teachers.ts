@@ -13,6 +13,23 @@ export const queryAll = gql`
   }
 `
 
+export const queryOneTeacher = gql`
+  query Teacher($id: ID!) {
+    teacher(id: $id) {
+      id
+      name
+      description
+      avatar {
+        url
+      }
+      groups {
+        id
+        name
+      }
+    }
+  }
+`
+
 export const createTeacher = gql`
   mutation CreateTeacher($input: createTeacherInput) {
     createTeacher(input: $input) {

@@ -1559,6 +1559,13 @@ export type TeachersQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type TeachersQuery = { __typename?: 'Query', teachers?: Maybe<Array<Maybe<{ __typename?: 'Teacher', id: string, name: string, description?: Maybe<string>, avatar?: Maybe<{ __typename?: 'UploadFile', url: string }> }>>> };
 
+export type TeacherQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type TeacherQuery = { __typename?: 'Query', teacher?: Maybe<{ __typename?: 'Teacher', id: string, name: string, description?: Maybe<string>, avatar?: Maybe<{ __typename?: 'UploadFile', url: string }>, groups?: Maybe<Array<Maybe<{ __typename?: 'Group', id: string, name: string }>>> }> };
+
 export type CreateTeacherMutationVariables = Exact<{
   input?: Maybe<CreateTeacherInput>;
 }>;
@@ -1760,6 +1767,48 @@ export function useTeachersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<T
 export type TeachersQueryHookResult = ReturnType<typeof useTeachersQuery>;
 export type TeachersLazyQueryHookResult = ReturnType<typeof useTeachersLazyQuery>;
 export type TeachersQueryResult = Apollo.QueryResult<TeachersQuery, TeachersQueryVariables>;
+export const TeacherDocument = gql`
+    query Teacher($id: ID!) {
+  teacher(id: $id) {
+    id
+    name
+    description
+    avatar {
+      url
+    }
+    groups {
+      id
+      name
+    }
+  }
+}
+    `;
+
+/**
+ * __useTeacherQuery__
+ *
+ * To run a query within a React component, call `useTeacherQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTeacherQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useTeacherQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useTeacherQuery(baseOptions: Apollo.QueryHookOptions<TeacherQuery, TeacherQueryVariables>) {
+        return Apollo.useQuery<TeacherQuery, TeacherQueryVariables>(TeacherDocument, baseOptions);
+      }
+export function useTeacherLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TeacherQuery, TeacherQueryVariables>) {
+          return Apollo.useLazyQuery<TeacherQuery, TeacherQueryVariables>(TeacherDocument, baseOptions);
+        }
+export type TeacherQueryHookResult = ReturnType<typeof useTeacherQuery>;
+export type TeacherLazyQueryHookResult = ReturnType<typeof useTeacherLazyQuery>;
+export type TeacherQueryResult = Apollo.QueryResult<TeacherQuery, TeacherQueryVariables>;
 export const CreateTeacherDocument = gql`
     mutation CreateTeacher($input: createTeacherInput) {
   createTeacher(input: $input) {

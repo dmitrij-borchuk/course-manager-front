@@ -9,6 +9,7 @@ import { LoginPage } from './pages/login/LoginPage'
 import { DashboardPage } from './pages/dashboard/Dashboard'
 import { EditTeacherPage } from './pages/teachers/EditTeacher'
 import { TeachersListPage } from './pages/teachers/TeachersList'
+import { TeacherPage } from './pages/teachers/Teacher'
 import './App.css'
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
           <AuthGuardedRoute component={DashboardPage} path="/" exact />
           <AuthGuardedRoute component={EditTeacherPage} path={ROUTES.TEACHERS_ADD} exact />
           <AuthGuardedRoute component={TeachersListPage} path={ROUTES.TEACHERS_LIST} exact />
+          <AuthGuardedRoute component={TeacherPage} path={`${ROUTES.TEACHERS_ROOT}/:id`} exact />
           <Route path="/login">
             <LoginPage />
           </Route>

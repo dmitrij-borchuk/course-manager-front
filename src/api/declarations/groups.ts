@@ -16,3 +16,24 @@ export const queryAll = gql`
     }
   }
 `
+
+export const queryOneGroup = gql`
+  query Group($id: ID!) {
+    group(id: $id) {
+      id
+      name
+      description
+      teacher {
+        id
+        name
+        avatar {
+          url
+        }
+      }
+      students {
+        id
+        name
+      }
+    }
+  }
+`

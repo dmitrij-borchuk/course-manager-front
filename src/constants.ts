@@ -9,4 +9,7 @@ export const ROUTES = {
 
   // Groups
   GROUPS_ROOT: '/groups',
+
+  // Students
+  STUDENTS_ROOT: '/students',
 }

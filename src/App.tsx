@@ -10,6 +10,7 @@ import { DashboardPage } from './pages/dashboard/Dashboard'
 import { EditTeacherPage } from './pages/teachers/EditTeacher'
 import { TeachersListPage } from './pages/teachers/TeachersList'
 import { TeacherPage } from './pages/teachers/Teacher'
+import { GroupPage } from './pages/groups/Group'
 import './App.css'
 
 function App() {
@@ -18,9 +19,13 @@ function App() {
       <Router>
         <Switch>
           <AuthGuardedRoute component={DashboardPage} path="/" exact />
+
           <AuthGuardedRoute component={EditTeacherPage} path={ROUTES.TEACHERS_ADD} exact />
           <AuthGuardedRoute component={TeachersListPage} path={ROUTES.TEACHERS_LIST} exact />
           <AuthGuardedRoute component={TeacherPage} path={`${ROUTES.TEACHERS_ROOT}/:id`} exact />
+
+          <AuthGuardedRoute component={GroupPage} path={`${ROUTES.GROUPS_ROOT}/:id`} exact />
+
           <Route path="/login">
             <LoginPage />
           </Route>

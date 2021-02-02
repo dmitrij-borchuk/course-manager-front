@@ -1549,6 +1549,13 @@ export type GroupsQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GroupsQuery = { __typename?: 'Query', groups?: Maybe<Array<Maybe<{ __typename?: 'Group', id: string, name: string, teacher?: Maybe<{ __typename?: 'Teacher', id: string, name: string }>, students?: Maybe<Array<Maybe<{ __typename?: 'Student', id: string, name: string }>>> }>>> };
 
+export type GroupQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type GroupQuery = { __typename?: 'Query', group?: Maybe<{ __typename?: 'Group', id: string, name: string, description?: Maybe<string>, teacher?: Maybe<{ __typename?: 'Teacher', id: string, name: string, avatar?: Maybe<{ __typename?: 'UploadFile', url: string }> }>, students?: Maybe<Array<Maybe<{ __typename?: 'Student', id: string, name: string }>>> }> };
+
 export type StudentsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1698,6 +1705,52 @@ export function useGroupsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Gro
 export type GroupsQueryHookResult = ReturnType<typeof useGroupsQuery>;
 export type GroupsLazyQueryHookResult = ReturnType<typeof useGroupsLazyQuery>;
 export type GroupsQueryResult = Apollo.QueryResult<GroupsQuery, GroupsQueryVariables>;
+export const GroupDocument = gql`
+    query Group($id: ID!) {
+  group(id: $id) {
+    id
+    name
+    description
+    teacher {
+      id
+      name
+      avatar {
+        url
+      }
+    }
+    students {
+      id
+      name
+    }
+  }
+}
+    `;
+
+/**
+ * __useGroupQuery__
+ *
+ * To run a query within a React component, call `useGroupQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGroupQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGroupQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGroupQuery(baseOptions: Apollo.QueryHookOptions<GroupQuery, GroupQueryVariables>) {
+        return Apollo.useQuery<GroupQuery, GroupQueryVariables>(GroupDocument, baseOptions);
+      }
+export function useGroupLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GroupQuery, GroupQueryVariables>) {
+          return Apollo.useLazyQuery<GroupQuery, GroupQueryVariables>(GroupDocument, baseOptions);
+        }
+export type GroupQueryHookResult = ReturnType<typeof useGroupQuery>;
+export type GroupLazyQueryHookResult = ReturnType<typeof useGroupLazyQuery>;
+export type GroupQueryResult = Apollo.QueryResult<GroupQuery, GroupQueryVariables>;
 export const StudentsDocument = gql`
     query Students {
   students {

@@ -13,6 +13,10 @@ export const messages = {
   'teachers.groups.empty': "The teacher doesn't have any classes",
 
   'groups.list.title': 'Groups',
+  'groups.teacher.title': 'Teacher',
+  'groups.students.empty': 'No students assigned',
+
+  'students.list.title': 'Students',
 }
 
 export default messages

@@ -4,18 +4,18 @@ import { FormattedMessage, useIntl } from 'react-intl'
 import { Container } from 'react-materialize'
 import { Header } from '../kit/header/Header'
 import { Input } from '../kit/input/Input'
-import { TeacherInput } from '../../api'
+import { UserInput } from '../../api'
 import { SubmitButton } from '../kit/buttons/SubmitButton'
 import { FormLayout } from '../kit/formLayout/FormLayout'
 
 interface Props {
-  onSubmit: (data: TeacherInput) => void
+  onSubmit: (data: UserInput) => void
   loading?: boolean
   className?: string
 }
 export const EditTeacher: React.FC<Props> = ({ className = '', onSubmit, loading = false }) => {
   const intl = useIntl()
-  const { control, handleSubmit } = useForm<TeacherInput>({
+  const { control, handleSubmit } = useForm<UserInput>({
     defaultValues: {
       name: '',
       description: '',

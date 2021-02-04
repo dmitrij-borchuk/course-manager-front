@@ -1,12 +1,12 @@
 import React from 'react'
-import { TeacherInput, useCreateTeacherMutation } from '../../api'
+import { UserInput, useCreateTeacherMutation } from '../../api'
 import { EditTeacher } from '../../components/teachers/EditTeacher'
 import { ROUTES } from '../../constants'
 import { useMutationWithRedirect } from '../../hooks/useMutationWithRedirect'
 
 export const EditTeacherPage = () => {
   const [edit, result] = useCreateTeacherMutation()
-  const editTeacher = useMutationWithRedirect<TeacherInput>(
+  const editTeacher = useMutationWithRedirect<UserInput>(
     (data) =>
       edit({
         variables: {

@@ -1431,7 +1431,9 @@ export type StudentQueryVariables = Exact<{
 
 export type StudentQuery = { __typename?: 'Query', student?: Maybe<{ __typename?: 'Student', id: string, name: string, description?: Maybe<string>, groups?: Maybe<Array<Maybe<{ __typename?: 'Group', id: string, name: string }>>> }> };
 
-export type TeachersQueryVariables = Exact<{ [key: string]: never; }>;
+export type TeachersQueryVariables = Exact<{
+  where?: Maybe<Scalars['JSON']>;
+}>;
 
 
 export type TeachersQuery = { __typename?: 'Query', users?: Maybe<Array<Maybe<{ __typename?: 'UsersPermissionsUser', id: string, name: string, description?: Maybe<string>, avatar?: Maybe<{ __typename?: 'UploadFile', url: string }> }>>> };
@@ -1693,8 +1695,8 @@ export type StudentQueryHookResult = ReturnType<typeof useStudentQuery>;
 export type StudentLazyQueryHookResult = ReturnType<typeof useStudentLazyQuery>;
 export type StudentQueryResult = Apollo.QueryResult<StudentQuery, StudentQueryVariables>;
 export const TeachersDocument = gql`
-    query Teachers {
-  users {
+    query Teachers($where: JSON) {
+  users(where: $where) {
     id
     name
     description
@@ -1717,6 +1719,7 @@ export const TeachersDocument = gql`
  * @example
  * const { data, loading, error } = useTeachersQuery({
  *   variables: {
+ *      where: // value for 'where'
  *   },
  * });
  */

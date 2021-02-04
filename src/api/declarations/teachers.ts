@@ -1,8 +1,8 @@
 import gql from 'graphql-tag'
 
 export const queryAll = gql`
-  query Teachers {
-    users {
+  query Teachers($where: JSON) {
+    users(where: $where) {
       id
       name
       description

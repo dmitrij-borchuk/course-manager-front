@@ -7,9 +7,9 @@ export const TeacherPage = () => {
   let { id } = useParams<{ id: string }>()
   const { data, loading } = useTeacher({ variables: { id } })
 
-  if (!data?.teacher) {
+  if (!data?.user) {
     return <div>Loading</div>
   }
 
-  return <Teacher data={data?.teacher || undefined} />
+  return <Teacher data={data?.user || undefined} />
 }

@@ -11,6 +11,5 @@ export const GroupPage = () => {
     return <div>Loading</div>
   }
 
-  console.log('=-= data', data)
   return <Group data={data?.group} />
 }

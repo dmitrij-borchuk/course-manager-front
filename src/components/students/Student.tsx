@@ -11,17 +11,14 @@ import { Text } from '../kit/text/Text'
 // TODO: add edit
 // TODO: add delete
 // TODO: assign group
+// TODO: move groups out
 interface Props {
   className?: string
   data: {
     id: string
     name: string
     description?: string | null
-    teacher?: {
-      id: string
-      name: string
-    } | null
-    students?:
+    groups?:
       | {
           id: string
           name: string
@@ -29,8 +26,8 @@ interface Props {
       | null
   }
 }
-export const Group: React.FC<Props> = ({ className = '', data }) => {
-  const { teacher, students, name, description } = data
+export const Student: React.FC<Props> = ({ className = '', data }) => {
+  const { groups, name, description } = data
 
   return (
     <div className={className}>
@@ -39,33 +36,20 @@ export const Group: React.FC<Props> = ({ className = '', data }) => {
         <SectionHeader>{name}</SectionHeader>
         {description}
 
-        {/* Teacher */}
         <Text type="h5" color="primary">
-          <FormattedMessage id="groups.teacher.title" />
+          <FormattedMessage id="groups.list.title" />
         </Text>
-        {teacher ? (
-          <Text type="h6">{teacher.name}</Text>
-        ) : (
-          <Text>
-            <FormattedMessage id="groups.students.empty" />
-          </Text>
-        )}
-
-        {/* Students */}
-        <Text type="h5" color="primary">
-          <FormattedMessage id="students.list.title" />
-        </Text>
-        {students ? (
+        {groups ? (
           <Collection>
-            {students.map((student) => (
-              <CollectionItemLink key={student.id} to={`${ROUTES.STUDENTS_ROOT}/${student.id}`}>
-                {student.name}
+            {groups.map((group) => (
+              <CollectionItemLink key={group.id} to={`${ROUTES.GROUPS_ROOT}/${group.id}`}>
+                {group.name}
               </CollectionItemLink>
             ))}
           </Collection>
         ) : (
           <Text>
-            <FormattedMessage id="groups.students.empty" />
+            <FormattedMessage id="students.groups.empty" />
           </Text>
         )}
       </Container>

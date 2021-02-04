@@ -1,7 +1,8 @@
 import React from 'react'
 import { FormattedMessage } from 'react-intl'
-import { Collection, CollectionItem, Container } from 'react-materialize'
+import { Collection, Container } from 'react-materialize'
 import { ROUTES } from '../../constants'
+import { CollectionItemLink } from '../kit/collectionItemLink/CollectionItemLink'
 import { Header } from '../kit/header/Header'
 import { SectionHeader } from '../kit/sectionHeader/SectionHeader'
 import { Text } from '../kit/text/Text'
@@ -40,9 +41,9 @@ export const Teacher: React.FC<Props> = ({ className = '', data }) => {
         {groups ? (
           <Collection>
             {groups.map((group) => (
-              <CollectionItem key={group.id} href={`${ROUTES.GROUPS_ROOT}/${group.id}`}>
+              <CollectionItemLink key={group.id} to={`${ROUTES.GROUPS_ROOT}/${group.id}`}>
                 {group.name}
-              </CollectionItem>
+              </CollectionItemLink>
             ))}
           </Collection>
         ) : (

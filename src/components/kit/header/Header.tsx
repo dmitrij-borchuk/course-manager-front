@@ -1,6 +1,7 @@
 import React from 'react'
 import { FormattedMessage } from 'react-intl'
 import { Icon, Navbar, NavItem } from 'react-materialize'
+import { Link } from 'react-router-dom'
 import { ROUTES } from '../../../constants'
 
 // TODO: use logo
@@ -9,7 +10,7 @@ export const Header = () => {
   return (
     <Navbar
       alignLinks="right"
-      brand={<a href="/">Learnify</a>}
+      brand={<Link to="/">Learnify</Link>}
       id="mobile-nav"
       menuIcon={<Icon>menu</Icon>}
       options={{
@@ -20,12 +21,12 @@ export const Header = () => {
         preventScrolling: true,
       }}
     >
-      <NavItem href="/">
+      <Link to="/">
         <FormattedMessage id="header.nav.dashboard" />
-      </NavItem>
-      <NavItem href={ROUTES.TEACHERS_LIST}>
+      </Link>
+      <Link to={ROUTES.TEACHERS_LIST}>
         <FormattedMessage id="header.nav.teachers" />
-      </NavItem>
+      </Link>
     </Navbar>
   )
 }

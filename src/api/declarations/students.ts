@@ -7,3 +7,17 @@ export const queryAll = gql`
     }
   }
 `
+
+export const queryOneStudent = gql`
+  query Student($id: ID!) {
+    student(id: $id) {
+      id
+      name
+      description
+      groups {
+        id
+        name
+      }
+    }
+  }
+`

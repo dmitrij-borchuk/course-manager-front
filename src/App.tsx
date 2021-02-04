@@ -11,6 +11,7 @@ import { EditTeacherPage } from './pages/teachers/EditTeacher'
 import { TeachersListPage } from './pages/teachers/TeachersList'
 import { TeacherPage } from './pages/teachers/Teacher'
 import { GroupPage } from './pages/groups/Group'
+import { StudentPage } from './pages/students/Student'
 import './App.css'
 
 function App() {
@@ -25,6 +26,8 @@ function App() {
           <AuthGuardedRoute component={TeacherPage} path={`${ROUTES.TEACHERS_ROOT}/:id`} exact />
 
           <AuthGuardedRoute component={GroupPage} path={`${ROUTES.GROUPS_ROOT}/:id`} exact />
+
+          <AuthGuardedRoute component={StudentPage} path={`${ROUTES.STUDENTS_ROOT}/:id`} exact />
 
           <Route path="/login">
             <LoginPage />

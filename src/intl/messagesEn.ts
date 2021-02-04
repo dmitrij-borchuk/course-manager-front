@@ -17,6 +17,7 @@ export const messages = {
   'groups.students.empty': 'No students assigned',
 
   'students.list.title': 'Students',
+  'students.groups.empty': 'Student is not attending any classes',
 }
 
 export default messages

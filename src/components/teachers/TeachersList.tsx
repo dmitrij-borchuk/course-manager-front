@@ -1,7 +1,8 @@
 import React from 'react'
 import { FormattedMessage } from 'react-intl'
-import { Collection, CollectionItem, Container } from 'react-materialize'
+import { Collection, Container } from 'react-materialize'
 import { ROUTES } from '../../constants'
+import { CollectionItemLink } from '../kit/collectionItemLink/CollectionItemLink'
 import { Header } from '../kit/header/Header'
 import { SectionHeader } from '../kit/sectionHeader/SectionHeader'
 
@@ -28,9 +29,9 @@ export const TeachersList: React.FC<Props> = ({ className = '', loading = false,
 
         <Collection>
           {items.map((item) => (
-            <CollectionItem key={item.id} href={`${ROUTES.TEACHERS_ROOT}/${item.id}`}>
+            <CollectionItemLink key={item.id} to={`${ROUTES.TEACHERS_ROOT}/${item.id}`}>
               {item.name}
-            </CollectionItem>
+            </CollectionItemLink>
           ))}
         </Collection>
       </Container>

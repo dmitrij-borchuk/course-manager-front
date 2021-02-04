@@ -27,6 +27,9 @@ export const Header = () => {
       <Link to={ROUTES.TEACHERS_LIST}>
         <FormattedMessage id="header.nav.teachers" />
       </Link>
+      <Link to={ROUTES.STUDENTS_LIST}>
+        <FormattedMessage id="header.nav.students" />
+      </Link>
     </Navbar>
   )
 }

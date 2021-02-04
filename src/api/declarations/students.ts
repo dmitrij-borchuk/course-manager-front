@@ -4,6 +4,12 @@ export const queryAll = gql`
   query Students {
     students {
       id
+      name
+      description
+      groups {
+        id
+        name
+      }
     }
   }
 `

@@ -1422,7 +1422,7 @@ export type GroupQuery = { __typename?: 'Query', group?: Maybe<{ __typename?: 'G
 export type StudentsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type StudentsQuery = { __typename?: 'Query', students?: Maybe<Array<Maybe<{ __typename?: 'Student', id: string }>>> };
+export type StudentsQuery = { __typename?: 'Query', students?: Maybe<Array<Maybe<{ __typename?: 'Student', id: string, name: string, description?: Maybe<string>, groups?: Maybe<Array<Maybe<{ __typename?: 'Group', id: string, name: string }>>> }>>> };
 
 export type StudentQueryVariables = Exact<{
   id: Scalars['ID'];
@@ -1627,6 +1627,12 @@ export const StudentsDocument = gql`
     query Students {
   students {
     id
+    name
+    description
+    groups {
+      id
+      name
+    }
   }
 }
     `;

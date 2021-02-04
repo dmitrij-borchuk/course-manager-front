@@ -7,6 +7,7 @@ export const messages = {
   'Auth.form.error.500': 'Something went wrong',
   'header.nav.dashboard': 'Dashboard',
   'header.nav.teachers': 'Teachers',
+  'header.nav.students': 'Students',
 
   'teachers.list.title': 'Teachers',
   'teachers.add.title': 'Add teacher',

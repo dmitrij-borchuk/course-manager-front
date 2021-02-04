@@ -12,4 +12,5 @@ export const ROUTES = {
 
   // Students
   STUDENTS_ROOT: '/students',
+  STUDENTS_LIST: '/students',
 }

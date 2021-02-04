@@ -13,6 +13,7 @@ import { TeacherPage } from './pages/teachers/Teacher'
 import { GroupPage } from './pages/groups/Group'
 import { StudentPage } from './pages/students/Student'
 import './App.css'
+import { StudentListPage } from './pages/students/StudentList'
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
 
           <AuthGuardedRoute component={GroupPage} path={`${ROUTES.GROUPS_ROOT}/:id`} exact />
 
+          <AuthGuardedRoute component={StudentListPage} path={ROUTES.STUDENTS_LIST} exact />
           <AuthGuardedRoute component={StudentPage} path={`${ROUTES.STUDENTS_ROOT}/:id`} exact />
 
           <Route path="/login">

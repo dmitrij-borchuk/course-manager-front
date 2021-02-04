@@ -2,20 +2,20 @@ import gql from 'graphql-tag'
 
 export const queryAll = gql`
   query Teachers {
-    teachers {
+    users {
       id
       name
+      description
       avatar {
         url
       }
-      description
     }
   }
 `
 
 export const queryOneTeacher = gql`
   query Teacher($id: ID!) {
-    teacher(id: $id) {
+    user(id: $id) {
       id
       name
       description
@@ -31,12 +31,15 @@ export const queryOneTeacher = gql`
 `
 
 export const createTeacher = gql`
-  mutation CreateTeacher($input: createTeacherInput) {
-    createTeacher(input: $input) {
-      teacher {
+  mutation CreateTeacher($input: createUserInput) {
+    createUser(input: $input) {
+      user {
         id
-        name
-        description
+        role {
+          id
+          name
+        }
+        username
       }
     }
   }

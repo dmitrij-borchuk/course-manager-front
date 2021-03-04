@@ -18,23 +18,23 @@
 }
 
 .color-primary {
-  color: var(--color-primary);
+  color: var(--color-primary) !important;
 }
 .color-secondary {
-  color: var(--color-secondary);
+  color: var(--color-secondary) !important;
 }
 .color-text-gray {
-  color: var(--color-text-gray);
+  color: var(--color-text-gray) !important;
 }
 .color-text-light {
-  color: var(--color-text-light);
+  color: var(--color-text-light) !important;
 }
 .color-text {
-  color: var(--color-text);
+  color: var(--color-text) !important;
 }
 .color-alert {
-  color: var(--color-alert);
+  color: var(--color-alert) !important;
 }
 .color-warning {
-  color: var(--color-warning);
+  color: var(--color-warning) !important;
 }

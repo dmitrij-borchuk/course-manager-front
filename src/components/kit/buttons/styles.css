@@ -10,3 +10,11 @@
   height: 18px;
   width: 18px;
 }
+
+.icon-btn.btn-flat {
+  padding: 0;
+  line-height: inherit;
+}
+.icon-btn.icon-btn-type-round {
+  border-radius: 50%;
+}

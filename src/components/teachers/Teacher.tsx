@@ -2,7 +2,9 @@ import React from 'react'
 import { FormattedMessage } from 'react-intl'
 import { Collection, Container } from 'react-materialize'
 import { ROUTES } from '../../constants'
+import { IconButton } from '../kit/buttons/IconButton'
 import { CollectionItemLink } from '../kit/collectionItemLink/CollectionItemLink'
+import { Ellipsis } from '../kit/ellipsis/Ellipsis'
 import { Header } from '../kit/header/Header'
 import { SectionHeader } from '../kit/sectionHeader/SectionHeader'
 import { Text } from '../kit/text/Text'
@@ -32,7 +34,15 @@ export const Teacher: React.FC<Props> = ({ className = '', data }) => {
     <div className={className}>
       <Header />
       <Container>
-        <SectionHeader>{name}</SectionHeader>
+        <div className="flex justify-between">
+          <SectionHeader className="min-w-0">
+            <Ellipsis>{name}</Ellipsis>
+          </SectionHeader>
+          <div className="flex items-center space-x-2 pt-4">
+            <IconButton type="square" size={40} icon="edit" />
+            <IconButton type="square" size={40} icon="delete" className="color-alert" />
+          </div>
+        </div>
         {description}
 
         <Text type="h5" color="primary">

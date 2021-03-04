@@ -41,6 +41,23 @@ export const EditTeacher: React.FC<Props> = ({ className = '', onSubmit, loading
             disabled={loading}
           />
           <Input
+            id="email"
+            control={control}
+            name="email"
+            label={`${intl.formatMessage({ id: 'common.form.email.label' })} *`}
+            rules={{ required: true }}
+            disabled={loading}
+          />
+          <Input
+            id="password"
+            control={control}
+            name="password"
+            label={`${intl.formatMessage({ id: 'common.form.password.label' })} *`}
+            rules={{ required: true }}
+            disabled={loading}
+            password
+          />
+          <Input
             id="description"
             control={control}
             name="description"

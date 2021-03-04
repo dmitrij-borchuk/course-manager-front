@@ -14,3 +14,5 @@ export const ROUTES = {
   STUDENTS_ROOT: '/students',
   STUDENTS_LIST: '/students',
 }
+
+export const TEACHER_ROLE_NAME = 'Teacher'

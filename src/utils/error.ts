@@ -1,6 +1,9 @@
 import { ApolloError } from '@apollo/client'
 
 export const parseError = (error: ApolloError): string[] => {
+  if (error.graphQLErrors.length === 0) {
+    return [error.networkError?.message || '']
+  }
   return error.graphQLErrors
     .map((item) => {
       if (!item.extensions) {

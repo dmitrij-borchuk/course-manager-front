@@ -1419,6 +1419,11 @@ export type GroupQueryVariables = Exact<{
 
 export type GroupQuery = { __typename?: 'Query', group?: Maybe<{ __typename?: 'Group', id: string, name: string, description?: Maybe<string>, teacher?: Maybe<{ __typename?: 'UsersPermissionsUser', id: string, name: string, avatar?: Maybe<{ __typename?: 'UploadFile', url: string }> }>, students?: Maybe<Array<Maybe<{ __typename?: 'Student', id: string, name: string }>>> }> };
 
+export type RolesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type RolesQuery = { __typename?: 'Query', roles?: Maybe<Array<Maybe<{ __typename?: 'UsersPermissionsRole', id: string, name: string }>>> };
+
 export type StudentsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1623,6 +1628,39 @@ export function useGroupLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Grou
 export type GroupQueryHookResult = ReturnType<typeof useGroupQuery>;
 export type GroupLazyQueryHookResult = ReturnType<typeof useGroupLazyQuery>;
 export type GroupQueryResult = Apollo.QueryResult<GroupQuery, GroupQueryVariables>;
+export const RolesDocument = gql`
+    query Roles {
+  roles {
+    id
+    name
+  }
+}
+    `;
+
+/**
+ * __useRolesQuery__
+ *
+ * To run a query within a React component, call `useRolesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useRolesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useRolesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useRolesQuery(baseOptions?: Apollo.QueryHookOptions<RolesQuery, RolesQueryVariables>) {
+        return Apollo.useQuery<RolesQuery, RolesQueryVariables>(RolesDocument, baseOptions);
+      }
+export function useRolesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<RolesQuery, RolesQueryVariables>) {
+          return Apollo.useLazyQuery<RolesQuery, RolesQueryVariables>(RolesDocument, baseOptions);
+        }
+export type RolesQueryHookResult = ReturnType<typeof useRolesQuery>;
+export type RolesLazyQueryHookResult = ReturnType<typeof useRolesLazyQuery>;
+export type RolesQueryResult = Apollo.QueryResult<RolesQuery, RolesQueryVariables>;
 export const StudentsDocument = gql`
     query Students {
   students {

@@ -1,6 +1,9 @@
 export const messages = {
   'common.submitLabel': 'Submit',
   'common.form.name.label': 'Name',
+  'common.form.username.label': 'Username',
+  'common.form.email.label': 'Email',
+  'common.form.password.label': 'Password',
   'common.form.description.label': 'Description',
 
   'Auth.form.error.invalid': 'Identifier or password invalid.',

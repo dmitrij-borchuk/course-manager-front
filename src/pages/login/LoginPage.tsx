@@ -33,8 +33,8 @@ export const LoginPage = () => {
           })
         }
       } catch (error) {
-        const massages = parseError(error).map((key) => formatMessage({ id: key }))
-        addToast(massages.join(';'), {
+        // const massages = parseError(error).map((key) => formatMessage({ id: key }))
+        addToast(parseError(error), {
           appearance: 'error',
           autoDismiss: true,
         })

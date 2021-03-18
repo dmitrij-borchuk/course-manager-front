@@ -8,7 +8,7 @@ export function useTeachers(baseOptions?: Apollo.QueryHookOptions<Teachers, Teac
     ...baseOptions,
     variables: {
       ...baseOptions?.variables,
-      where: { role: { name: 'Teacher' } },
+      where: { user: { role: { name: 'Teacher' } } },
     },
   })
 }

@@ -8,6 +8,7 @@ import { AuthGuardedRoute } from './components/guardedRoute/GuardedRoute'
 import { LoginPage } from './pages/login/LoginPage'
 import { DashboardPage } from './pages/dashboard/Dashboard'
 import { EditTeacherPage } from './pages/teachers/EditTeacher'
+import { CreateTeacherPage } from './pages/teachers/CreateTeacher'
 import { TeachersListPage } from './pages/teachers/TeachersList'
 import { TeacherPage } from './pages/teachers/Teacher'
 import { GroupPage } from './pages/groups/Group'
@@ -22,7 +23,8 @@ function App() {
         <Switch>
           <AuthGuardedRoute component={DashboardPage} path="/" exact />
 
-          <AuthGuardedRoute component={EditTeacherPage} path={ROUTES.TEACHERS_ADD} exact />
+          <AuthGuardedRoute component={CreateTeacherPage} path={ROUTES.TEACHERS_ADD} exact />
+          <AuthGuardedRoute component={EditTeacherPage} path={`${ROUTES.TEACHERS_EDIT}/:id`} exact />
           <AuthGuardedRoute component={TeachersListPage} path={ROUTES.TEACHERS_LIST} exact />
           <AuthGuardedRoute component={TeacherPage} path={`${ROUTES.TEACHERS_ROOT}/:id`} exact />
 

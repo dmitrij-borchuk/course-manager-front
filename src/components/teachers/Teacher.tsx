@@ -1,6 +1,7 @@
 import React from 'react'
 import { FormattedMessage } from 'react-intl'
 import { Collection, Container } from 'react-materialize'
+import { Link } from 'react-router-dom'
 import { ROUTES } from '../../constants'
 import { IconButton } from '../kit/buttons/IconButton'
 import { CollectionItemLink } from '../kit/collectionItemLink/CollectionItemLink'
@@ -28,7 +29,7 @@ interface Props {
   }
 }
 export const Teacher: React.FC<Props> = ({ className = '', data }) => {
-  const { groups, name, description } = data
+  const { groups, name, description, id } = data
 
   return (
     <div className={className}>
@@ -39,7 +40,9 @@ export const Teacher: React.FC<Props> = ({ className = '', data }) => {
             <Ellipsis>{name}</Ellipsis>
           </SectionHeader>
           <div className="flex items-center space-x-2 pt-4">
-            <IconButton type="square" size={40} icon="edit" />
+            <Link to={`${ROUTES.TEACHERS_EDIT}/${id}`}>
+              <IconButton type="square" size={40} icon="edit" />
+            </Link>
             <IconButton type="square" size={40} icon="delete" className="color-alert" />
           </div>
         </div>

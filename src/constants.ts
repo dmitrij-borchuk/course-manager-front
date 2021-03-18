@@ -6,6 +6,7 @@ export const ROUTES = {
   TEACHERS_ROOT: '/teachers',
   TEACHERS_LIST: '/teachers',
   TEACHERS_ADD: '/teachers/add',
+  TEACHERS_EDIT: '/teachers/edit',
 
   // Groups
   GROUPS_ROOT: '/groups',

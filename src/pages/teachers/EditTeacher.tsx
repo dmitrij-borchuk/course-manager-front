@@ -1,32 +1,31 @@
-import React, { useMemo } from 'react'
-import { UserInput, useCreateTeacherMutation } from '../../api'
+import { useMemo } from 'react'
+import { useParams } from 'react-router-dom'
+import { Message } from '../../components/kit/message/Message'
 import { EditTeacher } from '../../components/teachers/EditTeacher'
-import { ROUTES, TEACHER_ROLE_NAME } from '../../constants'
-import { useMutationWithRedirect } from '../../hooks/useMutationWithRedirect'
-import { useRoles } from '../../hooks/useRoles'
+import { useTeacher } from '../../hooks/useTeacher'
+import { useEditTeacher } from '../../services/teachers'
 
 export const EditTeacherPage = () => {
-  const [edit, result] = useCreateTeacherMutation()
-  const { data: rolesResponse, loading: rolesLoading } = useRoles()
-  const roles = rolesResponse?.roles
-  const teacherRole = useMemo(() => roles?.find((r) => r.name === TEACHER_ROLE_NAME), [roles])
-  const editTeacher = useMutationWithRedirect<UserInput>(
-    (data) =>
-      edit({
-        variables: {
-          input: {
-            data: {
-              ...data,
-              username: data.email,
-              role: teacherRole?.id,
-            },
-          },
-        },
-      }),
-    ROUTES.TEACHERS_LIST
-  )
+  let { id } = useParams<{ id: string }>()
+  const { data: initialData } = useTeacher({ variables: { id } })
+  const [update, loading] = useEditTeacher(initialData?.userInfo?.id)
+  const formData = useMemo(() => {
+    if (!initialData?.userInfo?.user) {
+      return undefined
+    }
+
+    return {
+      ...initialData.userInfo,
+      email: initialData.userInfo.user.email,
+    }
+  }, [initialData?.userInfo])
+
+  if (!formData) {
+    // TODO: implement
+    return <Message>404</Message>
+  }
 
   // TODO: add loading overlay
 
-  return <EditTeacher onSubmit={editTeacher} loading={result.loading} />
+  return <EditTeacher onSubmit={update} loading={loading} initial={formData} />
 }

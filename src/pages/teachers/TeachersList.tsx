@@ -1,8 +1,18 @@
+import { useMemo } from 'react'
 import { TeachersList } from '../../components/teachers/TeachersList'
-import { useTeachers } from '../../hooks/useTeachers'
+import { useApiCall } from '../../hooks/useApiCall'
+import { getTeachersList } from '../../services/teachers'
 
 export const TeachersListPage = () => {
-  const { data, loading } = useTeachers()
+  const [resp, loading] = useApiCall(getTeachersList)
+  const items = useMemo(
+    () =>
+      resp?.data.map((t) => ({
+        id: t.id,
+        name: t.user_info?.name || '',
+      })),
+    [resp?.data]
+  )
 
-  return <TeachersList items={data?.users || undefined} />
+  return <TeachersList items={items} loading={loading} />
 }

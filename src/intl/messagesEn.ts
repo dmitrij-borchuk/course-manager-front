@@ -14,6 +14,7 @@ export const messages = {
 
   'teachers.list.title': 'Teachers',
   'teachers.add.title': 'Add teacher',
+  'teachers.edit.title': 'Edit teacher',
   'teachers.groups.empty': "The teacher doesn't have any classes",
 
   'groups.list.title': 'Groups',

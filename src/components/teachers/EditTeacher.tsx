@@ -8,7 +8,7 @@ import { FormLayout } from '../kit/formLayout/FormLayout'
 import { useFormWithError } from '../../hooks/useFormWithError'
 import { CustomError } from '../../types/error'
 
-type TeacherFormOutput = {
+export type TeacherFormOutput = {
   name: string
   username: string
   email: string
@@ -36,6 +36,7 @@ export const EditTeacher: React.FC<Props> = ({ className = '', onSubmit, loading
     },
     error
   )
+  const isEdit = !!initial?.email
   // TODO: fix layout
 
   return (
@@ -43,7 +44,7 @@ export const EditTeacher: React.FC<Props> = ({ className = '', onSubmit, loading
       <Header />
       <Container>
         <FormLayout
-          header={<FormattedMessage id="teachers.add.title" />}
+          header={isEdit ? <FormattedMessage id="teachers.edit.title" /> : <FormattedMessage id="teachers.add.title" />}
           controls={<SubmitButton loading={loading} />}
           onSubmit={handleSubmit(onSubmit)}
         >
@@ -56,36 +57,37 @@ export const EditTeacher: React.FC<Props> = ({ className = '', onSubmit, loading
             disabled={loading}
             error={errors['name']?.message}
           />
-          {/* TODO: disable when edit */}
           <Input
             id="username"
             control={control}
             name="username"
             label={`${intl.formatMessage({ id: 'common.form.username.label' })} *`}
             rules={{ required: true }}
-            disabled={loading}
+            disabled={loading || isEdit}
             error={errors['username']?.message}
           />
-          {/* TODO: disable when edit */}
           <Input
             id="email"
             control={control}
             name="email"
             label={`${intl.formatMessage({ id: 'common.form.email.label' })} *`}
             rules={{ required: true }}
-            disabled={loading}
+            disabled={loading || isEdit}
             error={errors['email']?.message}
           />
-          <Input
-            id="password"
-            control={control}
-            name="password"
-            label={`${intl.formatMessage({ id: 'common.form.password.label' })} *`}
-            rules={{ required: true }}
-            disabled={loading}
-            password
-            error={errors['password']?.message}
-          />
+          {!isEdit && (
+            <Input
+              id="password"
+              control={control}
+              name="password"
+              label={`${intl.formatMessage({ id: 'common.form.password.label' })} *`}
+              rules={{ required: true }}
+              disabled={loading}
+              password
+              error={errors['password']?.message}
+            />
+          )}
+          {/* TODO: make text area */}
           <Input
             id="description"
             control={control}

@@ -8,9 +8,12 @@ type UserInfoBase = {
 export type NewUserInfo = UserInfoBase & {
   user: string
 }
-export type UserInfo = UserInfoBase & {
+export type UserInfoFull = UserInfoBase & {
   id: string
   user?: User
   created_by?: string
   updated_by?: string
+}
+export type UserInfo = Omit<UserInfoFull, 'user'> & {
+  user?: string
 }

@@ -1,11 +1,14 @@
 import { useCallback } from 'react'
 import { UserInfoInput, useUpdateTeacherMutation } from '../api'
+import { updateUserInfoRequest } from '../api/userInfo'
 import { getUsersRequest, getUserRequest } from '../api/users'
 import { ROUTES, TEACHER_ROLE_NAME } from '../constants'
 import { useCallbackWithRedirect } from '../hooks/useCallbackWithRedirect'
 import { getRoles } from '../services/roles'
 import { createUserInfo } from './userInfo'
 import { createUser } from './users'
+
+// TODO: rename to userInfoService
 
 export async function getTeachersList() {
   // TODO: improve it, request roles on app startup
@@ -43,20 +46,15 @@ export async function createTeacher(data: CreateTeacherProps) {
   })
 }
 
-export async function editTeacher(data: CreateTeacherProps) {
-  const rolesResponse = await getRoles()
-  const teacherRole = rolesResponse.data.roles.find((r) => r.name === TEACHER_ROLE_NAME)
-
-  if (!teacherRole) {
-    throw new Error(`Can't find role with name ${TEACHER_ROLE_NAME}`)
-  }
-
-  const response = await createUser({ ...data, role: teacherRole.id })
-  const userId = response.data.id
-
-  return await createUserInfo({
+type EditTeacherProps = {
+  userInfoId: string
+  name: string
+  description?: string
+}
+export async function editTeacher(data: EditTeacherProps) {
+  return await updateUserInfoRequest({
+    id: data.userInfoId,
     ...data,
-    user: userId,
   })
 }
 

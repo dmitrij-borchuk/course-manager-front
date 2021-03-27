@@ -1,41 +1,41 @@
 import React from 'react'
-import { useForm } from 'react-hook-form'
 import { FormattedMessage, useIntl } from 'react-intl'
 import { Container } from 'react-materialize'
 import { Header } from '../kit/header/Header'
 import { Input } from '../kit/input/Input'
 import { SubmitButton } from '../kit/buttons/SubmitButton'
 import { FormLayout } from '../kit/formLayout/FormLayout'
+import { useFormWithError } from '../../hooks/useFormWithError'
+import { CustomError } from '../../types/error'
 
-type Teacher = {
+type TeacherFormOutput = {
   name: string
-  email: string
-  password?: string
-  description?: string | null
-}
-
-type EditTeacherProps = {
-  name: string
+  username: string
   email: string
   password: string
-  description: string
+  description?: string
 }
+type TeacherFormInput = Omit<TeacherFormOutput, 'password'>
 
 interface Props {
-  onSubmit: (data: EditTeacherProps) => void
+  onSubmit: (data: TeacherFormOutput) => void
   loading?: boolean
   className?: string
-  initial?: Teacher
+  initial?: TeacherFormInput
+  error?: CustomError
 }
-export const EditTeacher: React.FC<Props> = ({ className = '', onSubmit, loading = false, initial }) => {
+export const EditTeacher: React.FC<Props> = ({ className = '', onSubmit, loading = false, initial, error }) => {
   const intl = useIntl()
-  const { control, handleSubmit } = useForm<Teacher>({
-    defaultValues: {
-      name: '',
-      description: '',
-      ...initial,
+  const { control, handleSubmit, errors } = useFormWithError<TeacherFormOutput>(
+    {
+      defaultValues: {
+        name: '',
+        description: '',
+        ...initial,
+      },
     },
-  })
+    error
+  )
   // TODO: fix layout
 
   return (
@@ -54,6 +54,17 @@ export const EditTeacher: React.FC<Props> = ({ className = '', onSubmit, loading
             label={`${intl.formatMessage({ id: 'common.form.name.label' })} *`}
             rules={{ required: true }}
             disabled={loading}
+            error={errors['name']?.message}
+          />
+          {/* TODO: disable when edit */}
+          <Input
+            id="username"
+            control={control}
+            name="username"
+            label={`${intl.formatMessage({ id: 'common.form.username.label' })} *`}
+            rules={{ required: true }}
+            disabled={loading}
+            error={errors['username']?.message}
           />
           {/* TODO: disable when edit */}
           <Input
@@ -63,6 +74,7 @@ export const EditTeacher: React.FC<Props> = ({ className = '', onSubmit, loading
             label={`${intl.formatMessage({ id: 'common.form.email.label' })} *`}
             rules={{ required: true }}
             disabled={loading}
+            error={errors['email']?.message}
           />
           <Input
             id="password"
@@ -72,6 +84,7 @@ export const EditTeacher: React.FC<Props> = ({ className = '', onSubmit, loading
             rules={{ required: true }}
             disabled={loading}
             password
+            error={errors['password']?.message}
           />
           <Input
             id="description"
@@ -79,6 +92,7 @@ export const EditTeacher: React.FC<Props> = ({ className = '', onSubmit, loading
             name="description"
             label={intl.formatMessage({ id: 'common.form.description.label' })}
             disabled={loading}
+            error={errors['description']?.message}
           />
         </FormLayout>
       </Container>

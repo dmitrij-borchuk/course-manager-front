@@ -17,3 +17,5 @@ export function groupBy<T>(xs: T[], selector: Selector<T>) {
     return rv
   }, {} as Record<string | number, T[]>)
 }
+
+export function noop() {}

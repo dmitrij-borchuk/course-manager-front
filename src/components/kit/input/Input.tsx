@@ -3,7 +3,9 @@ import { Controller } from 'react-hook-form'
 
 type ControllerProps = React.ComponentProps<typeof Controller>
 type InputProps = TextInputProps & Pick<ControllerProps, 'control' | 'name' | 'defaultValue' | 'rules' | 'onFocus'>
-export function Input({ control, name, defaultValue, rules, onFocus, ...props }: InputProps) {
+export function Input({ control, name, defaultValue, rules, onFocus, error, success, ...props }: InputProps) {
+  const validationClass = error ? 'invalid' : success ? 'valid' : ''
+
   return (
     <Controller
       control={control}
@@ -11,7 +13,9 @@ export function Input({ control, name, defaultValue, rules, onFocus, ...props }:
       defaultValue={defaultValue}
       rules={rules}
       onFocus={onFocus}
-      render={(renderProps) => <TextInput {...props} {...renderProps} />}
+      render={(renderProps) => (
+        <TextInput inputClassName={validationClass} error={error} success={success} {...props} {...renderProps} />
+      )}
     />
   )
 }

@@ -17,9 +17,10 @@ export async function getTeachersList() {
 
 type CreateTeacherProps = {
   name: string
+  username: string
   email: string
   password: string
-  description: string
+  description?: string
 }
 export async function createTeacher(data: CreateTeacherProps) {
   const rolesResponse = await getRoles()

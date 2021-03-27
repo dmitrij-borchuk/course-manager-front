@@ -2,12 +2,8 @@ import { useCallback, useState } from 'react'
 import { createUserRequest } from '../api/users'
 import { NewUser } from '../types/user'
 
-type CreateUserProps = Omit<NewUser, 'username'>
-export async function createUser(data: CreateUserProps) {
-  return await createUserRequest({
-    ...data,
-    username: data.email,
-  })
+export async function createUser(data: NewUser) {
+  return await createUserRequest(data)
 }
 
 export function useCreateUser() {

@@ -17,7 +17,9 @@ export const EditTeacherPage = () => {
     return {
       ...initialData.userInfo,
       email: initialData.userInfo.user.email,
-    }
+      // TODO
+      // username: initialData.userInfo.user.username,
+    } as any
   }, [initialData?.userInfo])
 
   if (!formData) {

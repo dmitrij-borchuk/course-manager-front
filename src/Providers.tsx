@@ -5,6 +5,7 @@ import { ToastProvider } from 'react-toast-notifications'
 import { IntlProvider } from 'react-intl'
 import messages from './intl/messagesEn'
 import { getAuthData } from './services/auth'
+import StoreProvider from './store'
 
 const httpLink = createHttpLink({
   // TODO: move to env vars
@@ -23,6 +24,7 @@ const authLink = setContext((_, { headers }) => {
   }
 })
 
+// TODO: remove it
 const client = new ApolloClient({
   link: authLink.concat(httpLink),
   cache: new InMemoryCache(),
@@ -32,11 +34,13 @@ interface Props {}
 export const Providers: React.FC<Props> = ({ children }) => {
   return (
     <ApolloProvider client={client}>
-      <ToastProvider>
-        <IntlProvider messages={messages} locale="en" defaultLocale="en">
-          {children}
-        </IntlProvider>
-      </ToastProvider>
+      <StoreProvider>
+        <ToastProvider>
+          <IntlProvider messages={messages} locale="en" defaultLocale="en">
+            {children}
+          </IntlProvider>
+        </ToastProvider>
+      </StoreProvider>
     </ApolloProvider>
   )
 }

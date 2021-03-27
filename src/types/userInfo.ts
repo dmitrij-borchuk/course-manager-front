@@ -3,13 +3,13 @@ import { User } from './user'
 type UserInfoBase = {
   name: string
   description?: string
+  groups?: string[]
 }
 export type NewUserInfo = UserInfoBase & {
-  groups?: string[]
   user: string
 }
 export type UserInfo = UserInfoBase & {
-  groups?: {}
+  id: string
   user?: User
   created_by?: string
   updated_by?: string

@@ -3,10 +3,13 @@ import { FormattedMessage } from 'react-intl'
 import { Collection, Container } from 'react-materialize'
 import { Link } from 'react-router-dom'
 import { ROUTES } from '../../constants'
+import { Group } from '../../types/group'
+import { User } from '../../types/user'
 import { IconButton } from '../kit/buttons/IconButton'
 import { CollectionItemLink } from '../kit/collectionItemLink/CollectionItemLink'
 import { Ellipsis } from '../kit/ellipsis/Ellipsis'
 import { Header } from '../kit/header/Header'
+import { Message } from '../kit/message/Message'
 import { SectionHeader } from '../kit/sectionHeader/SectionHeader'
 import { Text } from '../kit/text/Text'
 
@@ -16,20 +19,17 @@ import { Text } from '../kit/text/Text'
 // TODO: assign group
 interface Props {
   className?: string
-  data: {
-    id: string
-    name: string
-    description?: string | null
-    groups?:
-      | {
-          id: string
-          name: string
-        }[]
-      | null
-  }
+  data: User
+  groups: Group[]
 }
-export const Teacher: React.FC<Props> = ({ className = '', data }) => {
-  const { groups, name, description, id } = data
+export const Teacher: React.FC<Props> = ({ className = '', data, groups = [] }) => {
+  const { user_info, id } = data
+
+  if (!user_info) {
+    return <Message>TBD: Can't find `userInfo`</Message>
+  }
+
+  const { name, description } = user_info
 
   return (
     <div className={className}>
@@ -51,7 +51,7 @@ export const Teacher: React.FC<Props> = ({ className = '', data }) => {
         <Text type="h5" color="primary">
           <FormattedMessage id="groups.list.title" />
         </Text>
-        {groups ? (
+        {groups.length ? (
           <Collection>
             {groups.map((group) => (
               <CollectionItemLink key={group.id} to={`${ROUTES.GROUPS_ROOT}/${group.id}`}>
@@ -60,9 +60,11 @@ export const Teacher: React.FC<Props> = ({ className = '', data }) => {
             ))}
           </Collection>
         ) : (
-          <Text>
-            <FormattedMessage id="teachers.groups.empty" />
-          </Text>
+          <div className="flex justify-center">
+            <Text type="h6" color="textGray">
+              <FormattedMessage id="teachers.groups.empty" />
+            </Text>
+          </div>
         )}
       </Container>
     </div>

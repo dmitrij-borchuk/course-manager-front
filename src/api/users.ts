@@ -8,3 +8,7 @@ export function createUserRequest(data: NewUser) {
 export function getUsersRequest(params?: string) {
   return request.get<User[]>(`/users?${params || ''}`)
 }
+
+export function getUserRequest(id: string) {
+  return request.get<User>(`/users/${id}`)
+}

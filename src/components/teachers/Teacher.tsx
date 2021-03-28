@@ -46,6 +46,7 @@ export const Teacher: React.FC<Props> = ({ className = '', data, groups = [] }) 
             <IconButton type="square" size={40} icon="delete" className="color-alert" />
           </div>
         </div>
+        {/* TODO: break all */}
         {description}
 
         <Text type="h5" color="primary">

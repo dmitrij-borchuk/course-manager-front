@@ -32,5 +32,7 @@ export const TeacherPage = () => {
     return <div>Loading</div>
   }
 
+  // TODO: 404
+
   return <Teacher data={teacher} groups={groupsOfTeacher} />
 }

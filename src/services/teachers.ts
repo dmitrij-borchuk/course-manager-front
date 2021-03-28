@@ -37,13 +37,18 @@ export async function createTeacher(data: CreateTeacherProps) {
     throw new Error(`Can't find role with name ${TEACHER_ROLE_NAME}`)
   }
 
-  const response = await createUser({ ...data, role: teacherRole.id })
-  const userId = response.data.id
+  const userResponse = await createUser({ ...data, role: teacherRole.id })
+  const userId = userResponse.data.id
 
-  return await createUserInfo({
+  const userInfo = await createUserInfo({
     ...data,
     user: userId,
   })
+
+  return {
+    ...userResponse.data,
+    user_info: userInfo.data,
+  }
 }
 
 type EditTeacherProps = {

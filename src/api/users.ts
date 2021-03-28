@@ -2,7 +2,7 @@ import { NewUser, User } from '../types/user'
 import request from './request'
 
 export function createUserRequest(data: NewUser) {
-  return request.post<{ id: string }>('/users', data)
+  return request.post<User>('/users', data)
 }
 
 export function getUsersRequest(params?: string) {

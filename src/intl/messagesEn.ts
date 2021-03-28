@@ -11,6 +11,7 @@ export const messages = {
   'header.nav.dashboard': 'Dashboard',
   'header.nav.teachers': 'Teachers',
   'header.nav.students': 'Students',
+  'header.nav.logout': 'Logout',
 
   'teachers.list.title': 'Teachers',
   'teachers.add.title': 'Add teacher',

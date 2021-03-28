@@ -1,30 +1,26 @@
-import React, { useCallback } from 'react'
+import { ComponentProps, useCallback, useEffect } from 'react'
+import { useHistory } from 'react-router-dom'
 import { useToasts } from 'react-toast-notifications'
 import { useIntl } from 'react-intl'
-import { useHistory } from 'react-router-dom'
-import { useLoginMutation, UsersPermissionsLoginInput } from '../../api'
-import { parseError } from '../../utils/error'
 import { ROUTES } from '../../constants'
+import { useAuthState } from '../../store'
+import { parseError } from '../../utils/error'
 import { Login } from '../../components/login/Login'
-import { setAuthData } from '../../services/auth'
+
+type SubmitData = Parameters<ComponentProps<typeof Login>['onSubmit']>[0]
 
 export const LoginPage = () => {
+  const history = useHistory()
   const { addToast } = useToasts()
-  let history = useHistory()
-  const [login, result] = useLoginMutation()
-  const { loading } = result
+  const { login, loading, clearAuthData } = useAuthState()
   const { formatMessage } = useIntl()
   const onLoginSubmit = useCallback(
-    async (data: UsersPermissionsLoginInput) => {
+    async (data: SubmitData) => {
       try {
-        const response = await login({
-          variables: {
-            input: data,
-          },
-        })
+        clearAuthData()
+        const response = await login(data)
 
-        if (response.data?.login.jwt) {
-          setAuthData(response.data?.login.jwt)
+        if (response.data.jwt) {
           history.push(ROUTES.ROOT)
         } else {
           addToast(formatMessage({ id: 'Auth.form.error.500' }), {
@@ -33,14 +29,13 @@ export const LoginPage = () => {
           })
         }
       } catch (error) {
-        // const massages = parseError(error).map((key) => formatMessage({ id: key }))
         addToast(parseError(error), {
           appearance: 'error',
           autoDismiss: true,
         })
       }
     },
-    [login, addToast, formatMessage, history]
+    [clearAuthData, login, history, addToast, formatMessage]
   )
 
   return (

@@ -13,8 +13,9 @@ import { TeachersListPage } from './pages/teachers/TeachersList'
 import { TeacherPage } from './pages/teachers/Teacher'
 import { GroupPage } from './pages/groups/Group'
 import { StudentPage } from './pages/students/Student'
-import './App.css'
 import { StudentListPage } from './pages/students/StudentList'
+import { LogoutPage } from './pages/auth/Logout'
+import './App.css'
 
 function App() {
   return (
@@ -35,6 +36,9 @@ function App() {
 
           <Route path="/login">
             <LoginPage />
+          </Route>
+          <Route path="/LOGOUT">
+            <LogoutPage />
           </Route>
         </Switch>
       </Router>

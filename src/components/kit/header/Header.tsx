@@ -1,6 +1,5 @@
-import React from 'react'
 import { FormattedMessage } from 'react-intl'
-import { Icon, Navbar, NavItem } from 'react-materialize'
+import { Divider, Icon, Navbar } from 'react-materialize'
 import { Link } from 'react-router-dom'
 import { ROUTES } from '../../../constants'
 
@@ -13,6 +12,7 @@ export const Header = () => {
       brand={<Link to="/">Learnify</Link>}
       id="mobile-nav"
       menuIcon={<Icon>menu</Icon>}
+      centerChildren
       options={{
         draggable: true,
         edge: 'left',
@@ -29,6 +29,10 @@ export const Header = () => {
       </Link>
       <Link to={ROUTES.STUDENTS_LIST}>
         <FormattedMessage id="header.nav.students" />
+      </Link>
+      <Divider />
+      <Link to={ROUTES.LOGOUT}>
+        <FormattedMessage id="header.nav.logout" />
       </Link>
     </Navbar>
   )

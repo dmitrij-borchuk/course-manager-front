@@ -1,6 +1,5 @@
 import { useForm } from 'react-hook-form'
 import { Icon } from 'react-materialize'
-import { UsersPermissionsLoginInput } from '../../api'
 import { ButtonWithLoader } from '../kit/buttons/ButtonWithLoader'
 import { Input } from '../kit/input/Input'
 import { SectionHeader } from '../kit/sectionHeader/SectionHeader'
@@ -8,12 +7,16 @@ import './styles.css'
 
 // TODO: translations
 
+interface FormData {
+  identifier: string
+  password: string
+}
 interface Props {
-  onSubmit: (data: UsersPermissionsLoginInput) => void
+  onSubmit: (data: FormData) => void
   loading?: boolean
 }
 export const Login: React.FC<Props> = ({ onSubmit, loading = false }) => {
-  const { control, handleSubmit } = useForm<UsersPermissionsLoginInput>({
+  const { control, handleSubmit } = useForm<FormData>({
     defaultValues: {
       identifier: '',
       password: '',

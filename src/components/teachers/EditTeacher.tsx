@@ -20,11 +20,21 @@ type TeacherFormInput = Omit<TeacherFormOutput, 'password'>
 interface Props {
   onSubmit: (data: TeacherFormOutput) => void
   loading?: boolean
+  disabled?: boolean
+  isEdit?: boolean
   className?: string
   initial?: TeacherFormInput
   error?: CustomError
 }
-export const EditTeacher: React.FC<Props> = ({ className = '', onSubmit, loading = false, initial, error }) => {
+export const EditTeacher: React.FC<Props> = ({
+  className = '',
+  onSubmit,
+  loading = false,
+  disabled = false,
+  isEdit = false,
+  initial,
+  error,
+}) => {
   const intl = useIntl()
   const { control, handleSubmit, errors } = useFormWithError<TeacherFormOutput>(
     {
@@ -36,7 +46,6 @@ export const EditTeacher: React.FC<Props> = ({ className = '', onSubmit, loading
     },
     error
   )
-  const isEdit = !!initial?.email
   // TODO: fix layout
 
   return (
@@ -45,7 +54,7 @@ export const EditTeacher: React.FC<Props> = ({ className = '', onSubmit, loading
       <Container>
         <FormLayout
           header={isEdit ? <FormattedMessage id="teachers.edit.title" /> : <FormattedMessage id="teachers.add.title" />}
-          controls={<SubmitButton loading={loading} />}
+          controls={<SubmitButton loading={loading} disabled={disabled} />}
           onSubmit={handleSubmit(onSubmit)}
         >
           <Input
@@ -54,7 +63,7 @@ export const EditTeacher: React.FC<Props> = ({ className = '', onSubmit, loading
             name="name"
             label={`${intl.formatMessage({ id: 'common.form.name.label' })} *`}
             rules={{ required: true }}
-            disabled={loading}
+            disabled={loading || disabled}
             error={errors['name']?.message}
           />
           <Input
@@ -63,7 +72,7 @@ export const EditTeacher: React.FC<Props> = ({ className = '', onSubmit, loading
             name="username"
             label={`${intl.formatMessage({ id: 'common.form.username.label' })} *`}
             rules={{ required: true }}
-            disabled={loading || isEdit}
+            disabled={loading || isEdit || disabled}
             error={errors['username']?.message}
           />
           <Input
@@ -72,7 +81,7 @@ export const EditTeacher: React.FC<Props> = ({ className = '', onSubmit, loading
             name="email"
             label={`${intl.formatMessage({ id: 'common.form.email.label' })} *`}
             rules={{ required: true }}
-            disabled={loading || isEdit}
+            disabled={loading || isEdit || disabled}
             error={errors['email']?.message}
           />
           {!isEdit && (
@@ -82,7 +91,7 @@ export const EditTeacher: React.FC<Props> = ({ className = '', onSubmit, loading
               name="password"
               label={`${intl.formatMessage({ id: 'common.form.password.label' })} *`}
               rules={{ required: true }}
-              disabled={loading}
+              disabled={loading || disabled}
               password
               error={errors['password']?.message}
             />
@@ -93,7 +102,7 @@ export const EditTeacher: React.FC<Props> = ({ className = '', onSubmit, loading
             control={control}
             name="description"
             label={intl.formatMessage({ id: 'common.form.description.label' })}
-            disabled={loading}
+            disabled={loading || disabled}
             error={errors['description']?.message}
           />
         </FormLayout>

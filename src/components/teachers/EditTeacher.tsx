@@ -6,6 +6,7 @@ import { Input } from '../kit/input/Input'
 import { SubmitButton } from '../kit/buttons/SubmitButton'
 import { FormLayout } from '../kit/formLayout/FormLayout'
 import { useFormWithError } from '../../hooks/useFormWithError'
+import { useUpdateInitialForm } from '../../hooks/useUpdateInitialForm'
 import { CustomError } from '../../types/error'
 
 export type TeacherFormOutput = {
@@ -36,7 +37,7 @@ export const EditTeacher: React.FC<Props> = ({
   error,
 }) => {
   const intl = useIntl()
-  const { control, handleSubmit, errors } = useFormWithError<TeacherFormOutput>(
+  const { control, handleSubmit, errors, setValue } = useFormWithError<TeacherFormOutput>(
     {
       defaultValues: {
         name: '',
@@ -46,6 +47,9 @@ export const EditTeacher: React.FC<Props> = ({
     },
     error
   )
+
+  useUpdateInitialForm(setValue, initial)
+
   // TODO: fix layout
 
   return (

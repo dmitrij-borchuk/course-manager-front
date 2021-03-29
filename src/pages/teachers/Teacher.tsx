@@ -1,12 +1,14 @@
-import { useEffect, useMemo } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
+import { Header } from '../../components/kit/header/Header'
+import { Loader } from '../../components/kit/loader/Loader'
 import { Teacher } from '../../components/teachers/Teacher'
 import { useGroupsState, useTeachersState } from '../../store'
 
 // TODO: Add loading skeleton
 export const TeacherPage = () => {
   let { id } = useParams<{ id: string }>()
-  const { fetchTeacher, setTeacher, teachersById } = useTeachersState()
+  const { fetchTeacher, setTeacher, teachersById, fetching } = useTeachersState()
   // TODO: add loading
   const { fetchGroups, groups } = useGroupsState()
   const teacher = teachersById[id]
@@ -29,12 +31,13 @@ export const TeacherPage = () => {
     }
   }, [fetchGroups, fetchTeacher, id, setTeacher])
 
-  if (!teacher) {
-    // TODO: Implement
-    return <div>Loading</div>
-  }
-
   // TODO: 404
 
-  return <Teacher data={teacher} groups={groupsOfTeacher} />
+  return (
+    <>
+      <Header />
+      {/* TODO: skeleton loader */}
+      <Loader show={fetching}>{teacher && <Teacher data={teacher} groups={groupsOfTeacher} />}</Loader>
+    </>
+  )
 }

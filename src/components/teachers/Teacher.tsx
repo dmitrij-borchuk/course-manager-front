@@ -3,18 +3,16 @@ import { FormattedMessage } from 'react-intl'
 import { Collection, Container } from 'react-materialize'
 import { Link } from 'react-router-dom'
 import { ROUTES } from '../../constants'
-import { Group, GroupFull } from '../../types/group'
+import { GroupFull } from '../../types/group'
 import { User } from '../../types/user'
 import { IconButton } from '../kit/buttons/IconButton'
 import { CollectionItemLink } from '../kit/collectionItemLink/CollectionItemLink'
 import { Ellipsis } from '../kit/ellipsis/Ellipsis'
-import { Header } from '../kit/header/Header'
 import { Message } from '../kit/message/Message'
 import { SectionHeader } from '../kit/sectionHeader/SectionHeader'
 import { Text } from '../kit/text/Text'
 
 // TODO: fix layout
-// TODO: add edit
 // TODO: add delete
 // TODO: assign group
 interface Props {
@@ -33,7 +31,6 @@ export const Teacher: React.FC<Props> = ({ className = '', data, groups = [] }) 
 
   return (
     <div className={className}>
-      <Header />
       <Container>
         <div className="flex justify-between">
           <SectionHeader className="min-w-0">

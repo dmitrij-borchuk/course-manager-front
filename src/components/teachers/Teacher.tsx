@@ -1,5 +1,5 @@
 import React from 'react'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, useIntl } from 'react-intl'
 import { Collection, Container } from 'react-materialize'
 import { Link } from 'react-router-dom'
 import { ROUTES } from '../../constants'
@@ -7,6 +7,7 @@ import { GroupFull } from '../../types/group'
 import { User } from '../../types/user'
 import { IconButton } from '../kit/buttons/IconButton'
 import { CollectionItemLink } from '../kit/collectionItemLink/CollectionItemLink'
+import { DeleteIconWithDialog } from '../kit/deleteIconWithDialog/DeleteIconWithDialog'
 import { Ellipsis } from '../kit/ellipsis/Ellipsis'
 import { Message } from '../kit/message/Message'
 import { SectionHeader } from '../kit/sectionHeader/SectionHeader'
@@ -19,8 +20,10 @@ interface Props {
   className?: string
   data: User
   groups: GroupFull[]
+  onDelete: () => void
 }
-export const Teacher: React.FC<Props> = ({ className = '', data, groups = [] }) => {
+export const Teacher: React.FC<Props> = ({ className = '', data, groups = [], onDelete }) => {
+  const intl = useIntl()
   const { user_info, id } = data
 
   if (!user_info) {
@@ -40,7 +43,11 @@ export const Teacher: React.FC<Props> = ({ className = '', data, groups = [] }) 
             <Link to={`${ROUTES.TEACHERS_EDIT}/${id}`}>
               <IconButton type="square" size={40} icon="edit" />
             </Link>
-            <IconButton type="square" size={40} icon="delete" className="color-alert" />
+            <DeleteIconWithDialog
+              header={intl.formatMessage({ id: 'teachers.delete.header' })}
+              content={<FormattedMessage id="teachers.delete.text" />}
+              onSubmit={onDelete}
+            />
           </div>
         </div>
         {/* TODO: break all */}

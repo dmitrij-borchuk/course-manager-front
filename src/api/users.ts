@@ -12,3 +12,7 @@ export function getUsersRequest(params?: string) {
 export function getUserRequest(id: string) {
   return request.get<User>(`/users/${id}`)
 }
+
+export function deleteUserRequest(id: string) {
+  return request.delete<void>(`/users/${id}`)
+}

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react'
+import React, { useCallback, useEffect, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import { Header } from '../../components/kit/header/Header'
 import { Loader } from '../../components/kit/loader/Loader'
@@ -8,8 +8,7 @@ import { useGroupsState, useTeachersState } from '../../store'
 // TODO: Add loading skeleton
 export const TeacherPage = () => {
   let { id } = useParams<{ id: string }>()
-  const { fetchTeacher, setTeacher, teachersById, fetching } = useTeachersState()
-  // TODO: add loading
+  const { fetchTeacher, setTeacher, teachersById, fetching, deleteTeacher } = useTeachersState()
   const { fetchGroups, groups } = useGroupsState()
   const teacher = teachersById[id]
   const groupsOfTeacher = useMemo(() => {
@@ -19,6 +18,7 @@ export const TeacherPage = () => {
 
     return groups.filter((g) => g.teacher?.id === teacher.user_info?.id)
   }, [groups, teacher])
+  const onDelete = useCallback(() => deleteTeacher(id), [deleteTeacher, id])
 
   useEffect(() => {
     fetchTeacher(id)
@@ -37,7 +37,9 @@ export const TeacherPage = () => {
     <>
       <Header />
       {/* TODO: skeleton loader */}
-      <Loader show={fetching}>{teacher && <Teacher data={teacher} groups={groupsOfTeacher} />}</Loader>
+      <Loader show={fetching}>
+        {teacher && <Teacher data={teacher} groups={groupsOfTeacher} onDelete={onDelete} />}
+      </Loader>
     </>
   )
 }

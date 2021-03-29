@@ -1,5 +1,5 @@
 import { updateUserInfoRequest } from '../api/userInfo'
-import { getUsersRequest, getUserRequest } from '../api/users'
+import { getUsersRequest, getUserRequest, deleteUserRequest } from '../api/users'
 import { TEACHER_ROLE_NAME } from '../constants'
 import { getRoles } from '../services/roles'
 import { createUserInfo } from './userInfo'
@@ -17,6 +17,10 @@ export async function getTeachersList() {
 
 export async function getTeacher(id: string) {
   return getUserRequest(id)
+}
+
+export async function deleteTeacher(id: string) {
+  return deleteUserRequest(id)
 }
 
 type CreateTeacherProps = {

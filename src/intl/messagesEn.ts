@@ -5,6 +5,8 @@ export const messages = {
   'common.form.email.label': 'Email',
   'common.form.password.label': 'Password',
   'common.form.description.label': 'Description',
+  'common.dialog.btn.yes': 'Yes',
+  'common.dialog.btn.no': 'No',
 
   'Auth.form.error.invalid': 'Identifier or password invalid.',
   'Auth.form.error.500': 'Something went wrong',
@@ -17,6 +19,8 @@ export const messages = {
   'teachers.add.title': 'Add teacher',
   'teachers.edit.title': 'Edit teacher',
   'teachers.groups.empty': "The teacher doesn't have any classes",
+  'teachers.delete.header': 'Remove teacher',
+  'teachers.delete.text': 'Are you sure you want to delete this teacher?',
 
   'groups.list.title': 'Groups',
   'groups.teacher.title': 'Teacher',

@@ -1,15 +1,11 @@
 import { useMemo } from 'react'
-import { AttendancesQuery, GroupsQuery } from '../api'
-import { AttendanceItem } from '../types/attendance'
-import { GroupItem } from '../types/group'
-import { UnboxMaybe } from '../types/unboxMaybe'
+import { getAttendancesRequest } from '../api/attendances'
+import { AttendanceFull } from '../types/attendance'
+import { GroupFull } from '../types/group'
 import { groupBy } from '../utils/common'
 import { datesInRange } from '../utils/date'
 
-type Attendances = UnboxMaybe<AttendancesQuery['attendances']>
-type Groups = UnboxMaybe<GroupsQuery['groups']>
-
-export function useAttendanceGrouping(from: Date, to: Date, attendances?: Attendances, groups?: Groups) {
+export function useAttendanceGrouping(from: Date, to: Date, attendances?: AttendanceFull[], groups?: GroupFull[]) {
   return useMemo(() => {
     if (!attendances || !groups) {
       return []
@@ -22,7 +18,7 @@ export function useAttendanceGrouping(from: Date, to: Date, attendances?: Attend
 function getAttendanceDateKey(date: Date) {
   return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}}`
 }
-function getTimelineData(from: Date, to: Date, attendances: AttendanceItem[], groups: GroupItem[]) {
+function getTimelineData(from: Date, to: Date, attendances: AttendanceFull[], groups: GroupFull[]) {
   const attByDate = groupBy(attendances, (att) => {
     const date = new Date(att.date)
     return getAttendanceDateKey(date)
@@ -34,7 +30,7 @@ function getTimelineData(from: Date, to: Date, attendances: AttendanceItem[], gr
   })
 }
 
-function getBlockData(date: Date, attendances: AttendanceItem[], groups: GroupItem[]) {
+function getBlockData(date: Date, attendances: AttendanceFull[], groups: GroupFull[]) {
   const attByGroup = groupBy(attendances, (v) => v.group?.id)
   const groupsById = groupBy(groups, 'id')
 
@@ -48,11 +44,11 @@ function getBlockData(date: Date, attendances: AttendanceItem[], groups: GroupIt
   }
 }
 
-function getMeterData(attendances: AttendanceItem[], group: GroupItem) {
+function getMeterData(attendances: AttendanceFull[], group: GroupFull) {
   return { id: group.id, text: group.name, progress: getMeterProgress(attendances, group) }
 }
 
-function getMeterProgress(attendances: AttendanceItem[], group: GroupItem) {
+function getMeterProgress(attendances: AttendanceFull[], group: GroupFull) {
   // TODO: remove duplications in `attendancesOfGroup` items (if one student was registered two times)
   const groupAtt = attendances?.length
   const groupMembers = group.students?.length
@@ -61,4 +57,11 @@ function getMeterProgress(attendances: AttendanceItem[], group: GroupItem) {
   }
 
   return groupAtt / groupMembers
+}
+
+export function fetchAttendances(from: Date, to: Date) {
+  const fromDate = from.toISOString()
+  const toDate = to.toISOString()
+
+  return getAttendancesRequest(`date_gte=${fromDate}&date_lte=${toDate}`)
 }

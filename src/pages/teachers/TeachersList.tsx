@@ -4,6 +4,7 @@ import { useApiCall } from '../../hooks/useApiCall'
 import { getTeachersList } from '../../services/teachers'
 
 export const TeachersListPage = () => {
+  // TODO: use store
   const [resp, loading] = useApiCall(getTeachersList)
   const items = useMemo(
     () =>

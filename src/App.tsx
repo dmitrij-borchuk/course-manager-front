@@ -19,8 +19,8 @@ import './App.css'
 
 function App() {
   return (
-    <Providers>
-      <Router>
+    <Router>
+      <Providers>
         <Switch>
           <AuthGuardedRoute component={DashboardPage} path="/" exact />
 
@@ -41,8 +41,8 @@ function App() {
             <LogoutPage />
           </Route>
         </Switch>
-      </Router>
-    </Providers>
+      </Providers>
+    </Router>
   )
 }
 

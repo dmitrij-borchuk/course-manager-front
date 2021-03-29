@@ -20,7 +20,9 @@ export const TeacherPage = () => {
 
   useEffect(() => {
     fetchTeacher(id)
-    fetchGroups(id)
+    fetchGroups({
+      teacherId: id,
+    })
 
     return () => {
       setTeacher(id, undefined)

@@ -1,5 +1,15 @@
-import { AttendancesQuery } from '../api'
-import { UnboxMaybe } from './unboxMaybe'
-import { UnboxArray } from './unboxArray'
+import { Group } from './group'
+import { Student } from './student'
 
-export type AttendanceItem = UnboxArray<UnboxMaybe<AttendancesQuery['attendances']>>
+export type Attendance = {
+  id: string
+  student?: string
+  group?: string
+  date: string
+  published_at?: string
+}
+
+export type AttendanceFull = Omit<Attendance, 'student' | 'group'> & {
+  student?: Student
+  group?: Group
+}

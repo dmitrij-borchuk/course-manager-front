@@ -3,7 +3,7 @@ import { FormattedMessage } from 'react-intl'
 import { Collection, Container } from 'react-materialize'
 import { Link } from 'react-router-dom'
 import { ROUTES } from '../../constants'
-import { Group } from '../../types/group'
+import { Group, GroupFull } from '../../types/group'
 import { User } from '../../types/user'
 import { IconButton } from '../kit/buttons/IconButton'
 import { CollectionItemLink } from '../kit/collectionItemLink/CollectionItemLink'
@@ -20,7 +20,7 @@ import { Text } from '../kit/text/Text'
 interface Props {
   className?: string
   data: User
-  groups: Group[]
+  groups: GroupFull[]
 }
 export const Teacher: React.FC<Props> = ({ className = '', data, groups = [] }) => {
   const { user_info, id } = data

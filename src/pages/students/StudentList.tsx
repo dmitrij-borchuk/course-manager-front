@@ -1,8 +1,13 @@
+import { useEffect } from 'react'
 import { StudentList } from '../../components/students/StudentList'
-import { useStudents } from '../../hooks/useStudents'
+import { useStudentsState } from '../../store'
 
 export const StudentListPage = () => {
-  const { data, loading } = useStudents()
+  const { fetchStudents, students } = useStudentsState()
 
-  return <StudentList items={data?.students || undefined} />
+  useEffect(() => {
+    fetchStudents()
+  }, [fetchStudents])
+
+  return <StudentList items={students} />
 }

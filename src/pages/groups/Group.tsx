@@ -1,15 +1,21 @@
+import { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { Group } from '../../components/groups/Group'
-import { useGroup } from '../../hooks/useGroup'
+import { useGroupsState } from '../../store'
 
 // TODO: Add loading skeleton
 export const GroupPage = () => {
   let { id } = useParams<{ id: string }>()
-  const { data, loading } = useGroup({ variables: { id } })
+  const { fetchGroup, groupsById } = useGroupsState()
+  const group = groupsById[id]
 
-  if (!data?.group) {
+  useEffect(() => {
+    fetchGroup(id)
+  }, [fetchGroup, id])
+
+  if (!group) {
     return <div>Loading</div>
   }
 
-  return <Group data={data?.group} />
+  return <Group data={group} />
 }

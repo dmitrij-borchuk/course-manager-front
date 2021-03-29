@@ -1,17 +1,16 @@
-import { GroupsQuery } from '../api'
-import { UnboxMaybe } from './unboxMaybe'
-import { UnboxArray } from './unboxArray'
 import { UserInfo } from './userInfo'
-
-// TODO: remove
-export type GroupItem = UnboxArray<UnboxMaybe<GroupsQuery['groups']>>
+import { Student } from './student'
 
 export type Group = {
   id: string
   name: string
   description?: string
-  students?: {}[]
+  students?: Student[]
   attendances?: {}[]
-  teacher?: UserInfo
+  teacher?: string
   published_at?: string
+}
+
+export type GroupFull = Omit<Group, 'teacher'> & {
+  teacher?: UserInfo
 }

@@ -43,10 +43,6 @@ export const EditTeacherPage = () => {
 
   useEffect(() => {
     fetchTeacher(id)
-
-    return () => {
-      setTeacher(id, undefined)
-    }
   }, [fetchTeacher, id, setTeacher])
   // TODO: implement 404
 

@@ -13,8 +13,6 @@ import { Message } from '../kit/message/Message'
 import { SectionHeader } from '../kit/sectionHeader/SectionHeader'
 import { Text } from '../kit/text/Text'
 
-// TODO: fix layout
-// TODO: add delete
 // TODO: assign group
 interface Props {
   className?: string
@@ -27,6 +25,7 @@ export const Teacher: React.FC<Props> = ({ className = '', data, groups = [], on
   const { user_info, id } = data
 
   if (!user_info) {
+    // TODO:
     return <Message>TBD: Can't find `userInfo`</Message>
   }
 
@@ -50,8 +49,9 @@ export const Teacher: React.FC<Props> = ({ className = '', data, groups = [], on
             />
           </div>
         </div>
-        {/* TODO: break all */}
-        {description}
+
+        {/* Description */}
+        <div className="break-words">{description}</div>
 
         <Text type="h5" color="primary">
           <FormattedMessage id="groups.list.title" />

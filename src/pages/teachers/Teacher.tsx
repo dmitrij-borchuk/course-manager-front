@@ -25,10 +25,6 @@ export const TeacherPage = () => {
     fetchGroups({
       teacherId: id,
     })
-
-    return () => {
-      setTeacher(id, undefined)
-    }
   }, [fetchGroups, fetchTeacher, id, setTeacher])
 
   // TODO: 404

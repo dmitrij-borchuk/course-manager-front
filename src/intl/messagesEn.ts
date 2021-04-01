@@ -16,6 +16,7 @@ export const messages = {
   'header.nav.logout': 'Logout',
 
   'teachers.list.title': 'Teachers',
+  'teachers.list.empty': 'There is no teachers yet',
   'teachers.add.title': 'Add teacher',
   'teachers.edit.title': 'Edit teacher',
   'teachers.groups.empty': "The teacher doesn't have any classes",

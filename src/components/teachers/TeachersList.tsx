@@ -7,11 +7,10 @@ import { CollectionItemLink } from '../kit/collectionItemLink/CollectionItemLink
 import { FabBtn } from '../kit/FabBtn/FabBtn'
 import { Header } from '../kit/header/Header'
 import { SectionHeader } from '../kit/sectionHeader/SectionHeader'
+import { SkeletonList } from '../kit/skeleton/SkeletonList'
+import { Text } from '../kit/text/Text'
 
-// TODO: fix layout
 // TODO: add attendance
-// TODO: add loading skeleton
-// TODO: add empty list placeholder
 interface Props {
   loading?: boolean
   className?: string
@@ -24,23 +23,51 @@ export const TeachersList: React.FC<Props> = ({ className = '', loading = false,
   return (
     <div className={className}>
       <Header />
+
       <Container>
         <SectionHeader>
           <FormattedMessage id="teachers.list.title" />
         </SectionHeader>
 
-        <Collection>
-          {items.map((item) => (
-            <CollectionItemLink key={item.id} to={`${ROUTES.TEACHERS_ROOT}/${item.id}`}>
-              {item.name}
-            </CollectionItemLink>
-          ))}
-        </Collection>
+        <List loading={loading} items={items} />
       </Container>
 
       <Link to={ROUTES.TEACHERS_ADD}>
         <FabBtn />
       </Link>
     </div>
+  )
+}
+
+interface ListProps {
+  loading: boolean
+  items: {
+    id: string
+    name: string
+  }[]
+}
+const List = ({ loading, items }: ListProps) => {
+  if (loading) {
+    return <SkeletonList />
+  }
+
+  if (items.length === 0) {
+    return (
+      <div className="flex justify-center">
+        <Text type="h6" color="textGray">
+          <FormattedMessage id="teachers.list.empty" />
+        </Text>
+      </div>
+    )
+  }
+
+  return (
+    <Collection>
+      {items.map((item) => (
+        <CollectionItemLink key={item.id} to={`${ROUTES.TEACHERS_ROOT}/${item.id}`}>
+          {item.name}
+        </CollectionItemLink>
+      ))}
+    </Collection>
   )
 }

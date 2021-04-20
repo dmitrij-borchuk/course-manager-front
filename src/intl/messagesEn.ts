@@ -7,11 +7,13 @@ export const messages = {
   'common.form.description.label': 'Description',
   'common.dialog.btn.yes': 'Yes',
   'common.dialog.btn.no': 'No',
+  'common.list.empty': 'The list is empty',
 
   'Auth.form.error.invalid': 'Identifier or password invalid.',
   'Auth.form.error.500': 'Something went wrong',
   'header.nav.dashboard': 'Dashboard',
   'header.nav.teachers': 'Teachers',
+  'header.nav.groups': 'Groups',
   'header.nav.students': 'Students',
   'header.nav.logout': 'Logout',
 

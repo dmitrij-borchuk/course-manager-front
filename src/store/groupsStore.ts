@@ -27,5 +27,9 @@ export default function useGroupsStore() {
       setGroupsById((state) => ({ ...state, [resp.data.id]: resp.data }))
       setLoading(false)
     }, []),
+    clearGroups: useCallback(() => {
+      setGroupsById({})
+      setLoading(false)
+    }, []),
   }
 }

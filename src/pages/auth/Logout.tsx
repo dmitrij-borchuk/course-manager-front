@@ -1,15 +1,12 @@
 import { useEffect } from 'react'
-import { useHistory } from 'react-router'
-import { ROUTES } from '../../constants'
-import { setAuthData } from '../../services/auth'
+import { useAuthState } from '../../store'
 
 export const LogoutPage = () => {
-  const history = useHistory()
+  const { logout } = useAuthState()
 
   useEffect(() => {
-    setAuthData('')
-    history.push(ROUTES.ROOT)
-  }, [history])
+    logout()
+  }, [logout])
 
   return null
 }

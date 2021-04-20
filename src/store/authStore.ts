@@ -1,7 +1,10 @@
 import { useCallback, useState } from 'react'
+import { useHistory } from 'react-router-dom'
+import { ROUTES } from '../constants'
 import { login, setAuthData } from '../services/auth'
 
 export function useAuthStore() {
+  const history = useHistory()
   const [loading, setLoading] = useState(false)
 
   return {
@@ -20,5 +23,9 @@ export function useAuthStore() {
     clearAuthData: useCallback(() => {
       setAuthData('')
     }, []),
+    logout: useCallback(() => {
+      setAuthData('')
+      history.push(ROUTES.ROOT)
+    }, [history]),
   }
 }

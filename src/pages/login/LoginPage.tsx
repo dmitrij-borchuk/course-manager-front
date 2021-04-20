@@ -1,4 +1,4 @@
-import { ComponentProps, useCallback, useEffect } from 'react'
+import { ComponentProps, useCallback } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useToasts } from 'react-toast-notifications'
 import { useIntl } from 'react-intl'

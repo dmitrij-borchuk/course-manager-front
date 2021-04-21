@@ -1,4 +1,4 @@
-import { getGroupRequest, getGroupsRequest } from '../api/groups'
+import { createGroupRequest, getGroupRequest, getGroupsRequest, updateGroupRequest } from '../api/groups'
 
 export function getGroups(props?: { teacherId?: string }) {
   const teacher = props?.teacherId ? `teacher=${props.teacherId}` : ''
@@ -7,4 +7,12 @@ export function getGroups(props?: { teacherId?: string }) {
 
 export function getGroup(id: string) {
   return getGroupRequest(id)
+}
+
+export async function editGroup(data: Parameters<typeof updateGroupRequest>[0]) {
+  return await updateGroupRequest(data)
+}
+
+export async function createGroup(data: Parameters<typeof createGroupRequest>[0]) {
+  return await createGroupRequest(data)
 }

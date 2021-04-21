@@ -12,7 +12,7 @@ import { EditTeacherPage } from './pages/teachers/EditTeacher'
 import { CreateTeacherPage } from './pages/teachers/CreateTeacher'
 import { TeachersListPage } from './pages/teachers/TeachersList'
 import { TeacherPage } from './pages/teachers/Teacher'
-import { GroupsListPageLoadable } from './pages/groups'
+import { CreateGroupPageLoadable, EditGroupPageLoadable, GroupsListPageLoadable } from './pages/groups'
 import { GroupPage } from './pages/groups/Group'
 import { StudentPage } from './pages/students/Student'
 import { StudentListPage } from './pages/students/StudentList'
@@ -33,6 +33,8 @@ function App() {
           <AuthGuardedRoute component={TeacherPage} path={`${ROUTES.TEACHERS_ROOT}/:id`} exact />
 
           {/* Groups */}
+          <AuthGuardedRoute component={withHeader(CreateGroupPageLoadable)} path={ROUTES.GROUPS_ADD} exact />
+          <AuthGuardedRoute component={withHeader(EditGroupPageLoadable)} path={`${ROUTES.GROUPS_EDIT}/:id`} exact />
           <AuthGuardedRoute component={withHeader(GroupsListPageLoadable)} path={ROUTES.GROUPS_LIST} exact />
           <AuthGuardedRoute component={GroupPage} path={`${ROUTES.GROUPS_ROOT}/:id`} exact />
 

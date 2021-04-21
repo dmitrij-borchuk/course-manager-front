@@ -1,10 +1,13 @@
 import { UserInfo } from './userInfo'
 import { Student } from './student'
 
-export type Group = {
-  id: string
+export type GroupBase = {
   name: string
   description?: string
+}
+
+export type Group = GroupBase & {
+  id: string
   students?: Student[]
   attendances?: {}[]
   teacher?: string
@@ -14,3 +17,5 @@ export type Group = {
 export type GroupFull = Omit<Group, 'teacher'> & {
   teacher?: UserInfo
 }
+
+export type NewGroup = GroupBase

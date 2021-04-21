@@ -26,6 +26,8 @@ export const messages = {
   'teachers.delete.text': 'Are you sure you want to delete this teacher?',
 
   'groups.list.title': 'Groups',
+  'groups.add.title': 'Add group',
+  'groups.edit.title': 'Edit group',
   'groups.teacher.title': 'Teacher',
   'groups.students.empty': 'No students assigned',
 

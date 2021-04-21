@@ -1,7 +1,14 @@
 import loadable from '@loadable/component'
 import { Loader } from '../../components/kit/loader/Loader'
 
-interface Props {}
-export const GroupsListPageLoadable = loadable<Props>(() => import('./GroupsList'), {
+export const GroupsListPageLoadable = loadable<{}>(() => import('./GroupsList'), {
+  fallback: <Loader />,
+})
+
+export const CreateGroupPageLoadable = loadable<{}>(() => import('./CreateGroup'), {
+  fallback: <Loader />,
+})
+
+export const EditGroupPageLoadable = loadable<{}>(() => import('./EditGroup'), {
   fallback: <Loader />,
 })

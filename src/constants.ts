@@ -12,6 +12,7 @@ export const ROUTES = {
   GROUPS_ROOT: '/groups',
   GROUPS_LIST: '/groups',
   GROUPS_ADD: '/groups/add',
+  GROUPS_EDIT: '/groups/edit',
 
   // Students
   STUDENTS_ROOT: '/students',

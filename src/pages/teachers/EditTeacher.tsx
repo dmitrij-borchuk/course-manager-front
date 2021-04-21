@@ -8,7 +8,7 @@ import { useTeachersState } from '../../store'
 export const EditTeacherPage = () => {
   const history = useHistory()
   let { id } = useParams<{ id: string }>()
-  const { fetchTeacher, setTeacher, editTeacher, fetching, submitting, teachersById } = useTeachersState()
+  const { fetchTeacher, editTeacher, fetching, submitting, teachersById } = useTeachersState()
   const teacher = teachersById[id]
   const update = useCallback(
     async (data: TeacherFormOutput) => {
@@ -43,7 +43,7 @@ export const EditTeacherPage = () => {
 
   useEffect(() => {
     fetchTeacher(id)
-  }, [fetchTeacher, id, setTeacher])
+  }, [fetchTeacher, id])
   // TODO: implement 404
 
   return (

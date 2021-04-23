@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react'
 import { useHistory } from 'react-router'
 import { ROUTES } from '../constants'
 import { useDictionaryToArray } from '../hooks/useDictionaryToArray'
-import { createGroup, editGroup, getGroup, getGroups } from '../services/groups'
+import { createGroup, deleteGroup, editGroup, getGroup, getGroups } from '../services/groups'
 import { Dictionary } from '../types/dictionary'
 import { GroupFull, NewGroup } from '../types/group'
 import { arrayToDictionary } from '../utils/common'
@@ -58,5 +58,18 @@ export default function useGroupsStore() {
       setGroupsById({})
       setLoading(false)
     }, []),
+    deleteGroup: useCallback(
+      async (id: string) => {
+        setSubmitting(true)
+        await deleteGroup(id)
+        setGroupsById((state) => {
+          delete state[id]
+          return state
+        })
+        setSubmitting(false)
+        history.push(ROUTES.GROUPS_LIST)
+      },
+      [history]
+    ),
   }
 }

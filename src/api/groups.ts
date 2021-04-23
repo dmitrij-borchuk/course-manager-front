@@ -16,3 +16,7 @@ export function updateGroupRequest(data: GroupFull) {
 export function createGroupRequest(data: NewGroup) {
   return request.post<GroupFull>(`/groups`, data)
 }
+
+export function deleteGroupRequest(id: string) {
+  return request.delete<void>(`/groups/${id}`)
+}

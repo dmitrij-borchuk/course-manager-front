@@ -12,3 +12,7 @@ export const CreateGroupPageLoadable = loadable<{}>(() => import('./CreateGroup'
 export const EditGroupPageLoadable = loadable<{}>(() => import('./EditGroup'), {
   fallback: <Loader />,
 })
+
+export const GroupPageLoadable = loadable<{}>(() => import('./Group'), {
+  fallback: <Loader />,
+})

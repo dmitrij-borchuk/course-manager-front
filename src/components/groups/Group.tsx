@@ -1,15 +1,12 @@
 import React from 'react'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, useIntl } from 'react-intl'
 import { Collection, Container } from 'react-materialize'
 import { ROUTES } from '../../constants'
 import { CollectionItemLink } from '../kit/collectionItemLink/CollectionItemLink'
-import { Header } from '../kit/header/Header'
-import { SectionHeader } from '../kit/sectionHeader/SectionHeader'
+import { HeadingWithControls } from '../kit/headingWithControls/HeadingWithControls'
 import { Text } from '../kit/text/Text'
 
 // TODO: fix layout
-// TODO: add edit
-// TODO: add delete
 // TODO: assign group
 interface Props {
   className?: string
@@ -28,16 +25,27 @@ interface Props {
         }[]
       | null
   }
+  onDelete: () => void
 }
-export const Group: React.FC<Props> = ({ className = '', data }) => {
-  const { teacher, students, name, description } = data
+export const Group: React.FC<Props> = ({ className = '', data, onDelete }) => {
+  const intl = useIntl()
+  const { teacher, students, name, description, id } = data
 
   return (
     <div className={className}>
-      <Header />
       <Container>
-        <SectionHeader>{name}</SectionHeader>
-        {description}
+        <HeadingWithControls
+          text={name}
+          editPath={`${ROUTES.GROUPS_EDIT}/${id}`}
+          deleteProps={{
+            header: intl.formatMessage({ id: 'groups.delete.header' }),
+            content: <FormattedMessage id="groups.delete.text" />,
+            onSubmit: onDelete,
+          }}
+        />
+
+        {/* Description */}
+        <div className="break-words">{description}</div>
 
         {/* Teacher */}
         <Text type="h5" color="primary">
@@ -46,8 +54,8 @@ export const Group: React.FC<Props> = ({ className = '', data }) => {
         {teacher ? (
           <Text type="h6">{teacher.name}</Text>
         ) : (
-          <Text>
-            <FormattedMessage id="groups.students.empty" />
+          <Text type="h6" color="textGray" className="text-center">
+            <FormattedMessage id="groups.teacher.empty" />
           </Text>
         )}
 
@@ -55,7 +63,7 @@ export const Group: React.FC<Props> = ({ className = '', data }) => {
         <Text type="h5" color="primary">
           <FormattedMessage id="students.list.title" />
         </Text>
-        {students ? (
+        {students?.length ? (
           <Collection>
             {students.map((student) => (
               <CollectionItemLink key={student.id} to={`${ROUTES.STUDENTS_ROOT}/${student.id}`}>
@@ -64,7 +72,7 @@ export const Group: React.FC<Props> = ({ className = '', data }) => {
             ))}
           </Collection>
         ) : (
-          <Text>
+          <Text type="h6" color="textGray" className="text-center">
             <FormattedMessage id="groups.students.empty" />
           </Text>
         )}

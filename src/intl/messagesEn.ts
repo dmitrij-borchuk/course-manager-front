@@ -29,7 +29,10 @@ export const messages = {
   'groups.add.title': 'Add group',
   'groups.edit.title': 'Edit group',
   'groups.teacher.title': 'Teacher',
+  'groups.teacher.empty': 'No teacher assigned',
   'groups.students.empty': 'No students assigned',
+  'groups.delete.header': 'Remove group',
+  'groups.delete.text': 'Are you sure you want to delete this group?',
 
   'students.list.title': 'Students',
   'students.groups.empty': 'Student is not attending any classes',

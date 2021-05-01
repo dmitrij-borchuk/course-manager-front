@@ -1,26 +1,27 @@
 import React from 'react'
-import { FormattedMessage } from 'react-intl'
-import { Collection, Container } from 'react-materialize'
+import { Container } from 'react-materialize'
 import { Link } from 'react-router-dom'
-import { CollectionItemLink } from '../kit/collectionItemLink/CollectionItemLink'
 import { FabBtn } from '../kit/FabBtn/FabBtn'
 import { SectionHeader } from '../kit/sectionHeader/SectionHeader'
-import { SkeletonList } from '../kit/skeleton/SkeletonList'
-import { Text } from '../kit/text/Text'
-import { Ellipsis } from './ellipsis/Ellipsis'
+import { ListWithLinks, ListWithLinksProps } from './list/List'
 
 interface Props {
   className?: string
   listHeader?: React.ReactNode
   fabBtnLink?: string
 }
-export const ListPage: React.FC<Props & ListProps> = ({ className = '', listHeader, fabBtnLink, ...rest }) => {
+export function ListPage<T extends { id: string }>({
+  className = '',
+  listHeader,
+  fabBtnLink,
+  ...rest
+}: Props & ListWithLinksProps<T>) {
   return (
     <div className={className}>
       <Container>
         {listHeader && <SectionHeader>{listHeader}</SectionHeader>}
 
-        <List {...rest} />
+        <ListWithLinks<T> {...rest} />
       </Container>
 
       {fabBtnLink && (
@@ -29,40 +30,5 @@ export const ListPage: React.FC<Props & ListProps> = ({ className = '', listHead
         </Link>
       )}
     </div>
-  )
-}
-
-interface ListProps {
-  loading: boolean
-  items: {
-    id: string
-    name: string
-  }[]
-  emptyListPlaceholder?: React.ReactNode
-  itemLinkRoot?: string
-}
-const List = ({ loading, items, emptyListPlaceholder, itemLinkRoot }: ListProps) => {
-  if (loading) {
-    return <SkeletonList />
-  }
-
-  if (items.length === 0) {
-    return (
-      <div className="flex justify-center">
-        <Text type="h6" color="textGray">
-          {emptyListPlaceholder ? emptyListPlaceholder : <FormattedMessage id="common.list.empty" />}
-        </Text>
-      </div>
-    )
-  }
-
-  return (
-    <Collection>
-      {items.map((item) => (
-        <CollectionItemLink key={item.id} to={`${itemLinkRoot}/${item.id}`}>
-          <Ellipsis>{item.name}</Ellipsis>
-        </CollectionItemLink>
-      ))}
-    </Collection>
   )
 }

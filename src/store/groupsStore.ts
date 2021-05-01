@@ -4,7 +4,7 @@ import { ROUTES } from '../constants'
 import { useDictionaryToArray } from '../hooks/useDictionaryToArray'
 import { createGroup, deleteGroup, editGroup, getGroup, getGroups } from '../services/groups'
 import { Dictionary } from '../types/dictionary'
-import { GroupFull, NewGroup } from '../types/group'
+import { Group, GroupFull, NewGroup } from '../types/group'
 import { arrayToDictionary } from '../utils/common'
 
 export default function useGroupsStore() {
@@ -15,12 +15,20 @@ export default function useGroupsStore() {
   const [fetching, setFetching] = useState(false)
   const [submitting, setSubmitting] = useState(false)
 
+  const fetchGroup = useCallback(async (id: string) => {
+    setFetching(true)
+    const resp = await getGroup(id)
+    setGroupsById((state) => ({ ...state, [resp.data.id]: resp.data }))
+    setFetching(false)
+  }, [])
+
   return {
     groups,
     groupsById,
     loading,
     submitting,
     fetching,
+
     fetchGroups: useCallback(async (props?: Parameters<typeof getGroups>[0]) => {
       setLoading(true)
       const resp = await getGroups(props)
@@ -28,17 +36,12 @@ export default function useGroupsStore() {
       setGroupsById(groupsById)
       setLoading(false)
     }, []),
-    fetchGroup: useCallback(async (id: string) => {
-      setFetching(true)
-      const resp = await getGroup(id)
-      setGroupsById((state) => ({ ...state, [resp.data.id]: resp.data }))
-      setFetching(false)
-    }, []),
+    fetchGroup,
     editGroup: useCallback(
-      async (data: GroupFull) => {
+      async (data: Group) => {
         setSubmitting(true)
-        await editGroup(data)
-        setGroupsById((state) => ({ ...state, [data.id]: data }))
+        const response = await editGroup(data)
+        setGroupsById((state) => ({ ...state, [data.id]: response.data }))
         history.push(`${ROUTES.GROUPS_ROOT}/${data.id}`)
         setSubmitting(false)
       },

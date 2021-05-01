@@ -1,4 +1,4 @@
-import { GroupFull, NewGroup } from '../types/group'
+import { Group, GroupFull, NewGroup } from '../types/group'
 import request from './request'
 
 export function getGroupsRequest(params?: string) {
@@ -9,7 +9,7 @@ export function getGroupRequest(id: string) {
   return request.get<GroupFull>(`/groups/${id}`)
 }
 
-export function updateGroupRequest(data: GroupFull) {
+export function updateGroupRequest(data: Group) {
   return request.put<GroupFull>(`/groups/${data.id}`, data)
 }
 

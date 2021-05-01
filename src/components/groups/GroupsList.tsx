@@ -20,6 +20,7 @@ export const GroupsList: React.FC<Props> = ({ className = '', loading = false, i
       fabBtnLink={ROUTES.GROUPS_ADD}
       itemLinkRoot={ROUTES.GROUPS_ROOT}
       listHeader={<FormattedMessage id="groups.list.title" />}
+      labelProp="name"
     />
   )
 }

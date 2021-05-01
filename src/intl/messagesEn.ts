@@ -7,6 +7,8 @@ export const messages = {
   'common.form.description.label': 'Description',
   'common.dialog.btn.yes': 'Yes',
   'common.dialog.btn.no': 'No',
+  'common.dialog.btn.ok': 'Ok',
+  'common.dialog.btn.cancel': 'Cancel',
   'common.list.empty': 'The list is empty',
 
   'Auth.form.error.invalid': 'Identifier or password invalid.',
@@ -30,6 +32,8 @@ export const messages = {
   'groups.edit.title': 'Edit group',
   'groups.teacher.title': 'Teacher',
   'groups.teacher.empty': 'No teacher assigned',
+  'groups.teacher.assignBtn.label': 'Assign Teacher',
+  'groups.teacher.assignDialog.header': 'Assign Teacher',
   'groups.students.empty': 'No students assigned',
   'groups.delete.header': 'Remove group',
   'groups.delete.text': 'Are you sure you want to delete this group?',

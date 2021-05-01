@@ -1,0 +1,8 @@
+.tiny-preloader .circle-clipper .circle {
+  border-width: 2px;
+}
+.tiny-preloader .preloader-wrapper.active {
+  margin-right: 10px;
+  height: 18px;
+  width: 18px;
+}

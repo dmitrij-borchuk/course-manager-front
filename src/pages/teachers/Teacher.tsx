@@ -22,10 +22,13 @@ export const TeacherPage = () => {
 
   useEffect(() => {
     fetchTeacher(id)
+  }, [fetchTeacher, id])
+
+  useEffect(() => {
     fetchGroups({
-      teacherId: id,
+      teacherId: teacher.user_info?.id,
     })
-  }, [fetchGroups, fetchTeacher, id, setTeacher])
+  }, [fetchGroups, teacher.user_info?.id])
 
   // TODO: 404
 

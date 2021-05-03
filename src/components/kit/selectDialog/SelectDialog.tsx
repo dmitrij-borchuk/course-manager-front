@@ -1,29 +1,34 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { FormattedMessage } from 'react-intl'
-import { Button, Modal, ModalProps } from 'react-materialize'
+import { Button, Icon, Modal, ModalProps } from 'react-materialize'
 import { ButtonWithLoader } from '../buttons/ButtonWithLoader'
 import { List } from '../list/List'
 import { TinyPreloader } from '../TinyPreloader/TinyPreloader'
 
 type Accessor<T> = keyof T | ((data: T) => any)
 
-interface PropsSingle<T> {
+interface PropsBase<T> {
   items: T[]
-  onSubmit: (data: T) => void
   header?: string
   open?: boolean
   labelProp: Accessor<T>
   loading?: boolean
-  multiSelect?: false
   trigger?: ModalProps['trigger']
   onCloseStart?: () => void
 }
-interface PropsMulti<T> extends Omit<PropsSingle<T>, 'multiSelect'> {
-  multiSelect: true
+interface PropsSingle<T> extends PropsBase<T> {
+  multiSelect?: false
+  onSubmit: (data: T) => void
+  initial?: T
 }
-export function SelectDialog<T>(props: PropsSingle<T>): JSX.Element
-export function SelectDialog<T>(props: PropsMulti<T>): JSX.Element
-export function SelectDialog<T>({
+interface PropsMulti<T> extends PropsBase<T> {
+  multiSelect: true
+  onSubmit: (data: T[]) => void
+  initial?: T[]
+}
+export function SelectDialog<T extends { id: string }>(props: PropsMulti<T>): JSX.Element
+export function SelectDialog<T extends { id: string }>(props: PropsSingle<T>): JSX.Element
+export function SelectDialog<T extends { id: string }>({
   onSubmit,
   open,
   header,
@@ -33,9 +38,11 @@ export function SelectDialog<T>({
   labelProp,
   trigger,
   onCloseStart,
+  initial = [],
 }: PropsSingle<T> | PropsMulti<T>) {
   const [submitting, setSubmitting] = useState(false)
-  const [selected, setSelected] = useState<T[]>([])
+  const initialArray = useMemo(() => (Array.isArray(initial) ? initial : [initial]), [initial])
+  const [selected, setSelected] = useState<T[]>(initialArray)
   const [selectedLoading, setSelectedLoading] = useState<T>()
   const submit = useCallback(
     async (item?: T) => {
@@ -59,23 +66,21 @@ export function SelectDialog<T>({
       if (!multiSelect && !submitting) {
         return submit(item)
       }
-      setSelected((items) => {
-        const index = items.findIndex((i) => i === item)
-        if (index < 0) {
-          return [...items, item]
-        }
+      const index = selected.findIndex((s) => s.id === item.id)
+      if (index < 0) {
+        return setSelected([...selected, item])
+      }
+      const copy = [...selected]
+      copy.splice(index, 1)
 
-        items.splice(index, 1)
-
-        return items
-      })
+      setSelected(copy)
     },
-    [multiSelect, submit, submitting]
+    [multiSelect, selected, submit, submitting]
   )
   const onCloseEnd = useCallback(() => {
     setSelectedLoading(undefined)
-    setSelected([])
-  }, [])
+    setSelected(initialArray)
+  }, [initialArray])
   const onSubmitClick = useCallback(() => {
     submit()
   }, [submit])
@@ -85,16 +90,23 @@ export function SelectDialog<T>({
     </ButtonWithLoader>
   ) : null
   const renderItem = useCallback(
-    (d) => {
+    (d: T) => {
       const label = typeof labelProp === 'function' ? labelProp(d) : d[labelProp]
+      const isSelected = !!selected.find((s) => s.id === d.id)
+
       return (
-        <div className="collection-item flex justify-between" onClick={() => onSelect(d)}>
-          {label}
+        <div key={d.id} className="collection-item flex justify-between" onClick={() => onSelect(d)}>
+          <div className="overflow-ellipsis overflow-hidden">{label}</div>
           {selectedLoading === d && <TinyPreloader />}
+          {isSelected && (
+            <div className="ml-2 flex h-5">
+              <Icon center>check_circle</Icon>
+            </div>
+          )}
         </div>
       )
     },
-    [labelProp, onSelect, selectedLoading]
+    [labelProp, onSelect, selected, selectedLoading]
   )
   // TODO: add loading for the !multiSelect
 

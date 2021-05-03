@@ -26,6 +26,8 @@ export const messages = {
   'teachers.groups.empty': "The teacher doesn't have any classes",
   'teachers.delete.header': 'Remove teacher',
   'teachers.delete.text': 'Are you sure you want to delete this teacher?',
+  'teachers.groups.assignDialog.header': 'Assign Groups',
+  'teachers.groups.assignBtn.label': 'Assign Groups',
 
   'groups.list.title': 'Groups',
   'groups.add.title': 'Add group',

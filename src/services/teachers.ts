@@ -1,8 +1,8 @@
-import { updateUserInfoRequest } from '../api/userInfo'
-import { getUsersRequest, getUserRequest, deleteUserRequest } from '../api/users'
+import { getUsersInfoRequest, updateUserInfoRequest } from '../api/userInfo'
+import { deleteUserRequest } from '../api/users'
 import { TEACHER_ROLE_NAME } from '../constants'
 import { getRoles } from '../services/roles'
-import { createUserInfo } from './userInfo'
+import { createUserInfo, getUserInfo } from './userInfo'
 import { createUser } from './users'
 
 // TODO: rename to userInfoService
@@ -12,11 +12,11 @@ export async function getTeachersList() {
   const rolesResponse = await getRoles()
   const teacherRole = rolesResponse.data.roles.find((r) => r.name === TEACHER_ROLE_NAME)
 
-  return getUsersRequest(`role=${teacherRole?.id}`)
+  return getUsersInfoRequest(`user.role=${teacherRole?.id}`)
 }
 
 export async function getTeacher(id: string) {
-  return getUserRequest(id)
+  return getUserInfo(id)
 }
 
 export async function deleteTeacher(id: string) {
@@ -52,14 +52,6 @@ export async function createTeacher(data: CreateTeacherProps) {
   }
 }
 
-type EditTeacherProps = {
-  userInfoId: string
-  name: string
-  description?: string
-}
-export async function editTeacher(data: EditTeacherProps) {
-  return await updateUserInfoRequest({
-    id: data.userInfoId,
-    ...data,
-  })
+export async function editTeacher(data: Parameters<typeof updateUserInfoRequest>[0]) {
+  return await updateUserInfoRequest(data)
 }

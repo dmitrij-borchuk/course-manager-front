@@ -74,6 +74,7 @@ const TeacherInfoBlock = ({ teacher, group }: TeacherInfoBlockProps) => {
       <Text type="h5" color="primary">
         <FormattedMessage id="groups.teacher.title" />
       </Text>
+      {/* TODO: loading for the teacher */}
       {teacher?.id ? (
         <div className="flex justify-between">
           <UserPreview data={teacher} />

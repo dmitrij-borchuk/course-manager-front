@@ -4,7 +4,7 @@ import { ModalProps } from 'react-materialize'
 import { useToggle } from '../../hooks/useToggle'
 import { useGroupsState, useTeachersState } from '../../store'
 import { GroupFull } from '../../types/group'
-import { User } from '../../types/user'
+import { UserInfoFull } from '../../types/userInfo'
 import { noop } from '../../utils/common'
 import { SelectDialog } from '../kit/selectDialog/SelectDialog'
 
@@ -19,10 +19,10 @@ export const AssignTeacher = ({ group, onDone = noop, trigger }: Props) => {
   const { editGroup } = useGroupsState()
   const { teachers, fetchTeachers, fetching } = useTeachersState()
   const onSubmit = useCallback(
-    async (data: User) => {
+    async (data: UserInfoFull) => {
       await editGroup({
         ...group,
-        teacher: data.user_info?.id,
+        teacher: data.id,
       })
       toggler.off()
       onDone()
@@ -43,7 +43,7 @@ export const AssignTeacher = ({ group, onDone = noop, trigger }: Props) => {
         header={intl.formatMessage({ id: 'groups.teacher.assignDialog.header' })}
         onSubmit={onSubmit}
         items={teachers}
-        labelProp={(d) => d.user_info?.name}
+        labelProp={(t) => t.name}
         onCloseStart={toggler.off}
       />
     </>

@@ -7,12 +7,12 @@ import { Text } from '../text/Text'
 import { Ellipsis } from '../ellipsis/Ellipsis'
 
 export interface ListProps<T> {
-  loading: boolean
+  loading?: boolean
   items: T[]
   emptyListPlaceholder?: React.ReactNode
   renderItem: (data: T) => JSX.Element
 }
-export function List<T>({ loading, items, emptyListPlaceholder, renderItem }: ListProps<T>) {
+export function List<T>({ loading = false, items, emptyListPlaceholder, renderItem }: ListProps<T>) {
   if (loading) {
     return <SkeletonList />
   }

@@ -4,12 +4,12 @@ import { ROUTES } from '../constants'
 import { useDictionaryToArray } from '../hooks/useDictionaryToArray'
 import { deleteTeacher, editTeacher, getTeacher, getTeachersList } from '../services/teachers'
 import { Dictionary } from '../types/dictionary'
-import { User } from '../types/user'
+import { UserInfo, UserInfoFull } from '../types/userInfo'
 import { arrayToDictionary } from '../utils/common'
 
 export default function useTeachersStore() {
   const history = useHistory()
-  const [teachersById, setTeachersById] = useState<Dictionary<User>>({})
+  const [teachersById, setTeachersById] = useState<Dictionary<UserInfoFull>>({})
   const teachers = useDictionaryToArray(teachersById)
   const [fetching, setFetching] = useState(false)
   const [submitting, setSubmitting] = useState(false)
@@ -19,7 +19,7 @@ export default function useTeachersStore() {
     teachersById,
     fetching,
     submitting,
-    setTeacher: useCallback((id: string, data?: User) => {
+    setTeacher: useCallback((id: string, data?: UserInfoFull) => {
       setTeachersById((state) => {
         if (data) {
           return { ...state, [id]: data }
@@ -45,17 +45,17 @@ export default function useTeachersStore() {
       setTeachersById((state) => ({ ...state, [id]: resp.data }))
       setFetching(false)
     }, []),
-    editTeacher: useCallback(async (data: User) => {
-      if (!data.user_info) {
-        throw new Error('"user_info" field is absent')
+    editTeacher: useCallback(async (data: UserInfo) => {
+      if (!data.user) {
+        throw new Error('"user" field is absent')
       }
 
       setSubmitting(true)
-      await editTeacher({
-        userInfoId: data.user_info.id,
-        ...data.user_info,
-      })
-      setTeachersById((state) => ({ ...state, [data.id]: data }))
+      const response = await editTeacher(data)
+      setTeachersById((state) => ({
+        ...state,
+        [data.id]: response.data,
+      }))
       setSubmitting(false)
     }, []),
     deleteTeacher: useCallback(

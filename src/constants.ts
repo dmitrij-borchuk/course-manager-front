@@ -17,6 +17,8 @@ export const ROUTES = {
   // Students
   STUDENTS_ROOT: '/students',
   STUDENTS_LIST: '/students',
+  STUDENTS_ADD: '/students/add',
+  STUDENTS_EDIT: '/students/edit',
 
   LOGOUT: '/logout',
 }

@@ -12,17 +12,11 @@ export const EditTeacherPage = () => {
   const teacher = teachersById[id]
   const update = useCallback(
     async (data: TeacherFormOutput) => {
-      if (!teacher?.user_info) {
-        // TODO: show error
-        return undefined
-      }
-
       await editTeacher({
         ...teacher,
-        user_info: {
-          ...teacher.user_info,
-          ...data,
-        },
+        user: teacher.user?.id,
+        groups: teacher.groups?.map((g) => g.id),
+        ...data,
       })
 
       history.push(`${ROUTES.TEACHERS_ROOT}/${id}`)
@@ -30,14 +24,10 @@ export const EditTeacherPage = () => {
     [editTeacher, history, id, teacher]
   )
   const formData = useMemo(() => {
-    if (!teacher?.user_info) {
-      return undefined
-    }
-
     return {
-      ...teacher.user_info,
-      email: teacher.email,
-      username: teacher.username,
+      ...teacher,
+      email: teacher.user?.email,
+      username: teacher.user?.username,
     } as any
   }, [teacher])
 

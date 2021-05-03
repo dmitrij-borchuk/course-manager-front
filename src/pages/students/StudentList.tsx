@@ -11,3 +11,5 @@ export const StudentListPage = () => {
 
   return <StudentList items={students} />
 }
+
+export default StudentListPage

@@ -7,13 +7,14 @@ import { createTeacher } from '../../services/teachers'
 
 export const CreateTeacherPage = () => {
   const history = useHistory()
+  // TODO: use store
   const [create, { loading, error, data }] = useApiCallLazy(createTeacher)
 
   useEffect(() => {
-    if (data?.id) {
-      history.push(`${ROUTES.TEACHERS_ROOT}/${data?.id}`)
+    if (data?.user_info.id) {
+      history.push(`${ROUTES.TEACHERS_ROOT}/${data?.user_info.id}`)
     }
-  }, [data?.id, history])
+  }, [data?.user_info.id, history])
 
   // TODO: add loading overlay
   // TODO: probably we can preload roles on app start

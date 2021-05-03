@@ -64,7 +64,7 @@ const GroupsInfoBlock = ({ groups, teacher }: GroupsInfoBlockProps) => {
           <FormattedMessage id="groups.list.title" />
         </Text>
         {/* Assign groups dialog */}
-        {groups?.length && (
+        {!!groups?.length && (
           <AssignGroups teacher={teacher} trigger={<IconButton type="square" size={40} icon="edit" />} />
         )}
       </div>

@@ -20,6 +20,7 @@ export const EditGroupPage = () => {
       await editGroup({
         ...group,
         teacher: group.teacher?.id,
+        students: group.students?.map((s) => s.id),
         ...data,
       })
       history.push(`${ROUTES.GROUPS_ROOT}/${group.id}`)

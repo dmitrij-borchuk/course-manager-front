@@ -23,6 +23,7 @@ export const AssignTeacher = ({ group, onDone = noop, trigger }: Props) => {
       await editGroup({
         ...group,
         teacher: data.id,
+        students: group.students?.map((s) => s.id),
       })
       toggler.off()
       onDone()

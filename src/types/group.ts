@@ -8,14 +8,15 @@ export type GroupBase = {
 
 export type Group = GroupBase & {
   id: string
-  students?: Student[]
+  students?: string[]
   attendances?: {}[]
   teacher?: string
   published_at?: string
 }
 
-export type GroupFull = Omit<Group, 'teacher'> & {
+export type GroupFull = Omit<Group, 'teacher' | 'students'> & {
   teacher?: UserInfo
+  students?: Student[]
 }
 
 export type NewGroup = GroupBase

@@ -36,6 +36,8 @@ export const messages = {
   'groups.teacher.empty': 'No teacher assigned',
   'groups.teacher.assignBtn.label': 'Assign Teacher',
   'groups.teacher.assignDialog.header': 'Assign Teacher',
+  'groups.students.assignBtn.label': 'Assign Students',
+  'groups.students.assignDialog.header': 'Assign Students',
   'groups.students.empty': 'No students assigned',
   'groups.delete.header': 'Remove group',
   'groups.delete.text': 'Are you sure you want to delete this group?',

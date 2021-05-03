@@ -6,26 +6,26 @@ import { StudentFull } from '../types/student'
 import { arrayToDictionary } from '../utils/common'
 
 export default function useStudentsStore() {
-  const [loading, setLoading] = useState(false)
+  const [fetching, setFetching] = useState(false)
   const [studentsById, setStudentsById] = useState<Dictionary<StudentFull>>({})
   const students = useDictionaryToArray(studentsById)
 
   return {
     students,
     studentsById,
-    loading,
+    fetching,
     fetchStudents: useCallback(async (props?: Parameters<typeof getStudents>[0]) => {
-      setLoading(true)
+      setFetching(true)
       const resp = await getStudents(props)
       const groupsById = arrayToDictionary(resp.data)
       setStudentsById(groupsById)
-      setLoading(false)
+      setFetching(false)
     }, []),
     fetchStudent: useCallback(async (id: string) => {
-      setLoading(true)
+      setFetching(true)
       const resp = await getStudent(id)
       setStudentsById((state) => ({ ...state, [resp.data.id]: resp.data }))
-      setLoading(false)
+      setFetching(false)
     }, []),
   }
 }

@@ -1,15 +1,15 @@
 import React from 'react'
 import { FormattedMessage, useIntl } from 'react-intl'
-import { Button, Collection, Container } from 'react-materialize'
+import { Button, Container } from 'react-materialize'
 import { ROUTES } from '../../constants'
 import { GroupFull } from '../../types/group'
 import { UserInfo } from '../../types/userInfo'
 import { IconButton } from '../kit/buttons/IconButton'
-import { CollectionItemLink } from '../kit/collectionItemLink/CollectionItemLink'
 import { HeadingWithControls } from '../kit/headingWithControls/HeadingWithControls'
 import { Text } from '../kit/text/Text'
 import { UserPreview } from '../kit/userInfo/UserInfo'
 import { AssignTeacher } from './AssignTeacher'
+import { StudentsInfoBlock } from './StudentsInfoBlock'
 
 // TODO: fix layout
 interface Props {
@@ -41,24 +41,7 @@ export const Group: React.FC<Props> = ({ className = '', data, onDelete }) => {
         <TeacherInfoBlock teacher={teacher} group={data} />
 
         {/* Students */}
-        <div className="mt-7">
-          <Text type="h5" color="primary">
-            <FormattedMessage id="students.list.title" />
-          </Text>
-          {students?.length ? (
-            <Collection>
-              {students.map((student) => (
-                <CollectionItemLink key={student.id} to={`${ROUTES.STUDENTS_ROOT}/${student.id}`}>
-                  {student.name}
-                </CollectionItemLink>
-              ))}
-            </Collection>
-          ) : (
-            <Text type="h6" color="textGray" className="text-center">
-              <FormattedMessage id="groups.students.empty" />
-            </Text>
-          )}
-        </div>
+        <StudentsInfoBlock group={data} students={students} />
       </Container>
     </div>
   )

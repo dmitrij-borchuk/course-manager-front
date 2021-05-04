@@ -44,6 +44,10 @@ export const messages = {
 
   'students.list.title': 'Students',
   'students.groups.empty': 'Student is not attending any classes',
+  'students.delete.header': 'Remove student',
+  'students.delete.text': 'Are you sure you want to delete this student?',
+  'students.groups.assignDialog.header': 'Assign Groups',
+  'students.groups.assignBtn.label': 'Assign Groups',
 }
 
 export default messages

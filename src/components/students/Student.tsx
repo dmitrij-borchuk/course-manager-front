@@ -1,57 +1,36 @@
 import React from 'react'
-import { FormattedMessage } from 'react-intl'
-import { Collection, Container } from 'react-materialize'
+import { FormattedMessage, useIntl } from 'react-intl'
+import { Container } from 'react-materialize'
 import { ROUTES } from '../../constants'
-import { CollectionItemLink } from '../kit/collectionItemLink/CollectionItemLink'
-import { Header } from '../kit/header/Header'
-import { SectionHeader } from '../kit/sectionHeader/SectionHeader'
-import { Text } from '../kit/text/Text'
+import { StudentFull } from '../../types/student'
+import { HeadingWithControls } from '../kit/headingWithControls/HeadingWithControls'
+import { GroupsInfoBlock } from './GroupsInfoBlock'
 
-// TODO: fix layout
 // TODO: add edit
-// TODO: add delete
-// TODO: assign group
-// TODO: move groups out
 interface Props {
   className?: string
-  data: {
-    id: string
-    name: string
-    description?: string | null
-    groups?:
-      | {
-          id: string
-          name: string
-        }[]
-      | null
-  }
+  data: StudentFull
+  onDelete: () => void
 }
-export const Student: React.FC<Props> = ({ className = '', data }) => {
-  const { groups, name, description } = data
+export const Student: React.FC<Props> = ({ className = '', data, onDelete }) => {
+  const intl = useIntl()
+  const { groups, name, description, id } = data
 
   return (
     <div className={className}>
-      <Header />
       <Container>
-        <SectionHeader>{name}</SectionHeader>
-        {description}
+        <HeadingWithControls
+          text={name}
+          editPath={`${ROUTES.STUDENTS_EDIT}/${id}`}
+          deleteProps={{
+            header: intl.formatMessage({ id: 'students.delete.header' }),
+            content: <FormattedMessage id="students.delete.text" />,
+            onSubmit: onDelete,
+          }}
+        />
+        <div className="break-words">{description}</div>
 
-        <Text type="h5" color="primary">
-          <FormattedMessage id="groups.list.title" />
-        </Text>
-        {groups ? (
-          <Collection>
-            {groups.map((group) => (
-              <CollectionItemLink key={group.id} to={`${ROUTES.GROUPS_ROOT}/${group.id}`}>
-                {group.name}
-              </CollectionItemLink>
-            ))}
-          </Collection>
-        ) : (
-          <Text>
-            <FormattedMessage id="students.groups.empty" />
-          </Text>
-        )}
+        <GroupsInfoBlock student={data} groups={groups} />
       </Container>
     </div>
   )

@@ -15,7 +15,12 @@ import {
   GroupsListPageLoadable,
   GroupPageLoadable,
 } from './pages/groups'
-import { StudentsListPageLoadable, StudentPageLoadable } from './pages/students'
+import {
+  StudentsListPageLoadable,
+  StudentPageLoadable,
+  CreateStudentPageLoadable,
+  EditStudentPageLoadable,
+} from './pages/students'
 import { LogoutPage } from './pages/auth/Logout'
 
 export function Routing() {
@@ -37,6 +42,8 @@ export function Routing() {
         <AuthGuardedRoute component={withHeader(GroupPageLoadable)} path={`${ROUTES.GROUPS_ROOT}/:id`} exact />
 
         {/* Students */}
+        <AuthGuardedRoute component={withHeader(CreateStudentPageLoadable)} path={ROUTES.STUDENTS_ADD} exact />
+        <AuthGuardedRoute component={withHeader(EditStudentPageLoadable)} path={`${ROUTES.STUDENTS_EDIT}/:id`} exact />
         <AuthGuardedRoute component={withHeader(StudentsListPageLoadable)} path={ROUTES.STUDENTS_LIST} exact />
         <AuthGuardedRoute component={withHeader(StudentPageLoadable)} path={`${ROUTES.STUDENTS_ROOT}/:id`} exact />
 

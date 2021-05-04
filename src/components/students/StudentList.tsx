@@ -18,7 +18,7 @@ export const StudentList: React.FC<Props> = ({ className = '', loading = false, 
       className={className}
       items={items}
       loading={loading}
-      fabBtnLink={ROUTES.STUDENTS_EDIT}
+      fabBtnLink={ROUTES.STUDENTS_ADD}
       itemLinkRoot={ROUTES.STUDENTS_ROOT}
       listHeader={<FormattedMessage id="students.list.title" />}
       labelProp="name"

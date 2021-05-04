@@ -8,3 +8,11 @@ export const StudentsListPageLoadable = loadable<{}>(() => import('./StudentList
 export const StudentPageLoadable = loadable<{}>(() => import('./Student'), {
   fallback: <Loader />,
 })
+
+export const CreateStudentPageLoadable = loadable<{}>(() => import('./CreateStudent'), {
+  fallback: <Loader />,
+})
+
+export const EditStudentPageLoadable = loadable<{}>(() => import('./EditStudent'), {
+  fallback: <Loader />,
+})

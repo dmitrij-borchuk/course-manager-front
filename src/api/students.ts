@@ -1,4 +1,4 @@
-import { Student, StudentFull } from '../types/student'
+import { NewStudent, Student, StudentFull } from '../types/student'
 import request from './request'
 
 export function getStudentsRequest(params?: string) {
@@ -15,4 +15,8 @@ export function deleteStudentRequest(id: string) {
 
 export function updateStudentRequest(data: Student) {
   return request.put<StudentFull>(`/students/${data.id}`, data)
+}
+
+export function createStudentRequest(data: NewStudent) {
+  return request.post<StudentFull>(`/students`, data)
 }

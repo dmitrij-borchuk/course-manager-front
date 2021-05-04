@@ -1,8 +1,8 @@
 import { useCallback, useState } from 'react'
 import { useDictionaryToArray } from '../hooks/useDictionaryToArray'
-import { deleteStudent, getStudent, getStudents, updateStudent } from '../services/students'
+import { createStudent, deleteStudent, getStudent, getStudents, updateStudent } from '../services/students'
 import { Dictionary } from '../types/dictionary'
-import { Student, StudentFull } from '../types/student'
+import { NewStudent, Student, StudentFull } from '../types/student'
 import { arrayToDictionary } from '../utils/common'
 
 export default function useStudentsStore() {
@@ -28,6 +28,14 @@ export default function useStudentsStore() {
       const resp = await getStudent(id)
       setStudentsById((state) => ({ ...state, [resp.data.id]: resp.data }))
       setFetching(false)
+    }, []),
+    createStudent: useCallback(async (data: NewStudent) => {
+      setSubmitting(true)
+      const result = await createStudent(data)
+      setStudentsById((state) => ({ ...state, [result.data.id]: result.data }))
+      setSubmitting(false)
+
+      return result
     }, []),
     editStudent: useCallback(async (data: Student) => {
       setSubmitting(true)

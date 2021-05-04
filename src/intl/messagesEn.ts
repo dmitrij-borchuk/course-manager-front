@@ -42,6 +42,8 @@ export const messages = {
   'groups.delete.header': 'Remove group',
   'groups.delete.text': 'Are you sure you want to delete this group?',
 
+  'students.add.title': 'Add student',
+  'students.edit.title': 'Edit student',
   'students.list.title': 'Students',
   'students.groups.empty': 'Student is not attending any classes',
   'students.delete.header': 'Remove student',

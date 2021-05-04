@@ -1,5 +1,11 @@
-import { deleteStudentRequest, getStudentRequest, getStudentsRequest, updateStudentRequest } from '../api/students'
-import { Student } from '../types/student'
+import {
+  createStudentRequest,
+  deleteStudentRequest,
+  getStudentRequest,
+  getStudentsRequest,
+  updateStudentRequest,
+} from '../api/students'
+import { NewStudent, Student } from '../types/student'
 
 export function getStudents(props?: { teacherId?: string }) {
   const teacher = props?.teacherId ? `teacher=${props.teacherId}` : ''
@@ -16,4 +22,8 @@ export function deleteStudent(id: string) {
 
 export function updateStudent(data: Student) {
   return updateStudentRequest(data)
+}
+
+export function createStudent(data: NewStudent) {
+  return createStudentRequest(data)
 }

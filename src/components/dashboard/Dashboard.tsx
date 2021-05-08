@@ -13,7 +13,7 @@ export const Dashboard: React.FC<Props> = ({ className = '', items }) => {
   return (
     <div className={className}>
       <Header />
-      <Container>
+      <Container className="px-4">
         <AttendanceTimeLine items={items} />
       </Container>
 

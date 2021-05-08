@@ -25,7 +25,7 @@ export const Teacher: React.FC<Props> = ({ className = '', data, onDelete }) => 
 
   return (
     <div className={className}>
-      <Container>
+      <Container className="px-4">
         <div className="flex justify-between">
           <SectionHeader className="min-w-0">
             <Ellipsis>{name}</Ellipsis>

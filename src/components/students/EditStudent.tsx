@@ -46,7 +46,7 @@ export const EditStudent: React.FC<Props> = ({
 
   return (
     <div className={className}>
-      <Container>
+      <Container className="px-4">
         <FormLayout
           header={isEdit ? <FormattedMessage id="students.edit.title" /> : <FormattedMessage id="students.add.title" />}
           controls={<SubmitButton loading={loading} disabled={disabled} />}

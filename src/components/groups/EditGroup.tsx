@@ -46,7 +46,7 @@ export const EditGroup: React.FC<Props> = ({
 
   return (
     <div className={className}>
-      <Container>
+      <Container className="px-4">
         <FormLayout
           header={isEdit ? <FormattedMessage id="groups.edit.title" /> : <FormattedMessage id="groups.add.title" />}
           controls={<SubmitButton loading={loading} disabled={disabled} />}

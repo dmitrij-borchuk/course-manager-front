@@ -1,5 +1,3 @@
-@import 'materialize-css';
-
 :root {
   --color-primary: #ee6e73;
   --color-secondary: #26a69a;
@@ -8,4 +6,16 @@
   --color-text: rgba(0, 0, 0, 0.87);
   --color-alert: #c65454;
   --color-warning: #f2994a;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans',
+    'Droid Sans', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }

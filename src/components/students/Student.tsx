@@ -18,7 +18,7 @@ export const Student: React.FC<Props> = ({ className = '', data, onDelete }) => 
 
   return (
     <div className={className}>
-      <Container>
+      <Container className="px-4">
         <HeadingWithControls
           text={name}
           editPath={`${ROUTES.STUDENTS_EDIT}/${id}`}

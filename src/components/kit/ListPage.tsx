@@ -18,7 +18,7 @@ export function ListPage<T extends { id: string }>({
 }: Props & ListWithLinksProps<T>) {
   return (
     <div className={className}>
-      <Container>
+      <Container className="px-4">
         {listHeader && <SectionHeader>{listHeader}</SectionHeader>}
 
         <ListWithLinks<T> {...rest} />

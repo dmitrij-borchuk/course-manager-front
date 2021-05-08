@@ -18,44 +18,44 @@ const color2className: Record<Color, string> = {
 }
 
 const components: Record<TextType, React.ComponentType<HeadingType | ParagraphType>> = {
-  h1: ({ children, ...props }: HeadingType) => {
+  h1: ({ children, className, ...props }: HeadingType) => {
     return (
-      <h1 className="h1" {...props}>
+      <h1 className={`h1 ${className}`} {...props}>
         {children}
       </h1>
     )
   },
-  h2: ({ children, ...props }: HeadingType) => {
+  h2: ({ children, className, ...props }: HeadingType) => {
     return (
-      <h2 className="h2" {...props}>
+      <h2 className={`h2 ${className}`} {...props}>
         {children}
       </h2>
     )
   },
-  h3: ({ children, ...props }: HeadingType) => {
+  h3: ({ children, className, ...props }: HeadingType) => {
     return (
-      <h3 className="h3" {...props}>
+      <h3 className={`h3 ${className}`} {...props}>
         {children}
       </h3>
     )
   },
-  h4: ({ children, ...props }: HeadingType) => {
+  h4: ({ children, className, ...props }: HeadingType) => {
     return (
-      <h4 className="h4" {...props}>
+      <h4 className={`h4 ${className}`} {...props}>
         {children}
       </h4>
     )
   },
-  h5: ({ children, ...props }: HeadingType) => {
+  h5: ({ children, className, ...props }: HeadingType) => {
     return (
-      <h5 className="h5" {...props}>
+      <h5 className={`h5 ${className}`} {...props}>
         {children}
       </h5>
     )
   },
-  h6: ({ children, ...props }: HeadingType) => {
+  h6: ({ children, className, ...props }: HeadingType) => {
     return (
-      <h6 className="h6" {...props}>
+      <h6 className={`h6 ${className}`} {...props}>
         {children}
       </h6>
     )

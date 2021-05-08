@@ -24,7 +24,7 @@ export const TeachersList: React.FC<Props> = ({ className = '', loading = false,
     <div className={className}>
       <Header />
 
-      <Container>
+      <Container className="px-4">
         <SectionHeader>
           <FormattedMessage id="teachers.list.title" />
         </SectionHeader>

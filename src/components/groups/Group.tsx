@@ -9,9 +9,9 @@ import { HeadingWithControls } from '../kit/headingWithControls/HeadingWithContr
 import { Text } from '../kit/text/Text'
 import { UserPreview } from '../kit/userInfo/UserInfo'
 import { AssignTeacher } from './AssignTeacher'
+import { ScheduleInfoBlock } from './ScheduleInfoBlock'
 import { StudentsInfoBlock } from './StudentsInfoBlock'
 
-// TODO: fix layout
 interface Props {
   className?: string
   data: GroupFull
@@ -36,6 +36,9 @@ export const Group: React.FC<Props> = ({ className = '', data, onDelete }) => {
 
         {/* Description */}
         <div className="break-words">{description}</div>
+
+        {/* Schedule */}
+        <ScheduleInfoBlock group={data} />
 
         {/* Teacher */}
         <TeacherInfoBlock teacher={teacher} group={data} />

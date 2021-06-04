@@ -3,7 +3,6 @@ import { useParams } from 'react-router-dom'
 import { Group } from '../../components/groups/Group'
 import { useGroupsState } from '../../store'
 
-// TODO: Add loading skeleton
 export const GroupPage = () => {
   let { id } = useParams<{ id: string }>()
   const { fetchGroup, groupsById, deleteGroup } = useGroupsState()
@@ -15,6 +14,7 @@ export const GroupPage = () => {
   }, [fetchGroup, id])
 
   if (!group) {
+    // Loading when edit schedule and return back
     return <div>Loading</div>
   }
 

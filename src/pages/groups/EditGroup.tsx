@@ -21,6 +21,7 @@ export const EditGroupPage = () => {
         ...group,
         teacher: group.teacher?.id,
         students: group.students?.map((s) => s.id),
+        schedules: group.schedules.map((s) => s.id),
         ...data,
       })
       history.push(`${ROUTES.GROUPS_ROOT}/${group.id}`)

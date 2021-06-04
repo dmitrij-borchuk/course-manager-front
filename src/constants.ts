@@ -20,6 +20,9 @@ export const ROUTES = {
   STUDENTS_ADD: '/students/add',
   STUDENTS_EDIT: '/students/edit',
 
+  // Schedules
+  SCHEDULES_ROOT: '/schedule',
+
   LOGOUT: '/logout',
 }
 

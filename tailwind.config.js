@@ -8,4 +8,8 @@ module.exports = {
     extend: {},
   },
   plugins: [],
+  corePlugins: {
+    // Disabling preflight because it conflicts with MaterializeCSS
+    preflight: false,
+  },
 }

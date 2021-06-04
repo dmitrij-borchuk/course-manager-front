@@ -16,7 +16,7 @@ export const FormLayout: React.FC<Props> = ({ className = '', header, children, 
       <form onSubmit={onSubmit}>
         {children}
 
-        <div className="flex flex-row-reverse">{controls}</div>
+        <div className="flex flex-row-reverse pt-4">{controls}</div>
       </form>
     </div>
   )

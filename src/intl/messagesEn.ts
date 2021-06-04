@@ -32,6 +32,9 @@ export const messages = {
   'groups.list.title': 'Groups',
   'groups.add.title': 'Add group',
   'groups.edit.title': 'Edit group',
+  'groups.schedule.title': 'Schedule',
+  'groups.schedule.empty': 'Schedule is not defined',
+  'groups.schedule.assignBtn.label': 'Define Schedule',
   'groups.teacher.title': 'Teacher',
   'groups.teacher.empty': 'No teacher assigned',
   'groups.teacher.assignBtn.label': 'Assign Teacher',
@@ -50,6 +53,12 @@ export const messages = {
   'students.delete.text': 'Are you sure you want to delete this student?',
   'students.groups.assignDialog.header': 'Assign Groups',
   'students.groups.assignBtn.label': 'Assign Groups',
+
+  'schedule.list.title': 'Schedule',
+  'schedule.form.title': 'Schedule',
+  'schedule.form.start': 'Start date',
+  'schedule.form.end': 'End date',
+  'schedule.form.crud.required': 'Please select at least one day',
 }
 
 export default messages

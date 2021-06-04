@@ -25,6 +25,7 @@ export const AssignGroups = ({ student, onDone = noop, trigger }: Props) => {
         ...g,
         teacher: g.teacher?.id,
         students: g.students?.map((s) => s.id),
+        schedules: g.schedules.map((s) => s.id),
       })),
     [groups]
   )

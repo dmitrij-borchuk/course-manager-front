@@ -24,6 +24,7 @@ export const AssignTeacher = ({ group, onDone = noop, trigger }: Props) => {
         ...group,
         teacher: data.id,
         students: group.students?.map((s) => s.id),
+        schedules: group.schedules.map((s) => s.id),
       })
       toggler.off()
       onDone()

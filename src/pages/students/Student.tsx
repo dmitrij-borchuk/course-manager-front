@@ -1,8 +1,12 @@
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-import { Student } from '../../components/students/Student'
+import { useGroupsState, useStudentsState } from '../../store'
+import { useAttendancesState } from '../../store'
+import { Dictionary } from '../../types/dictionary'
+import { groupBy } from '../../utils/common'
+import { getClassesDates } from '../../utils/schedule'
 import { ROUTES } from '../../constants'
-import { useStudentsState } from '../../store'
+import { Student } from '../../components/students/Student'
 
 // TODO: Add loading skeleton
 // TODO: Add 404 state
@@ -11,22 +15,64 @@ export const StudentPage = () => {
   let { id } = useParams<{ id: string }>()
 
   const { fetchStudent, studentsById, deleteStudent } = useStudentsState()
+  const { attendances, clearAttendances, fetchAttendancesForStudent } = useAttendancesState()
+  const { groups, fetchGroups } = useGroupsState()
   const student = studentsById[id]
 
   const onDelete = useCallback(async () => {
     await deleteStudent(id)
     history.push(ROUTES.STUDENTS_LIST)
   }, [deleteStudent, history, id])
+  const classesByGroup = useMemo(
+    () =>
+      groups.reduce<Dictionary<Date[]>>((acc, g) => {
+        return {
+          ...acc,
+          [g.id]: getClassesDates(g, new Date()),
+        }
+      }, {}),
+    [groups]
+  )
+  const attendancesByGroup = useMemo(() => groupBy(attendances, (a) => a.group?.id), [attendances])
+  const rateByGroup = useMemo(
+    () =>
+      (student?.groups || []).reduce<Dictionary<number>>((acc, g) => {
+        const classesCount = classesByGroup[g.id]?.length || 0
+        const groupRate = classesCount ? (attendancesByGroup[g.id]?.length || 0) / classesCount : 0
+
+        return {
+          ...acc,
+          [g.id]: groupRate,
+        }
+      }, {}),
+    [attendancesByGroup, classesByGroup, student?.groups]
+  )
 
   useEffect(() => {
     fetchStudent(id)
   }, [fetchStudent, id])
 
+  useEffect(() => {
+    fetchGroups()
+  }, [fetchGroups])
+
+  useEffect(() => {
+    if (student) {
+      fetchAttendancesForStudent(
+        student.groups.map((g) => g.id),
+        student.id
+      )
+      return () => {
+        clearAttendances()
+      }
+    }
+  }, [clearAttendances, fetchAttendancesForStudent, student])
+
   if (!student) {
     return <div>Loading</div>
   }
 
-  return <Student data={student} onDelete={onDelete} />
+  return <Student data={student} onDelete={onDelete} attendanceRates={rateByGroup} />
 }
 
 export default StudentPage

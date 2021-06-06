@@ -21,6 +21,7 @@
     "autoprefixer": "^9.8.6",
     "axios": "^0.21.1",
     "constate": "^3.2.0",
+    "cron-parser": "^3.5.0",
     "graphql": "^15.4.0",
     "materialize-css": "^1.0.0-rc.2",
     "postcss": "^7.0.35",

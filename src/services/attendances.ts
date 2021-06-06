@@ -32,10 +32,9 @@ function getTimelineData(from: Date, to: Date, attendances: AttendanceFull[], gr
 
 function getBlockData(date: Date, attendances: AttendanceFull[], groups: GroupFull[]) {
   const attByGroup = groupBy(attendances, (v) => v.group?.id)
-  const groupsById = groupBy(groups, 'id')
 
-  const items = Object.entries(attByGroup).map(([groupId, attendances]) => {
-    return getMeterData(attendances, groupsById[groupId][0])
+  const items = groups.map((g) => {
+    return getMeterData(attByGroup[g.id], g)
   })
 
   return {
@@ -64,4 +63,10 @@ export function fetchAttendances(from: Date, to: Date) {
   const toDate = to.toISOString()
 
   return getAttendancesRequest(`date_gte=${fromDate}&date_lte=${toDate}`)
+}
+
+export function fetchAttendancesForStudent(groupsIds: string[], studentId: string) {
+  const groupInParam = groupsIds.map((g) => `group_in=${g}`).join('&')
+
+  return getAttendancesRequest(`student=${studentId}&${groupInParam}`)
 }

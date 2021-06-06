@@ -13,7 +13,7 @@ export type Group = GroupBase & {
   attendances?: {}[]
   teacher?: string
   published_at?: string
-  schedules: string[]
+  schedules?: string[]
 }
 
 export type GroupFull = Omit<Group, 'teacher' | 'students' | 'schedules'> & {

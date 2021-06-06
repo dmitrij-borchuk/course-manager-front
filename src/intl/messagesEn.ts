@@ -58,7 +58,7 @@ export const messages = {
   'schedule.form.title': 'Schedule',
   'schedule.form.start': 'Start date',
   'schedule.form.end': 'End date',
-  'schedule.form.crud.required': 'Please select at least one day',
+  'schedule.form.cron.required': 'Please select at least one day',
 }
 
 export default messages

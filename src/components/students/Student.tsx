@@ -2,6 +2,7 @@ import React from 'react'
 import { FormattedMessage, useIntl } from 'react-intl'
 import { Container } from 'react-materialize'
 import { ROUTES } from '../../constants'
+import { Dictionary } from '../../types/dictionary'
 import { StudentFull } from '../../types/student'
 import { HeadingWithControls } from '../kit/headingWithControls/HeadingWithControls'
 import { GroupsInfoBlock } from './GroupsInfoBlock'
@@ -11,8 +12,9 @@ interface Props {
   className?: string
   data: StudentFull
   onDelete: () => void
+  attendanceRates: Dictionary<number>
 }
-export const Student: React.FC<Props> = ({ className = '', data, onDelete }) => {
+export const Student: React.FC<Props> = ({ className = '', data, onDelete, attendanceRates }) => {
   const intl = useIntl()
   const { groups, name, description, id } = data
 
@@ -30,7 +32,7 @@ export const Student: React.FC<Props> = ({ className = '', data, onDelete }) => 
         />
         <div className="break-words">{description}</div>
 
-        <GroupsInfoBlock student={data} groups={groups} />
+        <GroupsInfoBlock student={data} groups={groups} attendanceRates={attendanceRates} />
       </Container>
     </div>
   )

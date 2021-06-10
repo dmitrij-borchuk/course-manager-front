@@ -2,6 +2,7 @@ import React from 'react'
 import { FormattedMessage, useIntl } from 'react-intl'
 import { Button, Container } from 'react-materialize'
 import { ROUTES } from '../../constants'
+import { Dictionary } from '../../types/dictionary'
 import { GroupFull } from '../../types/group'
 import { UserInfo } from '../../types/userInfo'
 import { IconButton } from '../kit/buttons/IconButton'
@@ -16,8 +17,9 @@ interface Props {
   className?: string
   data: GroupFull
   onDelete: () => void
+  attendanceRates: Dictionary<number>
 }
-export const Group: React.FC<Props> = ({ className = '', data, onDelete }) => {
+export const Group: React.FC<Props> = ({ className = '', data, onDelete, attendanceRates }) => {
   const intl = useIntl()
   const { teacher, students, name, description, id } = data
 
@@ -44,7 +46,7 @@ export const Group: React.FC<Props> = ({ className = '', data, onDelete }) => {
         <TeacherInfoBlock teacher={teacher} group={data} />
 
         {/* Students */}
-        <StudentsInfoBlock group={data} students={students} />
+        <StudentsInfoBlock group={data} students={students} attendanceRates={attendanceRates} />
       </Container>
     </div>
   )

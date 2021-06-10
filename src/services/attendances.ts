@@ -58,7 +58,7 @@ function getMeterProgress(attendances: AttendanceFull[], group: GroupFull) {
   return groupAtt / groupMembers
 }
 
-export function fetchAttendances(from: Date, to: Date) {
+export function fetchAllAttendances(from: Date, to: Date) {
   const fromDate = from.toISOString()
   const toDate = to.toISOString()
 
@@ -69,4 +69,13 @@ export function fetchAttendancesForStudent(groupsIds: string[], studentId: strin
   const groupInParam = groupsIds.map((g) => `group_in=${g}`).join('&')
 
   return getAttendancesRequest(`student=${studentId}&${groupInParam}`)
+}
+
+export function fetchAttendances(groupsIds: string[], studentsIds: string[]) {
+  const groupInParam = groupsIds.map((g) => `group_in=${g}`).join('&')
+  const studentInParam = studentsIds.map((s) => `student_in=${s}`).join('&')
+
+  return getAttendancesRequest(
+    `${studentsIds.length ? `${studentInParam}&` : ''}${groupsIds.length ? `${groupInParam}&` : ''}`
+  )
 }

@@ -10,14 +10,14 @@ const fromDate = new Date(now - oneDay * 6)
 const toDate = new Date(now - oneDay * 0)
 
 export function DashboardPage() {
-  const { fetchAttendances, attendances } = useAttendancesState()
+  const { fetchAllAttendances, attendances } = useAttendancesState()
   const { fetchGroups, groups } = useGroupsState()
   const timelineData = useAttendanceGrouping(fromDate, toDate, attendances, groups)
 
   useEffect(() => {
-    fetchAttendances(fromDate, toDate)
+    fetchAllAttendances(fromDate, toDate)
     fetchGroups()
-  }, [fetchAttendances, fetchGroups])
+  }, [fetchAllAttendances, fetchGroups])
 
   // TODO: loading state
   return <Dashboard items={timelineData} />

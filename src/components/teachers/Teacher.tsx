@@ -1,14 +1,17 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { FormattedMessage, useIntl } from 'react-intl'
 import { Button, Container } from 'react-materialize'
 import { Link } from 'react-router-dom'
 import { ROUTES } from '../../constants'
+import { Dictionary } from '../../types/dictionary'
 import { Group } from '../../types/group'
 import { UserInfoFull } from '../../types/userInfo'
+import { AttendanceRateBadge } from '../kit/attendanceRateBadge/AttendancerateBadge'
 import { IconButton } from '../kit/buttons/IconButton'
+import { CollectionItemLink } from '../kit/collectionItemLink/CollectionItemLink'
 import { DeleteIconWithDialog } from '../kit/deleteIconWithDialog/DeleteIconWithDialog'
 import { Ellipsis } from '../kit/ellipsis/Ellipsis'
-import { ListWithLinks } from '../kit/list/List'
+import { List } from '../kit/list/List'
 import { SectionHeader } from '../kit/sectionHeader/SectionHeader'
 import { Text } from '../kit/text/Text'
 import { AssignGroups } from './AssignGroups'
@@ -17,8 +20,9 @@ interface Props {
   className?: string
   data: UserInfoFull
   onDelete: () => void
+  attendanceRates: Dictionary<number>
 }
-export const Teacher: React.FC<Props> = ({ className = '', data, onDelete }) => {
+export const Teacher: React.FC<Props> = ({ className = '', data, onDelete, attendanceRates }) => {
   const intl = useIntl()
 
   const { name, description, id } = data
@@ -46,7 +50,7 @@ export const Teacher: React.FC<Props> = ({ className = '', data, onDelete }) => 
         <div className="break-words">{description}</div>
 
         {/* Groups */}
-        <GroupsInfoBlock teacher={data} groups={data.groups} />
+        <GroupsInfoBlock teacher={data} groups={data.groups} attendanceRates={attendanceRates} />
       </Container>
     </div>
   )
@@ -55,8 +59,11 @@ export const Teacher: React.FC<Props> = ({ className = '', data, onDelete }) => 
 interface GroupsInfoBlockProps {
   groups?: Group[]
   teacher: UserInfoFull
+  attendanceRates: Dictionary<number>
 }
-const GroupsInfoBlock = ({ groups, teacher }: GroupsInfoBlockProps) => {
+const GroupsInfoBlock = ({ groups, teacher, attendanceRates }: GroupsInfoBlockProps) => {
+  const renderItem = useMemo(() => getGroupItemRender(attendanceRates), [attendanceRates])
+
   return (
     <>
       <div className="flex justify-between items-center">
@@ -70,7 +77,8 @@ const GroupsInfoBlock = ({ groups, teacher }: GroupsInfoBlockProps) => {
       </div>
 
       {groups?.length ? (
-        <ListWithLinks items={groups} itemLinkRoot={ROUTES.GROUPS_ROOT} labelProp="name" />
+        // <ListWithLinks items={groups} itemLinkRoot={ROUTES.GROUPS_ROOT} labelProp="name" />
+        <List items={groups} renderItem={renderItem} />
       ) : (
         <NoGroupsInfoBlock teacher={teacher} />
       )}
@@ -99,4 +107,24 @@ const NoGroupsInfoBlock = ({ teacher }: NoGroupsInfoBlockProps) => {
       />
     </div>
   )
+}
+
+interface GroupWithAttendanceProps {
+  group: Group
+  attendanceRate?: number
+}
+const GroupWithAttendance = ({ group, attendanceRate }: GroupWithAttendanceProps) => {
+  return (
+    <CollectionItemLink to={`${ROUTES.GROUPS_ROOT}/${group.id}`}>
+      <div className="flex justify-between">
+        <Ellipsis>{group.name}</Ellipsis>
+        {/* TODO: add loading */}
+        {attendanceRate !== undefined && <AttendanceRateBadge value={attendanceRate} />}
+      </div>
+    </CollectionItemLink>
+  )
+}
+
+function getGroupItemRender(attendances: Dictionary<number>) {
+  return (data: Group) => <GroupWithAttendance key={data.id} group={data} attendanceRate={attendances[data.id]} />
 }

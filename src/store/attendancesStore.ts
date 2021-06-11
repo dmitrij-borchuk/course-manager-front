@@ -30,6 +30,12 @@ export function useAttendancesStore() {
       setAttendances(response.data)
       setLoading(false)
     }, []),
+    fetchAttendancesForGroups: useCallback(async (groupsIds: string[]) => {
+      setLoading(true)
+      const response = await fetchAttendances(groupsIds, [])
+      setAttendances(response.data)
+      setLoading(false)
+    }, []),
     clearAttendances: useCallback(() => {
       setAttendances([])
     }, []),

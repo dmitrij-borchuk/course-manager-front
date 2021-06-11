@@ -71,6 +71,7 @@ const StudentWithAttendance = ({ data, attendanceRate }: StudentWithAttendancePr
     <CollectionItemLink to={`${ROUTES.STUDENTS_ROOT}/${data.id}`}>
       <div className="flex justify-between">
         <Ellipsis>{data.name}</Ellipsis>
+        {/* TODO: add loading */}
         {attendanceRate !== undefined && <AttendanceRateBadge value={attendanceRate} />}
       </div>
     </CollectionItemLink>

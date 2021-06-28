@@ -12,14 +12,14 @@ export const AttendanceDateBlock: React.FC<Props> = ({ date, items = [], classNa
   return (
     <div className={`${className} flex`}>
       <div className="flex flex-col items-center mr-3 w-8">
-        <Text size="25" color="primary">
+        <Text size="25" color="primary" className="m-0">
           {date.getDate()}
         </Text>
-        <Text type="body">
+        <Text type="body" className="m-0">
           <FormattedDate value={date} weekday="short" />
         </Text>
       </div>
-      <div className="flex flex-col w-full">
+      <div className="flex flex-col w-full min-w-0 gap-1">
         {/* TODO: what if no elements */}
         {items.map((item) => (
           <AttendanceMeter key={item.id} text={item.text} progress={item.progress} />

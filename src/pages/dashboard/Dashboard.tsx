@@ -16,6 +16,7 @@ export function DashboardPage() {
 
   useEffect(() => {
     fetchAllAttendances(fromDate, toDate)
+    // TODO: Get teacher's groups in case of teacher
     fetchGroups()
   }, [fetchAllAttendances, fetchGroups])
 

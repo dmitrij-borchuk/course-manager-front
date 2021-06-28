@@ -4,6 +4,7 @@ import { AttendanceFull } from '../types/attendance'
 import { GroupFull } from '../types/group'
 import { groupBy } from '../utils/common'
 import { datesInRange } from '../utils/date'
+import { getClassesDates } from '../utils/schedule'
 
 export function useAttendanceGrouping(from: Date, to: Date, attendances?: AttendanceFull[], groups?: GroupFull[]) {
   return useMemo(() => {
@@ -34,13 +35,33 @@ function getBlockData(date: Date, attendances: AttendanceFull[], groups: GroupFu
   const attByGroup = groupBy(attendances, (v) => v.group?.id)
 
   const items = groups.map((g) => {
-    return getMeterData(attByGroup[g.id], g)
+    const [start, end] = getDayRanges(date)
+    const classes = getClassesDates(g, end, start)
+    if (classes.length) {
+      return getMeterData(attByGroup[g.id], g)
+    }
+
+    return null
   })
 
   return {
     date,
-    items,
+    items: items.filter(Boolean) as unknown as {
+      id: string
+      text: string
+      progress: number
+    }[],
   }
+}
+
+function getDayRanges(date: Date) {
+  const start = new Date(date)
+  start.setHours(0, 0, 0, 0)
+
+  const end = new Date(date)
+  end.setHours(23, 59, 59, 999)
+
+  return [start, end]
 }
 
 function getMeterData(attendances: AttendanceFull[], group: GroupFull) {

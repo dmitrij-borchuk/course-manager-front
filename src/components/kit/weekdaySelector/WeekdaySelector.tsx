@@ -8,7 +8,7 @@ interface Props {
   value?: string
   readonly?: boolean
 }
-export const WeekdaySelector = ({ onChange = noop, value = '0 0 * * *', readonly = false }: Props) => {
+export const WeekdaySelector = ({ onChange = noop, value = '0 12 * * *', readonly = false }: Props) => {
   const weekDaysArray = useWeekdays()
   const [selectedDays, setSelectedDates] = useState<number[]>(cronToWeekNumbers(value))
 
@@ -68,7 +68,7 @@ function useWeekdays() {
 }
 
 function weekNumbersToCron(days: number[]) {
-  return `0 0 * * ${days.join(',')}`
+  return `0 12 * * ${days.join(',')}`
 }
 
 function cronToWeekNumbers(cron: string) {

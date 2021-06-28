@@ -1,15 +1,15 @@
 import cronParser from 'cron-parser'
 import { GroupFull } from '../types/group'
 
-export function getClassesDates(group: GroupFull, date?: Date) {
+export function getClassesDates(group: GroupFull, to?: Date, from?: Date) {
   const schedule = group.schedules[0]
   if (!schedule) {
     return []
   }
 
   const interval = cronParser.parseExpression(schedule.cron, {
-    currentDate: new Date(schedule.start),
-    endDate: date ? date : new Date(schedule.end),
+    currentDate: from ? from : new Date(schedule.start),
+    endDate: to ? to : new Date(schedule.end),
     iterator: true,
   })
   const classes: Date[] = []

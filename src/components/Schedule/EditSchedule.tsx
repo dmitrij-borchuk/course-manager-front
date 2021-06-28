@@ -31,7 +31,7 @@ export const EditSchedule: React.FC<Props> = ({
   const intl = useIntl()
   const { control, handleSubmit, errors, setError } = useFormWithError<ScheduleFormData>({
     defaultValues: {
-      cron: '0 0 * * *',
+      cron: '0 12 * * *',
       ...initial,
       start: initial?.start ? new Date(initial.start) : '',
       end: initial?.end ? new Date(initial.end) : '',
@@ -135,7 +135,7 @@ export const EditSchedule: React.FC<Props> = ({
             rules={{
               pattern: {
                 message: intl.formatMessage({ id: 'schedule.form.cron.required' }),
-                value: /0 0 \* \* \d/,
+                value: /0 12 \* \* \d/,
               },
             }}
             render={(renderProps) => <WeekdaySelector {...renderProps} />}

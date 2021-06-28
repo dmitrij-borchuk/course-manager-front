@@ -20,10 +20,8 @@ export const AttendanceMeter: React.FC<Props> = ({ className = '', text = '', pr
   return (
     <div className={`${className} attendance-meter flex items-center h-16 rounded p-5 relative overflow-hidden`}>
       <Progress progress={progress} />
-      <Ellipsis>
-        <Text className="z-10" size="16">
-          {text}
-        </Text>
+      <Ellipsis className="z-10">
+        <Text size="16">{text}</Text>
       </Ellipsis>
     </div>
   )

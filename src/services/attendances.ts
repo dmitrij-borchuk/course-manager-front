@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
-import { getAttendancesRequest } from '../api/attendances'
-import { AttendanceFull } from '../types/attendance'
+import { addAttendanceRequest, getAttendancesRequest, removeAttendanceRequest } from '../api/attendances'
+import { AttendanceFull, AttendanceNew } from '../types/attendance'
 import { GroupFull } from '../types/group'
 import { groupBy } from '../utils/common'
 import { datesInRange } from '../utils/date'
@@ -99,4 +99,12 @@ export function fetchAttendances(groupsIds: string[], studentsIds: string[]) {
   return getAttendancesRequest(
     `${studentsIds.length ? `${studentInParam}&` : ''}${groupsIds.length ? `${groupInParam}&` : ''}`
   )
+}
+
+export function addAttendances(attendances: AttendanceNew[]) {
+  return Promise.allSettled(attendances.map((a) => addAttendanceRequest(a)))
+}
+
+export function removeAttendances(attendancesIds: string[]) {
+  return Promise.allSettled(attendancesIds.map((id) => removeAttendanceRequest(id)))
 }

@@ -1,5 +1,7 @@
 import React from 'react'
 import { FormattedDate } from 'react-intl'
+import { Link } from 'react-router-dom'
+import { ROUTES } from '../../constants'
 import { Text } from '../kit/text/Text'
 import { AttendanceMeter } from './AttendanceMeter'
 
@@ -22,7 +24,9 @@ export const AttendanceDateBlock: React.FC<Props> = ({ date, items = [], classNa
       <div className="flex flex-col w-full min-w-0 gap-1">
         {/* TODO: what if no elements */}
         {items.map((item) => (
-          <AttendanceMeter key={item.id} text={item.text} progress={item.progress} />
+          <Link to={`${ROUTES.ATTENDANCE_EDIT}/${item.id}/${date.toISOString()}`}>
+            <AttendanceMeter key={item.id} text={item.text} progress={item.progress} />
+          </Link>
         ))}
       </div>
     </div>

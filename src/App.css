@@ -19,3 +19,11 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
+
+/* TODO: add other colors */
+.color-secondary {
+  color: var(--color-secondary);
+}
+.color-text-gray {
+  color: var(--color-text-gray);
+}

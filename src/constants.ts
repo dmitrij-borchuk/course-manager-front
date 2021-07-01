@@ -23,6 +23,10 @@ export const ROUTES = {
   // Schedules
   SCHEDULES_ROOT: '/schedule',
 
+  // Attendance
+  ATTENDANCE_ROOT: '/attendance',
+  ATTENDANCE_EDIT: '/attendance/edit',
+
   LOGOUT: '/logout',
 }
 

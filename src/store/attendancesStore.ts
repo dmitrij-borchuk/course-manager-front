@@ -1,7 +1,13 @@
 import { useCallback, useState } from 'react'
-import { AttendanceFull } from '../types/attendance'
+import { AttendanceFull, AttendanceNew } from '../types/attendance'
 import { useDictionary } from '../hooks/useDictionary'
-import { fetchAllAttendances, fetchAttendances, fetchAttendancesForStudent } from '../services/attendances'
+import {
+  addAttendances,
+  fetchAllAttendances,
+  fetchAttendances,
+  fetchAttendancesForStudent,
+  removeAttendances,
+} from '../services/attendances'
 
 export function useAttendancesStore() {
   const [loading, setLoading] = useState(false)
@@ -34,6 +40,16 @@ export function useAttendancesStore() {
       setLoading(true)
       const response = await fetchAttendances(groupsIds, [])
       setAttendances(response.data)
+      setLoading(false)
+    }, []),
+    addAttendances: useCallback(async (attendances: AttendanceNew[]) => {
+      setLoading(true)
+      await addAttendances(attendances)
+      setLoading(false)
+    }, []),
+    removeAttendances: useCallback(async (id: string[]) => {
+      setLoading(true)
+      await removeAttendances(id)
       setLoading(false)
     }, []),
     clearAttendances: useCallback(() => {

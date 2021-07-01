@@ -23,6 +23,7 @@ import {
 } from './pages/students'
 import { LogoutPage } from './pages/auth/Logout'
 import { SchedulePageLoadable } from './pages/schedules'
+import { AttendanceEditorLoadable } from './pages/attendance'
 
 export function Routing() {
   return (
@@ -49,6 +50,13 @@ export function Routing() {
 
       {/* Schedule */}
       <AuthGuardedRoute component={withHeader(SchedulePageLoadable)} path={`${ROUTES.SCHEDULES_ROOT}`} exact />
+
+      {/* Attendance */}
+      <AuthGuardedRoute
+        component={withHeader(AttendanceEditorLoadable)}
+        path={`${ROUTES.ATTENDANCE_EDIT}/:id/:date`}
+        exact
+      />
 
       <Route path={ROUTES.LOGIN}>
         <LoginPage />

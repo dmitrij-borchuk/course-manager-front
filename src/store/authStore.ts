@@ -1,30 +1,32 @@
 import { useCallback, useState } from 'react'
 import { useHistory } from 'react-router-dom'
+import firebase from 'firebase'
 import { ROUTES } from '../constants'
-import { login, setAuthData } from '../services/auth'
+import { login, logout } from '../api/firebase/auth'
 
 export function useAuthStore() {
   const history = useHistory()
   const [loading, setLoading] = useState(false)
+  const [currentUser, setCurrentUser] = useState<firebase.User | null>(null)
 
   return {
     loading,
-    login: useCallback(async (data: Parameters<typeof login>[0]) => {
+    currentUser,
+    login: useCallback(async (...data: Parameters<typeof login>) => {
       setLoading(true)
-      const response = await login(data)
-      setLoading(false)
+      try {
+        const response = await login(...data)
+        setCurrentUser(response)
 
-      if (response.data.jwt) {
-        setAuthData(response.data.jwt)
+        return response
+      } catch (error) {
+        throw error
+      } finally {
+        setLoading(false)
       }
-
-      return response
-    }, []),
-    clearAuthData: useCallback(() => {
-      setAuthData('')
     }, []),
     logout: useCallback(() => {
-      setAuthData('')
+      logout()
       history.push(ROUTES.ROOT)
     }, [history]),
   }

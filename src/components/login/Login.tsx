@@ -44,10 +44,12 @@ export const Login: React.FC<Props> = ({ onSubmit, loading = false }) => {
           rules={{ required: true }}
           disabled={loading}
         />
-        <ButtonWithLoader loading={loading}>
-          Submit
-          <Icon right>send</Icon>
-        </ButtonWithLoader>
+        <div className="flex justify-end">
+          <ButtonWithLoader loading={loading}>
+            Submit
+            <Icon right>send</Icon>
+          </ButtonWithLoader>
+        </div>
       </form>
     </div>
   )

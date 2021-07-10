@@ -1,10 +1,8 @@
 import { ComponentProps, useCallback } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useToasts } from 'react-toast-notifications'
-import { useIntl } from 'react-intl'
 import { ROUTES } from '../../constants'
 import { useAuthState } from '../../store'
-import { parseError } from '../../utils/error'
 import { Login } from '../../components/login/Login'
 
 type SubmitData = Parameters<ComponentProps<typeof Login>['onSubmit']>[0]
@@ -12,30 +10,21 @@ type SubmitData = Parameters<ComponentProps<typeof Login>['onSubmit']>[0]
 export const LoginPage = () => {
   const history = useHistory()
   const { addToast } = useToasts()
-  const { login, loading, clearAuthData } = useAuthState()
-  const { formatMessage } = useIntl()
+  const { login, loading } = useAuthState()
   const onLoginSubmit = useCallback(
     async (data: SubmitData) => {
       try {
-        clearAuthData()
-        const response = await login(data)
+        await login(data.identifier, data.password)
 
-        if (response.data.jwt) {
-          history.push(ROUTES.ROOT)
-        } else {
-          addToast(formatMessage({ id: 'Auth.form.error.500' }), {
-            appearance: 'error',
-            autoDismiss: true,
-          })
-        }
+        history.push(ROUTES.ROOT)
       } catch (error) {
-        addToast(parseError(error), {
+        addToast(error.message, {
           appearance: 'error',
           autoDismiss: true,
         })
       }
     },
-    [clearAuthData, login, history, addToast, formatMessage]
+    [login, history, addToast]
   )
 
   return (

@@ -13,6 +13,11 @@ export const messages = {
 
   'Auth.form.error.invalid': 'Identifier or password invalid.',
   'Auth.form.error.500': 'Something went wrong',
+  'auth.loginLink.separator': 'or',
+  'auth.loginLink.title': 'Login',
+  'auth.registerLink.separator': 'or',
+  'auth.registerLink.label': 'Create account',
+  'auth.register.title': 'Register',
   'header.nav.dashboard': 'Dashboard',
   'header.nav.teachers': 'Teachers',
   'header.nav.groups': 'Groups',

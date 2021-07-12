@@ -4,6 +4,7 @@ import { ROUTES } from './constants'
 import { withHeader } from './hocs/withHeader'
 import { AuthGuardedRoute } from './components/guardedRoute/GuardedRoute'
 import { LoginPage } from './pages/login/LoginPage'
+import { RegisterPage } from './pages/register/RegisterPage'
 import { DashboardPage } from './pages/dashboard/Dashboard'
 import { EditTeacherPage } from './pages/teachers/EditTeacher'
 import { CreateTeacherPage } from './pages/teachers/CreateTeacher'
@@ -59,7 +60,12 @@ export function Routing() {
       />
 
       <Route path={ROUTES.LOGIN}>
+        {/* TODO: add lazy loading */}
         <LoginPage />
+      </Route>
+      <Route path={ROUTES.REGISTER}>
+        {/* TODO: add lazy loading */}
+        <RegisterPage />
       </Route>
       <Route path={ROUTES.LOGOUT}>
         <LogoutPage />

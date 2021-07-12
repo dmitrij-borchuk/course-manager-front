@@ -3,18 +3,18 @@ import { useHistory } from 'react-router-dom'
 import { useToasts } from 'react-toast-notifications'
 import { ROUTES } from '../../constants'
 import { useAuthState } from '../../store'
-import { Login } from '../../components/auth/Login'
+import { Register } from '../../components/auth/Register'
 
-type SubmitData = Parameters<ComponentProps<typeof Login>['onSubmit']>[0]
+type SubmitData = Parameters<ComponentProps<typeof Register>['onSubmit']>[0]
 
-export const LoginPage = () => {
+export const RegisterPage = () => {
   const history = useHistory()
   const { addToast } = useToasts()
-  const { login, loading } = useAuthState()
-  const onLoginSubmit = useCallback(
+  const { register, loading } = useAuthState()
+  const onSubmit = useCallback(
     async (data: SubmitData) => {
       try {
-        await login(data.identifier, data.password)
+        await register(data.email, data.password)
 
         history.push(ROUTES.ROOT)
       } catch (error) {
@@ -24,12 +24,12 @@ export const LoginPage = () => {
         })
       }
     },
-    [login, history, addToast]
+    [register, history, addToast]
   )
 
   return (
     <>
-      <Login onSubmit={onLoginSubmit} loading={loading} />
+      <Register onSubmit={onSubmit} loading={loading} />
     </>
   )
 }

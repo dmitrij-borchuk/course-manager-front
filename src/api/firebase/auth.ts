@@ -2,6 +2,7 @@ import { isProduction } from '../../config'
 import firebase from './index'
 
 const auth = firebase.auth()
+export default auth
 
 if (!isProduction) {
   // TODO: move to env var
@@ -17,4 +18,6 @@ export async function logout() {
   return auth.signOut()
 }
 
-export default auth
+export function register(email: string, password: string) {
+  return auth.createUserWithEmailAndPassword(email, password)
+}

@@ -8,15 +8,18 @@ export function useAuthStore() {
   const history = useHistory()
   const [loading, setLoading] = useState(false)
   const [currentUser, setCurrentUser] = useState<firebase.User | null>(null)
+  const [initiatingAuth, setInitiatingAuth] = useState(true)
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
       setCurrentUser(user)
+      setInitiatingAuth(false)
     })
   }, [])
 
   return {
     loading,
     currentUser,
+    initiatingAuth,
     login: useCallback(async (...data: Parameters<typeof login>) => {
       setLoading(true)
       try {

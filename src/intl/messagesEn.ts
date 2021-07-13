@@ -64,6 +64,8 @@ export const messages = {
   'schedule.form.start': 'Start date',
   'schedule.form.end': 'End date',
   'schedule.form.cron.required': 'Please select at least one day',
+
+  'profile.organizations.header': 'Your organizations',
 }
 
 export default messages

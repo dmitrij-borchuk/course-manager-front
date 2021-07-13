@@ -1,11 +1,16 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React, { useEffect } from 'react'
+import { Profile } from '../../components/profile/Profile'
+import { useAuthState, useOrganizationsState } from '../../store'
 
 export const ProfilePage = () => {
-  return (
-    <div>
-      Profile
-      <Link to="/testOrg">Test org</Link>
-    </div>
-  )
+  const { fetchAll, allItems } = useOrganizationsState()
+  const { currentUser } = useAuthState()
+
+  useEffect(() => {
+    if (currentUser?.uid) {
+      fetchAll(currentUser?.uid)
+    }
+  }, [currentUser?.uid, fetchAll])
+
+  return <Profile organizations={allItems} />
 }

@@ -19,3 +19,8 @@ export type NewUser = UserBase & {
   role: string
   user_info?: string
 }
+
+export type UserMetadata = {
+  id: string
+  organizations?: string[]
+}

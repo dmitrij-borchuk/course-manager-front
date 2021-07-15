@@ -3,6 +3,7 @@ import { FormattedMessage } from 'react-intl'
 import { Container } from 'react-materialize'
 import { Link } from 'react-router-dom'
 import { Organization } from '../../types/organization'
+import { AppUser } from '../../types/user'
 import { Header } from '../kit/header/Header'
 import { Text } from '../kit/text/Text'
 
@@ -11,17 +12,26 @@ import { Text } from '../kit/text/Text'
 interface Props {
   className?: string
   organizations?: Organization[]
+  user: AppUser
 }
 export const Profile = (props: Props) => {
-  const { className, organizations = [] } = props
+  const { className, organizations = [], user } = props
 
   return (
     <div className={className}>
       <Header />
-      <Container>
-        <Text type="h4">
+      <Container className="px-4">
+        {user.name ? (
+          <Text type="h3">{user.name}</Text>
+        ) : (
+          <Text type="h3" color="textGray">
+            <FormattedMessage id="profile.user.noName" />
+          </Text>
+        )}
+        <Text type="h5">
           <FormattedMessage id="profile.organizations.header" />
         </Text>
+        {/* TODO: avatar */}
         {organizations.map((org) => (
           <Link key={org.id} to={`/${org.id}`}>
             {org.name}

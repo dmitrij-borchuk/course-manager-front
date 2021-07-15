@@ -66,6 +66,7 @@ export const messages = {
   'schedule.form.cron.required': 'Please select at least one day',
 
   'profile.organizations.header': 'Your organizations',
+  'profile.user.noName': 'No name',
 }
 
 export default messages

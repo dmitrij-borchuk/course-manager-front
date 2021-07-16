@@ -1,5 +1,6 @@
 export const messages = {
   'common.submitLabel': 'Submit',
+  'common.form.id.label': 'Identifier',
   'common.form.name.label': 'Name',
   'common.form.username.label': 'Username',
   'common.form.email.label': 'Email',
@@ -67,6 +68,10 @@ export const messages = {
 
   'profile.organizations.header': 'Your organizations',
   'profile.user.noName': 'No name',
+
+  'organizations.add.title': 'Add organization',
+  'organizations.edit.title': 'Edit organization',
+  'organizations.edit.noUserId': 'Looks like user is logged out',
 }
 
 export default messages

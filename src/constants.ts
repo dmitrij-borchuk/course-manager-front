@@ -30,6 +30,9 @@ export const ROUTES = {
   ATTENDANCE_ROOT: '/attendance',
   ATTENDANCE_EDIT: '/attendance/edit',
 
+  // Organizations
+  ORGANIZATIONS_ADD: '/organizations/add',
+
   LOGOUT: '/logout',
 }
 

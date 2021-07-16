@@ -26,6 +26,7 @@ import { LogoutPage } from './pages/auth/Logout'
 import { SchedulePageLoadable } from './pages/schedules'
 import { AttendanceEditorLoadable } from './pages/attendance'
 import { ProfilePage } from './pages/profile/Profile'
+import { CreateOrganizationPageLoadable } from './pages/organizations'
 
 export function Routing() {
   return (
@@ -96,6 +97,13 @@ export function Routing() {
       <AuthGuardedRoute
         component={withHeader(AttendanceEditorLoadable)}
         path={`/:orgId${ROUTES.ATTENDANCE_EDIT}/:id/:date`}
+        exact
+      />
+
+      {/* Organizations */}
+      <AuthGuardedRoute
+        component={withHeader(CreateOrganizationPageLoadable)}
+        path={`${ROUTES.ORGANIZATIONS_ADD}`}
         exact
       />
     </Switch>

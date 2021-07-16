@@ -5,27 +5,34 @@ service cloud.firestore {
       allow read, write: if false;
     }
     match /organizations/{orgName} {
-    	function isOrgMember(uid) {
-      	return exists(/databases/$(database)/documents/organizations/$(orgName)/users/$(uid))
+      function isOrgMember(uid) {
+        return exists(/databases/$(database)/documents/organizations/$(orgName)/users/$(uid))
       }
-    	function isOrgAdmin(uid) {
-      	return exists(/databases/$(database)/documents/organizations/$(orgName)/admins/$(uid))
+      function isOrgAdmin(uid) {
+        return exists(/databases/$(database)/documents/organizations/$(orgName)/admins/$(uid))
       }
-    	function hasInvite() {
-      	return request.resource.data.inviteLink == get(/databases/$(database)/documents/organizations/$(orgName)).inviteLink
+      function hasInvite() {
+        return request.resource.data.inviteLink == get(/databases/$(database)/documents/organizations/$(orgName)).inviteLink
       }
-    	allow read, write: if isOrgMember(request.auth.uid);
+      function isCreator(uid) {
+        return resource.data.creator == uid
+      }
+      allow read, write: if isOrgMember(request.auth.uid);
 
       match /groups/{document=**} {
-      	allow read: if isOrgMember(request.auth.uid)
+        allow read: if isOrgMember(request.auth.uid)
       }
       match /students/{document=**} {
-      	allow read: if isOrgMember(request.auth.uid)
+        allow read: if isOrgMember(request.auth.uid)
       }
       match /users/{document=**} {
-      	allow read, write: if isOrgAdmin(request.auth.uid)
-      	allow create: if hasInvite()
+        allow read, write: if isOrgAdmin(request.auth.uid)
+        allow create: if hasInvite()
       }
+      allow create: if true
+      allow read: if isOrgMember(request.auth.uid)
+      allow read, write: if isOrgAdmin(request.auth.uid)
+      allow read, write: if isCreator(request.auth.uid)
     }
     match /users/{userId} {
       allow read, write: if request.auth.uid == userId;

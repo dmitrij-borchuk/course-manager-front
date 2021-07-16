@@ -2,8 +2,10 @@ import React from 'react'
 import { FormattedMessage } from 'react-intl'
 import { Container } from 'react-materialize'
 import { Link } from 'react-router-dom'
+import { ROUTES } from '../../constants'
 import { Organization } from '../../types/organization'
 import { AppUser } from '../../types/user'
+import { FabBtn } from '../kit/FabBtn/FabBtn'
 import { Header } from '../kit/header/Header'
 import { Text } from '../kit/text/Text'
 
@@ -33,10 +35,16 @@ export const Profile = (props: Props) => {
         </Text>
         {/* TODO: avatar */}
         {organizations.map((org) => (
-          <Link key={org.id} to={`/${org.id}`}>
-            {org.name}
-          </Link>
+          <div className="mt-4">
+            <Link key={org.id} to={`/${org.id}`}>
+              {org.name}
+            </Link>
+          </div>
         ))}
+
+        <Link to={ROUTES.ORGANIZATIONS_ADD}>
+          <FabBtn />
+        </Link>
       </Container>
     </div>
   )

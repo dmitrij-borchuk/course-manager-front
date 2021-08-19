@@ -30,3 +30,10 @@ export type AppUser = {
   name?: string
   avatar?: string
 }
+
+export type OrganizationUser = {
+  id: string
+  role?: string
+  activated?: boolean
+  name?: string
+}

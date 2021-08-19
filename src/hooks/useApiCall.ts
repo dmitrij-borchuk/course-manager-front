@@ -6,6 +6,7 @@ import { parseError } from '../utils/error'
 
 type ThenArg<T> = T extends PromiseLike<infer U> ? U : T
 
+// TODO: remove
 export function useApiCall<T extends (...args: any) => any>(cb: T) {
   const { addToast } = useToasts()
   const [loading, setLoading] = useState(false)

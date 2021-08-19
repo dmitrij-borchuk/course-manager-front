@@ -25,6 +25,9 @@ service cloud.firestore {
       match /students/{document=**} {
         allow read: if isOrgMember(request.auth.uid)
       }
+      match /users/{email} {
+        allow update: if request.auth.token.email == email
+      }
       match /users/{document=**} {
         allow read, write: if isOrgAdmin(request.auth.uid)
         allow create: if hasInvite()

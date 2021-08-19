@@ -5,7 +5,8 @@
   "scripts": {
     "start": "craco start",
     "build": "craco build",
-    "test": "craco test"
+    "test": "craco test",
+    "firebase-emulator": "firebase emulators:start"
   },
   "dependencies": {
     "@craco/craco": "^6.1.1",

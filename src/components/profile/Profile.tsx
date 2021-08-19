@@ -1,6 +1,6 @@
 import React from 'react'
 import { FormattedMessage } from 'react-intl'
-import { Container } from 'react-materialize'
+import { Container, Preloader } from 'react-materialize'
 import { Link } from 'react-router-dom'
 import { ROUTES } from '../../constants'
 import { Organization } from '../../types/organization'
@@ -15,9 +15,10 @@ interface Props {
   className?: string
   organizations?: Organization[]
   user: AppUser
+  organizationsLoading?: boolean
 }
 export const Profile = (props: Props) => {
-  const { className, organizations = [], user } = props
+  const { className, organizations = [], user, organizationsLoading = false } = props
 
   return (
     <div className={className}>
@@ -34,13 +35,15 @@ export const Profile = (props: Props) => {
           <FormattedMessage id="profile.organizations.header" />
         </Text>
         {/* TODO: avatar */}
-        {organizations.map((org) => (
-          <div className="mt-4">
-            <Link key={org.id} to={`/${org.id}`}>
-              {org.name}
-            </Link>
-          </div>
-        ))}
+        {!organizationsLoading &&
+          organizations.map((org) => (
+            <div className="mt-4">
+              <Link key={org.id} to={`/${org.id}`}>
+                {org.name}
+              </Link>
+            </div>
+          ))}
+        {organizationsLoading && <Preloader color="red" flashing={false} size="medium" />}
 
         <Link to={ROUTES.ORGANIZATIONS_ADD}>
           <FabBtn />

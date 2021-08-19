@@ -11,6 +11,7 @@ export const messages = {
   'common.dialog.btn.ok': 'Ok',
   'common.dialog.btn.cancel': 'Cancel',
   'common.list.empty': 'The list is empty',
+  'common.unknownName': 'Unknown name',
 
   'Auth.form.error.invalid': 'Identifier or password invalid.',
   'Auth.form.error.500': 'Something went wrong',

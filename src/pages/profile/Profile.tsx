@@ -4,7 +4,7 @@ import { AppUser } from '../../types/user'
 import { Profile } from '../../components/profile/Profile'
 
 export const ProfilePage = () => {
-  const { fetchAll, allItems } = useOrganizationsState()
+  const { fetchAll, allItems, loading } = useOrganizationsState()
   const { currentUser } = useAuthState()
   const user: AppUser = {
     name: currentUser?.displayName || undefined,
@@ -17,5 +17,5 @@ export const ProfilePage = () => {
     }
   }, [currentUser?.uid, fetchAll])
 
-  return <Profile organizations={allItems} user={user} />
+  return <Profile organizations={allItems} user={user} organizationsLoading={loading} />
 }

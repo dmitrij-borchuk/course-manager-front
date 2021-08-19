@@ -38,6 +38,11 @@ export function collection<T extends { id: string }>(name: string) {
 
       return getItemsFromSnapshot<T>(querySnapshot)
     },
+    query: async (...args: Parameters<typeof collection.where>) => {
+      const result = await collection.where(...args).get()
+
+      return getItemsFromSnapshot<T>(result)
+    },
     getById: async (id: string) => {
       const doc = await collection.doc(id).get()
 

@@ -11,13 +11,14 @@ import { SkeletonList } from '../kit/skeleton/SkeletonList'
 import { Text } from '../kit/text/Text'
 
 // TODO: add attendance
+interface UserItem {
+  id: string
+  name?: string
+}
 interface Props {
   loading?: boolean
   className?: string
-  items?: {
-    id: string
-    name: string
-  }[]
+  items?: UserItem[]
 }
 export const TeachersList: React.FC<Props> = ({ className = '', loading = false, items = [] }) => {
   return (
@@ -41,10 +42,7 @@ export const TeachersList: React.FC<Props> = ({ className = '', loading = false,
 
 interface ListProps {
   loading: boolean
-  items: {
-    id: string
-    name: string
-  }[]
+  items: UserItem[]
 }
 const List = ({ loading, items }: ListProps) => {
   if (loading) {
@@ -65,7 +63,11 @@ const List = ({ loading, items }: ListProps) => {
     <Collection>
       {items.map((item) => (
         <CollectionItemLink key={item.id} to={`${ROUTES.TEACHERS_ROOT}/${item.id}`}>
-          {item.name}
+          {item.name || (
+            <Text color="textGray">
+              <FormattedMessage id="common.unknownName" />
+            </Text>
+          )}
         </CollectionItemLink>
       ))}
     </Collection>

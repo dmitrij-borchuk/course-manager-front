@@ -1,10 +1,13 @@
+import { useEffect } from 'react'
 import { TeachersList } from '../../components/teachers/TeachersList'
-import { useApiCall } from '../../hooks/useApiCall'
-import { getTeachersList } from '../../services/teachers'
+import { useTeachersState } from '../../store'
 
 export const TeachersListPage = () => {
-  // TODO: use store
-  const [resp, loading] = useApiCall(getTeachersList)
+  const { teachers, fetchTeachers, fetching } = useTeachersState()
 
-  return <TeachersList items={resp?.data} loading={loading} />
+  useEffect(() => {
+    fetchTeachers()
+  }, [fetchTeachers])
+
+  return <TeachersList items={teachers} loading={fetching} />
 }

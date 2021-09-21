@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 import { ROUTES } from '../../constants'
 import { Dictionary } from '../../types/dictionary'
 import { Group } from '../../types/group'
-import { UserInfoFull } from '../../types/userInfo'
+import { OrganizationUser } from '../../types/user'
 import { AttendanceRateBadge } from '../kit/attendanceRateBadge/AttendancerateBadge'
 import { IconButton } from '../kit/buttons/IconButton'
 import { CollectionItemLink } from '../kit/collectionItemLink/CollectionItemLink'
@@ -18,14 +18,15 @@ import { AssignGroups } from './AssignGroups'
 
 interface Props {
   className?: string
-  data: UserInfoFull
+  data: OrganizationUser
   onDelete: () => void
   attendanceRates: Dictionary<number>
+  teachersGroups?: Group[]
 }
-export const Teacher: React.FC<Props> = ({ className = '', data, onDelete, attendanceRates }) => {
+export const Teacher: React.FC<Props> = ({ className = '', data, onDelete, attendanceRates, teachersGroups = [] }) => {
   const intl = useIntl()
 
-  const { name, description, id } = data
+  const { name, id } = data
 
   return (
     <div className={className}>
@@ -47,10 +48,11 @@ export const Teacher: React.FC<Props> = ({ className = '', data, onDelete, atten
         </div>
 
         {/* Description */}
-        <div className="break-words">{description}</div>
+        {/* TODO: should we use description at all, maybe something like `notes` that is private to viewer */}
+        {/* <div className="break-words">{description}</div> */}
 
         {/* Groups */}
-        <GroupsInfoBlock teacher={data} groups={data.groups} attendanceRates={attendanceRates} />
+        <GroupsInfoBlock teacher={data} groups={teachersGroups} attendanceRates={attendanceRates} />
       </Container>
     </div>
   )
@@ -58,10 +60,11 @@ export const Teacher: React.FC<Props> = ({ className = '', data, onDelete, atten
 
 interface GroupsInfoBlockProps {
   groups?: Group[]
-  teacher: UserInfoFull
+  teacher: OrganizationUser
   attendanceRates: Dictionary<number>
+  teachersGroups?: Group[]
 }
-const GroupsInfoBlock = ({ groups, teacher, attendanceRates }: GroupsInfoBlockProps) => {
+const GroupsInfoBlock = ({ groups, teacher, attendanceRates, teachersGroups = [] }: GroupsInfoBlockProps) => {
   const renderItem = useMemo(() => getGroupItemRender(attendanceRates), [attendanceRates])
 
   return (
@@ -72,7 +75,11 @@ const GroupsInfoBlock = ({ groups, teacher, attendanceRates }: GroupsInfoBlockPr
         </Text>
         {/* Assign groups dialog */}
         {!!groups?.length && (
-          <AssignGroups teacher={teacher} trigger={<IconButton type="square" size={40} icon="edit" />} />
+          <AssignGroups
+            teacher={teacher}
+            trigger={<IconButton type="square" size={40} icon="edit" />}
+            teachersGroups={teachersGroups}
+          />
         )}
       </div>
 
@@ -87,7 +94,7 @@ const GroupsInfoBlock = ({ groups, teacher, attendanceRates }: GroupsInfoBlockPr
 }
 
 interface NoGroupsInfoBlockProps {
-  teacher: UserInfoFull
+  teacher: OrganizationUser
 }
 const NoGroupsInfoBlock = ({ teacher }: NoGroupsInfoBlockProps) => {
   return (

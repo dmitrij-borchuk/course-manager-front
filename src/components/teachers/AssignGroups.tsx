@@ -4,16 +4,17 @@ import { ModalProps } from 'react-materialize'
 import { useToggle } from '../../hooks/useToggle'
 import { useGroupsState } from '../../store'
 import { Group } from '../../types/group'
-import { TeacherFull } from '../../types/teacher'
+import { OrganizationUser } from '../../types/user'
 import { noop } from '../../utils/common'
 import { SelectDialog } from '../kit/selectDialog/SelectDialog'
 
 interface Props {
-  teacher: TeacherFull
+  teacher: OrganizationUser
   onDone?: () => void
   trigger?: ModalProps['trigger']
+  teachersGroups?: Group[]
 }
-export const AssignGroups = ({ teacher, onDone = noop, trigger }: Props) => {
+export const AssignGroups = ({ teacher, onDone = noop, trigger, teachersGroups = [] }: Props) => {
   const intl = useIntl()
   const [open, toggler] = useToggle(false)
   const { groups, fetchGroups, fetching, editGroup } = useGroupsState()
@@ -58,7 +59,7 @@ export const AssignGroups = ({ teacher, onDone = noop, trigger }: Props) => {
         onSubmit={onSubmit}
         labelProp={(g) => g.name}
         onCloseStart={toggler.off}
-        initial={teacher.groups}
+        initial={teachersGroups}
         multiSelect
       />
     </>

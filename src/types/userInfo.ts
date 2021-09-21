@@ -8,6 +8,7 @@ type UserInfoBase = {
 export type NewUserInfo = UserInfoBase & {
   user: string
 }
+// TODO: do weed it?
 export type UserInfoFull = UserInfoBase & {
   id: string
   user?: User

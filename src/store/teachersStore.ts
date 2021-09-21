@@ -2,14 +2,12 @@ import { useCallback, useState } from 'react'
 import { useHistory } from 'react-router'
 import { ROUTES } from '../constants'
 import { useDictionaryToArray } from '../hooks/useDictionaryToArray'
-import { useOrgId } from '../hooks/useOrgId'
 import { deleteTeacher, editTeacher, getTeacher, getTeachersList } from '../services/teachers'
 import { Dictionary } from '../types/dictionary'
 import { OrganizationUser } from '../types/user'
 import { arrayToDictionary } from '../utils/common'
 
 export default function useTeachersStore() {
-  const orgId = useOrgId()
   const history = useHistory()
   const [teachersById, setTeachersById] = useState<Dictionary<OrganizationUser>>({})
   const teachers = useDictionaryToArray(teachersById)
@@ -34,44 +32,28 @@ export default function useTeachersStore() {
         }
       })
     }, []),
-    fetchTeachers: useCallback(async () => {
-      if (!orgId) {
-        throw new Error('Organization name not found')
-      }
+    fetchTeachers: useCallback(async (orgId: string) => {
       setFetching(true)
       const resp = await getTeachersList(orgId)
       const itemsById = arrayToDictionary(resp)
       setTeachersById(itemsById)
       setFetching(false)
-    }, [orgId]),
-    fetchTeacher: useCallback(
-      async (id: string) => {
-        if (!orgId) {
-          throw new Error('Organization name not found')
-        }
-        setFetching(true)
-        const resp = await getTeacher(orgId, id)
-        setTeachersById((state) => ({ ...state, [id]: resp }))
-        setFetching(false)
-      },
-      [orgId]
-    ),
-    editTeacher: useCallback(
-      async (data: OrganizationUser) => {
-        if (!orgId) {
-          throw new Error('Organization name not found')
-        }
-
-        setSubmitting(true)
-        await editTeacher(orgId, data)
-        setTeachersById((state) => ({
-          ...state,
-          [data.id]: data,
-        }))
-        setSubmitting(false)
-      },
-      [orgId]
-    ),
+    }, []),
+    fetchTeacher: useCallback(async (orgId: string, id: string) => {
+      setFetching(true)
+      const resp = await getTeacher(orgId, id)
+      setTeachersById((state) => ({ ...state, [id]: resp }))
+      setFetching(false)
+    }, []),
+    editTeacher: useCallback(async (orgId: string, data: OrganizationUser) => {
+      setSubmitting(true)
+      await editTeacher(orgId, data)
+      setTeachersById((state) => ({
+        ...state,
+        [data.id]: data,
+      }))
+      setSubmitting(false)
+    }, []),
     deleteTeacher: useCallback(
       async (id: string) => {
         setSubmitting(true)

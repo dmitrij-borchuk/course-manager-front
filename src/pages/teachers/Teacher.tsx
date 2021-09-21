@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom'
 import { Header } from '../../components/kit/header/Header'
 import { Loader } from '../../components/kit/loader/Loader'
 import { Teacher } from '../../components/teachers/Teacher'
+import { useOrgId } from '../../hooks/useOrgId'
 import { useAttendancesState, useGroupsState, useTeachersState } from '../../store'
 import { Dictionary } from '../../types/dictionary'
 import { groupBy } from '../../utils/common'
@@ -15,6 +16,8 @@ export const TeacherPage = () => {
   const { attendances, clearAttendances, fetchAttendancesForGroups } = useAttendancesState()
   const { groups, fetchGroups } = useGroupsState()
   const teacher = teachersById[id]
+  const orgId = useOrgId()
+  // const { appUser } = useAuthState()
   const onDelete = useCallback(() => deleteTeacher(id), [deleteTeacher, id])
 
   const attendancesByGroup = useMemo(() => groupBy(attendances, (a) => a.group?.id), [attendances])
@@ -28,37 +31,39 @@ export const TeacherPage = () => {
       }, {}),
     [groups]
   )
-  const rateByGroup = useMemo(
-    () =>
-      (teacher?.groups || []).reduce<Dictionary<number>>((acc, g) => {
-        const classesCount = classesByGroup[g.id]?.length || 0
-        const groupRate = classesCount ? (attendancesByGroup[g.id]?.length || 0) / classesCount : 0
+  const groupsOfTeacher = useMemo(() => groups.filter((g) => g.teacher?.id === teacher.id), [groups, teacher.id])
+  const rateByGroup = useMemo(() => {
+    return groupsOfTeacher.reduce<Dictionary<number>>((acc, g) => {
+      const classesCount = classesByGroup[g.id]?.length || 0
+      const groupRate = classesCount ? (attendancesByGroup[g.id]?.length || 0) / classesCount : 0
 
-        return {
-          ...acc,
-          [g.id]: groupRate,
-        }
-      }, {}),
-    [attendancesByGroup, classesByGroup, teacher?.groups]
-  )
-
-  useEffect(() => {
-    fetchTeacher(id)
-  }, [fetchTeacher, id])
+      return {
+        ...acc,
+        [g.id]: groupRate,
+      }
+    }, {})
+  }, [attendancesByGroup, classesByGroup, groupsOfTeacher])
 
   useEffect(() => {
+    if (orgId) {
+      fetchTeacher(orgId, id)
+      // TODO: clear
+    }
+  }, [fetchTeacher, id, orgId])
+
+  useEffect(() => {
+    // TODO: probably we need only groups of teacher
     fetchGroups()
+    // TODO: clear
   }, [fetchGroups])
 
   useEffect(() => {
-    if (teacher?.groups) {
-      fetchAttendancesForGroups(teacher.groups.map((g) => g.id))
+    fetchAttendancesForGroups(groupsOfTeacher.map((g) => g.id))
 
-      return () => {
-        clearAttendances()
-      }
+    return () => {
+      clearAttendances()
     }
-  }, [clearAttendances, fetchAttendancesForGroups, teacher?.groups])
+  }, [clearAttendances, fetchAttendancesForGroups, groupsOfTeacher])
 
   // TODO: 404
 

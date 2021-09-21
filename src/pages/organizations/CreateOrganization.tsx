@@ -14,6 +14,7 @@ export const CreateOrganizationPage = () => {
   const submit = useCallback(
     async (data: OrganizationForm) => {
       if (currentUser?.uid) {
+        // DODO: add try catch
         await save({
           ...data,
           creator: currentUser.uid,

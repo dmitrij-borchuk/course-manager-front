@@ -1,10 +1,18 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import firebase from 'firebase'
 import auth, { login, register, logout } from '../api/firebase/auth'
+import { AppUser } from '../types/user'
 
 export function useAuthStore() {
   const [loading, setLoading] = useState(false)
   const [currentUser, setCurrentUser] = useState<firebase.User | null>(null)
+  const appUser: AppUser = useMemo(
+    () => ({
+      name: currentUser?.displayName || undefined,
+      avatar: currentUser?.photoURL || undefined,
+    }),
+    [currentUser?.displayName, currentUser?.photoURL]
+  )
   const [initiatingAuth, setInitiatingAuth] = useState(true)
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
@@ -16,6 +24,7 @@ export function useAuthStore() {
   return {
     loading,
     currentUser,
+    appUser,
     initiatingAuth,
     login: useCallback(async (...data: Parameters<typeof login>) => {
       setLoading(true)

@@ -1,6 +1,7 @@
 import { useCallback, useState } from 'react'
 import { organizations, users } from '../api/firebase/collections'
 import { useDictionaryToArray } from '../hooks/useDictionaryToArray'
+import { addUserToOrganization } from '../services/users'
 import { Dictionary } from '../types/dictionary'
 import { Organization } from '../types/organization'
 import { arrayToDictionary } from '../utils/common'
@@ -25,13 +26,19 @@ export default function useOrganizationsBaseStore() {
       setById(groupsById)
       setLoading(false)
     }, []),
+    // TODO: rename to `add`
     save: useCallback(async (data: Organization) => {
       setSubmitting(true)
       await organizations.save(data)
       const user = await users.getById(data.creator)
+      const userOrganizations = user.organizations || []
+      // TODO: probably move to FireBase functions
       await users.save({
         ...user,
-        organizations: user.organizations?.concat([data.id]),
+        organizations: userOrganizations.concat([data.id]),
+      })
+      addUserToOrganization(data.id, {
+        id: user.id,
       })
       setById((list) => ({
         ...list,

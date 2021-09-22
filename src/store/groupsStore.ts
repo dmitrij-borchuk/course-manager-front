@@ -5,7 +5,6 @@ import { useDictionaryToArray } from '../hooks/useDictionaryToArray'
 import { createGroup, deleteGroup, editGroup, getGroup, getGroups } from '../services/groups'
 import { Dictionary } from '../types/dictionary'
 import { Group, GroupFull, NewGroup } from '../types/group'
-import { arrayToDictionary } from '../utils/common'
 
 export default function useGroupsStore() {
   const history = useHistory()

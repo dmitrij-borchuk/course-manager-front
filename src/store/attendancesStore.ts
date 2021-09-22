@@ -3,7 +3,6 @@ import { AttendanceFull, AttendanceNew } from '../types/attendance'
 import { useDictionary } from '../hooks/useDictionary'
 import {
   addAttendances,
-  fetchAllAttendances,
   fetchAttendances,
   fetchAttendancesForStudent,
   removeAttendances,

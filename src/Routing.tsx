@@ -27,6 +27,8 @@ import { SchedulePageLoadable } from './pages/schedules'
 import { AttendanceEditorLoadable } from './pages/attendance'
 import { ProfilePage } from './pages/profile/Profile'
 import { CreateOrganizationPageLoadable } from './pages/organizations'
+import { InviteUserPage } from './pages/users/InviteUser'
+import { ConfirmInvitePage } from './pages/users/ConfirmInvite'
 
 export function Routing() {
   return (
@@ -59,6 +61,9 @@ export function Routing() {
 
       <AuthGuardedRoute component={ProfilePage} path="/" exact />
       <AuthGuardedRoute component={DashboardPage} path="/:orgId/" exact />
+
+      <AuthGuardedRoute component={InviteUserPage} path="/:orgId/invite" exact />
+      <AuthGuardedRoute component={ConfirmInvitePage} path="/:orgId/invite/confirm/:token" exact />
 
       {/* Teachers */}
       <AuthGuardedRoute component={CreateTeacherPage} path={`/:orgId${ROUTES.TEACHERS_ADD}`} exact />
@@ -106,6 +111,9 @@ export function Routing() {
         path={`${ROUTES.ORGANIZATIONS_ADD}`}
         exact
       />
+
+      {/* 404 */}
+      <Route path={`/*`}>404</Route>
     </Switch>
   )
 }

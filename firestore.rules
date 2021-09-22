@@ -9,20 +9,26 @@ service cloud.firestore {
         return exists(/databases/$(database)/documents/organizations/$(orgName)/users/$(uid))
       }
       function isOrgAdmin(uid) {
-        return exists(/databases/$(database)/documents/organizations/$(orgName)/admins/$(uid))
+        return exists(/databases/$(database)/documents/organizations/$(orgName)/admins/$(uid)) || isOrgCreator(uid)
       }
-      function hasInvite() {
-        return request.resource.data.inviteLink == get(/databases/$(database)/documents/organizations/$(orgName)).inviteLink
+      function hasInvite(email, token) {
+        return email == get(/databases/$(database)/documents/organizations/$(orgName)/invites/$(token)).data.email
       }
-      function isCreator(uid) {
-        return resource.data.creator == uid
+      function isOrgCreator(uid) {
+        return get(/databases/$(database)/documents/organizations/$(orgName)).data.creator == uid
       }
 
+      match /invites/{document=**} {
+        allow write: if isOrgAdmin(request.auth.uid)
+      }
       match /groups/{document=**} {
         allow read: if isOrgMember(request.auth.uid)
       }
       match /students/{document=**} {
         allow read: if isOrgMember(request.auth.uid)
+      }
+      match /admins/{document=**} {
+        allow write: if isOrgAdmin(request.auth.uid)
       }
       // email as an ID to be able to invite
       match /users/{email} {
@@ -30,12 +36,12 @@ service cloud.firestore {
       }
       match /users/{document=**} {
         allow read, write: if isOrgAdmin(request.auth.uid)
-        allow create: if hasInvite()
+        allow create: if hasInvite(request.auth.token.email, request.resource.data.token)
       }
       allow create: if true
       allow read: if isOrgMember(request.auth.uid)
       allow read, write: if isOrgAdmin(request.auth.uid)
-      allow read, write: if isCreator(request.auth.uid)
+      allow read, write: if isOrgCreator(request.auth.uid)
     }
     match /users/{userId} {
       allow read, write: if request.auth.uid == userId;

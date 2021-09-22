@@ -28,7 +28,7 @@ export const messages = {
 
   'teachers.list.title': 'Teachers',
   'teachers.list.empty': 'There is no teachers yet',
-  'teachers.add.title': 'Add teacher',
+  'teachers.add.title': 'Invite teacher',
   'teachers.edit.title': 'Edit teacher',
   'teachers.groups.empty': "The teacher doesn't have any classes",
   'teachers.delete.header': 'Remove teacher',
@@ -73,6 +73,8 @@ export const messages = {
   'organizations.add.title': 'Add organization',
   'organizations.edit.title': 'Edit organization',
   'organizations.edit.noUserId': 'Looks like user is logged out',
+
+  'users.invite.title': 'Invite user',
 }
 
 export default messages

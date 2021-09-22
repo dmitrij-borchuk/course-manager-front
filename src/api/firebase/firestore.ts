@@ -48,6 +48,10 @@ export function collection<T extends { id: string }>(name: string) {
 
       return getItemFromDoc<T>(doc)
     },
-    save: (data: T) => collection.doc(data.id).set(data, { merge: true }),
+    save: async (data: T) => {
+      const doc = collection.doc(data.id)
+      await doc.set(data, { merge: true })
+      return doc
+    },
   }
 }

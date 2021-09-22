@@ -31,9 +31,10 @@ export default function useGroupsStore() {
 
     fetchGroups: useCallback(async (props?: Parameters<typeof getGroups>[0]) => {
       setLoading(true)
-      const resp = await getGroups(props)
-      const groupsById = arrayToDictionary(resp.data)
-      setGroupsById(groupsById)
+      // TODO: implement it
+      // const resp = await getGroups(props)
+      // const groupsById = arrayToDictionary(resp.data)
+      // setGroupsById(groupsById)
       setLoading(false)
     }, []),
     fetchGroup,

@@ -20,8 +20,9 @@ export function useAttendancesStore() {
     attendances,
     fetchAllAttendances: useCallback(async (from: Date, to: Date) => {
       setLoading(true)
-      const response = await fetchAllAttendances(from, to)
-      setAttendances(response.data)
+      // TODO: implement
+      // const response = await fetchAllAttendances(from, to)
+      // setAttendances(response.data)
       setLoading(false)
     }, []),
     fetchAttendancesForStudent: useCallback(async (groupsIds: string[], studentId: string) => {

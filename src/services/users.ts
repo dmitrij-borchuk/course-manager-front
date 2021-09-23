@@ -44,4 +44,11 @@ export async function confirmInvitation(orgId: string, userId: string, token: st
     id: userId,
     token,
   })
+
+  const userOrganizations = user.organizations || []
+  // TODO: probably move to FireBase functions
+  await users.save({
+    ...user,
+    organizations: userOrganizations.concat([orgId]),
+  })
 }

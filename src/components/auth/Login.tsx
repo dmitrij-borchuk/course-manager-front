@@ -68,6 +68,7 @@ export const Login: React.FC<Props> = ({ onSubmit, loading = false }) => {
             </div>
             <div className="h-px bg-gray-400 w-full" />
           </div>
+          {/* TODO: can't register inside of organization */}
           <Link to={`${orgPrefix}${ROUTES.REGISTER}`}>
             <FormattedMessage id="auth.registerLink.label" />
           </Link>

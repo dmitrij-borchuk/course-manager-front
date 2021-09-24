@@ -1,7 +1,6 @@
 import React, { useMemo } from 'react'
-import { FormattedMessage, useIntl } from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 import { Button, Container } from 'react-materialize'
-import { Link } from 'react-router-dom'
 import { ROUTES } from '../../constants'
 import { Dictionary } from '../../types/dictionary'
 import { Group } from '../../types/group'
@@ -9,7 +8,6 @@ import { OrganizationUser } from '../../types/user'
 import { AttendanceRateBadge } from '../kit/attendanceRateBadge/AttendancerateBadge'
 import { IconButton } from '../kit/buttons/IconButton'
 import { CollectionItemLink } from '../kit/collectionItemLink/CollectionItemLink'
-import { DeleteIconWithDialog } from '../kit/deleteIconWithDialog/DeleteIconWithDialog'
 import { Ellipsis } from '../kit/ellipsis/Ellipsis'
 import { List } from '../kit/list/List'
 import { SectionHeader } from '../kit/sectionHeader/SectionHeader'
@@ -24,9 +22,7 @@ interface Props {
   teachersGroups?: Group[]
 }
 export const Teacher: React.FC<Props> = ({ className = '', data, onDelete, attendanceRates, teachersGroups = [] }) => {
-  const intl = useIntl()
-
-  const { name, id } = data
+  const { name } = data
 
   return (
     <div className={className}>
@@ -36,14 +32,16 @@ export const Teacher: React.FC<Props> = ({ className = '', data, onDelete, atten
             <Ellipsis>{name}</Ellipsis>
           </SectionHeader>
           <div className="flex items-center space-x-2 pt-4">
-            <Link to={`${ROUTES.TEACHERS_EDIT}/${id}`}>
+            {/* TODO */}
+            {/* <Link to={`/${orgId}${ROUTES.TEACHERS_EDIT}/${id}`}>
               <IconButton type="square" size={40} icon="edit" />
-            </Link>
-            <DeleteIconWithDialog
+            </Link> */}
+            {/* TODO */}
+            {/* <DeleteIconWithDialog
               header={intl.formatMessage({ id: 'teachers.delete.header' })}
               content={<FormattedMessage id="teachers.delete.text" />}
               onSubmit={onDelete}
-            />
+            /> */}
           </div>
         </div>
 
@@ -100,7 +98,7 @@ const NoGroupsInfoBlock = ({ teacher }: NoGroupsInfoBlockProps) => {
   return (
     <div className="text-center">
       <Text type="h6" color="textGray" className="mb-3">
-        <FormattedMessage id="groups.teacher.empty" />
+        <FormattedMessage id="teachers.groups.empty" />
       </Text>
 
       {/* Assign teacher dialog */}

@@ -1,9 +1,11 @@
 import React from 'react'
 import { FormattedMessage } from 'react-intl'
 import { Collection, Container } from 'react-materialize'
+import { Link } from 'react-router-dom'
 import { ROUTES } from '../../constants'
 import { useOrgId } from '../../hooks/useOrgId'
 import { CollectionItemLink } from '../kit/collectionItemLink/CollectionItemLink'
+import { FabBtn } from '../kit/FabBtn/FabBtn'
 import { Header } from '../kit/header/Header'
 import { SectionHeader } from '../kit/sectionHeader/SectionHeader'
 import { SkeletonList } from '../kit/skeleton/SkeletonList'
@@ -19,22 +21,24 @@ interface Props {
   className?: string
   items?: UserItem[]
 }
-export const TeachersList: React.FC<Props> = ({ className = '', loading = false, items = [] }) => {
+export const UsersList: React.FC<Props> = ({ className = '', loading = false, items = [] }) => {
+  const orgId = useOrgId()
+
   return (
     <div className={className}>
       <Header />
 
       <Container className="px-4">
         <SectionHeader>
-          <FormattedMessage id="teachers.list.title" />
+          <FormattedMessage id="users.list.title" />
         </SectionHeader>
 
         <List loading={loading} items={items} />
       </Container>
 
-      {/* <Link to={ROUTES.TEACHERS_ADD}>
+      <Link to={`${orgId}/invite`}>
         <FabBtn />
-      </Link> */}
+      </Link>
     </div>
   )
 }
@@ -44,7 +48,6 @@ interface ListProps {
   items: UserItem[]
 }
 const List = ({ loading, items }: ListProps) => {
-  const orgId = useOrgId()
   if (loading) {
     return <SkeletonList />
   }
@@ -53,7 +56,7 @@ const List = ({ loading, items }: ListProps) => {
     return (
       <div className="flex justify-center">
         <Text type="h6" color="textGray">
-          <FormattedMessage id="teachers.list.empty" />
+          <FormattedMessage id="users.list.empty" />
         </Text>
       </div>
     )
@@ -62,7 +65,7 @@ const List = ({ loading, items }: ListProps) => {
   return (
     <Collection>
       {items.map((item) => (
-        <CollectionItemLink key={item.id} to={`/${orgId}/${ROUTES.TEACHERS_ROOT}/${item.id}`}>
+        <CollectionItemLink key={item.id} to={`${ROUTES.USERS_ROOT}/${item.id}`}>
           {item.name || (
             <Text color="textGray">
               <FormattedMessage id="common.unknownName" />

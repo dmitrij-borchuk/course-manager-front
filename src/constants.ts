@@ -5,6 +5,12 @@ export const ROUTES = {
   LOGIN: '/login',
   REGISTER: '/register',
 
+  // Users
+  USERS_ROOT: '/users',
+  USERS_LIST: '/users',
+  // USERS_ADD: '/users/add',
+  // USERS_EDIT: '/users/edit',
+
   // Teachers
   TEACHERS_ROOT: '/teachers',
   TEACHERS_LIST: '/teachers',

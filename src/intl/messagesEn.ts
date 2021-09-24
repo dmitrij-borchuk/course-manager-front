@@ -21,6 +21,7 @@ export const messages = {
   'auth.registerLink.label': 'Create account',
   'auth.register.title': 'Register',
   'header.nav.dashboard': 'Dashboard',
+  'header.nav.users': 'Users',
   'header.nav.teachers': 'Teachers',
   'header.nav.groups': 'Groups',
   'header.nav.students': 'Students',
@@ -75,6 +76,8 @@ export const messages = {
   'organizations.edit.noUserId': 'Looks like user is logged out',
 
   'users.invite.title': 'Invite user',
+  'users.list.title': 'Users',
+  'users.list.empty': 'There is no users yet',
 }
 
 export default messages

@@ -52,7 +52,7 @@ export const InviteUser: React.FC<Props> = ({
           controls={<SubmitButton loading={loading} disabled={disabled} />}
           onSubmit={handleSubmit(onSubmit)}
         >
-          {inviteLink}
+          <div className="break-all">{inviteLink}</div>
           <Input
             id="email"
             control={control}

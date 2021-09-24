@@ -15,6 +15,10 @@ export const Header = () => {
     <Link to={`/${orgId}${ROUTES.TEACHERS_LIST}`}>
       <FormattedMessage id="header.nav.teachers" />
     </Link>,
+    // TODO
+    // <Link to={`/${orgId}${ROUTES.USERS_LIST}`}>
+    //   <FormattedMessage id="header.nav.users" />
+    // </Link>,
     <Link to={`/${orgId}${ROUTES.GROUPS_LIST}`}>
       <FormattedMessage id="header.nav.groups" />
     </Link>,

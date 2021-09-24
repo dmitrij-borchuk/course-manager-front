@@ -4,24 +4,33 @@ import { Header } from '../kit/header/Header'
 import { SubmitButton } from '../kit/buttons/SubmitButton'
 import { CustomError } from '../../types/error'
 import { useOrgId } from '../../hooks/useOrgId'
-import { Text } from '../kit/text/Text'
+import { FormLayout } from '../kit/formLayout/FormLayout'
+import { useIntl } from 'react-intl'
+import { useFormWithError } from '../../hooks/useFormWithError'
+import { Input } from '../kit/input/Input'
 
-export type TeacherFormOutput = {
+type ConfirmInvitationForm = {
   name: string
-  username: string
-  email: string
-  password: string
-  description?: string
 }
 
 interface Props {
-  onSubmit: () => void
+  onSubmit: (data: ConfirmInvitationForm) => void
   loading?: boolean
   className?: string
+  disabled?: boolean
   error?: CustomError
 }
-export const ConfirmInvite: React.FC<Props> = ({ className = '', onSubmit, loading = false }) => {
+export const ConfirmInvite: React.FC<Props> = ({ className = '', disabled, onSubmit, loading = false, error }) => {
+  const intl = useIntl()
   const orgId = useOrgId()
+  const { control, handleSubmit, errors } = useFormWithError<ConfirmInvitationForm>(
+    {
+      defaultValues: {
+        name: '',
+      },
+    },
+    error
+  )
 
   return (
     <div className={className}>
@@ -30,12 +39,22 @@ export const ConfirmInvite: React.FC<Props> = ({ className = '', onSubmit, loadi
         {/* TODO: use org name */}
         {/* TODO: use translations */}
         {/* TODO: check valid invite */}
-        <Text type="h4">You have been invited to organization {orgId}.</Text>
-        <div className="flex justify-center">
-          <SubmitButton loading={loading} onSubmit={onSubmit}>
-            Confirm
-          </SubmitButton>
-        </div>
+
+        <FormLayout
+          header={`You have been invited to organization ${orgId}.`}
+          controls={<SubmitButton loading={loading} disabled={disabled} />}
+          onSubmit={handleSubmit(onSubmit)}
+        >
+          <Input
+            id="name"
+            control={control}
+            name="name"
+            label={`${intl.formatMessage({ id: 'common.form.name.label' })} *`}
+            rules={{ required: true }}
+            disabled={loading || disabled}
+            error={errors['name']?.message}
+          />
+        </FormLayout>
       </Container>
     </div>
   )

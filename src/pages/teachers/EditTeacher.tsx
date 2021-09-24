@@ -20,7 +20,7 @@ export const EditTeacherPage = () => {
           ...data,
         })
 
-        history.push(`${ROUTES.TEACHERS_ROOT}/${id}`)
+        history.push(`/${orgId}/${ROUTES.TEACHERS_ROOT}/${id}`)
       }
     },
     [editTeacher, history, id, orgId, teacher]

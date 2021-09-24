@@ -29,6 +29,7 @@ import { ProfilePage } from './pages/profile/Profile'
 import { CreateOrganizationPageLoadable } from './pages/organizations'
 import { InviteUserPage } from './pages/users/InviteUser'
 import { ConfirmInvitePage } from './pages/users/ConfirmInvite'
+import { UsersListPage } from './pages/users/UsersList'
 
 export function Routing() {
   return (
@@ -64,6 +65,12 @@ export function Routing() {
 
       <AuthGuardedRoute component={InviteUserPage} path="/:orgId/invite" exact />
       <AuthGuardedRoute component={ConfirmInvitePage} path="/:orgId/invite/confirm/:token" exact />
+
+      {/* Users */}
+      {/* <AuthGuardedRoute component={CreateTeacherPage} path={`/:orgId${ROUTES.TEACHERS_ADD}`} exact />
+      <AuthGuardedRoute component={EditTeacherPage} path={`/:orgId${ROUTES.TEACHERS_EDIT}/:id`} exact /> */}
+      <AuthGuardedRoute component={UsersListPage} path={`/:orgId${ROUTES.USERS_LIST}`} exact />
+      {/* <AuthGuardedRoute component={TeacherPage} path={`/:orgId$/{ROUTES.TEACHERS_ROOT}/:id`} exact /> */}
 
       {/* Teachers */}
       <AuthGuardedRoute component={CreateTeacherPage} path={`/:orgId${ROUTES.TEACHERS_ADD}`} exact />

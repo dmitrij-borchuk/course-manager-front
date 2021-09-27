@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { useHistory } from 'react-router'
 import { makeOrgCollection } from '../api/firebase/collections'
 import { ROUTES } from '../constants'

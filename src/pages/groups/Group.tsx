@@ -1,8 +1,6 @@
 import { useCallback, useEffect, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
-import { Dictionary } from '../../types/dictionary'
-import { groupBy } from '../../utils/common'
-import { getClassesDates } from '../../utils/schedule'
+// import { getClassesDates } from '../../utils/schedule'
 import { useAttendancesState, useGroupsState, useTeachersState } from '../../store'
 import { Group } from '../../components/groups/Group'
 import { useOrgId } from '../../hooks/useOrgId'
@@ -11,7 +9,7 @@ export const GroupPage = () => {
   let { id } = useParams<{ id: string }>()
   const { fetchGroup, groupsById, deleteGroup } = useGroupsState()
   const { fetchTeacher, teachersById } = useTeachersState()
-  const { attendances, clearAttendances, fetchAttendancesForGroup } = useAttendancesState()
+  const { /* attendances,  */ clearAttendances, fetchAttendancesForGroup } = useAttendancesState()
   const group = groupsById[id]
   const teacher = teachersById[group?.teacher || '']
   const groupWithTeacher = useMemo(() => {
@@ -26,8 +24,8 @@ export const GroupPage = () => {
   }, [group, teacher])
   const orgId = useOrgId()
   const onDelete = useCallback(() => deleteGroup(id), [deleteGroup, id])
-  const classes = useMemo(() => (group ? getClassesDates(group, new Date()) : []), [group])
-  const attendancesByStudent = useMemo(() => groupBy(attendances, (a) => a.student?.id), [attendances])
+  // const classes = useMemo(() => (group ? getClassesDates(group, new Date()) : []), [group])
+  // const attendancesByStudent = useMemo(() => groupBy(attendances, (a) => a.student?.id), [attendances])
   const rateByStudent = {}
   // const rateByStudent = useMemo(
   //   () =>

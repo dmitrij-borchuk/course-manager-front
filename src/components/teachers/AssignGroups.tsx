@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { useIntl } from 'react-intl'
 import { ModalProps } from 'react-materialize'
 import { useOrgId } from '../../hooks/useOrgId'

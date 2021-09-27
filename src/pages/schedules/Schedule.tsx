@@ -1,15 +1,14 @@
 import React, { useCallback, useEffect } from 'react'
-import { useHistory } from 'react-router-dom'
+// import { useHistory } from 'react-router-dom'
 import { useQuery } from '../../hooks/useQuery'
 import { useGroupsState } from '../../store'
-import { createSchedule, editSchedule } from '../../services/schedule'
+// import { createSchedule, editSchedule } from '../../services/schedule'
 import { EditSchedule, ScheduleFormData } from '../../components/Schedule/EditSchedule'
-import { ROUTES } from '../../constants'
+// import { ROUTES } from '../../constants'
 import { Message } from '../../components/kit/message/Message'
 import { useOrgId } from '../../hooks/useOrgId'
 
 export const SchedulePage = () => {
-  const history = useHistory()
   const query = useQuery()
   const orgId = useOrgId()
   const groupId = query.get('group')
@@ -23,7 +22,7 @@ export const SchedulePage = () => {
   }, [fetchGroup, groupId, orgId])
 
   // We use only one schedule
-  const schedule = group?.schedules && group?.schedules[0]
+  // const schedule = group?.schedules && group?.schedules[0]
   // TODO: loading
 
   const onSubmit = useCallback(async (data: ScheduleFormData) => {

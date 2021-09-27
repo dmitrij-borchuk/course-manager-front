@@ -7,6 +7,7 @@ import { groupBy } from '../../utils/common'
 import { getClassesDates } from '../../utils/schedule'
 import { ROUTES } from '../../constants'
 import { Student } from '../../components/students/Student'
+import { useOrgId } from '../../hooks/useOrgId'
 
 // TODO: Add loading skeleton
 // TODO: Add 404 state
@@ -18,6 +19,7 @@ export const StudentPage = () => {
   const { attendances, clearAttendances, fetchAttendancesForStudent } = useAttendancesState()
   const { groups, fetchGroups } = useGroupsState()
   const student = studentsById[id]
+  const orgId = useOrgId()
 
   const onDelete = useCallback(async () => {
     await deleteStudent(id)
@@ -53,8 +55,8 @@ export const StudentPage = () => {
   }, [fetchStudent, id])
 
   useEffect(() => {
-    fetchGroups()
-  }, [fetchGroups])
+    fetchGroups(orgId)
+  }, [fetchGroups, orgId])
 
   useEffect(() => {
     if (student) {

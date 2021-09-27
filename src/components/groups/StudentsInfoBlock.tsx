@@ -3,7 +3,7 @@ import { FormattedMessage } from 'react-intl'
 import { Button } from 'react-materialize'
 import { ROUTES } from '../../constants'
 import { Dictionary } from '../../types/dictionary'
-import { GroupFull } from '../../types/group'
+import { Group } from '../../types/group'
 import { Student } from '../../types/student'
 import { AttendanceRateBadge } from '../kit/attendanceRateBadge/AttendancerateBadge'
 import { IconButton } from '../kit/buttons/IconButton'
@@ -15,7 +15,7 @@ import { AssignStudents } from './AssignStudents'
 
 interface StudentsInfoBlockProps {
   students?: Student[]
-  group: GroupFull
+  group: Group
   attendanceRates: Dictionary<number>
 }
 export const StudentsInfoBlock = ({ students, group, attendanceRates }: StudentsInfoBlockProps) => {
@@ -40,7 +40,7 @@ export const StudentsInfoBlock = ({ students, group, attendanceRates }: Students
 }
 
 interface NoStudentsInfoBlockProps {
-  group: GroupFull
+  group: Group
 }
 const NoStudentsInfoBlock = ({ group }: NoStudentsInfoBlockProps) => {
   return (

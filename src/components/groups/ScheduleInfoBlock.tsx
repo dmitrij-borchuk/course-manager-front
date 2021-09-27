@@ -3,7 +3,7 @@ import { FormattedMessage } from 'react-intl'
 import { Button } from 'react-materialize'
 import { Link } from 'react-router-dom'
 import { ROUTES } from '../../constants'
-import { GroupFull } from '../../types/group'
+import { Group, GroupFull } from '../../types/group'
 import { IconButton } from '../kit/buttons/IconButton'
 import { Text } from '../kit/text/Text'
 import { WeekdaySelector } from '../kit/weekdaySelector/WeekdaySelector'
@@ -30,13 +30,13 @@ export const ScheduleInfoBlock = ({ group }: Props) => {
         )}
       </div>
 
-      {schedule ? <ScheduleView value={schedule.cron} /> : <NoScheduleInfoBlock group={group} />}
+      {/* {schedule ? <ScheduleView value={schedule.cron} /> : <NoScheduleInfoBlock group={group} />} */}
     </>
   )
 }
 
 interface NoScheduleInfoBlockProps {
-  group: GroupFull
+  group: Group
 }
 const NoScheduleInfoBlock = ({ group }: NoScheduleInfoBlockProps) => {
   return (

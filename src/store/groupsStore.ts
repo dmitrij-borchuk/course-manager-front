@@ -1,23 +1,25 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useHistory } from 'react-router'
+import { makeOrgCollection } from '../api/firebase/collections'
 import { ROUTES } from '../constants'
 import { useDictionaryToArray } from '../hooks/useDictionaryToArray'
-import { createGroup, deleteGroup, editGroup, getGroup, getGroups } from '../services/groups'
 import { Dictionary } from '../types/dictionary'
-import { Group, GroupFull, NewGroup } from '../types/group'
+import { Group, NewGroup } from '../types/group'
+import { arrayToDictionary } from '../utils/common'
 
 export default function useGroupsStore() {
   const history = useHistory()
   const [loading, setLoading] = useState(false)
-  const [groupsById, setGroupsById] = useState<Dictionary<GroupFull>>({})
+  const [groupsById, setGroupsById] = useState<Dictionary<Group>>({})
   const groups = useDictionaryToArray(groupsById)
   const [fetching, setFetching] = useState(false)
   const [submitting, setSubmitting] = useState(false)
 
-  const fetchGroup = useCallback(async (id: string) => {
+  const fetchGroup = useCallback(async (orgId: string, id: string) => {
     setFetching(true)
-    const resp = await getGroup(id)
-    setGroupsById((state) => ({ ...state, [resp.data.id]: resp.data }))
+    const groupsCollection = makeOrgCollection<Group>('groups', orgId)
+    const resp = await groupsCollection.getById(id)
+    setGroupsById((state) => ({ ...state, [resp.id]: resp }))
     setFetching(false)
   }, [])
 
@@ -28,32 +30,46 @@ export default function useGroupsStore() {
     submitting,
     fetching,
 
-    fetchGroups: useCallback(async (props?: Parameters<typeof getGroups>[0]) => {
+    fetchGroups: useCallback(async (orgId: string) => {
       setLoading(true)
-      // TODO: implement it
-      // const resp = await getGroups(props)
-      // const groupsById = arrayToDictionary(resp.data)
-      // setGroupsById(groupsById)
+      const groupsCollection = makeOrgCollection<Group>('groups', orgId)
+      const resp = await groupsCollection.getAll()
+      const newGroupsById = arrayToDictionary(resp)
+      setGroupsById(newGroupsById)
       setLoading(false)
     }, []),
     fetchGroup,
-    editGroup: useCallback(
-      async (data: Group) => {
-        setSubmitting(true)
-        const response = await editGroup(data)
-        setGroupsById((state) => ({ ...state, [data.id]: response.data }))
-        history.push(`${ROUTES.GROUPS_ROOT}/${data.id}`)
+    editGroup: useCallback(async (orgId: string, data: Partial<Group>) => {
+      setSubmitting(true)
+      const groupsCollection = makeOrgCollection<Group>('groups', orgId)
+      try {
+        const result = await groupsCollection.save(data)
+        setGroupsById((state) => ({
+          ...state,
+          [result.id]: {
+            ...state[result.id],
+            ...data,
+          },
+        }))
         setSubmitting(false)
-      },
-      [history]
-    ),
+      } catch (error) {
+        setSubmitting(false)
+        throw error
+      }
+    }, []),
     createGroup: useCallback(
-      async (data: NewGroup) => {
+      async (orgId: string, data: NewGroup) => {
         setSubmitting(true)
-        const result = await createGroup(data)
-        setGroupsById((state) => ({ ...state, [result.data.id]: result.data }))
-        history.push(`${ROUTES.GROUPS_ROOT}/${result.data.id}`)
-        setSubmitting(false)
+        const groupsCollection = makeOrgCollection<Group>('groups', orgId)
+        try {
+          const result = await groupsCollection.save(data)
+          setGroupsById((state) => ({ ...state, [result.id]: { ...data, id: result.id } }))
+          history.push(`/${orgId}${ROUTES.GROUPS_ROOT}/${result.id}`)
+          setSubmitting(false)
+        } catch (error) {
+          setSubmitting(false)
+          throw error
+        }
       },
       [history]
     ),
@@ -64,7 +80,7 @@ export default function useGroupsStore() {
     deleteGroup: useCallback(
       async (id: string) => {
         setSubmitting(true)
-        await deleteGroup(id)
+        // await deleteGroup(id)
         setGroupsById((state) => {
           delete state[id]
           return state

@@ -22,16 +22,14 @@ export const AssignTeacher = ({ group, onDone = noop, trigger }: Props) => {
   const { teachers, fetchTeachers, fetching } = useTeachersState()
   const onSubmit = useCallback(
     async (data: OrganizationUser) => {
-      await editGroup({
-        ...group,
+      await editGroup(orgId, {
+        id: group.id,
         teacher: data.id,
-        students: group.students?.map((s) => s.id),
-        schedules: group.schedules.map((s) => s.id),
       })
       toggler.off()
       onDone()
     },
-    [editGroup, group, onDone, toggler]
+    [editGroup, group.id, onDone, orgId, toggler]
   )
 
   useEffect(() => {

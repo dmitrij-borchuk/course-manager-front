@@ -65,6 +65,7 @@ interface GroupsInfoBlockProps {
 const GroupsInfoBlock = ({ groups, teacher, attendanceRates, teachersGroups = [] }: GroupsInfoBlockProps) => {
   const renderItem = useMemo(() => getGroupItemRender(attendanceRates), [attendanceRates])
 
+  // TODO: loading
   return (
     <>
       <div className="flex justify-between items-center">

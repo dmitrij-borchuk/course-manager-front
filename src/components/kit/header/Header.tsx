@@ -2,31 +2,31 @@ import { FormattedMessage } from 'react-intl'
 import { Divider, Icon, Navbar } from 'react-materialize'
 import { Link } from 'react-router-dom'
 import { ROUTES } from '../../../constants'
-import { useOrgId } from '../../../hooks/useOrgId'
+import { useOrgIdNotStrict } from '../../../hooks/useOrgId'
 
 // TODO: use logo
 
 export const Header = () => {
-  const orgId = useOrgId()
+  const orgId = useOrgIdNotStrict()
   const orgItems = [
-    <Link to={`/${orgId}`}>
+    <Link key="dashboard" to={`/${orgId}`}>
       <FormattedMessage id="header.nav.dashboard" />
     </Link>,
-    <Link to={`/${orgId}${ROUTES.TEACHERS_LIST}`}>
+    <Link key="teachers" to={`/${orgId}${ROUTES.TEACHERS_LIST}`}>
       <FormattedMessage id="header.nav.teachers" />
     </Link>,
     // TODO
-    // <Link to={`/${orgId}${ROUTES.USERS_LIST}`}>
+    // <Link key="users" to={`/${orgId}${ROUTES.USERS_LIST}`}>
     //   <FormattedMessage id="header.nav.users" />
     // </Link>,
-    <Link to={`/${orgId}${ROUTES.GROUPS_LIST}`}>
+    <Link key="groups" to={`/${orgId}${ROUTES.GROUPS_LIST}`}>
       <FormattedMessage id="header.nav.groups" />
     </Link>,
-    <Link to={`/${orgId}${ROUTES.STUDENTS_LIST}`}>
+    <Link key="students" to={`/${orgId}${ROUTES.STUDENTS_LIST}`}>
       <FormattedMessage id="header.nav.students" />
     </Link>,
-    <Divider />,
-    <Link to={`/${orgId}${ROUTES.LOGOUT}`}>
+    <Divider key="divider" />,
+    <Link key="logout" to={`/${orgId}${ROUTES.LOGOUT}`}>
       <FormattedMessage id="header.nav.logout" />
     </Link>,
   ]

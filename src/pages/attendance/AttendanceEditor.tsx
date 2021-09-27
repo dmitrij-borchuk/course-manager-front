@@ -4,11 +4,13 @@ import { useAttendancesState, useGroupsState } from '../../store'
 import { datesAreOnSameDay } from '../../utils/date'
 import { Student } from '../../types/student'
 import AttendanceEditor from '../../components/attendance/AttendanceEditor'
+import { useOrgId } from '../../hooks/useOrgId'
 
 export const AttendanceEditorPage = () => {
   const { id, date } = useParams<{ id: string; date: string }>()
   const { fetchGroup, groupsById } = useGroupsState()
   const history = useHistory()
+  const orgId = useOrgId()
   const {
     addAttendances,
     removeAttendances,
@@ -41,8 +43,8 @@ export const AttendanceEditorPage = () => {
   )
 
   useEffect(() => {
-    fetchGroup(id)
-  }, [fetchGroup, id])
+    fetchGroup(orgId, id)
+  }, [fetchGroup, id, orgId])
 
   useEffect(() => {
     if (group?.id) {

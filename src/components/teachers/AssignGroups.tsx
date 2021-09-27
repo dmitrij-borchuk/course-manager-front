@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo } from 'react'
 import { useIntl } from 'react-intl'
 import { ModalProps } from 'react-materialize'
+import { useOrgId } from '../../hooks/useOrgId'
 import { useToggle } from '../../hooks/useToggle'
 import { useGroupsState } from '../../store'
 import { Group } from '../../types/group'
@@ -16,37 +17,28 @@ interface Props {
 }
 export const AssignGroups = ({ teacher, onDone = noop, trigger, teachersGroups = [] }: Props) => {
   const intl = useIntl()
+  const orgId = useOrgId()
   const [open, toggler] = useToggle(false)
   const { groups, fetchGroups, fetching, editGroup } = useGroupsState()
-  // Make 'Group[]' from 'GroupFull[]'
-  const groupsSimple = useMemo(
-    () =>
-      groups.map((g) => ({
-        ...g,
-        teacher: g.teacher?.id,
-        students: g.students?.map((s) => s.id),
-        schedules: g.schedules.map((s) => s.id),
-      })),
-    [groups]
-  )
   const onSubmit = useCallback(
     async (data: Group[]) => {
       for (let index = 0; index < data.length; index++) {
         const group = data[index]
-        await editGroup({
-          ...group,
+        // TODO: fix unselect groups
+        await editGroup(orgId, {
+          id: group.id,
           teacher: teacher.id,
         })
       }
       toggler.off()
       onDone()
     },
-    [editGroup, onDone, teacher.id, toggler]
+    [editGroup, onDone, orgId, teacher.id, toggler]
   )
 
   useEffect(() => {
-    fetchGroups()
-  }, [fetchGroups])
+    fetchGroups(orgId)
+  }, [fetchGroups, orgId])
 
   return (
     <>
@@ -55,7 +47,7 @@ export const AssignGroups = ({ teacher, onDone = noop, trigger, teachersGroups =
         loading={fetching}
         open={open}
         header={intl.formatMessage({ id: 'teachers.groups.assignDialog.header' })}
-        items={groupsSimple}
+        items={groups}
         onSubmit={onSubmit}
         labelProp={(g) => g.name}
         onCloseStart={toggler.off}

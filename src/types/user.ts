@@ -34,6 +34,5 @@ export type AppUser = {
 export type OrganizationUser = {
   id: string
   role?: string
-  activated?: boolean
   name?: string
 }

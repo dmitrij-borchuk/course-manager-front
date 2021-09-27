@@ -3,13 +3,13 @@ import { useIntl } from 'react-intl'
 import { ModalProps } from 'react-materialize'
 import { useToggle } from '../../hooks/useToggle'
 import { useGroupsState, useStudentsState } from '../../store'
-import { GroupFull } from '../../types/group'
+import { Group } from '../../types/group'
 import { Student } from '../../types/student'
 import { noop } from '../../utils/common'
 import { SelectDialog } from '../kit/selectDialog/SelectDialog'
 
 interface Props {
-  group: GroupFull
+  group: Group
   onDone?: () => void
   trigger?: ModalProps['trigger']
 }
@@ -28,19 +28,17 @@ export const AssignStudents = ({ group, onDone = noop, trigger }: Props) => {
       })),
     [students]
   )
-  const onSubmit = useCallback(
-    async (data: Student[]) => {
-      await editGroup({
-        ...group,
-        teacher: group.teacher?.id,
-        students: data.map((s) => s.id),
-        schedules: data.map((s) => s.id),
-      })
-      toggler.off()
-      onDone()
-    },
-    [editGroup, group, onDone, toggler]
-  )
+  const onSubmit = useCallback(async (data: Student[]) => {
+    // TODO: implenemt me
+    // await editGroup({
+    //   ...group,
+    //   teacher: group.teacher?.id,
+    //   students: data.map((s) => s.id),
+    //   schedules: data.map((s) => s.id),
+    // })
+    // toggler.off()
+    // onDone()
+  }, [])
 
   useEffect(() => {
     fetchStudents()
@@ -57,7 +55,7 @@ export const AssignStudents = ({ group, onDone = noop, trigger }: Props) => {
         onSubmit={onSubmit}
         labelProp={(g) => g.name}
         onCloseStart={toggler.off}
-        initial={group.students}
+        // initial={group.students}
         multiSelect
       />
     </>

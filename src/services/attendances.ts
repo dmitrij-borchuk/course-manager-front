@@ -1,12 +1,12 @@
 import { useMemo } from 'react'
 import { addAttendanceRequest, getAttendancesRequest, removeAttendanceRequest } from '../api/attendances'
 import { AttendanceFull, AttendanceNew } from '../types/attendance'
-import { GroupFull } from '../types/group'
+import { Group } from '../types/group'
 import { groupBy } from '../utils/common'
 import { datesInRange } from '../utils/date'
 import { getClassesDates } from '../utils/schedule'
 
-export function useAttendanceGrouping(from: Date, to: Date, attendances?: AttendanceFull[], groups?: GroupFull[]) {
+export function useAttendanceGrouping(from: Date, to: Date, attendances?: AttendanceFull[], groups?: Group[]) {
   return useMemo(() => {
     if (!attendances || !groups) {
       return []
@@ -19,7 +19,7 @@ export function useAttendanceGrouping(from: Date, to: Date, attendances?: Attend
 function getAttendanceDateKey(date: Date) {
   return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}}`
 }
-function getTimelineData(from: Date, to: Date, attendances: AttendanceFull[], groups: GroupFull[]) {
+function getTimelineData(from: Date, to: Date, attendances: AttendanceFull[], groups: Group[]) {
   const attByDate = groupBy(attendances, (att) => {
     const date = new Date(att.date)
     return getAttendanceDateKey(date)
@@ -31,7 +31,7 @@ function getTimelineData(from: Date, to: Date, attendances: AttendanceFull[], gr
   })
 }
 
-function getBlockData(date: Date, attendances: AttendanceFull[], groups: GroupFull[]) {
+function getBlockData(date: Date, attendances: AttendanceFull[], groups: Group[]) {
   const attByGroup = groupBy(attendances, (v) => v.group?.id)
 
   const items = groups.map((g) => {
@@ -64,14 +64,15 @@ function getDayRanges(date: Date) {
   return [start, end]
 }
 
-function getMeterData(attendances: AttendanceFull[], group: GroupFull) {
+function getMeterData(attendances: AttendanceFull[], group: Group) {
   return { id: group.id, text: group.name, progress: getMeterProgress(attendances, group) }
 }
 
-function getMeterProgress(attendances: AttendanceFull[], group: GroupFull) {
+function getMeterProgress(attendances: AttendanceFull[], group: Group) {
   // TODO: remove duplications in `attendancesOfGroup` items (if one student was registered two times)
   const groupAtt = attendances?.length
-  const groupMembers = group.students?.length
+  // const groupMembers = group.students?.length
+  const groupMembers = 0
   if (!groupAtt || !groupMembers) {
     return 0
   }

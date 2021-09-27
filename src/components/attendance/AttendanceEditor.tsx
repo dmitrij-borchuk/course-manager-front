@@ -3,7 +3,7 @@ import { FormattedDate } from 'react-intl'
 import { Container, Icon } from 'react-materialize'
 import { useDictionary } from '../../hooks/useDictionary'
 import { AttendanceFull } from '../../types/attendance'
-import { GroupFull } from '../../types/group'
+import { Group } from '../../types/group'
 import { Student } from '../../types/student'
 import { noop } from '../../utils/common'
 import { datesAreOnSameDay } from '../../utils/date'
@@ -14,7 +14,7 @@ import { SectionHeader } from '../kit/sectionHeader/SectionHeader'
 
 interface Props {
   className?: string
-  group: GroupFull
+  group: Group
   date: Date
   onSubmit?: (data: { toAdd: Student[]; toRemove: Student[] }) => void
   attendances: AttendanceFull[]
@@ -35,15 +35,16 @@ export const AttendanceEditor = (props: Props) => {
   }, [attendances])
   const initialSelected = useMemo(() => {
     const map: Record<string, boolean> = {}
-    group.students?.forEach((s) => {
-      const studentsAttendance = attendancesByStudent[s.id] || []
-      const thisDayAttendance = studentsAttendance.filter((a) => datesAreOnSameDay(new Date(a.date), date))
-      const hasAttendance = !!thisDayAttendance.find((a) => a.student?.id === s.id)
-      map[s.id] = hasAttendance
-    })
+    // TODO: implement me
+    // group.students?.forEach((s) => {
+    //   const studentsAttendance = attendancesByStudent[s.id] || []
+    //   const thisDayAttendance = studentsAttendance.filter((a) => datesAreOnSameDay(new Date(a.date), date))
+    //   const hasAttendance = !!thisDayAttendance.find((a) => a.student?.id === s.id)
+    //   map[s.id] = hasAttendance
+    // })
 
     return map
-  }, [attendancesByStudent, date, group.students])
+  }, [])
   const [selected, setSelected] = useState<Record<string, boolean>>(initialSelected)
   const renderItem = useMemo(
     () => (s: Student) =>
@@ -71,32 +72,33 @@ export const AttendanceEditor = (props: Props) => {
       ),
     [selected]
   )
-  const studentsById = useDictionary(group.students)
-  const { students } = group
+  // const studentsById = useDictionary(group.students)
+  // const { students } = group
   const submitHandler = useCallback(() => {
-    const initialSelectedArray = Object.entries(initialSelected)
-      .filter(([key, value]) => value)
-      .map(([key]) => key)
-    const selectedArray = Object.entries(selected)
-      .filter(([key, value]) => value)
-      .map(([key]) => key)
-    const toAdd: Student[] = []
-    const toRemove: Student[] = []
-    selectedArray.forEach((id) => {
-      if (!initialSelectedArray.includes(id)) {
-        toAdd.push(studentsById[id])
-      }
-    })
-    initialSelectedArray.forEach((id) => {
-      if (!selectedArray.includes(id)) {
-        toRemove.push(studentsById[id])
-      }
-    })
-    onSubmit({
-      toAdd,
-      toRemove,
-    })
-  }, [initialSelected, onSubmit, selected, studentsById])
+    // TODO: implement me
+    // const initialSelectedArray = Object.entries(initialSelected)
+    //   .filter(([key, value]) => value)
+    //   .map(([key]) => key)
+    // const selectedArray = Object.entries(selected)
+    //   .filter(([key, value]) => value)
+    //   .map(([key]) => key)
+    // const toAdd: Student[] = []
+    // const toRemove: Student[] = []
+    // selectedArray.forEach((id) => {
+    //   if (!initialSelectedArray.includes(id)) {
+    //     toAdd.push(studentsById[id])
+    //   }
+    // })
+    // initialSelectedArray.forEach((id) => {
+    //   if (!selectedArray.includes(id)) {
+    //     toRemove.push(studentsById[id])
+    //   }
+    // })
+    // onSubmit({
+    //   toAdd,
+    //   toRemove,
+    // })
+  }, [])
 
   return (
     <div className={className}>
@@ -105,7 +107,7 @@ export const AttendanceEditor = (props: Props) => {
         <div>
           <FormattedDate month="short" day="2-digit" weekday="short" value={date} />
         </div>
-        {students?.length ? <List items={students} renderItem={renderItem} /> : <NoStudents />}
+        {/* {students?.length ? <List items={students} renderItem={renderItem} /> : <NoStudents />} */}
         <div className="flex justify-end">
           <SubmitButton onSubmit={submitHandler} />
         </div>

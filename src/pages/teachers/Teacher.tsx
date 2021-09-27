@@ -31,7 +31,7 @@ export const TeacherPage = () => {
       }, {}),
     [groups]
   )
-  const groupsOfTeacher = useMemo(() => groups.filter((g) => g.teacher?.id === teacher.id), [groups, teacher.id])
+  const groupsOfTeacher = useMemo(() => groups.filter((g) => g.teacher === teacher?.id), [groups, teacher?.id])
   const rateByGroup = useMemo(() => {
     return groupsOfTeacher.reduce<Dictionary<number>>((acc, g) => {
       const classesCount = classesByGroup[g.id]?.length || 0
@@ -53,9 +53,9 @@ export const TeacherPage = () => {
 
   useEffect(() => {
     // TODO: probably we need only groups of teacher
-    fetchGroups()
+    fetchGroups(orgId)
     // TODO: clear
-  }, [fetchGroups])
+  }, [fetchGroups, orgId])
 
   useEffect(() => {
     fetchAttendancesForGroups(groupsOfTeacher.map((g) => g.id))
@@ -72,7 +72,9 @@ export const TeacherPage = () => {
       <Header />
       {/* TODO: skeleton loader */}
       <Loader show={fetching}>
-        {teacher && <Teacher data={teacher} onDelete={onDelete} attendanceRates={rateByGroup} />}
+        {teacher && (
+          <Teacher data={teacher} onDelete={onDelete} attendanceRates={rateByGroup} teachersGroups={groupsOfTeacher} />
+        )}
       </Loader>
     </>
   )

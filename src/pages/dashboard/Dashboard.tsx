@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { Dashboard } from '../../components/dashboard/Dashboard'
+import { useOrgId } from '../../hooks/useOrgId'
 import { useAttendanceGrouping } from '../../services/attendances'
 import { useAttendancesState, useGroupsState } from '../../store'
 
@@ -13,12 +14,13 @@ export function DashboardPage() {
   const { fetchAllAttendances, attendances } = useAttendancesState()
   const { fetchGroups, groups } = useGroupsState()
   const timelineData = useAttendanceGrouping(fromDate, toDate, attendances, groups)
+  const orgId = useOrgId()
 
   useEffect(() => {
     fetchAllAttendances(fromDate, toDate)
     // TODO: Get teacher's groups in case of teacher
-    fetchGroups()
-  }, [fetchAllAttendances, fetchGroups])
+    fetchGroups(orgId)
+  }, [fetchAllAttendances, fetchGroups, orgId])
 
   // TODO: loading state
   return <Dashboard items={timelineData} />

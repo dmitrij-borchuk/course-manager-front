@@ -31,7 +31,19 @@ import { InviteUserPage } from './pages/users/InviteUser'
 import { ConfirmInvitePage } from './pages/users/ConfirmInvite'
 import { UsersListPage } from './pages/users/UsersList'
 
-export function Routing() {
+const GroupsListPage = withHeader(GroupsListPageLoadable)
+const CreateGroupPage = withHeader(CreateGroupPageLoadable)
+const EditGroupPage = withHeader(EditGroupPageLoadable)
+const GroupPage = withHeader(GroupPageLoadable)
+const CreateStudentPage = withHeader(CreateStudentPageLoadable)
+const EditStudentPage = withHeader(EditStudentPageLoadable)
+const StudentsListPage = withHeader(StudentsListPageLoadable)
+const StudentPage = withHeader(StudentPageLoadable)
+const SchedulePage = withHeader(SchedulePageLoadable)
+const AttendanceEditor = withHeader(AttendanceEditorLoadable)
+const CreateOrganizationPage = withHeader(CreateOrganizationPageLoadable)
+
+export const Routing = React.memo(function () {
   return (
     <Switch>
       {/* Default auth flow */}
@@ -79,48 +91,28 @@ export function Routing() {
       <AuthGuardedRoute component={TeacherPage} path={`/:orgId${ROUTES.TEACHERS_ROOT}/:id`} exact />
 
       {/* Groups */}
-      <AuthGuardedRoute component={withHeader(CreateGroupPageLoadable)} path={`/:orgId${ROUTES.GROUPS_ADD}`} exact />
-      <AuthGuardedRoute component={withHeader(EditGroupPageLoadable)} path={`/:orgId${ROUTES.GROUPS_EDIT}/:id`} exact />
-      <AuthGuardedRoute component={withHeader(GroupsListPageLoadable)} path={`/:orgId${ROUTES.GROUPS_LIST}`} exact />
-      <AuthGuardedRoute component={withHeader(GroupPageLoadable)} path={`/:orgId${ROUTES.GROUPS_ROOT}/:id`} exact />
+      <AuthGuardedRoute component={CreateGroupPage} path={`/:orgId${ROUTES.GROUPS_ADD}`} exact />
+      <AuthGuardedRoute component={EditGroupPage} path={`/:orgId${ROUTES.GROUPS_EDIT}/:id`} exact />
+      <AuthGuardedRoute component={GroupsListPage} path={`/:orgId${ROUTES.GROUPS_LIST}`} exact />
+      <AuthGuardedRoute component={GroupPage} path={`/:orgId${ROUTES.GROUPS_ROOT}/:id`} exact />
 
       {/* Students */}
-      <AuthGuardedRoute
-        component={withHeader(CreateStudentPageLoadable)}
-        path={`/:orgId${ROUTES.STUDENTS_ADD}`}
-        exact
-      />
-      <AuthGuardedRoute
-        component={withHeader(EditStudentPageLoadable)}
-        path={`/:orgId${ROUTES.STUDENTS_EDIT}/:id`}
-        exact
-      />
-      <AuthGuardedRoute
-        component={withHeader(StudentsListPageLoadable)}
-        path={`/:orgId${ROUTES.STUDENTS_LIST}`}
-        exact
-      />
-      <AuthGuardedRoute component={withHeader(StudentPageLoadable)} path={`/:orgId${ROUTES.STUDENTS_ROOT}/:id`} exact />
+      <AuthGuardedRoute component={CreateStudentPage} path={`/:orgId${ROUTES.STUDENTS_ADD}`} exact />
+      <AuthGuardedRoute component={EditStudentPage} path={`/:orgId${ROUTES.STUDENTS_EDIT}/:id`} exact />
+      <AuthGuardedRoute component={StudentsListPage} path={`/:orgId${ROUTES.STUDENTS_LIST}`} exact />
+      <AuthGuardedRoute component={StudentPage} path={`/:orgId${ROUTES.STUDENTS_ROOT}/:id`} exact />
 
       {/* Schedule */}
-      <AuthGuardedRoute component={withHeader(SchedulePageLoadable)} path={`/:orgId${ROUTES.SCHEDULES_ROOT}`} exact />
+      <AuthGuardedRoute component={SchedulePage} path={`/:orgId${ROUTES.SCHEDULES_ROOT}`} exact />
 
       {/* Attendance */}
-      <AuthGuardedRoute
-        component={withHeader(AttendanceEditorLoadable)}
-        path={`/:orgId${ROUTES.ATTENDANCE_EDIT}/:id/:date`}
-        exact
-      />
+      <AuthGuardedRoute component={AttendanceEditor} path={`/:orgId${ROUTES.ATTENDANCE_EDIT}/:id/:date`} exact />
 
       {/* Organizations */}
-      <AuthGuardedRoute
-        component={withHeader(CreateOrganizationPageLoadable)}
-        path={`${ROUTES.ORGANIZATIONS_ADD}`}
-        exact
-      />
+      <AuthGuardedRoute component={CreateOrganizationPage} path={`${ROUTES.ORGANIZATIONS_ADD}`} exact />
 
       {/* 404 */}
       <Route path={`/*`}>404</Route>
     </Switch>
   )
-}
+})

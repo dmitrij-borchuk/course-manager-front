@@ -6,7 +6,7 @@
     "start": "craco start",
     "build": "craco build",
     "test": "craco test",
-    "firebase-emulator": "firebase emulators:start"
+    "firebase-emulator": "firebase emulators:start --import=./local-firebase-data --export-on-exit"
   },
   "dependencies": {
     "@craco/craco": "^6.1.1",

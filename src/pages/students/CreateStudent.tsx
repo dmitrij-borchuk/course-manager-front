@@ -3,20 +3,22 @@ import { useHistory } from 'react-router'
 import { Loader } from '../../components/kit/loader/Loader'
 import { EditStudent, StudentForm } from '../../components/students/EditStudent'
 import { ROUTES } from '../../constants'
+import { useOrgId } from '../../hooks/useOrgId'
 import { useStudentsState } from '../../store'
 
 export const CreateStudent = () => {
   const history = useHistory()
+  const orgId = useOrgId()
   const { createStudent, fetching, submitting } = useStudentsState()
 
   const submit = useCallback(
     async (data: StudentForm) => {
-      const result = await createStudent({
+      const result = await createStudent(orgId, {
         ...data,
       })
-      history.push(`${ROUTES.STUDENTS_ROOT}/${result.data.id}`)
+      history.push(`/${orgId}${ROUTES.STUDENTS_ROOT}/${result.id}`)
     },
-    [createStudent, history]
+    [createStudent, history, orgId]
   )
 
   return (

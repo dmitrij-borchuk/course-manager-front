@@ -4,7 +4,7 @@ import { Button } from 'react-materialize'
 import { ROUTES } from '../../constants'
 import { Dictionary } from '../../types/dictionary'
 import { Group } from '../../types/group'
-import { StudentFull } from '../../types/student'
+import { Student } from '../../types/student'
 import { AttendanceRateBadge } from '../kit/attendanceRateBadge/AttendancerateBadge'
 import { IconButton } from '../kit/buttons/IconButton'
 import { CollectionItemLink } from '../kit/collectionItemLink/CollectionItemLink'
@@ -15,7 +15,7 @@ import { AssignGroups } from './AssignGroups'
 
 interface Props {
   groups?: Group[]
-  student: StudentFull
+  student: Student
   attendanceRates: Dictionary<number>
 }
 export const GroupsInfoBlock = ({ groups, student, attendanceRates }: Props) => {
@@ -29,7 +29,11 @@ export const GroupsInfoBlock = ({ groups, student, attendanceRates }: Props) => 
         </Text>
         {/* Assign groups dialog */}
         {!!groups?.length && (
-          <AssignGroups student={student} trigger={<IconButton type="square" size={40} icon="edit" />} />
+          <AssignGroups
+            student={student}
+            initialGroups={groups}
+            trigger={<IconButton type="square" size={40} icon="edit" />}
+          />
         )}
       </div>
 
@@ -39,7 +43,7 @@ export const GroupsInfoBlock = ({ groups, student, attendanceRates }: Props) => 
 }
 
 interface NoGroupsInfoBlockProps {
-  student: StudentFull
+  student: Student
 }
 const NoGroupsInfoBlock = ({ student }: NoGroupsInfoBlockProps) => {
   return (
@@ -51,6 +55,7 @@ const NoGroupsInfoBlock = ({ student }: NoGroupsInfoBlockProps) => {
       {/* Assign groups dialog */}
       <AssignGroups
         student={student}
+        initialGroups={[]}
         trigger={
           <Button waves="light">
             <FormattedMessage id="students.groups.assignBtn.label" />

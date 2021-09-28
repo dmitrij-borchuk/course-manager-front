@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo } from 'react'
 import { useIntl } from 'react-intl'
 import { ModalProps } from 'react-materialize'
+import { useOrgId } from '../../hooks/useOrgId'
 import { useToggle } from '../../hooks/useToggle'
 import { useGroupsState, useStudentsState } from '../../store'
 import { Group } from '../../types/group'
@@ -15,6 +16,7 @@ interface Props {
 }
 export const AssignStudents = ({ group, onDone = noop, trigger }: Props) => {
   const intl = useIntl()
+  const orgId = useOrgId()
   const [open, toggler] = useToggle(false)
   const { students, fetching, fetchStudents } = useStudentsState()
   const { editGroup } = useGroupsState()
@@ -23,8 +25,8 @@ export const AssignStudents = ({ group, onDone = noop, trigger }: Props) => {
     () =>
       students.map((s) => ({
         ...s,
-        groups: s.groups.map((g) => g.id),
-        attendances: s.attendances.map((a) => a.id),
+        // groups: s.groups.map((g) => g.id),
+        // attendances: s.attendances.map((a) => a.id),
       })),
     [students]
   )
@@ -41,8 +43,8 @@ export const AssignStudents = ({ group, onDone = noop, trigger }: Props) => {
   }, [])
 
   useEffect(() => {
-    fetchStudents()
-  }, [fetchStudents])
+    fetchStudents(orgId)
+  }, [fetchStudents, orgId])
 
   return (
     <>

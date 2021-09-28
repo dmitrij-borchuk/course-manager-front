@@ -5,16 +5,17 @@ import { useOrgId } from '../../hooks/useOrgId'
 import { useToggle } from '../../hooks/useToggle'
 import { useGroupsState, useStudentsState } from '../../store'
 import { Group } from '../../types/group'
-import { StudentFull } from '../../types/student'
+import { Student } from '../../types/student'
 import { noop } from '../../utils/common'
 import { SelectDialog } from '../kit/selectDialog/SelectDialog'
 
 interface Props {
-  student: StudentFull
+  student: Student
   onDone?: () => void
   trigger?: ModalProps['trigger']
+  initialGroups: Group[]
 }
-export const AssignGroups = ({ student, onDone = noop, trigger }: Props) => {
+export const AssignGroups = ({ student, onDone = noop, trigger, initialGroups }: Props) => {
   const intl = useIntl()
   const orgId = useOrgId()
   const [open, toggler] = useToggle(false)
@@ -24,8 +25,8 @@ export const AssignGroups = ({ student, onDone = noop, trigger }: Props) => {
     async (data: Group[]) => {
       await editStudent({
         ...student,
-        groups: data.map((g) => g.id),
-        attendances: student.attendances.map((a) => a.id),
+        // groups: data.map((g) => g.id),
+        // attendances: student.attendances.map((a) => a.id),
       })
       toggler.off()
       onDone()
@@ -48,7 +49,7 @@ export const AssignGroups = ({ student, onDone = noop, trigger }: Props) => {
         onSubmit={onSubmit}
         labelProp={(g) => g.name}
         onCloseStart={toggler.off}
-        initial={student.groups}
+        initial={initialGroups}
         multiSelect
       />
     </>

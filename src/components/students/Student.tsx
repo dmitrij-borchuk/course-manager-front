@@ -3,20 +3,22 @@ import { FormattedMessage, useIntl } from 'react-intl'
 import { Container } from 'react-materialize'
 import { ROUTES } from '../../constants'
 import { Dictionary } from '../../types/dictionary'
-import { StudentFull } from '../../types/student'
+import { Group } from '../../types/group'
+import { Student as StudentType } from '../../types/student'
 import { HeadingWithControls } from '../kit/headingWithControls/HeadingWithControls'
 import { GroupsInfoBlock } from './GroupsInfoBlock'
 
 // TODO: add edit
 interface Props {
   className?: string
-  data: StudentFull
+  data: StudentType
   onDelete: () => void
   attendanceRates: Dictionary<number>
+  groups?: Group[]
 }
-export const Student: React.FC<Props> = ({ className = '', data, onDelete, attendanceRates }) => {
+export const Student: React.FC<Props> = ({ className = '', data, groups, onDelete, attendanceRates }) => {
   const intl = useIntl()
-  const { groups, name, description, id } = data
+  const { name, description, id } = data
 
   return (
     <div className={className}>

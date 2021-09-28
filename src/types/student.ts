@@ -8,14 +8,9 @@ export type StudentBase = {
 
 export type Student = StudentBase & {
   id: string
-  groups: string[]
-  attendances: string[]
-  published_at: string
-  created_by: string
-  updated_by: string
 }
 
-export type StudentFull = Omit<Student, 'groups' | 'attendances'> & {
+export type StudentFull = Student & {
   groups: Group[]
   attendances: Attendance[]
 }

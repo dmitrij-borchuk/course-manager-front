@@ -1,13 +1,14 @@
 import { useCallback, useState } from 'react'
+import { makeOrgCollection } from '../api/firebase/collections'
 import { useDictionaryToArray } from '../hooks/useDictionaryToArray'
-import { createStudent, deleteStudent, getStudent, getStudents, updateStudent } from '../services/students'
+import { createStudent, deleteStudent, getStudent, updateStudent } from '../services/students'
 import { Dictionary } from '../types/dictionary'
-import { NewStudent, Student, StudentFull } from '../types/student'
+import { NewStudent, Student } from '../types/student'
 import { arrayToDictionary } from '../utils/common'
 
 export default function useStudentsStore() {
   const [fetching, setFetching] = useState(false)
-  const [studentsById, setStudentsById] = useState<Dictionary<StudentFull>>({})
+  const [studentsById, setStudentsById] = useState<Dictionary<Student>>({})
   const students = useDictionaryToArray(studentsById)
   const [submitting, setSubmitting] = useState(false)
 
@@ -16,10 +17,11 @@ export default function useStudentsStore() {
     studentsById,
     fetching,
     submitting,
-    fetchStudents: useCallback(async (props?: Parameters<typeof getStudents>[0]) => {
+    fetchStudents: useCallback(async (orgId: string) => {
       setFetching(true)
-      const resp = await getStudents(props)
-      const groupsById = arrayToDictionary(resp.data)
+      const collection = makeOrgCollection<Student>('students', orgId)
+      const resp = await collection.getAll()
+      const groupsById = arrayToDictionary(resp)
       setStudentsById(groupsById)
       setFetching(false)
     }, []),

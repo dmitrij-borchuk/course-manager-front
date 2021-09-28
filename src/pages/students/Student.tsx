@@ -25,30 +25,30 @@ export const StudentPage = () => {
     await deleteStudent(id)
     history.push(ROUTES.STUDENTS_LIST)
   }, [deleteStudent, history, id])
-  const classesByGroup = useMemo(
-    () =>
-      groups.reduce<Dictionary<Date[]>>((acc, g) => {
-        return {
-          ...acc,
-          [g.id]: getClassesDates(g, new Date()),
-        }
-      }, {}),
-    [groups]
-  )
-  const attendancesByGroup = useMemo(() => groupBy(attendances, (a) => a.group?.id), [attendances])
-  const rateByGroup = useMemo(
-    () =>
-      (student?.groups || []).reduce<Dictionary<number>>((acc, g) => {
-        const classesCount = classesByGroup[g.id]?.length || 0
-        const groupRate = classesCount ? (attendancesByGroup[g.id]?.length || 0) / classesCount : 0
+  // const classesByGroup = useMemo(
+  //   () =>
+  //     groups.reduce<Dictionary<Date[]>>((acc, g) => {
+  //       return {
+  //         ...acc,
+  //         [g.id]: getClassesDates(g, new Date()),
+  //       }
+  //     }, {}),
+  //   [groups]
+  // )
+  // const attendancesByGroup = useMemo(() => groupBy(attendances, (a) => a.group?.id), [attendances])
+  // const rateByGroup = useMemo(
+  //   () =>
+  //     (student?.groups || []).reduce<Dictionary<number>>((acc, g) => {
+  //       const classesCount = classesByGroup[g.id]?.length || 0
+  //       const groupRate = classesCount ? (attendancesByGroup[g.id]?.length || 0) / classesCount : 0
 
-        return {
-          ...acc,
-          [g.id]: groupRate,
-        }
-      }, {}),
-    [attendancesByGroup, classesByGroup, student?.groups]
-  )
+  //       return {
+  //         ...acc,
+  //         [g.id]: groupRate,
+  //       }
+  //     }, {}),
+  //   [attendancesByGroup, classesByGroup, student?.groups]
+  // )
 
   useEffect(() => {
     fetchStudent(id)
@@ -60,10 +60,10 @@ export const StudentPage = () => {
 
   useEffect(() => {
     if (student) {
-      fetchAttendancesForStudent(
-        student.groups.map((g) => g.id),
-        student.id
-      )
+      // fetchAttendancesForStudent(
+      //   student.groups.map((g) => g.id),
+      //   student.id
+      // )
       return () => {
         clearAttendances()
       }
@@ -74,7 +74,7 @@ export const StudentPage = () => {
     return <div>Loading</div>
   }
 
-  return <Student data={student} onDelete={onDelete} attendanceRates={rateByGroup} />
+  return <Student data={student} onDelete={onDelete} attendanceRates={{}} />
 }
 
 export default StudentPage

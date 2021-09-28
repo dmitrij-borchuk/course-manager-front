@@ -19,8 +19,8 @@ export const EditStudentPage = () => {
 
       await editStudent({
         ...student,
-        attendances: student.attendances?.map((a) => a.id),
-        groups: student.groups?.map((g) => g.id),
+        // attendances: student.attendances?.map((a) => a.id),
+        // groups: student.groups?.map((g) => g.id),
         ...data,
       })
       history.push(`${ROUTES.STUDENTS_ROOT}/${student.id}`)

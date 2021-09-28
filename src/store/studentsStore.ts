@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react'
 import { makeOrgCollection } from '../api/firebase/collections'
 import { useDictionaryToArray } from '../hooks/useDictionaryToArray'
-import { deleteStudent, getStudent, updateStudent } from '../services/students'
+import { deleteStudent, updateStudent } from '../services/students'
 import { Dictionary } from '../types/dictionary'
 import { NewStudent, Student } from '../types/student'
 import { arrayToDictionary } from '../utils/common'

@@ -1,10 +1,6 @@
 import { Student, StudentFull } from '../types/student'
 import request from './request'
 
-export function getStudentRequest(id: string) {
-  return request.get<StudentFull>(`/students/${id}`)
-}
-
 export function deleteStudentRequest(id: string) {
   return request.delete<void>(`/students/${id}`)
 }

@@ -1,10 +1,7 @@
-import { useCallback, useEffect, useMemo } from 'react'
+import { useCallback, useEffect } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { useGroupsState, useStudentsState } from '../../store'
 import { useAttendancesState } from '../../store'
-import { Dictionary } from '../../types/dictionary'
-import { groupBy } from '../../utils/common'
-import { getClassesDates } from '../../utils/schedule'
 import { ROUTES } from '../../constants'
 import { Student } from '../../components/students/Student'
 import { useOrgId } from '../../hooks/useOrgId'
@@ -16,8 +13,8 @@ export const StudentPage = () => {
   let { id } = useParams<{ id: string }>()
 
   const { fetchStudent, studentsById, deleteStudent } = useStudentsState()
-  const { attendances, clearAttendances, fetchAttendancesForStudent } = useAttendancesState()
-  const { groups, fetchGroups } = useGroupsState()
+  const { /* attendances,  */ clearAttendances, fetchAttendancesForStudent } = useAttendancesState()
+  const { /* groups,  */ fetchGroups } = useGroupsState()
   const student = studentsById[id]
   const orgId = useOrgId()
 
@@ -51,8 +48,8 @@ export const StudentPage = () => {
   // )
 
   useEffect(() => {
-    fetchStudent(id)
-  }, [fetchStudent, id])
+    fetchStudent(orgId, id)
+  }, [fetchStudent, id, orgId])
 
   useEffect(() => {
     fetchGroups(orgId)

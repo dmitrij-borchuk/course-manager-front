@@ -25,10 +25,11 @@ export default function useStudentsStore() {
       setStudentsById(groupsById)
       setFetching(false)
     }, []),
-    fetchStudent: useCallback(async (id: string) => {
+    fetchStudent: useCallback(async (orgId: string, id: string) => {
       setFetching(true)
-      const resp = await getStudent(id)
-      setStudentsById((state) => ({ ...state, [resp.data.id]: resp.data }))
+      const collection = makeOrgCollection<Student>('students', orgId)
+      const resp = await collection.getById(id)
+      setStudentsById((state) => ({ ...state, [resp.id]: resp }))
       setFetching(false)
     }, []),
     createStudent: useCallback(async (orgId: string, data: NewStudent) => {

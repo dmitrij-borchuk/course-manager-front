@@ -2,6 +2,7 @@ import React from 'react'
 import { FormattedMessage, useIntl } from 'react-intl'
 import { Container } from 'react-materialize'
 import { ROUTES } from '../../constants'
+import { useOrgId } from '../../hooks/useOrgId'
 import { Dictionary } from '../../types/dictionary'
 import { Group } from '../../types/group'
 import { Student as StudentType } from '../../types/student'
@@ -18,6 +19,7 @@ interface Props {
 }
 export const Student: React.FC<Props> = ({ className = '', data, groups, onDelete, attendanceRates }) => {
   const intl = useIntl()
+  const orgId = useOrgId()
   const { name, description, id } = data
 
   return (
@@ -25,7 +27,8 @@ export const Student: React.FC<Props> = ({ className = '', data, groups, onDelet
       <Container className="px-4">
         <HeadingWithControls
           text={name}
-          editPath={`${ROUTES.STUDENTS_EDIT}/${id}`}
+          // TODO: forbid for non admins
+          editPath={`/${orgId}${ROUTES.STUDENTS_EDIT}/${id}`}
           deleteProps={{
             header: intl.formatMessage({ id: 'students.delete.header' }),
             content: <FormattedMessage id="students.delete.text" />,

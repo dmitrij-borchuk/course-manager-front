@@ -19,15 +19,15 @@ export const EditStudentPage = () => {
         return
       }
 
-      await editStudent({
+      await editStudent(orgId, {
         ...student,
         // attendances: student.attendances?.map((a) => a.id),
         // groups: student.groups?.map((g) => g.id),
         ...data,
       })
-      history.push(`${ROUTES.STUDENTS_ROOT}/${student.id}`)
+      history.push(`/${orgId}${ROUTES.STUDENTS_ROOT}/${student.id}`)
     },
-    [editStudent, history, student]
+    [editStudent, history, orgId, student]
   )
 
   useEffect(() => {

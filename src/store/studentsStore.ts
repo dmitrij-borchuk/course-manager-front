@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react'
 import { makeOrgCollection } from '../api/firebase/collections'
 import { useDictionaryToArray } from '../hooks/useDictionaryToArray'
-import { deleteStudent, updateStudent } from '../services/students'
+import { deleteStudent } from '../services/students'
 import { Dictionary } from '../types/dictionary'
 import { NewStudent, Student } from '../types/student'
 import { arrayToDictionary } from '../utils/common'
@@ -46,14 +46,23 @@ export default function useStudentsStore() {
         throw error
       }
     }, []),
-    editStudent: useCallback(async (data: Student) => {
+    editStudent: useCallback(async (orgId: string, data: Student) => {
       setSubmitting(true)
-      const response = await updateStudent(data)
-      setStudentsById((state) => ({
-        ...state,
-        [data.id]: response.data,
-      }))
-      setSubmitting(false)
+      const collection = makeOrgCollection<Student>('students', orgId)
+      try {
+        const result = await collection.save(data)
+        setStudentsById((state) => ({
+          ...state,
+          [result.id]: {
+            ...state[result.id],
+            ...data,
+          },
+        }))
+        setSubmitting(false)
+      } catch (error) {
+        setSubmitting(false)
+        throw error
+      }
     }, []),
     deleteStudent: useCallback(async (id: string) => {
       await deleteStudent(id)

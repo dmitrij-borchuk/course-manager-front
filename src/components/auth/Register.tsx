@@ -3,7 +3,7 @@ import { FormattedMessage, useIntl } from 'react-intl'
 import { Container, Icon } from 'react-materialize'
 import { Link } from 'react-router-dom'
 import { ROUTES } from '../../constants'
-import { useOrgId } from '../../hooks/useOrgId'
+import { useOrgIdNotStrict } from '../../hooks/useOrgId'
 import { ButtonWithLoader } from '../kit/buttons/ButtonWithLoader'
 import { Input } from '../kit/input/Input'
 import { SectionHeader } from '../kit/sectionHeader/SectionHeader'
@@ -18,7 +18,7 @@ interface Props {
   loading?: boolean
 }
 export const Register: React.FC<Props> = ({ onSubmit, loading = false }) => {
-  const orgId = useOrgId()
+  const orgId = useOrgIdNotStrict()
   const orgPrefix = orgId ? `/${orgId}` : ''
   const intl = useIntl()
   const { control, handleSubmit } = useForm<FormData>({

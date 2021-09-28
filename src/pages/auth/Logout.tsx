@@ -1,12 +1,12 @@
 import { useCallback, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import { ROUTES } from '../../constants'
-import { useOrgId } from '../../hooks/useOrgId'
+import { useOrgIdNotStrict } from '../../hooks/useOrgId'
 import { useAuthState } from '../../store'
 
 export const LogoutPage = () => {
   const history = useHistory()
-  const orgId = useOrgId()
+  const orgId = useOrgIdNotStrict()
   const { logout } = useAuthState()
   const onLogout = useCallback(async () => {
     await logout()

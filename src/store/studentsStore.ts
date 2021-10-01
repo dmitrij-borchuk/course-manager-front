@@ -1,4 +1,5 @@
 import { useCallback, useState } from 'react'
+import { nanoid } from 'nanoid'
 import { makeOrgCollection } from '../api/firebase/collections'
 import { useDictionaryToArray } from '../hooks/useDictionaryToArray'
 import { deleteStudent } from '../services/students'
@@ -38,7 +39,7 @@ export default function useStudentsStore() {
       const collection = makeOrgCollection<Student>('students', orgId)
 
       try {
-        const result = await collection.save(data)
+        const result = await collection.save({ ...data, id: nanoid() })
         setStudentsById((state) => ({ ...state, [result.id]: { ...data, id: result.id } }))
         setSubmitting(false)
         return result

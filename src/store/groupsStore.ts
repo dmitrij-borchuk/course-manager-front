@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'react'
 import { useHistory } from 'react-router'
+import { nanoid } from 'nanoid'
 import { makeOrgCollection } from '../api/firebase/collections'
 import { ROUTES } from '../constants'
 import { useDictionaryToArray } from '../hooks/useDictionaryToArray'
@@ -62,7 +63,7 @@ export default function useGroupsStore() {
         setSubmitting(true)
         const groupsCollection = makeOrgCollection<Group>('groups', orgId)
         try {
-          const result = await groupsCollection.save(data)
+          const result = await groupsCollection.save({ ...data, id: nanoid() })
           setGroupsById((state) => ({ ...state, [result.id]: { ...data, id: result.id } }))
           history.push(`/${orgId}${ROUTES.GROUPS_ROOT}/${result.id}`)
           setSubmitting(false)

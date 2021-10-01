@@ -1,6 +1,6 @@
 import { useCallback, useEffect } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-import { useGroupsState, useStudentsState } from '../../store'
+import { useGroupsState, useStudentsOfGroupState, useStudentsState } from '../../store'
 import { useAttendancesState } from '../../store'
 import { ROUTES } from '../../constants'
 import { Student } from '../../components/students/Student'
@@ -15,6 +15,7 @@ export const StudentPage = () => {
   const { fetchStudent, studentsById, deleteStudent } = useStudentsState()
   const { /* attendances,  */ clearAttendances, fetchAttendancesForStudent } = useAttendancesState()
   const { /* groups,  */ fetchGroups } = useGroupsState()
+  const { fetchGroupsOfStudent, clearGroupOfStudents, groupsOfStudent } = useStudentsOfGroupState()
   const student = studentsById[id]
   const orgId = useOrgId()
 
@@ -56,6 +57,13 @@ export const StudentPage = () => {
   }, [fetchGroups, orgId])
 
   useEffect(() => {
+    if (student?.id) {
+      fetchGroupsOfStudent(orgId, student.id)
+      return () => clearGroupOfStudents()
+    }
+  }, [clearGroupOfStudents, fetchGroupsOfStudent, orgId, student?.id])
+
+  useEffect(() => {
     if (student) {
       // fetchAttendancesForStudent(
       //   student.groups.map((g) => g.id),
@@ -71,7 +79,7 @@ export const StudentPage = () => {
     return <div>Loading</div>
   }
 
-  return <Student data={student} onDelete={onDelete} attendanceRates={{}} />
+  return <Student data={student} onDelete={onDelete} attendanceRates={{}} groups={groupsOfStudent} />
 }
 
 export default StudentPage

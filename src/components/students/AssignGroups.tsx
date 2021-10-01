@@ -3,10 +3,10 @@ import { useIntl } from 'react-intl'
 import { ModalProps } from 'react-materialize'
 import { useOrgId } from '../../hooks/useOrgId'
 import { useToggle } from '../../hooks/useToggle'
-import { useGroupsState, useStudentsState } from '../../store'
+import { useGroupsState, useStudentsOfGroupState } from '../../store'
 import { Group } from '../../types/group'
 import { Student } from '../../types/student'
-import { noop } from '../../utils/common'
+import { getDiff, noop } from '../../utils/common'
 import { SelectDialog } from '../kit/selectDialog/SelectDialog'
 
 interface Props {
@@ -20,18 +20,25 @@ export const AssignGroups = ({ student, onDone = noop, trigger, initialGroups }:
   const orgId = useOrgId()
   const [open, toggler] = useToggle(false)
   const { groups, fetchGroups, fetching } = useGroupsState()
-  const { editStudent } = useStudentsState()
+  const { addGroupToStudent, deleteGroupFromStudent } = useStudentsOfGroupState()
   const onSubmit = useCallback(
     async (data: Group[]) => {
-      await editStudent(orgId, {
-        ...student,
-        // groups: data.map((g) => g.id),
-        // attendances: student.attendances.map((a) => a.id),
-      })
+      const initialGroupsIds = (initialGroups || [])?.map((g) => g.id)
+      const resultGroupsIds = data.map((g) => g.id)
+      const { added, removed } = getDiff(initialGroupsIds, resultGroupsIds)
+      await Promise.all(
+        added.map(async (gId) =>
+          addGroupToStudent(orgId, {
+            studentId: student.id,
+            groupId: gId,
+          })
+        )
+      )
+      await Promise.all(removed.map(async (gId) => deleteGroupFromStudent(orgId, gId, student.id)))
       toggler.off()
       onDone()
     },
-    [editStudent, onDone, orgId, student, toggler]
+    [addGroupToStudent, deleteGroupFromStudent, initialGroups, onDone, orgId, student.id, toggler]
   )
 
   useEffect(() => {

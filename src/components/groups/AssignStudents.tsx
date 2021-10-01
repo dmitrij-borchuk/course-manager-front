@@ -6,7 +6,7 @@ import { useToggle } from '../../hooks/useToggle'
 import { useStudentsOfGroupState, useStudentsState } from '../../store'
 import { Group } from '../../types/group'
 import { Student } from '../../types/student'
-import { noop } from '../../utils/common'
+import { getDiff, noop } from '../../utils/common'
 import { SelectDialog } from '../kit/selectDialog/SelectDialog'
 
 interface Props {
@@ -61,24 +61,4 @@ export const AssignStudents = ({ group, onDone = noop, trigger, studentsOfGroup 
       />
     </>
   )
-}
-
-function getDiff(initial: string[], result: string[]) {
-  const added: string[] = []
-  const removed: string[] = []
-  initial.forEach((item) => {
-    if (!result.includes(item)) {
-      removed.push(item)
-    }
-  })
-  result.forEach((item) => {
-    if (!initial.includes(item)) {
-      added.push(item)
-    }
-  })
-
-  return {
-    added,
-    removed,
-  }
 }

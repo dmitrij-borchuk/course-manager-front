@@ -11,6 +11,13 @@ export default function useStudentsStore() {
   const [studentsById, setStudentsById] = useState<Dictionary<Student>>({})
   const students = useDictionaryToArray(studentsById)
   const [submitting, setSubmitting] = useState(false)
+  const fetchStudent = useCallback(async (orgId: string, id: string) => {
+    setFetching(true)
+    const collection = makeOrgCollection<Student>('students', orgId)
+    const resp = await collection.getById(id)
+    setStudentsById((state) => ({ ...state, [resp.id]: resp }))
+    setFetching(false)
+  }, [])
 
   return {
     students,
@@ -21,17 +28,11 @@ export default function useStudentsStore() {
       setFetching(true)
       const collection = makeOrgCollection<Student>('students', orgId)
       const resp = await collection.getAll()
-      const groupsById = arrayToDictionary(resp)
-      setStudentsById(groupsById)
+      const studentsById = arrayToDictionary(resp)
+      setStudentsById(studentsById)
       setFetching(false)
     }, []),
-    fetchStudent: useCallback(async (orgId: string, id: string) => {
-      setFetching(true)
-      const collection = makeOrgCollection<Student>('students', orgId)
-      const resp = await collection.getById(id)
-      setStudentsById((state) => ({ ...state, [resp.id]: resp }))
-      setFetching(false)
-    }, []),
+    fetchStudent,
     createStudent: useCallback(async (orgId: string, data: NewStudent) => {
       setSubmitting(true)
       const collection = makeOrgCollection<Student>('students', orgId)
@@ -64,6 +65,7 @@ export default function useStudentsStore() {
         throw error
       }
     }, []),
+    // TODO: verify
     deleteStudent: useCallback(async (id: string) => {
       await deleteStudent(id)
 
@@ -72,6 +74,9 @@ export default function useStudentsStore() {
 
         return state
       })
+    }, []),
+    clearStudents: useCallback(() => {
+      setStudentsById({})
     }, []),
   }
 }

@@ -43,6 +43,15 @@ export function collection<T extends { id: string }>(name: string) {
 
       return getItemsFromSnapshot<T>(result)
     },
+    queryMulti: async (args: Parameters<typeof collection.where>[]) => {
+      let currentCollection: Firebase.firestore.Query<Firebase.firestore.DocumentData> = collection
+      args.forEach((params) => {
+        currentCollection = currentCollection.where(...params)
+      })
+      const result = await currentCollection.get()
+
+      return getItemsFromSnapshot<T>(result)
+    },
     getById: async (id: string) => {
       const doc = await collection.doc(id).get()
 
@@ -52,6 +61,11 @@ export function collection<T extends { id: string }>(name: string) {
       const doc = collection.doc(data.id)
       await doc.set(data, { merge: true })
       return doc
+    },
+    delete: async (id: string) => {
+      // TODO: Think about sub collections https://firebase.google.com/docs/firestore/manage-data/delete-data
+      await collection.doc(id).delete()
+      return
     },
   }
 }

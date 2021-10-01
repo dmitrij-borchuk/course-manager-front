@@ -78,15 +78,16 @@ export default function useGroupsStore() {
       setLoading(false)
     }, []),
     deleteGroup: useCallback(
-      async (id: string) => {
+      async (orgId: string, id: string) => {
         setSubmitting(true)
-        // await deleteGroup(id)
+        const groupsCollection = makeOrgCollection<Group>('groups', orgId)
+        groupsCollection.delete(id)
         setGroupsById((state) => {
           delete state[id]
           return state
         })
         setSubmitting(false)
-        history.push(ROUTES.GROUPS_LIST)
+        history.push(`/${orgId}${ROUTES.GROUPS_LIST}`)
       },
       [history]
     ),

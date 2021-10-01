@@ -2,6 +2,7 @@ import React, { useMemo } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { Button } from 'react-materialize'
 import { ROUTES } from '../../constants'
+import { useOrgId } from '../../hooks/useOrgId'
 import { Dictionary } from '../../types/dictionary'
 import { Group } from '../../types/group'
 import { Student } from '../../types/student'
@@ -29,7 +30,11 @@ export const StudentsInfoBlock = ({ students, group, attendanceRates }: Students
         </Text>
         {/* Assign groups dialog */}
         {!!students?.length && (
-          <AssignStudents group={group} trigger={<IconButton type="square" size={40} icon="edit" />} />
+          <AssignStudents
+            group={group}
+            trigger={<IconButton type="square" size={40} icon="edit" />}
+            studentsOfGroup={students}
+          />
         )}
       </div>
       {/* TODO: loading for the students */}
@@ -41,8 +46,9 @@ export const StudentsInfoBlock = ({ students, group, attendanceRates }: Students
 
 interface NoStudentsInfoBlockProps {
   group: Group
+  students?: Student[]
 }
-const NoStudentsInfoBlock = ({ group }: NoStudentsInfoBlockProps) => {
+const NoStudentsInfoBlock = ({ group, students }: NoStudentsInfoBlockProps) => {
   return (
     <div className="text-center">
       <Text type="h6" color="textGray" className="mb-3">
@@ -57,6 +63,7 @@ const NoStudentsInfoBlock = ({ group }: NoStudentsInfoBlockProps) => {
             <FormattedMessage id="groups.students.assignBtn.label" />
           </Button>
         }
+        studentsOfGroup={students}
       />
     </div>
   )
@@ -67,8 +74,10 @@ interface StudentWithAttendanceProps {
   attendanceRate?: number
 }
 const StudentWithAttendance = ({ data, attendanceRate }: StudentWithAttendanceProps) => {
+  const orgId = useOrgId()
+
   return (
-    <CollectionItemLink to={`${ROUTES.STUDENTS_ROOT}/${data.id}`}>
+    <CollectionItemLink to={`/${orgId}${ROUTES.STUDENTS_ROOT}/${data.id}`}>
       <div className="flex justify-between">
         <Ellipsis>{data.name}</Ellipsis>
         {/* TODO: add loading */}

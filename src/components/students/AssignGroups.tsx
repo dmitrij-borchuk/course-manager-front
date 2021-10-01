@@ -23,7 +23,7 @@ export const AssignGroups = ({ student, onDone = noop, trigger, initialGroups }:
   const { editStudent } = useStudentsState()
   const onSubmit = useCallback(
     async (data: Group[]) => {
-      await editStudent({
+      await editStudent(orgId, {
         ...student,
         // groups: data.map((g) => g.id),
         // attendances: student.attendances.map((a) => a.id),
@@ -31,7 +31,7 @@ export const AssignGroups = ({ student, onDone = noop, trigger, initialGroups }:
       toggler.off()
       onDone()
     },
-    [editStudent, onDone, student, toggler]
+    [editStudent, onDone, orgId, student, toggler]
   )
 
   useEffect(() => {

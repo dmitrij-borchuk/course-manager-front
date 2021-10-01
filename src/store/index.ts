@@ -6,6 +6,7 @@ import useStudentsStore from './studentsStore'
 import useTeachersStore from './teachersStore'
 import useOrganizationsStore from './organizationsStore'
 import useUsersStore from './usersStore'
+import useStudentsOfGroupStore from './studentsOfGroupStore'
 
 function useStore() {
   return {
@@ -14,18 +15,20 @@ function useStore() {
     auth: useAuthStore(),
     attendances: useAttendancesStore(),
     students: useStudentsStore(),
+    studentsOfGroup: useStudentsOfGroupStore(),
     organizations: useOrganizationsStore(),
     users: useUsersStore(),
   }
 }
 
-const [StoreProvider, teachers, groups, auth, attendances, students, organizations, users] = constate(
+const [StoreProvider, teachers, groups, auth, attendances, students, studentsOfGroup, organizations, users] = constate(
   useStore,
   (value) => value.teachers,
   (value) => value.groups,
   (value) => value.auth,
   (value) => value.attendances,
   (value) => value.students,
+  (value) => value.studentsOfGroup,
   (value) => value.organizations,
   (value) => value.users
 )
@@ -37,5 +40,6 @@ export const useGroupsState = groups
 export const useAuthState = auth
 export const useAttendancesState = attendances
 export const useStudentsState = students
+export const useStudentsOfGroupState = studentsOfGroup
 export const useOrganizationsState = organizations
 export const useUsersState = users

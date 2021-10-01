@@ -2,6 +2,7 @@ import React, { useMemo } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { Button, Container } from 'react-materialize'
 import { ROUTES } from '../../constants'
+import { useOrgId } from '../../hooks/useOrgId'
 import { Dictionary } from '../../types/dictionary'
 import { Group } from '../../types/group'
 import { OrganizationUser } from '../../types/user'
@@ -120,8 +121,10 @@ interface GroupWithAttendanceProps {
   attendanceRate?: number
 }
 const GroupWithAttendance = ({ group, attendanceRate }: GroupWithAttendanceProps) => {
+  const orgId = useOrgId()
+
   return (
-    <CollectionItemLink to={`${ROUTES.GROUPS_ROOT}/${group.id}`}>
+    <CollectionItemLink to={`/${orgId}${ROUTES.GROUPS_ROOT}/${group.id}`}>
       <div className="flex justify-between">
         <Ellipsis>{group.name}</Ellipsis>
         {/* TODO: add loading */}

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 // import { getClassesDates } from '../../utils/schedule'
-import { useAttendancesState, useGroupsState, useTeachersState } from '../../store'
+import { useAttendancesState, useGroupsState, useStudentsOfGroupState, useTeachersState } from '../../store'
 import { Group } from '../../components/groups/Group'
 import { useOrgId } from '../../hooks/useOrgId'
 
@@ -9,10 +9,11 @@ export const GroupPage = () => {
   let { id } = useParams<{ id: string }>()
   const { fetchGroup, groupsById, deleteGroup } = useGroupsState()
   const { fetchTeacher, teachersById } = useTeachersState()
+  const { fetchStudentsOfGroup, clearStudentsOfGroup, studentsOfGroup } = useStudentsOfGroupState()
   const { /* attendances,  */ clearAttendances, fetchAttendancesForGroup } = useAttendancesState()
   const group = groupsById[id]
   const teacher = teachersById[group?.teacher || '']
-  const groupWithTeacher = useMemo(() => {
+  const groupFull = useMemo(() => {
     if (!group || (group?.teacher && !teacher)) {
       return undefined
     }
@@ -23,7 +24,7 @@ export const GroupPage = () => {
     }
   }, [group, teacher])
   const orgId = useOrgId()
-  const onDelete = useCallback(() => deleteGroup(id), [deleteGroup, id])
+  const onDelete = useCallback(() => deleteGroup(orgId, id), [deleteGroup, id, orgId])
   // const classes = useMemo(() => (group ? getClassesDates(group, new Date()) : []), [group])
   // const attendancesByStudent = useMemo(() => groupBy(attendances, (a) => a.student?.id), [attendances])
   const rateByStudent = {}
@@ -56,6 +57,13 @@ export const GroupPage = () => {
   }, [fetchTeacher, group?.teacher, orgId, teacher])
 
   useEffect(() => {
+    if (group?.id) {
+      fetchStudentsOfGroup(orgId, group.id)
+      return () => clearStudentsOfGroup()
+    }
+  }, [clearStudentsOfGroup, fetchStudentsOfGroup, group?.id, orgId])
+
+  useEffect(() => {
     if (group) {
       fetchAttendancesForGroup(group.id)
       return () => {
@@ -64,12 +72,14 @@ export const GroupPage = () => {
     }
   }, [clearAttendances, fetchAttendancesForGroup, group])
 
-  if (!groupWithTeacher) {
+  if (!groupFull) {
     // Loading when edit schedule and return back
     return <div>Loading</div>
   }
 
-  return <Group data={groupWithTeacher} onDelete={onDelete} attendanceRates={rateByStudent} />
+  return (
+    <Group data={groupFull} onDelete={onDelete} attendanceRates={rateByStudent} studentsOfGroup={studentsOfGroup} />
+  )
 }
 
 export default GroupPage

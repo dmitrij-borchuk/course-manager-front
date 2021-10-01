@@ -1,10 +1,11 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { FormattedMessage, useIntl } from 'react-intl'
 import { Button, Container } from 'react-materialize'
 import { ROUTES } from '../../constants'
 import { useOrgId } from '../../hooks/useOrgId'
 import { Dictionary } from '../../types/dictionary'
 import { GroupFull } from '../../types/group'
+import { Student } from '../../types/student'
 import { OrganizationUser } from '../../types/user'
 import { IconButton } from '../kit/buttons/IconButton'
 import { HeadingWithControls } from '../kit/headingWithControls/HeadingWithControls'
@@ -12,17 +13,26 @@ import { Text } from '../kit/text/Text'
 import { UserPreview } from '../kit/userInfo/UserInfo'
 import { AssignTeacher } from './AssignTeacher'
 import { ScheduleInfoBlock } from './ScheduleInfoBlock'
+import { StudentsInfoBlock } from './StudentsInfoBlock'
 
 interface Props {
   className?: string
   data: GroupFull
   onDelete: () => void
   attendanceRates: Dictionary<number>
+  studentsOfGroup: Student[]
 }
-export const Group: React.FC<Props> = ({ className = '', data, onDelete, attendanceRates }) => {
+export const Group: React.FC<Props> = ({ className = '', data, studentsOfGroup, onDelete, attendanceRates }) => {
   const orgId = useOrgId()
   const intl = useIntl()
-  const { teacher, /* students,  */ name, description, id } = data
+  const { teacher, name, description, id } = data
+  const simpleGroup = useMemo(
+    () => ({
+      ...data,
+      teacher: data.teacher?.id,
+    }),
+    [data]
+  )
 
   return (
     <div className={className}>
@@ -47,7 +57,8 @@ export const Group: React.FC<Props> = ({ className = '', data, onDelete, attenda
         <TeacherInfoBlock teacher={teacher} group={data} />
 
         {/* Students */}
-        {/* <StudentsInfoBlock group={data} students={students} attendanceRates={attendanceRates} /> */}
+        {/* TODO: add loader */}
+        <StudentsInfoBlock group={simpleGroup} students={studentsOfGroup} attendanceRates={attendanceRates} />
       </Container>
     </div>
   )

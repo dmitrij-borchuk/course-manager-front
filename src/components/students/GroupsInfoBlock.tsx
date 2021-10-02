@@ -1,7 +1,8 @@
 import React, { useMemo } from 'react'
 import { FormattedMessage } from 'react-intl'
-import { Button } from 'react-materialize'
+import { Button, Preloader } from 'react-materialize'
 import { ROUTES } from '../../constants'
+import { useOrgId } from '../../hooks/useOrgId'
 import { Dictionary } from '../../types/dictionary'
 import { Group } from '../../types/group'
 import { Student } from '../../types/student'
@@ -17,8 +18,9 @@ interface Props {
   groups?: Group[]
   student: Student
   attendanceRates: Dictionary<number>
+  loadingGroups?: boolean
 }
-export const GroupsInfoBlock = ({ groups, student, attendanceRates }: Props) => {
+export const GroupsInfoBlock = ({ groups, student, attendanceRates, loadingGroups }: Props) => {
   const renderItem = useMemo(() => getGroupItemRender(attendanceRates), [attendanceRates])
 
   return (
@@ -27,6 +29,7 @@ export const GroupsInfoBlock = ({ groups, student, attendanceRates }: Props) => 
         <Text type="h5" color="primary">
           <FormattedMessage id="groups.list.title" />
         </Text>
+
         {/* Assign groups dialog */}
         {!!groups?.length && (
           <AssignGroups
@@ -37,7 +40,15 @@ export const GroupsInfoBlock = ({ groups, student, attendanceRates }: Props) => 
         )}
       </div>
 
-      {groups?.length ? <List items={groups} renderItem={renderItem} /> : <NoGroupsInfoBlock student={student} />}
+      {loadingGroups ? (
+        <div className="flex justify-center">
+          <Preloader color="red" flashing={false} size="medium" />
+        </div>
+      ) : groups?.length ? (
+        <List items={groups} renderItem={renderItem} />
+      ) : (
+        <NoGroupsInfoBlock student={student} />
+      )}
     </>
   )
 }
@@ -71,8 +82,10 @@ interface GroupWithAttendanceProps {
   attendanceRate?: number
 }
 const GroupWithAttendance = ({ group, attendanceRate }: GroupWithAttendanceProps) => {
+  const orgId = useOrgId()
+
   return (
-    <CollectionItemLink to={`${ROUTES.GROUPS_ROOT}/${group.id}`}>
+    <CollectionItemLink to={`/${orgId}${ROUTES.GROUPS_ROOT}/${group.id}`}>
       <div className="flex justify-between">
         <Ellipsis>{group.name}</Ellipsis>
         {attendanceRate !== undefined && <AttendanceRateBadge value={attendanceRate} />}

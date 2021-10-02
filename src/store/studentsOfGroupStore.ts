@@ -90,20 +90,27 @@ export default function useStudentsOfGroupStore() {
     ),
     fetchStudentsOfGroup: useCallback(async (orgId: string, groupId: string) => {
       setFetching(true)
-      const collection = makeOrgCollection<StudentOfGroup>('studentsToGroups', orgId)
-      const resp = await collection.query('groupId', '==', groupId)
-      const studentIds = resp.map((item) => item.studentId)
+      try {
+        const collection = makeOrgCollection<StudentOfGroup>('studentsToGroups', orgId)
+        const resp = await collection.query('groupId', '==', groupId)
+        const studentIds = resp.map((item) => item.studentId)
 
-      if (!studentIds.length) {
-        return []
+        if (!studentIds.length) {
+          setFetching(false)
+          return []
+        }
+        const students = makeOrgCollection<Student>('students', orgId)
+        const studentsList = await students.query('id', 'in', studentIds)
+        const studentsById = arrayToDictionary(studentsList)
+        setStudentsOfGroupById(studentsById)
+
+        setFetching(false)
+
+        return studentsList
+      } catch (error) {
+        setFetching(false)
+        throw error
       }
-      const students = makeOrgCollection<Student>('students', orgId)
-      const studentsList = await students.query('id', 'in', studentIds)
-      const studentsById = arrayToDictionary(studentsList)
-      setStudentsOfGroupById(studentsById)
-      setFetching(false)
-
-      return studentsList
     }, []),
     fetchGroupsOfStudent: useCallback(async (orgId: string, studentId: string) => {
       setFetching(true)

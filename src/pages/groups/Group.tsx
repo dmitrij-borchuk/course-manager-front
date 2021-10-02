@@ -9,7 +9,12 @@ export const GroupPage = () => {
   let { id } = useParams<{ id: string }>()
   const { fetchGroup, groupsById, deleteGroup } = useGroupsState()
   const { fetchTeacher, teachersById } = useTeachersState()
-  const { fetchStudentsOfGroup, clearStudentsOfGroup, studentsOfGroup } = useStudentsOfGroupState()
+  const {
+    fetchStudentsOfGroup,
+    clearStudentsOfGroup,
+    studentsOfGroup,
+    fetching: loadingGroups,
+  } = useStudentsOfGroupState()
   const { /* attendances,  */ clearAttendances, fetchAttendancesForGroup } = useAttendancesState()
   const group = groupsById[id]
   const teacher = teachersById[group?.teacher || '']
@@ -78,7 +83,13 @@ export const GroupPage = () => {
   }
 
   return (
-    <Group data={groupFull} onDelete={onDelete} attendanceRates={rateByStudent} studentsOfGroup={studentsOfGroup} />
+    <Group
+      data={groupFull}
+      onDelete={onDelete}
+      attendanceRates={rateByStudent}
+      studentsOfGroup={studentsOfGroup}
+      loadingGroups={loadingGroups}
+    />
   )
 }
 

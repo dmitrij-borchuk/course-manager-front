@@ -15,7 +15,12 @@ export const StudentPage = () => {
   const { fetchStudent, studentsById, deleteStudent } = useStudentsState()
   const { /* attendances,  */ clearAttendances, fetchAttendancesForStudent } = useAttendancesState()
   const { /* groups,  */ fetchGroups } = useGroupsState()
-  const { fetchGroupsOfStudent, clearGroupOfStudents, groupsOfStudent } = useStudentsOfGroupState()
+  const {
+    fetchGroupsOfStudent,
+    clearGroupOfStudents,
+    groupsOfStudent,
+    fetching: fetchingGroups,
+  } = useStudentsOfGroupState()
   const student = studentsById[id]
   const orgId = useOrgId()
 
@@ -79,7 +84,15 @@ export const StudentPage = () => {
     return <div>Loading</div>
   }
 
-  return <Student data={student} onDelete={onDelete} attendanceRates={{}} groups={groupsOfStudent} />
+  return (
+    <Student
+      data={student}
+      onDelete={onDelete}
+      attendanceRates={{}}
+      groups={groupsOfStudent}
+      loadingGroups={fetchingGroups}
+    />
+  )
 }
 
 export default StudentPage

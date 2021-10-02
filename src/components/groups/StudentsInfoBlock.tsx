@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react'
 import { FormattedMessage } from 'react-intl'
-import { Button } from 'react-materialize'
+import { Button, Preloader } from 'react-materialize'
 import { ROUTES } from '../../constants'
 import { useOrgId } from '../../hooks/useOrgId'
 import { Dictionary } from '../../types/dictionary'
@@ -18,8 +18,14 @@ interface StudentsInfoBlockProps {
   students?: Student[]
   group: Group
   attendanceRates: Dictionary<number>
+  loadingGroups?: boolean
 }
-export const StudentsInfoBlock = ({ students, group, attendanceRates }: StudentsInfoBlockProps) => {
+export const StudentsInfoBlock = ({
+  students,
+  group,
+  attendanceRates,
+  loadingGroups = false,
+}: StudentsInfoBlockProps) => {
   const renderItem = useMemo(() => getStudentItemRender(attendanceRates), [attendanceRates])
 
   return (
@@ -37,9 +43,16 @@ export const StudentsInfoBlock = ({ students, group, attendanceRates }: Students
           />
         )}
       </div>
-      {/* TODO: loading for the students */}
 
-      {students?.length ? <List items={students} renderItem={renderItem} /> : <NoStudentsInfoBlock group={group} />}
+      {loadingGroups ? (
+        <div className="flex justify-center">
+          <Preloader color="red" flashing={false} size="medium" />
+        </div>
+      ) : students?.length ? (
+        <List items={students} renderItem={renderItem} />
+      ) : (
+        <NoStudentsInfoBlock group={group} />
+      )}
     </>
   )
 }

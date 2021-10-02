@@ -21,8 +21,16 @@ interface Props {
   onDelete: () => void
   attendanceRates: Dictionary<number>
   studentsOfGroup: Student[]
+  loadingGroups?: boolean
 }
-export const Group: React.FC<Props> = ({ className = '', data, studentsOfGroup, onDelete, attendanceRates }) => {
+export const Group: React.FC<Props> = ({
+  className = '',
+  data,
+  studentsOfGroup,
+  onDelete,
+  attendanceRates,
+  loadingGroups,
+}) => {
   const orgId = useOrgId()
   const intl = useIntl()
   const { teacher, name, description, id } = data
@@ -58,7 +66,12 @@ export const Group: React.FC<Props> = ({ className = '', data, studentsOfGroup, 
 
         {/* Students */}
         {/* TODO: add loader */}
-        <StudentsInfoBlock group={simpleGroup} students={studentsOfGroup} attendanceRates={attendanceRates} />
+        <StudentsInfoBlock
+          group={simpleGroup}
+          students={studentsOfGroup}
+          attendanceRates={attendanceRates}
+          loadingGroups={loadingGroups}
+        />
       </Container>
     </div>
   )

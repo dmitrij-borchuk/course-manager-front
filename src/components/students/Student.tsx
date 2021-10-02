@@ -16,8 +16,16 @@ interface Props {
   onDelete: () => void
   attendanceRates: Dictionary<number>
   groups?: Group[]
+  loadingGroups?: boolean
 }
-export const Student: React.FC<Props> = ({ className = '', data, groups, onDelete, attendanceRates }) => {
+export const Student: React.FC<Props> = ({
+  className = '',
+  data,
+  groups,
+  onDelete,
+  attendanceRates,
+  loadingGroups = false,
+}) => {
   const intl = useIntl()
   const orgId = useOrgId()
   const { name, description, id } = data
@@ -37,7 +45,12 @@ export const Student: React.FC<Props> = ({ className = '', data, groups, onDelet
         />
         <div className="break-words">{description}</div>
 
-        <GroupsInfoBlock student={data} groups={groups} attendanceRates={attendanceRates} />
+        <GroupsInfoBlock
+          student={data}
+          groups={groups}
+          attendanceRates={attendanceRates}
+          loadingGroups={loadingGroups}
+        />
       </Container>
     </div>
   )

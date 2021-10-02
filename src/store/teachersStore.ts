@@ -54,6 +54,7 @@ export default function useTeachersStore() {
       }))
       setSubmitting(false)
     }, []),
+    // TODO: do we need it
     deleteTeacher: useCallback(
       async (id: string) => {
         setSubmitting(true)

@@ -25,9 +25,9 @@ export const StudentPage = () => {
   const orgId = useOrgId()
 
   const onDelete = useCallback(async () => {
-    await deleteStudent(id)
-    history.push(ROUTES.STUDENTS_LIST)
-  }, [deleteStudent, history, id])
+    await deleteStudent(orgId, id)
+    history.push(`/${orgId}${ROUTES.STUDENTS_LIST}`)
+  }, [deleteStudent, history, id, orgId])
   // const classesByGroup = useMemo(
   //   () =>
   //     groups.reduce<Dictionary<Date[]>>((acc, g) => {

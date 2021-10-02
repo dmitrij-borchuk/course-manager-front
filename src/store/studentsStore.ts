@@ -2,10 +2,10 @@ import { useCallback, useState } from 'react'
 import { nanoid } from 'nanoid'
 import { makeOrgCollection } from '../api/firebase/collections'
 import { useDictionaryToArray } from '../hooks/useDictionaryToArray'
-import { deleteStudent } from '../services/students'
 import { Dictionary } from '../types/dictionary'
 import { NewStudent, Student } from '../types/student'
 import { arrayToDictionary } from '../utils/common'
+import { StudentOfGroup } from '../types/studentOfGroup'
 
 export default function useStudentsStore() {
   const [fetching, setFetching] = useState(false)
@@ -66,13 +66,17 @@ export default function useStudentsStore() {
         throw error
       }
     }, []),
-    // TODO: verify
-    deleteStudent: useCallback(async (id: string) => {
-      await deleteStudent(id)
+    deleteStudent: useCallback(async (orgId: string, id: string) => {
+      // Remove students from group
+      const student2groupCollection = makeOrgCollection<StudentOfGroup>('studentsToGroups', orgId)
+      const resp = await student2groupCollection.query('studentId', '==', id)
+      await Promise.all(resp.map((item) => student2groupCollection.delete(item.id)))
 
+      // Remove group itself
+      const collection = makeOrgCollection<Student>('students', orgId)
+      await collection.delete(id)
       setStudentsById((state) => {
         delete state[id]
-
         return state
       })
     }, []),

@@ -7,6 +7,7 @@ import { useDictionaryToArray } from '../hooks/useDictionaryToArray'
 import { Dictionary } from '../types/dictionary'
 import { Group, NewGroup } from '../types/group'
 import { arrayToDictionary } from '../utils/common'
+import { StudentOfGroup } from '../types/studentOfGroup'
 
 export default function useGroupsStore() {
   const history = useHistory()
@@ -81,8 +82,15 @@ export default function useGroupsStore() {
     deleteGroup: useCallback(
       async (orgId: string, id: string) => {
         setSubmitting(true)
+
+        // Remove students from group
+        const student2groupCollection = makeOrgCollection<StudentOfGroup>('studentsToGroups', orgId)
+        const resp = await student2groupCollection.query('groupId', '==', id)
+        await Promise.all(resp.map((item) => student2groupCollection.delete(item.id)))
+
+        // Remove group itself
         const groupsCollection = makeOrgCollection<Group>('groups', orgId)
-        groupsCollection.delete(id)
+        await groupsCollection.delete(id)
         setGroupsById((state) => {
           delete state[id]
           return state

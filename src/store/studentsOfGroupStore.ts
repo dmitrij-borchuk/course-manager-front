@@ -119,6 +119,7 @@ export default function useStudentsOfGroupStore() {
       const groupIds = resp.map((item) => item.groupId)
 
       if (!groupIds.length) {
+        setFetching(false)
         return []
       }
       const groups = makeOrgCollection<Group>('groups', orgId)

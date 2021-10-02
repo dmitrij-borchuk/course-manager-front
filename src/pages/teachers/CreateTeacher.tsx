@@ -5,6 +5,7 @@ import { ROUTES } from '../../constants'
 import { useApiCallLazy } from '../../hooks/useApiCall'
 import { createTeacher } from '../../services/teachers'
 
+// TODO: do we need it
 export const CreateTeacherPage = () => {
   const history = useHistory()
   // TODO: use store

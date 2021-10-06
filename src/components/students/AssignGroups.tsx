@@ -31,6 +31,8 @@ export const AssignGroups = ({ student, onDone = noop, trigger, initialGroups }:
           addGroupToStudent(orgId, {
             studentId: student.id,
             groupId: gId,
+            startDate: new Date().toISOString(),
+            endDate: null,
           })
         )
       )

@@ -19,8 +19,14 @@ export default function useStudentsOfGroupStore() {
     const resp = await student2groupCollection.queryMulti([
       ['studentId', '==', studentId],
       ['groupId', '==', groupId],
+      ['endDate', '==', null],
     ])
-    await Promise.all(resp.map((item) => student2groupCollection.delete(item.id)))
+    await Promise.all(
+      resp.map((item) => {
+        item.endDate = new Date().toISOString()
+        return student2groupCollection.save(item)
+      })
+    )
 
     return resp
   }, [])
@@ -92,7 +98,11 @@ export default function useStudentsOfGroupStore() {
       setFetching(true)
       try {
         const collection = makeOrgCollection<StudentOfGroup>('studentsToGroups', orgId)
-        const resp = await collection.query('groupId', '==', groupId)
+        const resp = await collection.queryMulti([
+          ['groupId', '==', groupId],
+          ['endDate', '==', null],
+        ])
+
         const studentIds = resp.map((item) => item.studentId)
 
         if (!studentIds.length) {
@@ -115,7 +125,11 @@ export default function useStudentsOfGroupStore() {
     fetchGroupsOfStudent: useCallback(async (orgId: string, studentId: string) => {
       setFetching(true)
       const collection = makeOrgCollection<StudentOfGroup>('studentsToGroups', orgId)
-      const resp = await collection.query('studentId', '==', studentId)
+      const resp = await collection.queryMulti([
+        ['studentId', '==', studentId],
+        ['endDate', '==', null],
+      ])
+
       const groupIds = resp.map((item) => item.groupId)
 
       if (!groupIds.length) {

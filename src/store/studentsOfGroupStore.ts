@@ -23,7 +23,7 @@ export default function useStudentsOfGroupStore() {
     ])
     await Promise.all(
       resp.map((item) => {
-        item.endDate = new Date().toISOString()
+        item.endDate = new Date().getTime()
         return student2groupCollection.save(item)
       })
     )

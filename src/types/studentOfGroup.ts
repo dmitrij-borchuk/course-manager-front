@@ -1,8 +1,10 @@
 export type NewStudentOfGroup = {
   groupId: string
   studentId: string
-  startDate: string
-  endDate: string | null
+  // Time in milliseconds (UTC)
+  startDate: number
+  // Time in milliseconds (UTC)
+  endDate: number | null
 }
 
 export type StudentOfGroup = NewStudentOfGroup & {

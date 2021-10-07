@@ -21,7 +21,6 @@ interface Props {
 }
 export const Login: React.FC<Props> = ({ onSubmit, loading = false }) => {
   const orgId = useOrgIdNotStrict()
-  const orgPrefix = orgId ? `/${orgId}` : ''
   const { control, handleSubmit } = useForm<FormData>({
     defaultValues: {
       identifier: '',

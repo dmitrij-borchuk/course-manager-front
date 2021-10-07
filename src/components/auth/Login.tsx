@@ -61,17 +61,22 @@ export const Login: React.FC<Props> = ({ onSubmit, loading = false }) => {
           </div>
         </form>
         <div className="flex flex-col items-center mt-8 gap-3">
-          <div className="flex w-full items-center gap-2">
-            <div className="h-px bg-gray-400 w-full" />
-            <div className="-mt-1">
-              <FormattedMessage id="auth.registerLink.separator" />
-            </div>
-            <div className="h-px bg-gray-400 w-full" />
-          </div>
-          {/* TODO: can't register inside of organization */}
-          <Link to={`${orgPrefix}${ROUTES.REGISTER}`}>
-            <FormattedMessage id="auth.registerLink.label" />
-          </Link>
+          {/* Can't register inside of organization */}
+          {!orgId && (
+            <>
+              {/* Separator */}
+              <div className="flex w-full items-center gap-2">
+                <div className="h-px bg-gray-400 w-full" />
+                <div className="-mt-1">
+                  <FormattedMessage id="auth.registerLink.separator" />
+                </div>
+                <div className="h-px bg-gray-400 w-full" />
+              </div>
+              <Link to={`${ROUTES.REGISTER}`}>
+                <FormattedMessage id="auth.registerLink.label" />
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </Container>

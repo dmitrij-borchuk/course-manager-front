@@ -3,13 +3,13 @@ import { useHistory } from 'react-router-dom'
 import { useToasts } from 'react-toast-notifications'
 import { ROUTES } from '../../constants'
 import { useAuthState } from '../../store'
-import { useOrgId } from '../../hooks/useOrgId'
+import { useOrgIdNotStrict } from '../../hooks/useOrgId'
 import { Register } from '../../components/auth/Register'
 
 type SubmitData = Parameters<ComponentProps<typeof Register>['onSubmit']>[0]
 
 export const RegisterPage = () => {
-  const orgId = useOrgId()
+  const orgId = useOrgIdNotStrict()
   const orgPrefix = orgId ? `/${orgId}` : ''
   const history = useHistory()
   const { addToast } = useToasts()
@@ -20,7 +20,7 @@ export const RegisterPage = () => {
         await register(data.email, data.password)
 
         history.push(`${orgPrefix}${ROUTES.ROOT}`)
-      } catch (error) {
+      } catch (error: any) {
         addToast(error.message, {
           appearance: 'error',
           autoDismiss: true,

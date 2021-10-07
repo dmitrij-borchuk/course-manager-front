@@ -64,10 +64,6 @@ export const Routing = React.memo(function () {
         {/* TODO: add lazy loading */}
         <LoginPage />
       </Route>
-      <Route path={`/:orgId${ROUTES.REGISTER}`}>
-        {/* TODO: add lazy loading */}
-        <RegisterPage />
-      </Route>
       <Route path={`/:orgId${ROUTES.LOGOUT}`}>
         <LogoutPage />
       </Route>

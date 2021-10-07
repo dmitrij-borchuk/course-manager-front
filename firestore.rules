@@ -44,6 +44,9 @@ service cloud.firestore {
         allow read, write: if isOrgAdmin(request.auth.uid)
         allow create: if hasInvite(request.auth.token.email, request.resource.data.token)
       }
+      match /users/{userId} {
+        allow read: if request.auth.uid == userId;
+      }
       allow create: if true
       allow read: if isOrgMember(request.auth.uid)
       allow read, write: if isOrgAdmin(request.auth.uid)

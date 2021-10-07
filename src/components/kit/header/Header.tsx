@@ -1,35 +1,67 @@
+import { useEffect, useMemo } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { Divider, Icon, Navbar } from 'react-materialize'
 import { Link } from 'react-router-dom'
 import { ROUTES } from '../../../constants'
+import { useAccessManager } from '../../../hooks/useAccessManager'
 import { useOrgIdNotStrict } from '../../../hooks/useOrgId'
+import { useAuthState, useUsersState } from '../../../store'
 
 // TODO: use logo
 
 export const Header = () => {
   const orgId = useOrgIdNotStrict()
-  const orgItems = [
-    <Link key="dashboard" to={`/${orgId}`}>
-      <FormattedMessage id="header.nav.dashboard" />
-    </Link>,
-    <Link key="teachers" to={`/${orgId}${ROUTES.TEACHERS_LIST}`}>
-      <FormattedMessage id="header.nav.teachers" />
-    </Link>,
-    // TODO
-    // <Link key="users" to={`/${orgId}${ROUTES.USERS_LIST}`}>
-    //   <FormattedMessage id="header.nav.users" />
-    // </Link>,
-    <Link key="groups" to={`/${orgId}${ROUTES.GROUPS_LIST}`}>
-      <FormattedMessage id="header.nav.groups" />
-    </Link>,
-    <Link key="students" to={`/${orgId}${ROUTES.STUDENTS_LIST}`}>
-      <FormattedMessage id="header.nav.students" />
-    </Link>,
-    <Divider key="divider" />,
-    <Link key="logout" to={`/${orgId}${ROUTES.LOGOUT}`}>
-      <FormattedMessage id="header.nav.logout" />
-    </Link>,
-  ]
+  const { currentUser } = useAuthState()
+  const { fetchOrgUser, usersById } = useUsersState()
+  const organizationUser = usersById[currentUser?.uid || '']
+  const { hasAccess } = useAccessManager(organizationUser)
+  const orgItems = useMemo(() => {
+    const items: JSX.Element[] = [
+      <Link key="dashboard" to={`/${orgId}`}>
+        <FormattedMessage id="header.nav.dashboard" />
+      </Link>,
+    ]
+
+    if (hasAccess('MANAGE_TEACHERS')) {
+      items.push(
+        <Link key="teachers" to={`/${orgId}${ROUTES.TEACHERS_LIST}`}>
+          <FormattedMessage id="header.nav.teachers" />
+        </Link>
+      )
+    }
+    if (hasAccess('MANAGE_GROUPS')) {
+      items.push(
+        <Link key="groups" to={`/${orgId}${ROUTES.GROUPS_LIST}`}>
+          <FormattedMessage id="header.nav.groups" />
+        </Link>
+      )
+    }
+    if (hasAccess('MANAGE_STUDENTS')) {
+      items.push(
+        <Link key="students" to={`/${orgId}${ROUTES.STUDENTS_LIST}`}>
+          <FormattedMessage id="header.nav.students" />
+        </Link>
+      )
+    }
+
+    return items.concat([
+      // TODO
+      // <Link key="users" to={`/${orgId}${ROUTES.USERS_LIST}`}>
+      // <FormattedMessage id="header.nav.users" />
+      // </Link>
+      <Divider key="divider" />,
+      <Link key="logout" to={`/${orgId}${ROUTES.LOGOUT}`}>
+        <FormattedMessage id="header.nav.logout" />
+      </Link>,
+    ])
+  }, [hasAccess, orgId])
+
+  useEffect(() => {
+    if (!orgId || !currentUser) {
+      return
+    }
+    fetchOrgUser(orgId, currentUser.uid)
+  }, [currentUser, fetchOrgUser, orgId])
 
   return (
     <Navbar

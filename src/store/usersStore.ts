@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'react'
 import { useHistory } from 'react-router-dom'
+import { makeOrgCollection } from '../api/firebase/collections'
 import { useDictionaryToArray } from '../hooks/useDictionaryToArray'
 import { confirmInvitation, getUsersList, inviteUser } from '../services/users'
 import { Dictionary } from '../types/dictionary'
@@ -52,6 +53,13 @@ export default function useUsersStore() {
       const resp = await getUsersList(orgId)
       const itemsById = arrayToDictionary(resp)
       setUsersById(itemsById)
+      setFetching(false)
+    }, []),
+    fetchOrgUser: useCallback(async (orgId: string, id: string) => {
+      setFetching(true)
+      const collection = makeOrgCollection<OrganizationUser>('users', orgId)
+      const res = await collection.getById(id)
+      setUsersById((items) => ({ ...items, [res.id]: res }))
       setFetching(false)
     }, []),
   }

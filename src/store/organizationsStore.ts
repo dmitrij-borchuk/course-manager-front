@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'react'
 import { organizations, users } from '../api/firebase/collections'
+import { ROLES } from '../config'
 import { useDictionaryToArray } from '../hooks/useDictionaryToArray'
 import { addUserToOrganization } from '../services/users'
 import { Dictionary } from '../types/dictionary'
@@ -38,7 +39,8 @@ export default function useOrganizationsBaseStore() {
         organizations: userOrganizations.concat([data.id]),
       })
       addUserToOrganization(data.id, {
-        id: user.id,
+        ...user,
+        role: ROLES.Administrator,
       })
       setById((list) => ({
         ...list,

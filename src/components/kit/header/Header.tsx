@@ -1,19 +1,17 @@
-import { useEffect, useMemo } from 'react'
+import { useMemo } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { Divider, Icon, Navbar } from 'react-materialize'
 import { Link } from 'react-router-dom'
 import { ROUTES } from '../../../constants'
 import { useAccessManager } from '../../../hooks/useAccessManager'
+import { useCurrentUser } from '../../../hooks/useCurrentUser'
 import { useOrgIdNotStrict } from '../../../hooks/useOrgId'
-import { useAuthState, useUsersState } from '../../../store'
 
 // TODO: use logo
 
 export const Header = () => {
   const orgId = useOrgIdNotStrict()
-  const { currentUser } = useAuthState()
-  const { fetchOrgUser, usersById } = useUsersState()
-  const organizationUser = usersById[currentUser?.uid || '']
+  const { organizationUser } = useCurrentUser()
   const { hasAccess } = useAccessManager(organizationUser)
   const orgItems = useMemo(() => {
     const items: JSX.Element[] = [
@@ -55,13 +53,6 @@ export const Header = () => {
       </Link>,
     ])
   }, [hasAccess, orgId])
-
-  useEffect(() => {
-    if (!orgId || !currentUser) {
-      return
-    }
-    fetchOrgUser(orgId, currentUser.uid)
-  }, [currentUser, fetchOrgUser, orgId])
 
   return (
     <Navbar

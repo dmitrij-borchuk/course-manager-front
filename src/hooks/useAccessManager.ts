@@ -2,7 +2,7 @@ import { useCallback, useMemo } from 'react'
 import { OrganizationUser } from '../types/user'
 
 const ACTIONS = ['MANAGE_TEACHERS', 'MANAGE_GROUPS', 'MANAGE_STUDENTS'] as const
-type ActionType = typeof ACTIONS[number]
+export type ActionType = typeof ACTIONS[number]
 const rolesToActionsMap: Record<string, ActionType[]> = {
   Administrator: ['MANAGE_TEACHERS', 'MANAGE_GROUPS', 'MANAGE_STUDENTS'],
   Teacher: [],

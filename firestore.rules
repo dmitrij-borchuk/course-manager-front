@@ -9,7 +9,7 @@ service cloud.firestore {
         return exists(/databases/$(database)/documents/organizations/$(orgName)/users/$(uid))
       }
       function isOrgAdmin(uid) {
-        return exists(/databases/$(database)/documents/organizations/$(orgName)/admins/$(uid)) || isOrgCreator(uid)
+        return get(/databases/$(database)/documents/organizations/$(orgName)/users/$(uid)).data.role == "Administrator" || isOrgCreator(uid)
       }
       function hasInvite(email, token) {
         return email == get(/databases/$(database)/documents/organizations/$(orgName)/invites/$(token)).data.email
@@ -33,15 +33,9 @@ service cloud.firestore {
         allow read: if isOrgMember(request.auth.uid)
         allow write: if isOrgAdmin(request.auth.uid)
       }
-      match /admins/{document=**} {
-        allow write: if isOrgAdmin(request.auth.uid)
-      }
-      // email as an ID to be able to invite
-      match /users/{email} {
-        allow update: if request.auth.token.email == email
-      }
       match /users/{document=**} {
-        allow read, write: if isOrgAdmin(request.auth.uid)
+        allow read: if isOrgMember(request.auth.uid)
+        allow write: if isOrgAdmin(request.auth.uid)
         allow create: if hasInvite(request.auth.token.email, request.resource.data.token)
       }
       match /users/{userId} {

@@ -20,29 +20,29 @@ export const TeacherPage = () => {
   // const { appUser } = useAuthState()
   const onDelete = useCallback(() => deleteTeacher(id), [deleteTeacher, id])
 
-  const attendancesByGroup = useMemo(() => groupBy(attendances, (a) => a.group?.id), [attendances])
-  const classesByGroup = useMemo(
-    () =>
-      groups.reduce<Dictionary<Date[]>>((acc, g) => {
-        return {
-          ...acc,
-          [g.id]: getClassesDates(g, new Date()),
-        }
-      }, {}),
-    [groups]
-  )
+  // const attendancesByGroup = useMemo(() => groupBy(attendances, (a) => a.group?.id), [attendances])
+  // const classesByGroup = useMemo(
+  //   () =>
+  //     groups.reduce<Dictionary<Date[]>>((acc, g) => {
+  //       return {
+  //         ...acc,
+  //         [g.id]: getClassesDates(g, new Date()),
+  //       }
+  //     }, {}),
+  //   [groups]
+  // )
   const groupsOfTeacher = useMemo(() => groups.filter((g) => g.teacher === teacher?.id), [groups, teacher?.id])
-  const rateByGroup = useMemo(() => {
-    return groupsOfTeacher.reduce<Dictionary<number>>((acc, g) => {
-      const classesCount = classesByGroup[g.id]?.length || 0
-      const groupRate = classesCount ? (attendancesByGroup[g.id]?.length || 0) / classesCount : 0
+  // const rateByGroup = useMemo(() => {
+  //   return groupsOfTeacher.reduce<Dictionary<number>>((acc, g) => {
+  //     const classesCount = classesByGroup[g.id]?.length || 0
+  //     const groupRate = classesCount ? (attendancesByGroup[g.id]?.length || 0) / classesCount : 0
 
-      return {
-        ...acc,
-        [g.id]: groupRate,
-      }
-    }, {})
-  }, [attendancesByGroup, classesByGroup, groupsOfTeacher])
+  //     return {
+  //       ...acc,
+  //       [g.id]: groupRate,
+  //     }
+  //   }, {})
+  // }, [attendancesByGroup, classesByGroup, groupsOfTeacher])
 
   useEffect(() => {
     if (orgId) {
@@ -73,7 +73,7 @@ export const TeacherPage = () => {
       {/* TODO: skeleton loader */}
       <Loader show={fetching}>
         {teacher && (
-          <Teacher data={teacher} onDelete={onDelete} attendanceRates={rateByGroup} teachersGroups={groupsOfTeacher} />
+          <Teacher data={teacher} onDelete={onDelete} attendanceRates={{}} teachersGroups={groupsOfTeacher} />
         )}
       </Loader>
     </>

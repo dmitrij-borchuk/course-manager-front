@@ -63,7 +63,7 @@ export const GroupPage = () => {
 
   useEffect(() => {
     if (group?.id) {
-      fetchStudentsOfGroup(orgId, group.id)
+      fetchStudentsOfGroup(orgId, group.id, new Date())
       return () => clearStudentsOfGroup()
     }
   }, [clearStudentsOfGroup, fetchStudentsOfGroup, group?.id, orgId])

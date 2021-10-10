@@ -40,6 +40,14 @@ export default function useGroupsStore() {
       setGroupsById(newGroupsById)
       setLoading(false)
     }, []),
+    fetchGroupsOfTeacher: useCallback(async (orgId: string, teacherId: string) => {
+      setLoading(true)
+      const groupsCollection = makeOrgCollection<Group>('groups', orgId)
+      const resp = await groupsCollection.query('teacher', '==', teacherId)
+      const newGroupsById = arrayToDictionary(resp)
+      setGroupsById(newGroupsById)
+      setLoading(false)
+    }, []),
     fetchGroup,
     editGroup: useCallback(async (orgId: string, data: Partial<Group>) => {
       setSubmitting(true)

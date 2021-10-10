@@ -94,16 +94,16 @@ export default function useStudentsOfGroupStore() {
       },
       [unassignStudentFromGroup]
     ),
-    fetchStudentsOfGroup: useCallback(async (orgId: string, groupId: string) => {
+    fetchStudentsOfGroup: useCallback(async (orgId: string, groupId: string, date: Date) => {
       setFetching(true)
       try {
         const collection = makeOrgCollection<StudentOfGroup>('studentsToGroups', orgId)
         const resp = await collection.queryMulti([
           ['groupId', '==', groupId],
-          ['endDate', '==', null],
+          ['startDate', '<=', date.getTime()],
         ])
-
-        const studentIds = resp.map((item) => item.studentId)
+        const filtered = resp.filter((item) => item.endDate === null || item.endDate >= date.getTime())
+        const studentIds = filtered.map((item) => item.studentId)
 
         if (!studentIds.length) {
           setFetching(false)
@@ -122,15 +122,15 @@ export default function useStudentsOfGroupStore() {
         throw error
       }
     }, []),
-    fetchGroupsOfStudent: useCallback(async (orgId: string, studentId: string) => {
+    fetchGroupsOfStudent: useCallback(async (orgId: string, studentId: string, date: Date) => {
       setFetching(true)
       const collection = makeOrgCollection<StudentOfGroup>('studentsToGroups', orgId)
       const resp = await collection.queryMulti([
         ['studentId', '==', studentId],
-        ['endDate', '==', null],
+        ['startDate', '<=', date.getTime()],
       ])
-
-      const groupIds = resp.map((item) => item.groupId)
+      const filtered = resp.filter((item) => item.endDate === null || item.endDate >= date.getTime())
+      const groupIds = filtered.map((item) => item.groupId)
 
       if (!groupIds.length) {
         setFetching(false)

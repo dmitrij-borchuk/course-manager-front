@@ -1,16 +1,11 @@
 import { useCallback, useState } from 'react'
-import { AttendanceFull, AttendanceNew } from '../types/attendance'
+import { Attendance, AttendanceNew } from '../types/attendance'
 import { useDictionary } from '../hooks/useDictionary'
-// import {
-//   addAttendances,
-//   fetchAttendances,
-//   fetchAttendancesForStudent,
-//   removeAttendances,
-// } from '../services/attendances'
+import { makeOrgCollection } from '../api/firebase/collections'
 
 export function useAttendancesStore() {
   const [loading, setLoading] = useState(false)
-  const [attendances, setAttendances] = useState<AttendanceFull[]>([])
+  const [attendances, setAttendances] = useState<Attendance[]>([])
   const attendancesById = useDictionary(attendances)
 
   return {
@@ -42,16 +37,13 @@ export function useAttendancesStore() {
       // setAttendances(response.data)
       // setLoading(false)
     }, []),
-    addAttendances: useCallback(async (attendances: AttendanceNew[]) => {
-      // setLoading(true)
-      // await addAttendances(attendances)
-      // setLoading(false)
+    addAttendance: useCallback(async (orgId: string, attendance: AttendanceNew | Attendance) => {
+      setLoading(true)
+      const groupsCollection = makeOrgCollection<Attendance>('attendances', orgId)
+      await groupsCollection.save(attendance)
+      setLoading(false)
     }, []),
-    removeAttendances: useCallback(async (id: string[]) => {
-      // setLoading(true)
-      // await removeAttendances(id)
-      // setLoading(false)
-    }, []),
+    removeAttendances: useCallback(async (orgId: string, id: string[]) => {}, []),
     clearAttendances: useCallback(() => {
       setAttendances([])
     }, []),

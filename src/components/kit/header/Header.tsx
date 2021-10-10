@@ -4,15 +4,13 @@ import { Divider, Icon, Navbar } from 'react-materialize'
 import { Link } from 'react-router-dom'
 import { ROUTES } from '../../../constants'
 import { useAccessManager } from '../../../hooks/useAccessManager'
-import { useCurrentUser } from '../../../hooks/useCurrentUser'
 import { useOrgIdNotStrict } from '../../../hooks/useOrgId'
 
 // TODO: use logo
 
 export const Header = () => {
   const orgId = useOrgIdNotStrict()
-  const { organizationUser } = useCurrentUser()
-  const { hasAccess } = useAccessManager(organizationUser)
+  const { hasAccess } = useAccessManager()
   const orgItems = useMemo(() => {
     const items: JSX.Element[] = [
       <Link key="dashboard" to={`/${orgId}`}>

@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from 'react'
-import { OrganizationUser } from '../types/user'
+import { useCurrentUser } from './useCurrentUser'
 
 const ACTIONS = ['MANAGE_TEACHERS', 'MANAGE_GROUPS', 'MANAGE_STUDENTS'] as const
 export type ActionType = typeof ACTIONS[number]
@@ -8,10 +8,11 @@ const rolesToActionsMap: Record<string, ActionType[]> = {
   Teacher: [],
 }
 
-export function useAccessManager(user?: OrganizationUser) {
+export function useAccessManager() {
+  const { organizationUser } = useCurrentUser()
   const hasAccess = useCallback(
     (action: ActionType) => {
-      const actions = rolesToActionsMap[user?.role || '']
+      const actions = rolesToActionsMap[organizationUser?.role || '']
 
       if (!actions) {
         return false
@@ -19,7 +20,7 @@ export function useAccessManager(user?: OrganizationUser) {
 
       return actions.includes(action)
     },
-    [user?.role]
+    [organizationUser?.role]
   )
 
   return useMemo(

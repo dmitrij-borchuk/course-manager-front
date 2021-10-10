@@ -102,7 +102,9 @@ export const Routing = React.memo(function () {
       <AuthGuardedRoute component={SchedulePage} path={`/:orgId${ROUTES.SCHEDULES_ROOT}`} exact />
 
       {/* Attendance */}
-      <AuthGuardedRoute component={AttendanceEditor} path={`/:orgId${ROUTES.ATTENDANCE_EDIT}/:id/:date`} exact />
+      <AuthGuardedRoute component={AttendanceEditor} path={`/:orgId${ROUTES.ATTENDANCE_EDIT}/:id`} exact />
+      <AuthGuardedRoute component={AttendanceEditor} path={`/:orgId${ROUTES.ATTENDANCE_ADD}`} exact />
+      <AuthGuardedRoute component={AttendanceEditor} path={`/:orgId${ROUTES.ATTENDANCE_ADD}/:date`} exact />
 
       {/* Organizations */}
       <AuthGuardedRoute component={CreateOrganizationPage} path={`${ROUTES.ORGANIZATIONS_ADD}`} exact />

@@ -33,6 +33,9 @@ service cloud.firestore {
         allow read: if isOrgMember(request.auth.uid)
         allow write: if isOrgAdmin(request.auth.uid)
       }
+      match /attendances/{document=**} {
+        allow read, write: if isOrgMember(request.auth.uid)
+      }
       match /users/{document=**} {
         allow read: if isOrgMember(request.auth.uid)
         allow write: if isOrgAdmin(request.auth.uid)

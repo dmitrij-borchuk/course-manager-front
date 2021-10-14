@@ -3,26 +3,36 @@ import { Attendance, AttendanceNew } from '../types/attendance'
 import { makeOrgCollection } from '../api/firebase/collections'
 import { useDictionaryToArray } from '../hooks/useDictionaryToArray'
 import { Dictionary } from '../types/dictionary'
+import { arrayToDictionary } from '../utils/common'
 
 export function useAttendancesStore() {
   const [loading, setLoading] = useState(false)
   const [attendancesById, setAttendancesById] = useState<Dictionary<Attendance | undefined>>({})
-  const attendances = useDictionaryToArray(attendancesById)
+  const attendances = useDictionaryToArray<Attendance>(attendancesById as Dictionary<Attendance>)
 
   return {
     loading,
     attendancesById,
     attendances,
-    fetchAllAttendances: useCallback(async (from: Date, to: Date) => {
-      setLoading(true)
-      // TODO: implement
-      // const response = await fetchAllAttendances(from, to)
-      // setAttendances(response.data)
-      setLoading(false)
+    fetchAllAttendances: useCallback(async (orgId: string, from: Date, to: Date) => {
+      try {
+        setLoading(true)
+        const collection = makeOrgCollection<Attendance>('attendances', orgId)
+        const resp = await collection.queryMulti([
+          ['date', '>=', from.getTime()],
+          ['date', '<=', to.getTime()],
+        ])
+        const itemsById = arrayToDictionary(resp)
+        setAttendancesById(itemsById)
+        setLoading(false)
+      } catch (error) {
+        setLoading(false)
+        throw error
+      }
     }, []),
     fetchAttendance: useCallback(async (orgId: string, id: string) => {
       setLoading(true)
-      const collection = makeOrgCollection<Attendance>('attendance', orgId)
+      const collection = makeOrgCollection<Attendance>('attendances', orgId)
       const resp = await collection.getById(id)
       setAttendancesById((state) => ({ ...state, [resp.id]: resp }))
       setLoading(false)

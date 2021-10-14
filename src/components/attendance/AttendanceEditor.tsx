@@ -64,9 +64,7 @@ export const AttendanceEditor = (props: Props) => {
   }, [])
   const group = watch('group')
 
-  console.log('=-= group', group)
   useEffect(() => {
-    console.log('=-= onGroupChanged', group)
     onGroupChanged(group)
   }, [group, onGroupChanged])
 

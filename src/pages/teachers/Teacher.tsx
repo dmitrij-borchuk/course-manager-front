@@ -5,15 +5,12 @@ import { Loader } from '../../components/kit/loader/Loader'
 import { Teacher } from '../../components/teachers/Teacher'
 import { useOrgId } from '../../hooks/useOrgId'
 import { useAttendancesState, useGroupsState, useTeachersState } from '../../store'
-import { Dictionary } from '../../types/dictionary'
-import { groupBy } from '../../utils/common'
-import { getClassesDates } from '../../utils/schedule'
 
 // TODO: Add loading skeleton
 export const TeacherPage = () => {
   let { id } = useParams<{ id: string }>()
   const { fetchTeacher, teachersById, fetching, deleteTeacher } = useTeachersState()
-  const { attendances, clearAttendances, fetchAttendancesForGroups } = useAttendancesState()
+  const { clearAttendances, fetchAttendancesForGroups } = useAttendancesState()
   const { groups, fetchGroups } = useGroupsState()
   const teacher = teachersById[id]
   const orgId = useOrgId()

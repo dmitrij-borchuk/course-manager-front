@@ -12,6 +12,7 @@ export const messages = {
   'common.dialog.btn.cancel': 'Cancel',
   'common.list.empty': 'The list is empty',
   'common.unknownName': 'Unknown name',
+  'common.date': 'Date',
 
   'Auth.form.error.invalid': 'Identifier or password invalid.',
   'Auth.form.error.500': 'Something went wrong',
@@ -28,7 +29,7 @@ export const messages = {
   'header.nav.logout': 'Logout',
 
   'teachers.list.title': 'Teachers',
-  'teachers.list.empty': 'There is no teachers yet',
+  'teachers.list.empty': 'There are no teachers yet',
   'teachers.add.title': 'Invite teacher',
   'teachers.edit.title': 'Edit teacher',
   'teachers.groups.empty': "The teacher doesn't have any classes",
@@ -78,6 +79,10 @@ export const messages = {
   'users.invite.title': 'Invite user',
   'users.list.title': 'Users',
   'users.list.empty': 'There is no users yet',
+
+  'attendance.header.add': 'Add Attendance',
+  'attendance.header.edit': 'Edit Attendance',
+  'attendance.groupSelector.placeholder': 'Group',
 }
 
 export default messages

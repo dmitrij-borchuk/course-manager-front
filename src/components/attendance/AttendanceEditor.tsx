@@ -1,116 +1,174 @@
-import React, { useCallback } from 'react'
-import { FormattedDate } from 'react-intl'
-import { Container } from 'react-materialize'
-// import { useDictionary } from '../../hooks/useDictionary'
-import { AttendanceFull } from '../../types/attendance'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import { Controller } from 'react-hook-form'
+import { FormattedMessage, useIntl } from 'react-intl'
+import { Container, DatePicker, Icon, Preloader, Select } from 'react-materialize'
+import { useFormWithError } from '../../hooks/useFormWithError'
+import { Attendance } from '../../types/attendance'
+import { Dictionary } from '../../types/dictionary'
 import { Group } from '../../types/group'
 import { Student } from '../../types/student'
-// import { noop } from '../../utils/common'
-// import { datesAreOnSameDay } from '../../utils/date'
+import { noop } from '../../utils/common'
 import { SubmitButton } from '../kit/buttons/SubmitButton'
-// import { Ellipsis } from '../kit/ellipsis/Ellipsis'
-// import { List } from '../kit/list/List'
-import { SectionHeader } from '../kit/sectionHeader/SectionHeader'
+import { Ellipsis } from '../kit/ellipsis/Ellipsis'
+import { FormLayout } from '../kit/formLayout/FormLayout'
+import { List } from '../kit/list/List'
 
+type AttendanceForm = {
+  date: Date
+  group: string
+  selected: Dictionary<boolean>
+}
 interface Props {
   className?: string
-  group: Group
-  date: Date
-  onSubmit?: (data: { toAdd: Student[]; toRemove: Student[] }) => void
-  attendances: AttendanceFull[]
+  currentGroup?: Group
+  groups: Group[]
+  onSubmit?: (data: AttendanceForm) => void
+  onGroupChanged?: (id: string) => void
+  students: Student[]
+  studentsLoading?: boolean
+  submitting?: boolean
+  attendance?: Attendance
 }
 export const AttendanceEditor = (props: Props) => {
-  const { className, group, date /* , onSubmit = noop, attendances */ } = props
-  // const attendancesByStudent = useMemo(() => {
-  //   return attendances.reduce<Record<string, AttendanceFull[]>>((acc, a) => {
-  //     if (!a.student?.id) {
-  //       return acc
-  //     }
-
-  //     acc[a.student.id] = acc[a.student.id] || []
-  //     acc[a.student.id].push(a)
-
-  //     return acc
-  //   }, {})
-  // }, [attendances])
-  // const initialSelected = useMemo(() => {
-  //   const map: Record<string, boolean> = {}
-  //   // TODO: implement me
-  //   // group.students?.forEach((s) => {
-  //   //   const studentsAttendance = attendancesByStudent[s.id] || []
-  //   //   const thisDayAttendance = studentsAttendance.filter((a) => datesAreOnSameDay(new Date(a.date), date))
-  //   //   const hasAttendance = !!thisDayAttendance.find((a) => a.student?.id === s.id)
-  //   //   map[s.id] = hasAttendance
-  //   // })
-
-  //   return map
-  // }, [])
-  // const [selected, setSelected] = useState<Record<string, boolean>>(initialSelected)
-  // const renderItem = useMemo(
-  //   () => (s: Student) =>
-  //     (
-  //       <div
-  //         className="collection-item flex justify-between items-center cursor-pointer"
-  //         onClick={() => setSelected((selected) => ({ ...selected, [s.id]: !selected[s.id] }))}
-  //       >
-  //         <Ellipsis className="color-secondary">{s.name}</Ellipsis>
-  //         {selected[s.id] && (
-  //           <div className="-my-3 -mr-5 flex color-secondary">
-  //             <Icon center className="text-5xl">
-  //               check_circle
-  //             </Icon>
-  //           </div>
-  //         )}
-  //         {!selected[s.id] && (
-  //           <div className="-my-3 -mr-5 flex color-text-gray">
-  //             <Icon center className="text-5xl">
-  //               radio_button_unchecked
-  //             </Icon>
-  //           </div>
-  //         )}
-  //       </div>
-  //     ),
-  //   [selected]
-  // )
-  // const studentsById = useDictionary(group.students)
-  // const { students } = group
-  const submitHandler = useCallback(() => {
-    // TODO: implement me
-    // const initialSelectedArray = Object.entries(initialSelected)
-    //   .filter(([key, value]) => value)
-    //   .map(([key]) => key)
-    // const selectedArray = Object.entries(selected)
-    //   .filter(([key, value]) => value)
-    //   .map(([key]) => key)
-    // const toAdd: Student[] = []
-    // const toRemove: Student[] = []
-    // selectedArray.forEach((id) => {
-    //   if (!initialSelectedArray.includes(id)) {
-    //     toAdd.push(studentsById[id])
-    //   }
-    // })
-    // initialSelectedArray.forEach((id) => {
-    //   if (!selectedArray.includes(id)) {
-    //     toRemove.push(studentsById[id])
-    //   }
-    // })
-    // onSubmit({
-    //   toAdd,
-    //   toRemove,
-    // })
+  const {
+    className,
+    groups,
+    students,
+    onSubmit = noop,
+    submitting = false,
+    attendance,
+    onGroupChanged = noop,
+    studentsLoading = false,
+  } = props
+  const intl = useIntl()
+  const { control, handleSubmit, errors, watch } = useFormWithError<AttendanceForm>({
+    defaultValues: {
+      ...attendance,
+      group: attendance?.group || '',
+      date: attendance?.date ? new Date(attendance.date) : new Date(),
+    },
+    reValidateMode: 'onChange',
+  })
+  const [selected, setSelected] = useState<Dictionary<boolean>>({})
+  const onSubmitInternal = useCallback(
+    (data) => {
+      onSubmit({
+        ...data,
+        selected,
+      })
+    },
+    [onSubmit, selected]
+  )
+  const onStudentsChanged = useCallback((attendance: Dictionary<boolean>) => {
+    setSelected(attendance)
   }, [])
+  const group = watch('group')
+
+  console.log('=-= group', group)
+  useEffect(() => {
+    console.log('=-= onGroupChanged', group)
+    onGroupChanged(group)
+  }, [group, onGroupChanged])
 
   return (
     <div className={className}>
       <Container className="px-4">
-        <SectionHeader>{group.name}</SectionHeader>
-        <div>
-          <FormattedDate month="short" day="2-digit" weekday="short" value={date} />
-        </div>
-        {/* {students?.length ? <List items={students} renderItem={renderItem} /> : <NoStudents />} */}
-        <div className="flex justify-end">
-          <SubmitButton onSubmit={submitHandler} />
-        </div>
+        <FormLayout
+          header={<FormattedMessage id={attendance ? 'attendance.header.edit' : 'attendance.header.add'} />}
+          controls={<SubmitButton loading={submitting} disabled={submitting || studentsLoading} />}
+          onSubmit={handleSubmit(onSubmitInternal)}
+        >
+          <div>
+            {/* TODO: move to component */}
+            {/* Date */}
+            <Controller
+              id="date"
+              control={control}
+              name="date"
+              label={`${intl.formatMessage({ id: 'common.date' })} *`}
+              rules={{
+                required: {
+                  value: true,
+                  message: 'Required',
+                },
+              }}
+              render={({ value, ...renderProps }, ddd) => {
+                return (
+                  <DatePicker
+                    id="date"
+                    options={{
+                      autoClose: true,
+                      format: 'mmm dd, yyyy',
+                      defaultDate: value,
+                      setDefaultDate: true,
+                    }}
+                    // @ts-ignore
+                    label={`${intl.formatMessage({ id: 'common.date' })} *`}
+                    disabled={submitting}
+                    {...renderProps}
+                  />
+                )
+              }}
+            />
+          </div>
+
+          <Controller
+            id="group"
+            control={control}
+            name="group"
+            // label={`${intl.formatMessage({ id: 'attendance.groupSelector.placeholder' })} *`}
+            rules={{
+              required: {
+                value: true,
+                message: 'Required',
+              },
+            }}
+            render={({ ...renderProps }) => {
+              const error = errors['group']?.message
+              const validationClass = error ? 'invalid' : ''
+
+              return (
+                <Select
+                  id="group-selector"
+                  multiple={false}
+                  options={{
+                    classes: validationClass,
+                    dropdownOptions: {
+                      alignment: 'left',
+                      autoTrigger: true,
+                      closeOnClick: true,
+                      constrainWidth: true,
+                      coverTrigger: true,
+                      hover: false,
+                      inDuration: 150,
+                      outDuration: 250,
+                    },
+                  }}
+                  error={error}
+                  className={validationClass}
+                  {...renderProps}
+                >
+                  <option disabled value="">
+                    {intl.formatMessage({ id: 'attendance.groupSelector.placeholder' })}
+                  </option>
+                  {groups.map((g) => (
+                    <option key={g.id} value={g.id}>
+                      {g.name}
+                    </option>
+                  ))}
+                </Select>
+              )
+            }}
+          />
+
+          {studentsLoading && (
+            <div className="flex justify-center">
+              <Preloader color="red" flashing={false} size="medium" />
+            </div>
+          )}
+
+          <StudentsSelector students={students} onChange={onStudentsChanged} initialSelected={attendance?.attended} />
+        </FormLayout>
       </Container>
     </div>
   )
@@ -118,5 +176,66 @@ export const AttendanceEditor = (props: Props) => {
 
 export default AttendanceEditor
 
+interface StudentsSelectorProps {
+  students: Student[]
+  initialSelected?: Dictionary<boolean>
+  onChange?: (attendance: Dictionary<boolean>) => void
+}
+const StudentsSelector = ({ students, onChange = noop, initialSelected }: StudentsSelectorProps) => {
+  const [selected, setSelected] = useState<Record<string, boolean>>(initialSelected || {})
+  const onClick = useCallback((id: string, value: boolean) => {
+    setSelected((d) => ({ ...d, [id]: value }))
+  }, [])
+  const renderItem = useMemo(
+    () => (s: Student) =>
+      (
+        <div
+          className="collection-item flex justify-between items-center cursor-pointer"
+          onClick={() => onClick(s.id, !selected[s.id])}
+        >
+          <Ellipsis className="color-secondary">{s.name}</Ellipsis>
+          {selected[s.id] && (
+            <div className="-my-3 -mr-5 flex color-secondary">
+              <Icon center className="text-5xl">
+                check_circle
+              </Icon>
+            </div>
+          )}
+          {!selected[s.id] && (
+            <div className="-my-3 -mr-5 flex color-text-gray">
+              <Icon center className="text-5xl">
+                radio_button_unchecked
+              </Icon>
+            </div>
+          )}
+        </div>
+      ),
+    [onClick, selected]
+  )
+
+  useEffect(() => {
+    setSelected((selected) => {
+      const newSelected: Record<string, boolean> = {}
+      students.forEach((s) => {
+        newSelected[s.id] = selected[s.id] || false
+      })
+
+      return newSelected
+    })
+  }, [students])
+
+  useEffect(() => {
+    onChange(selected)
+  }, [onChange, selected])
+
+  useEffect(() => {
+    if (initialSelected) {
+      setSelected(initialSelected)
+    }
+  }, [initialSelected])
+
+  return <>{students?.length ? <List items={students} renderItem={renderItem} /> : <NoStudents />}</>
+}
+
 // TODO: add implementation
-// const NoStudents = () => <div />
+const NoStudents = () => <div />

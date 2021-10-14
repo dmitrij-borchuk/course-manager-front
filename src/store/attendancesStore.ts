@@ -1,12 +1,13 @@
 import { useCallback, useState } from 'react'
 import { Attendance, AttendanceNew } from '../types/attendance'
-import { useDictionary } from '../hooks/useDictionary'
 import { makeOrgCollection } from '../api/firebase/collections'
+import { useDictionaryToArray } from '../hooks/useDictionaryToArray'
+import { Dictionary } from '../types/dictionary'
 
 export function useAttendancesStore() {
   const [loading, setLoading] = useState(false)
-  const [attendances, setAttendances] = useState<Attendance[]>([])
-  const attendancesById = useDictionary(attendances)
+  const [attendancesById, setAttendancesById] = useState<Dictionary<Attendance | undefined>>({})
+  const attendances = useDictionaryToArray(attendancesById)
 
   return {
     loading,
@@ -17,6 +18,13 @@ export function useAttendancesStore() {
       // TODO: implement
       // const response = await fetchAllAttendances(from, to)
       // setAttendances(response.data)
+      setLoading(false)
+    }, []),
+    fetchAttendance: useCallback(async (orgId: string, id: string) => {
+      setLoading(true)
+      const collection = makeOrgCollection<Attendance>('attendance', orgId)
+      const resp = await collection.getById(id)
+      setAttendancesById((state) => ({ ...state, [resp.id]: resp }))
       setLoading(false)
     }, []),
     fetchAttendancesForStudent: useCallback(async (groupsIds: string[], studentId: string) => {
@@ -37,7 +45,7 @@ export function useAttendancesStore() {
       // setAttendances(response.data)
       // setLoading(false)
     }, []),
-    addAttendance: useCallback(async (orgId: string, attendance: AttendanceNew | Attendance) => {
+    saveAttendance: useCallback(async (orgId: string, attendance: AttendanceNew | Attendance) => {
       setLoading(true)
       const groupsCollection = makeOrgCollection<Attendance>('attendances', orgId)
       await groupsCollection.save(attendance)
@@ -45,7 +53,7 @@ export function useAttendancesStore() {
     }, []),
     removeAttendances: useCallback(async (orgId: string, id: string[]) => {}, []),
     clearAttendances: useCallback(() => {
-      setAttendances([])
+      setAttendancesById({})
     }, []),
   }
 }

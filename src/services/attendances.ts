@@ -32,6 +32,9 @@ function getTimelineData(from: Date, to: Date, attendances: Attendance[], groups
 function getBlockData(date: Date, attendances: Attendance[], groups: Group[]) {
   const groupsById = arrayToDictionary(groups)
   const items = attendances.map((a) => {
+    if (!groupsById[a.group]) {
+      return null
+    }
     return getMeterData(a, groupsById[a.group])
   })
   return {
@@ -45,7 +48,7 @@ function getBlockData(date: Date, attendances: Attendance[], groups: Group[]) {
 }
 
 function getMeterData(attendance: Attendance, group: Group) {
-  return { id: group.id, text: group.name, progress: getMeterProgress(attendance, group) }
+  return { id: attendance.id, text: group.name, progress: getMeterProgress(attendance, group) }
 }
 
 function getMeterProgress(attendance: Attendance, group: Group) {

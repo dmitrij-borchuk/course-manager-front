@@ -188,6 +188,7 @@ const StudentsSelector = ({ students, onChange = noop, initialSelected }: Studen
     () => (s: Student) =>
       (
         <div
+          key={s.id}
           className="collection-item flex justify-between items-center cursor-pointer"
           onClick={() => onClick(s.id, !selected[s.id])}
         >

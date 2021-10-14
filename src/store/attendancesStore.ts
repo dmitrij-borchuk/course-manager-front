@@ -58,7 +58,7 @@ export function useAttendancesStore() {
     saveAttendance: useCallback(async (orgId: string, attendance: AttendanceNew | Attendance) => {
       setLoading(true)
       const groupsCollection = makeOrgCollection<Attendance>('attendances', orgId)
-      await groupsCollection.save(attendance)
+      await groupsCollection.save(attendance, { merge: false })
       setLoading(false)
     }, []),
     removeAttendances: useCallback(async (orgId: string, id: string[]) => {}, []),

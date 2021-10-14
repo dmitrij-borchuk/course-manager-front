@@ -57,9 +57,9 @@ export function collection<T extends { id: string }>(name: string) {
 
       return getItemFromDoc<T>(doc)
     },
-    save: async (data: Partial<T>) => {
+    save: async (data: Partial<T>, options = { merge: true }) => {
       const doc = collection.doc(data.id)
-      await doc.set(data, { merge: true })
+      await doc.set(data, options)
       return doc
     },
     delete: async (id: string) => {

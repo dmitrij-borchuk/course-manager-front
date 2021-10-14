@@ -2,6 +2,7 @@ import React from 'react'
 import { FormattedDate } from 'react-intl'
 import { Link } from 'react-router-dom'
 import { ROUTES } from '../../constants'
+import { useOrgId } from '../../hooks/useOrgId'
 import { Text } from '../kit/text/Text'
 import { AttendanceMeter } from './AttendanceMeter'
 
@@ -11,6 +12,8 @@ interface Props {
   className?: string
 }
 export const AttendanceDateBlock: React.FC<Props> = ({ date, items = [], className }) => {
+  const orgId = useOrgId()
+
   return (
     <div className={`${className} flex`}>
       <div className="flex flex-col items-center mr-3 w-8">
@@ -24,7 +27,7 @@ export const AttendanceDateBlock: React.FC<Props> = ({ date, items = [], classNa
       <div className="flex flex-col w-full min-w-0 gap-1">
         {/* TODO: what if no elements */}
         {items.map((item) => (
-          <Link to={`${ROUTES.ATTENDANCE_EDIT}/${item.id}/${date.toISOString()}`}>
+          <Link to={`/${orgId}${ROUTES.ATTENDANCE_EDIT}/${item.id}`}>
             <AttendanceMeter key={item.id} text={item.text} progress={item.progress} />
           </Link>
         ))}

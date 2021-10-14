@@ -1,20 +1,14 @@
-import { Group } from './group'
-import { Student } from './student'
+import { Dictionary } from './dictionary'
 
 export type AttendanceBase = {
-  student?: string
-  group?: string
-  date: string
+  // In milliseconds in UTC
+  date: number
+  attended: Dictionary<boolean>
+  group: string
 }
 
 export type AttendanceNew = AttendanceBase
 
 export type Attendance = AttendanceBase & {
   id: string
-  published_at?: string
-}
-
-export type AttendanceFull = Omit<Attendance, 'student' | 'group'> & {
-  student?: Student
-  group?: Group
 }

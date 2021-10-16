@@ -13,7 +13,7 @@ export const DashboardMenu = () => {
   const { hasAccess } = useAccessManager()
   const onTeacherClick = useCallback(() => {
     if (orgId) {
-      history.push(`${orgId}/invite`)
+      history.push(`/${orgId}/invite`)
     }
   }, [history, orgId])
   const onReportClick = useCallback(() => {

@@ -21,3 +21,7 @@ export async function logout() {
 export function register(email: string, password: string) {
   return auth.createUserWithEmailAndPassword(email, password)
 }
+
+export function resetPassword(email: string) {
+  return auth.sendPasswordResetEmail(email)
+}

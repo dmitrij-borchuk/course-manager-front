@@ -4,6 +4,7 @@ import { ROUTES } from './constants'
 import { withHeader } from './hocs/withHeader'
 import { AuthGuardedRoute } from './components/guardedRoute/GuardedRoute'
 import { LoginPage } from './pages/login/LoginPage'
+import { ResetPasswordPage } from './pages/resetPassword/ResetPasswordPage'
 import { RegisterPage } from './pages/register/RegisterPage'
 import { DashboardPage } from './pages/dashboard/Dashboard'
 import { EditTeacherPage } from './pages/teachers/EditTeacher'
@@ -51,6 +52,10 @@ export const Routing = React.memo(function () {
         {/* TODO: add lazy loading */}
         <LoginPage />
       </Route>
+      <Route path={ROUTES.RESET}>
+        {/* TODO: add lazy loading */}
+        <ResetPasswordPage />
+      </Route>
       <Route path={ROUTES.REGISTER}>
         {/* TODO: add lazy loading */}
         <RegisterPage />
@@ -66,6 +71,10 @@ export const Routing = React.memo(function () {
       </Route>
       <Route path={`/:orgId${ROUTES.LOGOUT}`}>
         <LogoutPage />
+      </Route>
+      <Route path={`/:orgId${ROUTES.RESET}`}>
+        {/* TODO: add lazy loading */}
+        <ResetPasswordPage />
       </Route>
 
       <AuthGuardedRoute component={ProfilePage} path="/" exact />

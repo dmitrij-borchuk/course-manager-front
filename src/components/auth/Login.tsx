@@ -21,6 +21,7 @@ interface Props {
 }
 export const Login: React.FC<Props> = ({ onSubmit, loading = false }) => {
   const orgId = useOrgIdNotStrict()
+  const orgPrefix = orgId ? `/${orgId}` : ''
   const { control, handleSubmit } = useForm<FormData>({
     defaultValues: {
       identifier: '',
@@ -30,7 +31,7 @@ export const Login: React.FC<Props> = ({ onSubmit, loading = false }) => {
 
   return (
     <Container>
-      <div className="login-wrapper m-auto">
+      <div className="auth-form-wrapper m-auto">
         {/* TODO: translate */}
         <SectionHeader>Login</SectionHeader>
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -51,6 +52,13 @@ export const Login: React.FC<Props> = ({ onSubmit, loading = false }) => {
             rules={{ required: true }}
             disabled={loading}
           />
+
+          {/* Password reset */}
+          <Link to={`${orgPrefix}${ROUTES.RESET}`}>
+            <FormattedMessage id="auth.resetLink.label" />
+          </Link>
+
+          {/* Submit */}
           <div className="flex justify-end">
             <ButtonWithLoader loading={loading}>
               {/* TODO: translate */}
@@ -71,6 +79,8 @@ export const Login: React.FC<Props> = ({ onSubmit, loading = false }) => {
                 </div>
                 <div className="h-px bg-gray-400 w-full" />
               </div>
+
+              {/* Link */}
               <Link to={`${ROUTES.REGISTER}`}>
                 <FormattedMessage id="auth.registerLink.label" />
               </Link>

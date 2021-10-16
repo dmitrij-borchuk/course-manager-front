@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import firebase from 'firebase'
-import auth, { login, register, logout } from '../api/firebase/auth'
+import auth, { login, register, logout, resetPassword } from '../api/firebase/auth'
 import { AppUser } from '../types/user'
 
 export function useAuthStore() {
@@ -52,6 +52,9 @@ export function useAuthStore() {
     }, []),
     logout: useCallback(() => {
       return logout()
+    }, []),
+    resetPassword: useCallback((email: string) => {
+      return resetPassword(email)
     }, []),
   }
 }

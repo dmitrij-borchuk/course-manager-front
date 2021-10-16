@@ -20,7 +20,7 @@ export const LoginPage = () => {
         await login(data.identifier, data.password)
 
         history.push(`${orgPrefix}${ROUTES.ROOT}`)
-      } catch (error) {
+      } catch (error: any) {
         addToast(error.message, {
           appearance: 'error',
           autoDismiss: true,

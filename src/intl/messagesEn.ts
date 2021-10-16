@@ -21,6 +21,8 @@ export const messages = {
   'auth.registerLink.separator': 'or',
   'auth.registerLink.label': 'Create account',
   'auth.register.title': 'Register',
+  'auth.resetLink.label': 'Forgot password?',
+  'auth.reset.success': 'Reset password email has been sent.',
   'header.nav.dashboard': 'Dashboard',
   'header.nav.users': 'Users',
   'header.nav.teachers': 'Teachers',

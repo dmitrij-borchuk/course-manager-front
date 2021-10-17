@@ -5,7 +5,7 @@ const ACTIONS = ['MANAGE_TEACHERS', 'MANAGE_GROUPS', 'MANAGE_STUDENTS'] as const
 export type ActionType = typeof ACTIONS[number]
 const rolesToActionsMap: Record<string, ActionType[]> = {
   Administrator: ['MANAGE_TEACHERS', 'MANAGE_GROUPS', 'MANAGE_STUDENTS'],
-  Teacher: [],
+  Teacher: ['MANAGE_GROUPS', 'MANAGE_STUDENTS'],
 }
 
 export function useAccessManager() {

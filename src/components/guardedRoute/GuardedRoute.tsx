@@ -1,7 +1,7 @@
 import React from 'react'
 import { Route, Redirect, RouteProps, RouteComponentProps } from 'react-router-dom'
 import { ROUTES } from '../../constants'
-import { getAuthData } from '../../services/auth'
+import { useAuthState } from '../../store'
 
 interface GuardedRouteProps extends RouteProps {
   component: React.ComponentType<RouteComponentProps>
@@ -18,8 +18,9 @@ export const GuardedRoute: React.FC<GuardedRouteProps> = ({
 interface AuthGuardedRouteProps extends RouteProps {
   component: React.ComponentType<RouteComponentProps>
 }
-export const AuthGuardedRoute: React.FC<AuthGuardedRouteProps> = ({ ...rest }) => (
-  <GuardedRoute condition={!!getAuthData()} otherwise={() => <Redirect to={ROUTES.LOGIN} />} {...rest} />
-)
+export const AuthGuardedRoute: React.FC<AuthGuardedRouteProps> = ({ ...rest }) => {
+  const { currentUser } = useAuthState()
+  return <GuardedRoute condition={!!currentUser} otherwise={() => <Redirect to={ROUTES.LOGIN} />} {...rest} />
+}
 
 export default GuardedRoute

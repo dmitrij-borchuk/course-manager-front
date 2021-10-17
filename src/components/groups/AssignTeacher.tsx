@@ -1,10 +1,11 @@
 import React, { useCallback, useEffect } from 'react'
 import { useIntl } from 'react-intl'
 import { ModalProps } from 'react-materialize'
+import { useOrgId } from '../../hooks/useOrgId'
 import { useToggle } from '../../hooks/useToggle'
 import { useGroupsState, useTeachersState } from '../../store'
 import { GroupFull } from '../../types/group'
-import { UserInfoFull } from '../../types/userInfo'
+import { OrganizationUser } from '../../types/user'
 import { noop } from '../../utils/common'
 import { SelectDialog } from '../kit/selectDialog/SelectDialog'
 
@@ -15,26 +16,27 @@ interface Props {
 }
 export const AssignTeacher = ({ group, onDone = noop, trigger }: Props) => {
   const intl = useIntl()
+  const orgId = useOrgId()
   const [open, toggler] = useToggle(false)
   const { editGroup } = useGroupsState()
   const { teachers, fetchTeachers, fetching } = useTeachersState()
   const onSubmit = useCallback(
-    async (data: UserInfoFull) => {
-      await editGroup({
-        ...group,
+    async (data: OrganizationUser) => {
+      await editGroup(orgId, {
+        id: group.id,
         teacher: data.id,
-        students: group.students?.map((s) => s.id),
-        schedules: group.schedules.map((s) => s.id),
       })
       toggler.off()
       onDone()
     },
-    [editGroup, group, onDone, toggler]
+    [editGroup, group.id, onDone, orgId, toggler]
   )
 
   useEffect(() => {
-    fetchTeachers()
-  }, [fetchTeachers])
+    if (orgId) {
+      fetchTeachers(orgId)
+    }
+  }, [fetchTeachers, orgId])
 
   return (
     <>

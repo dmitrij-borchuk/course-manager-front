@@ -8,6 +8,7 @@ type UserInfoBase = {
 export type NewUserInfo = UserInfoBase & {
   user: string
 }
+// TODO: do weed it?
 export type UserInfoFull = UserInfoBase & {
   id: string
   user?: User
@@ -15,6 +16,7 @@ export type UserInfoFull = UserInfoBase & {
   updated_by?: string
   groups?: Group[]
 }
+// TODO: do weed it?
 export type UserInfo = Omit<UserInfoFull, 'user' | 'groups'> & {
   user?: string
   groups?: string[]

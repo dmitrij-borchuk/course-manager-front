@@ -3,10 +3,12 @@ import { useHistory, useParams } from 'react-router-dom'
 import { Loader } from '../../components/kit/loader/Loader'
 import { EditStudent, StudentForm } from '../../components/students/EditStudent'
 import { ROUTES } from '../../constants'
+import { useOrgId } from '../../hooks/useOrgId'
 import { useStudentsState } from '../../store'
 
 export const EditStudentPage = () => {
   const history = useHistory()
+  const orgId = useOrgId()
   let { id } = useParams<{ id: string }>()
   const { fetchStudent, editStudent, fetching, submitting, studentsById } = useStudentsState()
 
@@ -17,20 +19,20 @@ export const EditStudentPage = () => {
         return
       }
 
-      await editStudent({
+      await editStudent(orgId, {
         ...student,
-        attendances: student.attendances?.map((a) => a.id),
-        groups: student.groups?.map((g) => g.id),
+        // attendances: student.attendances?.map((a) => a.id),
+        // groups: student.groups?.map((g) => g.id),
         ...data,
       })
-      history.push(`${ROUTES.STUDENTS_ROOT}/${student.id}`)
+      history.push(`/${orgId}${ROUTES.STUDENTS_ROOT}/${student.id}`)
     },
-    [editStudent, history, student]
+    [editStudent, history, orgId, student]
   )
 
   useEffect(() => {
-    fetchStudent(id)
-  }, [fetchStudent, id])
+    fetchStudent(orgId, id)
+  }, [fetchStudent, id, orgId])
   // TODO: implement 404
 
   return (

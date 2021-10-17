@@ -4,9 +4,11 @@ import { useGroupsState } from '../../store'
 import { ROUTES } from '../../constants'
 import { EditGroup, GroupForm } from '../../components/groups/EditGroup'
 import { Loader } from '../../components/kit/loader/Loader'
+import { useOrgId } from '../../hooks/useOrgId'
 
 export const EditGroupPage = () => {
   const history = useHistory()
+  const orgId = useOrgId()
   let { id } = useParams<{ id: string }>()
   const { fetchGroup, editGroup, fetching, submitting, groupsById } = useGroupsState()
 
@@ -17,21 +19,18 @@ export const EditGroupPage = () => {
         return
       }
 
-      await editGroup({
-        ...group,
-        teacher: group.teacher?.id,
-        students: group.students?.map((s) => s.id),
-        schedules: group.schedules.map((s) => s.id),
+      await editGroup(orgId, {
+        id: group.id,
         ...data,
       })
-      history.push(`${ROUTES.GROUPS_ROOT}/${group.id}`)
+      history.push(`/${orgId}${ROUTES.GROUPS_ROOT}/${group.id}`)
     },
-    [editGroup, group, history]
+    [editGroup, group, history, orgId]
   )
 
   useEffect(() => {
-    fetchGroup(id)
-  }, [fetchGroup, id])
+    fetchGroup(orgId, id)
+  }, [fetchGroup, id, orgId])
   // TODO: implement 404
 
   return (

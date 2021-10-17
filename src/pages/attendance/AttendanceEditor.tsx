@@ -1,62 +1,109 @@
-import React, { useCallback, useEffect, useMemo } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
+import { useToasts } from 'react-toast-notifications'
 import { useAttendancesState, useGroupsState } from '../../store'
-import { datesAreOnSameDay } from '../../utils/date'
-import { Student } from '../../types/student'
 import AttendanceEditor from '../../components/attendance/AttendanceEditor'
+import { useOrgId } from '../../hooks/useOrgId'
+import { useCurrentUser } from '../../hooks/useCurrentUser'
+import useStudentsOfGroupStore from '../../store/studentsOfGroupStore'
+import { Group } from '../../types/group'
+import { Dictionary } from '../../types/dictionary'
 
 export const AttendanceEditorPage = () => {
-  const { id, date } = useParams<{ id: string; date: string }>()
-  const { fetchGroup, groupsById } = useGroupsState()
-  const history = useHistory()
+  const { id } = useParams<{ id: string }>()
+  const { addToast } = useToasts()
+  const { fetchGroupsOfTeacher, groupsById, groups, fetching: groupsFetching } = useGroupsState()
+  const { organizationUser } = useCurrentUser()
   const {
-    addAttendances,
-    removeAttendances,
-    fetchAttendancesForGroup,
-    clearAttendances,
-    attendances,
-    loading: attendancesLoading,
-  } = useAttendancesState()
+    fetchStudentsOfGroup,
+    clearStudentsOfGroup,
+    studentsOfGroup,
+    fetching: studentsFetching,
+  } = useStudentsOfGroupStore()
+  const history = useHistory()
+  const orgId = useOrgId()
+  const { saveAttendance, fetchAttendance, attendancesById, loading: attendancesLoading } = useAttendancesState()
   // TODO: add 404
-  const group = groupsById[id]
-  const dateObj = useMemo(() => new Date(date), [date])
-  const onSubmit = useCallback(
-    async ({ toAdd, toRemove }: { toAdd: Student[]; toRemove: Student[] }) => {
-      // TODO: add loading
-      await addAttendances(
-        toAdd.map((s) => ({
-          date,
-          group: group.id,
-          student: s.id,
-        }))
-      )
-      const attendancesIdsMaybe = toRemove.map(
-        (s) => attendances.find((a) => datesAreOnSameDay(new Date(a.date), dateObj) && a.student?.id === s.id)?.id
-      )
-      const attendancesIds = attendancesIdsMaybe.filter(Boolean) as string[]
-      await removeAttendances(attendancesIds)
-      history.push(`/`)
+  const [group, setGroup] = useState<Group>()
+  const onGroupChanged = useCallback(
+    (id: string) => {
+      setGroup(groupsById[id])
     },
-    [addAttendances, attendances, date, dateObj, group.id, history, removeAttendances]
+    [groupsById]
+  )
+  const attendance = attendancesById[id]
+  const onSubmit = useCallback(
+    async (data: { date: Date; group: string; selected: Dictionary<boolean> }) => {
+      const dataToSave = {
+        date: data.date.getTime(),
+        attended: data.selected,
+        group: data.group,
+      }
+      if (attendance?.id) {
+        await saveAttendance(orgId, {
+          id: attendance?.id,
+          ...dataToSave,
+        })
+      } else {
+        await saveAttendance(orgId, dataToSave)
+      }
+      history.push(`/${orgId}`)
+    },
+    [attendance?.id, history, orgId, saveAttendance]
   )
 
   useEffect(() => {
-    fetchGroup(id)
-  }, [fetchGroup, id])
+    // TODO: cleanup
+    if (!organizationUser) {
+      return
+    }
+    fetchGroupsOfTeacher(orgId, organizationUser.id)
+  }, [fetchGroupsOfTeacher, orgId, organizationUser])
+
+  const fetchAttendanceById = useCallback(
+    async (id: string) => {
+      // TODO: cleanup
+      try {
+        await fetchAttendance(orgId, id)
+      } catch (error: any) {
+        addToast(error.message, {
+          appearance: 'error',
+          autoDismiss: true,
+        })
+      }
+    },
+    [addToast, fetchAttendance, orgId]
+  )
+  useEffect(() => {
+    if (id) {
+      fetchAttendanceById(id)
+    }
+  }, [fetchAttendanceById, id])
 
   useEffect(() => {
     if (group?.id) {
-      fetchAttendancesForGroup(group.id)
-      return () => clearAttendances()
+      const date = attendance ? new Date(attendance.date) : new Date()
+      fetchStudentsOfGroup(orgId, group.id, date)
+      return () => clearStudentsOfGroup()
     }
-  }, [clearAttendances, fetchAttendancesForGroup, group?.id])
+  }, [attendance, clearStudentsOfGroup, fetchStudentsOfGroup, group?.id, orgId])
 
-  if (!group || attendancesLoading) {
+  if (groupsFetching || attendancesLoading) {
     // TODO
     return <div>Loading</div>
   }
 
-  return <AttendanceEditor group={group} date={dateObj} onSubmit={onSubmit} attendances={attendances} />
+  return (
+    <AttendanceEditor
+      currentGroup={group}
+      groups={groups}
+      onSubmit={onSubmit}
+      attendance={attendance}
+      students={studentsOfGroup}
+      studentsLoading={studentsFetching}
+      onGroupChanged={onGroupChanged}
+    />
+  )
 }
 
 export default AttendanceEditorPage

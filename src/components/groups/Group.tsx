@@ -1,10 +1,12 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { FormattedMessage, useIntl } from 'react-intl'
 import { Button, Container } from 'react-materialize'
 import { ROUTES } from '../../constants'
+import { useOrgId } from '../../hooks/useOrgId'
 import { Dictionary } from '../../types/dictionary'
 import { GroupFull } from '../../types/group'
-import { UserInfo } from '../../types/userInfo'
+import { Student } from '../../types/student'
+import { OrganizationUser } from '../../types/user'
 import { IconButton } from '../kit/buttons/IconButton'
 import { HeadingWithControls } from '../kit/headingWithControls/HeadingWithControls'
 import { Text } from '../kit/text/Text'
@@ -18,17 +20,34 @@ interface Props {
   data: GroupFull
   onDelete: () => void
   attendanceRates: Dictionary<number>
+  studentsOfGroup: Student[]
+  loadingGroups?: boolean
 }
-export const Group: React.FC<Props> = ({ className = '', data, onDelete, attendanceRates }) => {
+export const Group: React.FC<Props> = ({
+  className = '',
+  data,
+  studentsOfGroup,
+  onDelete,
+  attendanceRates,
+  loadingGroups,
+}) => {
+  const orgId = useOrgId()
   const intl = useIntl()
-  const { teacher, students, name, description, id } = data
+  const { teacher, name, description, id } = data
+  const simpleGroup = useMemo(
+    () => ({
+      ...data,
+      teacher: data.teacher?.id,
+    }),
+    [data]
+  )
 
   return (
     <div className={className}>
       <Container className="px-4">
         <HeadingWithControls
           text={name}
-          editPath={`${ROUTES.GROUPS_EDIT}/${id}`}
+          editPath={`/${orgId}${ROUTES.GROUPS_EDIT}/${id}`}
           deleteProps={{
             header: intl.formatMessage({ id: 'groups.delete.header' }),
             content: <FormattedMessage id="groups.delete.text" />,
@@ -46,14 +65,20 @@ export const Group: React.FC<Props> = ({ className = '', data, onDelete, attenda
         <TeacherInfoBlock teacher={teacher} group={data} />
 
         {/* Students */}
-        <StudentsInfoBlock group={data} students={students} attendanceRates={attendanceRates} />
+        {/* TODO: add loader */}
+        <StudentsInfoBlock
+          group={simpleGroup}
+          students={studentsOfGroup}
+          attendanceRates={attendanceRates}
+          loadingGroups={loadingGroups}
+        />
       </Container>
     </div>
   )
 }
 
 interface TeacherInfoBlockProps {
-  teacher?: UserInfo
+  teacher?: OrganizationUser
   group: GroupFull
 }
 const TeacherInfoBlock = ({ teacher, group }: TeacherInfoBlockProps) => {

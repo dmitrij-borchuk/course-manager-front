@@ -1,6 +1,4 @@
-import { UserInfo } from './userInfo'
-import { Student } from './student'
-import { Schedule } from './Schedule'
+import { OrganizationUser } from './user'
 
 export type GroupBase = {
   name: string
@@ -9,17 +7,15 @@ export type GroupBase = {
 
 export type Group = GroupBase & {
   id: string
-  students?: string[]
-  attendances?: {}[]
   teacher?: string
-  published_at?: string
+  // TODO: remove
   schedules?: string[]
 }
 
-export type GroupFull = Omit<Group, 'teacher' | 'students' | 'schedules'> & {
-  teacher?: UserInfo
-  students?: Student[]
-  schedules: Schedule[]
+export type GroupFull = Omit<Group, 'teacher'> & {
+  teacher?: OrganizationUser
+  // students?: Student[]
+  // schedules: Schedule[]
 }
 
 export type NewGroup = GroupBase

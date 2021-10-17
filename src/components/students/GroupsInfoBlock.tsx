@@ -1,10 +1,11 @@
 import React, { useMemo } from 'react'
 import { FormattedMessage } from 'react-intl'
-import { Button } from 'react-materialize'
+import { Button, Preloader } from 'react-materialize'
 import { ROUTES } from '../../constants'
+import { useOrgId } from '../../hooks/useOrgId'
 import { Dictionary } from '../../types/dictionary'
 import { Group } from '../../types/group'
-import { StudentFull } from '../../types/student'
+import { Student } from '../../types/student'
 import { AttendanceRateBadge } from '../kit/attendanceRateBadge/AttendancerateBadge'
 import { IconButton } from '../kit/buttons/IconButton'
 import { CollectionItemLink } from '../kit/collectionItemLink/CollectionItemLink'
@@ -15,10 +16,11 @@ import { AssignGroups } from './AssignGroups'
 
 interface Props {
   groups?: Group[]
-  student: StudentFull
+  student: Student
   attendanceRates: Dictionary<number>
+  loadingGroups?: boolean
 }
-export const GroupsInfoBlock = ({ groups, student, attendanceRates }: Props) => {
+export const GroupsInfoBlock = ({ groups, student, attendanceRates, loadingGroups }: Props) => {
   const renderItem = useMemo(() => getGroupItemRender(attendanceRates), [attendanceRates])
 
   return (
@@ -27,19 +29,32 @@ export const GroupsInfoBlock = ({ groups, student, attendanceRates }: Props) => 
         <Text type="h5" color="primary">
           <FormattedMessage id="groups.list.title" />
         </Text>
+
         {/* Assign groups dialog */}
         {!!groups?.length && (
-          <AssignGroups student={student} trigger={<IconButton type="square" size={40} icon="edit" />} />
+          <AssignGroups
+            student={student}
+            initialGroups={groups}
+            trigger={<IconButton type="square" size={40} icon="edit" />}
+          />
         )}
       </div>
 
-      {groups?.length ? <List items={groups} renderItem={renderItem} /> : <NoGroupsInfoBlock student={student} />}
+      {loadingGroups ? (
+        <div className="flex justify-center">
+          <Preloader color="red" flashing={false} size="medium" />
+        </div>
+      ) : groups?.length ? (
+        <List items={groups} renderItem={renderItem} />
+      ) : (
+        <NoGroupsInfoBlock student={student} />
+      )}
     </>
   )
 }
 
 interface NoGroupsInfoBlockProps {
-  student: StudentFull
+  student: Student
 }
 const NoGroupsInfoBlock = ({ student }: NoGroupsInfoBlockProps) => {
   return (
@@ -51,6 +66,7 @@ const NoGroupsInfoBlock = ({ student }: NoGroupsInfoBlockProps) => {
       {/* Assign groups dialog */}
       <AssignGroups
         student={student}
+        initialGroups={[]}
         trigger={
           <Button waves="light">
             <FormattedMessage id="students.groups.assignBtn.label" />
@@ -66,8 +82,10 @@ interface GroupWithAttendanceProps {
   attendanceRate?: number
 }
 const GroupWithAttendance = ({ group, attendanceRate }: GroupWithAttendanceProps) => {
+  const orgId = useOrgId()
+
   return (
-    <CollectionItemLink to={`${ROUTES.GROUPS_ROOT}/${group.id}`}>
+    <CollectionItemLink to={`/${orgId}${ROUTES.GROUPS_ROOT}/${group.id}`}>
       <div className="flex justify-between">
         <Ellipsis>{group.name}</Ellipsis>
         {attendanceRate !== undefined && <AttendanceRateBadge value={attendanceRate} />}

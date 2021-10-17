@@ -1,41 +1,33 @@
 import { ComponentProps, useCallback } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useToasts } from 'react-toast-notifications'
-import { useIntl } from 'react-intl'
 import { ROUTES } from '../../constants'
 import { useAuthState } from '../../store'
-import { parseError } from '../../utils/error'
-import { Login } from '../../components/login/Login'
+import { Login } from '../../components/auth/Login'
+import { useOrgIdNotStrict } from '../../hooks/useOrgId'
 
 type SubmitData = Parameters<ComponentProps<typeof Login>['onSubmit']>[0]
 
 export const LoginPage = () => {
+  const orgId = useOrgIdNotStrict()
+  const orgPrefix = orgId ? `/${orgId}` : ''
   const history = useHistory()
   const { addToast } = useToasts()
-  const { login, loading, clearAuthData } = useAuthState()
-  const { formatMessage } = useIntl()
+  const { login, loading } = useAuthState()
   const onLoginSubmit = useCallback(
     async (data: SubmitData) => {
       try {
-        clearAuthData()
-        const response = await login(data)
+        await login(data.identifier, data.password)
 
-        if (response.data.jwt) {
-          history.push(ROUTES.ROOT)
-        } else {
-          addToast(formatMessage({ id: 'Auth.form.error.500' }), {
-            appearance: 'error',
-            autoDismiss: true,
-          })
-        }
-      } catch (error) {
-        addToast(parseError(error), {
+        history.push(`${orgPrefix}${ROUTES.ROOT}`)
+      } catch (error: any) {
+        addToast(error.message, {
           appearance: 'error',
           autoDismiss: true,
         })
       }
     },
-    [clearAuthData, login, history, addToast, formatMessage]
+    [login, history, orgPrefix, addToast]
   )
 
   return (

@@ -5,7 +5,8 @@
   "scripts": {
     "start": "craco start",
     "build": "craco build",
-    "test": "craco test"
+    "test": "craco test",
+    "firebase-emulator": "firebase emulators:start --import=./local-firebase-data --export-on-exit"
   },
   "dependencies": {
     "@craco/craco": "^6.1.1",
@@ -22,8 +23,11 @@
     "axios": "^0.21.1",
     "constate": "^3.2.0",
     "cron-parser": "^3.5.0",
+    "firebase": "^8.7.0",
+    "firebase-tools": "^9.14.0",
     "graphql": "^15.4.0",
     "materialize-css": "^1.0.0-rc.2",
+    "nanoid": "^3.1.28",
     "postcss": "^7.0.35",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",

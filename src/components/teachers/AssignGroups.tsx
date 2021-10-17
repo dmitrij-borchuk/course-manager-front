@@ -1,50 +1,44 @@
-import React, { useCallback, useEffect, useMemo } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { useIntl } from 'react-intl'
 import { ModalProps } from 'react-materialize'
+import { useOrgId } from '../../hooks/useOrgId'
 import { useToggle } from '../../hooks/useToggle'
-import { useGroupsState, useTeachersState } from '../../store'
+import { useGroupsState } from '../../store'
 import { Group } from '../../types/group'
-import { TeacherFull } from '../../types/teacher'
+import { OrganizationUser } from '../../types/user'
 import { noop } from '../../utils/common'
 import { SelectDialog } from '../kit/selectDialog/SelectDialog'
 
 interface Props {
-  teacher: TeacherFull
+  teacher: OrganizationUser
   onDone?: () => void
   trigger?: ModalProps['trigger']
+  teachersGroups?: Group[]
 }
-export const AssignGroups = ({ teacher, onDone = noop, trigger }: Props) => {
+export const AssignGroups = ({ teacher, onDone = noop, trigger, teachersGroups = [] }: Props) => {
   const intl = useIntl()
+  const orgId = useOrgId()
   const [open, toggler] = useToggle(false)
-  const { groups, fetchGroups, fetching } = useGroupsState()
-  const { editTeacher } = useTeachersState()
-  // Make 'Group[]' from 'GroupFull[]'
-  const groupsSimple = useMemo(
-    () =>
-      groups.map((g) => ({
-        ...g,
-        teacher: g.teacher?.id,
-        students: g.students?.map((s) => s.id),
-        schedules: g.schedules.map((s) => s.id),
-      })),
-    [groups]
-  )
+  const { groups, fetchGroups, fetching, editGroup } = useGroupsState()
   const onSubmit = useCallback(
     async (data: Group[]) => {
-      await editTeacher({
-        ...teacher,
-        user: teacher.user?.id,
-        groups: data.map((g) => g.id),
-      })
+      for (let index = 0; index < data.length; index++) {
+        const group = data[index]
+        // TODO: fix unselect groups
+        await editGroup(orgId, {
+          id: group.id,
+          teacher: teacher.id,
+        })
+      }
       toggler.off()
       onDone()
     },
-    [editTeacher, onDone, teacher, toggler]
+    [editGroup, onDone, orgId, teacher.id, toggler]
   )
 
   useEffect(() => {
-    fetchGroups()
-  }, [fetchGroups])
+    fetchGroups(orgId)
+  }, [fetchGroups, orgId])
 
   return (
     <>
@@ -53,11 +47,11 @@ export const AssignGroups = ({ teacher, onDone = noop, trigger }: Props) => {
         loading={fetching}
         open={open}
         header={intl.formatMessage({ id: 'teachers.groups.assignDialog.header' })}
-        items={groupsSimple}
+        items={groups}
         onSubmit={onSubmit}
         labelProp={(g) => g.name}
         onCloseStart={toggler.off}
-        initial={teacher.groups}
+        initial={teachersGroups}
         multiSelect
       />
     </>

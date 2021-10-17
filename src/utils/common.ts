@@ -33,3 +33,23 @@ export function arrayToDictionary<T extends { id: string }>(list?: T[]) {
     return acc
   }, {})
 }
+
+export function getDiff(initial: string[], result: string[]) {
+  const added: string[] = []
+  const removed: string[] = []
+  initial.forEach((item) => {
+    if (!result.includes(item)) {
+      removed.push(item)
+    }
+  })
+  result.forEach((item) => {
+    if (!initial.includes(item)) {
+      added.push(item)
+    }
+  })
+
+  return {
+    added,
+    removed,
+  }
+}

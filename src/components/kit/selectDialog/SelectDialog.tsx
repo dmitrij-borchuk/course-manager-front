@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { Button, Icon, Modal, ModalProps } from 'react-materialize'
 import { ButtonWithLoader } from '../buttons/ButtonWithLoader'
@@ -38,12 +38,20 @@ export function SelectDialog<T extends { id: string }>({
   labelProp,
   trigger,
   onCloseStart,
-  initial = [],
+  initial,
 }: PropsSingle<T> | PropsMulti<T>) {
   const [submitting, setSubmitting] = useState(false)
-  const initialArray = useMemo(() => (Array.isArray(initial) ? initial : [initial]), [initial])
+  const initialArray = useMemo(() => {
+    if (!initial) {
+      return []
+    }
+    return Array.isArray(initial) ? initial : [initial]
+  }, [initial])
   const [selected, setSelected] = useState<T[]>(initialArray)
   const [selectedLoading, setSelectedLoading] = useState<T>()
+  useEffect(() => {
+    setSelected(initialArray)
+  }, [initialArray])
   const submit = useCallback(
     async (item?: T) => {
       setSubmitting(true)
@@ -79,8 +87,7 @@ export function SelectDialog<T extends { id: string }>({
   )
   const onCloseEnd = useCallback(() => {
     setSelectedLoading(undefined)
-    setSelected(initialArray)
-  }, [initialArray])
+  }, [])
   const onSubmitClick = useCallback(() => {
     submit()
   }, [submit])
@@ -109,6 +116,7 @@ export function SelectDialog<T extends { id: string }>({
     [labelProp, onSelect, selected, selectedLoading]
   )
   // TODO: add loading for the !multiSelect
+  // TODO: add cursor pinter
 
   return (
     <Modal

@@ -14,8 +14,25 @@ export type User = UserBase & {
   user_info?: UserInfo
 }
 
+// TODO: do we need it?
 export type NewUser = UserBase & {
   password?: string
   role: string
   user_info?: string
+}
+
+export type UserMetadata = {
+  id: string
+  organizations?: string[]
+}
+
+export type AppUser = {
+  name?: string
+  avatar?: string
+}
+
+export type OrganizationUser = {
+  id: string
+  role?: string
+  name?: string
 }

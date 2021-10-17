@@ -1,9 +1,9 @@
 import React from 'react'
-import { UserInfo } from '../../../types/userInfo'
+import { OrganizationUser } from '../../../types/user'
 import { Text } from '../text/Text'
 
 interface Props {
-  data: UserInfo
+  data: OrganizationUser
 }
 export const UserPreview = ({ data }: Props) => {
   return (

@@ -1,12 +1,12 @@
 import React from 'react'
 import { FormattedMessage } from 'react-intl'
-import { Button } from 'react-materialize'
+// import { Button } from 'react-materialize'
 import { Link } from 'react-router-dom'
 import { ROUTES } from '../../constants'
 import { GroupFull } from '../../types/group'
 import { IconButton } from '../kit/buttons/IconButton'
 import { Text } from '../kit/text/Text'
-import { WeekdaySelector } from '../kit/weekdaySelector/WeekdaySelector'
+// import { WeekdaySelector } from '../kit/weekdaySelector/WeekdaySelector'
 
 interface Props {
   group: GroupFull
@@ -30,34 +30,34 @@ export const ScheduleInfoBlock = ({ group }: Props) => {
         )}
       </div>
 
-      {schedule ? <ScheduleView value={schedule.cron} /> : <NoScheduleInfoBlock group={group} />}
+      {/* {schedule ? <ScheduleView value={schedule.cron} /> : <NoScheduleInfoBlock group={group} />} */}
     </>
   )
 }
 
-interface NoScheduleInfoBlockProps {
-  group: GroupFull
-}
-const NoScheduleInfoBlock = ({ group }: NoScheduleInfoBlockProps) => {
-  return (
-    <div className="text-center">
-      <Text type="h6" color="textGray" className="mb-3">
-        <FormattedMessage id="groups.schedule.empty" />
-      </Text>
+// interface NoScheduleInfoBlockProps {
+//   group: Group
+// }
+// const NoScheduleInfoBlock = ({ group }: NoScheduleInfoBlockProps) => {
+//   return (
+//     <div className="text-center">
+//       <Text type="h6" color="textGray" className="mb-3">
+//         <FormattedMessage id="groups.schedule.empty" />
+//       </Text>
 
-      {/* Define schedule */}
-      <Link to={`${ROUTES.SCHEDULES_ROOT}?group=${group.id}`}>
-        <Button waves="light">
-          <FormattedMessage id="groups.schedule.assignBtn.label" />
-        </Button>
-      </Link>
-    </div>
-  )
-}
+//       {/* Define schedule */}
+//       <Link to={`${ROUTES.SCHEDULES_ROOT}?group=${group.id}`}>
+//         <Button waves="light">
+//           <FormattedMessage id="groups.schedule.assignBtn.label" />
+//         </Button>
+//       </Link>
+//     </div>
+//   )
+// }
 
-interface ScheduleViewProps {
-  value: string
-}
-const ScheduleView = ({ value }: ScheduleViewProps) => {
-  return <WeekdaySelector readonly value={value} />
-}
+// interface ScheduleViewProps {
+//   value: string
+// }
+// const ScheduleView = ({ value }: ScheduleViewProps) => {
+//   return <WeekdaySelector readonly value={value} />
+// }

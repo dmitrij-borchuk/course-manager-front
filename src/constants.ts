@@ -1,6 +1,16 @@
 export const ROUTES = {
-  LOGIN: '/login',
   ROOT: '/',
+
+  // Auth
+  LOGIN: '/login',
+  RESET: '/reset',
+  REGISTER: '/register',
+
+  // Users
+  USERS_ROOT: '/users',
+  USERS_LIST: '/users',
+  // USERS_ADD: '/users/add',
+  // USERS_EDIT: '/users/edit',
 
   // Teachers
   TEACHERS_ROOT: '/teachers',
@@ -26,6 +36,10 @@ export const ROUTES = {
   // Attendance
   ATTENDANCE_ROOT: '/attendance',
   ATTENDANCE_EDIT: '/attendance/edit',
+  ATTENDANCE_ADD: '/attendance/add',
+
+  // Organizations
+  ORGANIZATIONS_ADD: '/organizations/add',
 
   LOGOUT: '/logout',
 }

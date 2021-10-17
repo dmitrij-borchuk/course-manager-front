@@ -18,6 +18,7 @@ export const Dashboard: React.FC<Props> = ({ className = '', items }) => {
       </Container>
 
       {/* Fab */}
+      {/* TODO: only for the administrator */}
       <DashboardMenu />
     </div>
   )

@@ -4,12 +4,12 @@ import { ROUTES } from '../constants'
 import { useDictionaryToArray } from '../hooks/useDictionaryToArray'
 import { deleteTeacher, editTeacher, getTeacher, getTeachersList } from '../services/teachers'
 import { Dictionary } from '../types/dictionary'
-import { UserInfo, UserInfoFull } from '../types/userInfo'
+import { OrganizationUser } from '../types/user'
 import { arrayToDictionary } from '../utils/common'
 
 export default function useTeachersStore() {
   const history = useHistory()
-  const [teachersById, setTeachersById] = useState<Dictionary<UserInfoFull>>({})
+  const [teachersById, setTeachersById] = useState<Dictionary<OrganizationUser>>({})
   const teachers = useDictionaryToArray(teachersById)
   const [fetching, setFetching] = useState(false)
   const [submitting, setSubmitting] = useState(false)
@@ -19,7 +19,7 @@ export default function useTeachersStore() {
     teachersById,
     fetching,
     submitting,
-    setTeacher: useCallback((id: string, data?: UserInfoFull) => {
+    setTeacher: useCallback((id: string, data?: OrganizationUser) => {
       setTeachersById((state) => {
         if (data) {
           return { ...state, [id]: data }
@@ -32,32 +32,29 @@ export default function useTeachersStore() {
         }
       })
     }, []),
-    fetchTeachers: useCallback(async () => {
+    fetchTeachers: useCallback(async (orgId: string) => {
       setFetching(true)
-      const resp = await getTeachersList()
-      const itemsById = arrayToDictionary(resp.data)
+      const resp = await getTeachersList(orgId)
+      const itemsById = arrayToDictionary(resp)
       setTeachersById(itemsById)
       setFetching(false)
     }, []),
-    fetchTeacher: useCallback(async (id: string) => {
+    fetchTeacher: useCallback(async (orgId: string, id: string) => {
       setFetching(true)
-      const resp = await getTeacher(id)
-      setTeachersById((state) => ({ ...state, [id]: resp.data }))
+      const resp = await getTeacher(orgId, id)
+      setTeachersById((state) => ({ ...state, [id]: resp }))
       setFetching(false)
     }, []),
-    editTeacher: useCallback(async (data: UserInfo) => {
-      if (!data.user) {
-        throw new Error('"user" field is absent')
-      }
-
+    editTeacher: useCallback(async (orgId: string, data: OrganizationUser) => {
       setSubmitting(true)
-      const response = await editTeacher(data)
+      await editTeacher(orgId, data)
       setTeachersById((state) => ({
         ...state,
-        [data.id]: response.data,
+        [data.id]: data,
       }))
       setSubmitting(false)
     }, []),
+    // TODO: do we need it
     deleteTeacher: useCallback(
       async (id: string) => {
         setSubmitting(true)

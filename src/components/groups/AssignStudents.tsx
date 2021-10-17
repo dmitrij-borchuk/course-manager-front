@@ -1,50 +1,51 @@
-import React, { useCallback, useEffect, useMemo } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { useIntl } from 'react-intl'
 import { ModalProps } from 'react-materialize'
+import { useOrgId } from '../../hooks/useOrgId'
 import { useToggle } from '../../hooks/useToggle'
-import { useGroupsState, useStudentsState } from '../../store'
-import { GroupFull } from '../../types/group'
+import { useStudentsOfGroupState, useStudentsState } from '../../store'
+import { Group } from '../../types/group'
 import { Student } from '../../types/student'
-import { noop } from '../../utils/common'
+import { getDiff, noop } from '../../utils/common'
 import { SelectDialog } from '../kit/selectDialog/SelectDialog'
 
 interface Props {
-  group: GroupFull
+  group: Group
+  studentsOfGroup?: Student[]
   onDone?: () => void
   trigger?: ModalProps['trigger']
 }
-export const AssignStudents = ({ group, onDone = noop, trigger }: Props) => {
+export const AssignStudents = ({ group, onDone = noop, trigger, studentsOfGroup }: Props) => {
   const intl = useIntl()
+  const orgId = useOrgId()
   const [open, toggler] = useToggle(false)
   const { students, fetching, fetchStudents } = useStudentsState()
-  const { editGroup } = useGroupsState()
-  // Make 'Student[]' from 'StudentFull[]'
-  const studentsSimple = useMemo(
-    () =>
-      students.map((s) => ({
-        ...s,
-        groups: s.groups.map((g) => g.id),
-        attendances: s.attendances.map((a) => a.id),
-      })),
-    [students]
-  )
+  const { addStudentToGroup, deleteStudentFromGroup } = useStudentsOfGroupState()
   const onSubmit = useCallback(
     async (data: Student[]) => {
-      await editGroup({
-        ...group,
-        teacher: group.teacher?.id,
-        students: data.map((s) => s.id),
-        schedules: data.map((s) => s.id),
-      })
+      const initialStudentsIds = (studentsOfGroup || [])?.map((s) => s.id)
+      const resultStudentsIds = data.map((s) => s.id)
+      const { added, removed } = getDiff(initialStudentsIds, resultStudentsIds)
+      await Promise.all(
+        added.map(async (sId) =>
+          addStudentToGroup(orgId, {
+            studentId: sId,
+            groupId: group.id,
+            startDate: new Date().getTime(),
+            endDate: null,
+          })
+        )
+      )
+      await Promise.all(removed.map(async (sId) => deleteStudentFromGroup(orgId, sId, group.id)))
       toggler.off()
       onDone()
     },
-    [editGroup, group, onDone, toggler]
+    [addStudentToGroup, deleteStudentFromGroup, group.id, onDone, orgId, studentsOfGroup, toggler]
   )
 
   useEffect(() => {
-    fetchStudents()
-  }, [fetchStudents])
+    fetchStudents(orgId)
+  }, [fetchStudents, orgId])
 
   return (
     <>
@@ -53,11 +54,11 @@ export const AssignStudents = ({ group, onDone = noop, trigger }: Props) => {
         loading={fetching}
         open={open}
         header={intl.formatMessage({ id: 'groups.students.assignDialog.header' })}
-        items={studentsSimple}
+        items={students}
         onSubmit={onSubmit}
         labelProp={(g) => g.name}
         onCloseStart={toggler.off}
-        initial={group.students}
+        initial={studentsOfGroup}
         multiSelect
       />
     </>

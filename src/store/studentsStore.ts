@@ -1,59 +1,87 @@
 import { useCallback, useState } from 'react'
+import { nanoid } from 'nanoid'
+import { makeOrgCollection } from '../api/firebase/collections'
 import { useDictionaryToArray } from '../hooks/useDictionaryToArray'
-import { createStudent, deleteStudent, getStudent, getStudents, updateStudent } from '../services/students'
 import { Dictionary } from '../types/dictionary'
-import { NewStudent, Student, StudentFull } from '../types/student'
+import { NewStudent, Student } from '../types/student'
 import { arrayToDictionary } from '../utils/common'
+import { StudentOfGroup } from '../types/studentOfGroup'
 
 export default function useStudentsStore() {
   const [fetching, setFetching] = useState(false)
-  const [studentsById, setStudentsById] = useState<Dictionary<StudentFull>>({})
+  const [studentsById, setStudentsById] = useState<Dictionary<Student>>({})
   const students = useDictionaryToArray(studentsById)
   const [submitting, setSubmitting] = useState(false)
+  const fetchStudent = useCallback(async (orgId: string, id: string) => {
+    setFetching(true)
+    const collection = makeOrgCollection<Student>('students', orgId)
+    const resp = await collection.getById(id)
+    setStudentsById((state) => ({ ...state, [resp.id]: resp }))
+    setFetching(false)
+  }, [])
 
   return {
     students,
     studentsById,
     fetching,
     submitting,
-    fetchStudents: useCallback(async (props?: Parameters<typeof getStudents>[0]) => {
+    fetchStudents: useCallback(async (orgId: string) => {
       setFetching(true)
-      const resp = await getStudents(props)
-      const groupsById = arrayToDictionary(resp.data)
-      setStudentsById(groupsById)
+      const collection = makeOrgCollection<Student>('students', orgId)
+      const resp = await collection.getAll()
+      const studentsById = arrayToDictionary(resp)
+      setStudentsById(studentsById)
       setFetching(false)
     }, []),
-    fetchStudent: useCallback(async (id: string) => {
-      setFetching(true)
-      const resp = await getStudent(id)
-      setStudentsById((state) => ({ ...state, [resp.data.id]: resp.data }))
-      setFetching(false)
-    }, []),
-    createStudent: useCallback(async (data: NewStudent) => {
+    fetchStudent,
+    createStudent: useCallback(async (orgId: string, data: NewStudent) => {
       setSubmitting(true)
-      const result = await createStudent(data)
-      setStudentsById((state) => ({ ...state, [result.data.id]: result.data }))
-      setSubmitting(false)
+      const collection = makeOrgCollection<Student>('students', orgId)
 
-      return result
+      try {
+        const result = await collection.save({ ...data, id: nanoid() })
+        setStudentsById((state) => ({ ...state, [result.id]: { ...data, id: result.id } }))
+        setSubmitting(false)
+        return result
+      } catch (error) {
+        setSubmitting(false)
+        throw error
+      }
     }, []),
-    editStudent: useCallback(async (data: Student) => {
+    editStudent: useCallback(async (orgId: string, data: Student) => {
       setSubmitting(true)
-      const response = await updateStudent(data)
-      setStudentsById((state) => ({
-        ...state,
-        [data.id]: response.data,
-      }))
-      setSubmitting(false)
+      const collection = makeOrgCollection<Student>('students', orgId)
+      try {
+        const result = await collection.save(data)
+        setStudentsById((state) => ({
+          ...state,
+          [result.id]: {
+            ...state[result.id],
+            ...data,
+          },
+        }))
+        setSubmitting(false)
+      } catch (error) {
+        setSubmitting(false)
+        throw error
+      }
     }, []),
-    deleteStudent: useCallback(async (id: string) => {
-      await deleteStudent(id)
+    deleteStudent: useCallback(async (orgId: string, id: string) => {
+      // Remove students from group
+      const student2groupCollection = makeOrgCollection<StudentOfGroup>('studentsToGroups', orgId)
+      const resp = await student2groupCollection.query('studentId', '==', id)
+      await Promise.all(resp.map((item) => student2groupCollection.delete(item.id)))
 
+      // Remove group itself
+      const collection = makeOrgCollection<Student>('students', orgId)
+      await collection.delete(id)
       setStudentsById((state) => {
         delete state[id]
-
         return state
       })
+    }, []),
+    clearStudents: useCallback(() => {
+      setStudentsById({})
     }, []),
   }
 }

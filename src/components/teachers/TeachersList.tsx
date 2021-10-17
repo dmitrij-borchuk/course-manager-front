@@ -1,23 +1,23 @@
 import React from 'react'
 import { FormattedMessage } from 'react-intl'
 import { Collection, Container } from 'react-materialize'
-import { Link } from 'react-router-dom'
 import { ROUTES } from '../../constants'
+import { useOrgId } from '../../hooks/useOrgId'
 import { CollectionItemLink } from '../kit/collectionItemLink/CollectionItemLink'
-import { FabBtn } from '../kit/FabBtn/FabBtn'
 import { Header } from '../kit/header/Header'
 import { SectionHeader } from '../kit/sectionHeader/SectionHeader'
 import { SkeletonList } from '../kit/skeleton/SkeletonList'
 import { Text } from '../kit/text/Text'
 
 // TODO: add attendance
+interface UserItem {
+  id: string
+  name?: string
+}
 interface Props {
   loading?: boolean
   className?: string
-  items?: {
-    id: string
-    name: string
-  }[]
+  items?: UserItem[]
 }
 export const TeachersList: React.FC<Props> = ({ className = '', loading = false, items = [] }) => {
   return (
@@ -32,21 +32,19 @@ export const TeachersList: React.FC<Props> = ({ className = '', loading = false,
         <List loading={loading} items={items} />
       </Container>
 
-      <Link to={ROUTES.TEACHERS_ADD}>
+      {/* <Link to={ROUTES.TEACHERS_ADD}>
         <FabBtn />
-      </Link>
+      </Link> */}
     </div>
   )
 }
 
 interface ListProps {
   loading: boolean
-  items: {
-    id: string
-    name: string
-  }[]
+  items: UserItem[]
 }
 const List = ({ loading, items }: ListProps) => {
+  const orgId = useOrgId()
   if (loading) {
     return <SkeletonList />
   }
@@ -64,8 +62,12 @@ const List = ({ loading, items }: ListProps) => {
   return (
     <Collection>
       {items.map((item) => (
-        <CollectionItemLink key={item.id} to={`${ROUTES.TEACHERS_ROOT}/${item.id}`}>
-          {item.name}
+        <CollectionItemLink key={item.id} to={`/${orgId}${ROUTES.TEACHERS_ROOT}/${item.id}`}>
+          {item.name || (
+            <Text color="textGray">
+              <FormattedMessage id="common.unknownName" />
+            </Text>
+          )}
         </CollectionItemLink>
       ))}
     </Collection>

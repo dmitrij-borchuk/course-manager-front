@@ -5,6 +5,7 @@ export type AttendanceBase = {
   date: number
   attended: Dictionary<boolean>
   group: string
+  teacher: string
 }
 
 export type AttendanceNew = AttendanceBase

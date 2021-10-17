@@ -42,14 +42,15 @@ export const AttendanceEditorPage = () => {
       if (attendance?.id) {
         await saveAttendance(orgId, {
           id: attendance?.id,
+          teacher: organizationUser.id,
           ...dataToSave,
         })
       } else {
-        await saveAttendance(orgId, dataToSave)
+        await saveAttendance(orgId, { ...dataToSave, teacher: organizationUser.id })
       }
       history.push(`/${orgId}`)
     },
-    [attendance?.id, history, orgId, saveAttendance]
+    [attendance?.id, history, orgId, organizationUser, saveAttendance]
   )
 
   useEffect(() => {

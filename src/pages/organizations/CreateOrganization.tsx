@@ -58,7 +58,7 @@ export const CreateOrganizationPage = () => {
         })
       }
     },
-    [addToast, currentUser?.uid, history, intl, save]
+    [addToast, allItems, currentUser, history, intl, save]
   )
 
   return <EditOrganization onSubmit={submit} loading={submitting} error={error} />

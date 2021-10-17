@@ -37,10 +37,8 @@ export const Profile = (props: Props) => {
         {/* TODO: avatar */}
         {!organizationsLoading &&
           organizations.map((org) => (
-            <div className="mt-4">
-              <Link key={org.id} to={`/${org.id}`}>
-                {org.name}
-              </Link>
+            <div key={org.id} className="mt-4">
+              <Link to={`/${org.id}`}>{org.name}</Link>
             </div>
           ))}
         {organizationsLoading && <Preloader color="red" flashing={false} size="medium" />}

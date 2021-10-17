@@ -39,7 +39,7 @@ export default function useOrganizationsBaseStore() {
           ...user,
           organizations: userOrganizations.concat([data.id]),
         })
-        addUserToOrganization(data.id, {
+        await addUserToOrganization(data.id, {
           ...user,
           role: ROLES.Administrator,
         })

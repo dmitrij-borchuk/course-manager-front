@@ -5,9 +5,10 @@ import { useOrgIdNotStrict } from './useOrgId'
 
 export function useCurrentUser() {
   const orgId = useOrgIdNotStrict()
-  const { currentUser } = useAuthState()
-  const { fetchOrgUser, usersById } = useUsersState()
+  const { currentUser, loading } = useAuthState()
+  const { fetchOrgUser, usersById, fetching } = useUsersState()
   const organizationUser: OrganizationUser = usersById[currentUser?.uid || '']
+  const isLoading = loading || fetching
 
   useEffect(() => {
     if (!orgId || !currentUser) {
@@ -20,7 +21,8 @@ export function useCurrentUser() {
     () => ({
       currentUser,
       organizationUser,
+      loading: isLoading,
     }),
-    [currentUser, organizationUser]
+    [currentUser, isLoading, organizationUser]
   )
 }

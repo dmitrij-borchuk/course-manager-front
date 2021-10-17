@@ -27,8 +27,8 @@ export const AttendanceDateBlock: React.FC<Props> = ({ date, items = [], classNa
       <div className="flex flex-col w-full min-w-0 gap-1">
         {/* TODO: what if no elements */}
         {items.map((item) => (
-          <Link to={`/${orgId}${ROUTES.ATTENDANCE_EDIT}/${item.id}`}>
-            <AttendanceMeter key={item.id} text={item.text} progress={item.progress} />
+          <Link key={item.id} to={`/${orgId}${ROUTES.ATTENDANCE_EDIT}/${item.id}`}>
+            <AttendanceMeter text={item.text} progress={item.progress} />
           </Link>
         ))}
       </div>

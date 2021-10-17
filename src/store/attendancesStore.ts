@@ -30,6 +30,23 @@ export function useAttendancesStore() {
         throw error
       }
     }, []),
+    fetchAttendancesForTeacher: useCallback(async (orgId: string, teacherId: string, from: Date, to: Date) => {
+      try {
+        setLoading(true)
+        const collection = makeOrgCollection<Attendance>('attendances', orgId)
+        const resp = await collection.queryMulti([
+          ['date', '>=', from.getTime()],
+          ['date', '<=', to.getTime()],
+          ['teacher', '==', teacherId],
+        ])
+        const itemsById = arrayToDictionary(resp)
+        setAttendancesById(itemsById)
+        setLoading(false)
+      } catch (error) {
+        setLoading(false)
+        throw error
+      }
+    }, []),
     fetchAttendance: useCallback(async (orgId: string, id: string) => {
       setLoading(true)
       const collection = makeOrgCollection<Attendance>('attendances', orgId)

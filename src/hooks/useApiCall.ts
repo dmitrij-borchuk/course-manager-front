@@ -19,8 +19,8 @@ export function useApiCall<T extends (...args: any) => any>(cb: T) {
       setData(resp)
     } catch (error) {
       // TODO: add intl
-      const massage = parseError(error)
-      addToast(massage, {
+      const message = parseError(error)
+      addToast(message, {
         appearance: 'error',
         autoDismiss: true,
       })

@@ -12,12 +12,25 @@ import { useCurrentUser } from '../../hooks/useCurrentUser'
 export const CreateOrganizationPage = () => {
   const history = useHistory()
   const intl = useIntl()
-  const { save, submitting } = useOrganizationsState()
+  const { save, submitting, allItems } = useOrganizationsState()
   const { currentUser } = useCurrentUser()
   const { addToast } = useToasts()
   const [error, setError] = useState<ExternalError<OrganizationForm>>()
   const submit = useCallback(
     async (data: OrganizationForm) => {
+      // Check if we already have such org id
+      if (allItems.find((o) => o.id === data.id)) {
+        setError({
+          fields: [
+            {
+              field: 'id',
+              message: intl.formatMessage({ id: 'organizations.edit.conflict' }),
+            },
+          ],
+        })
+
+        return
+      }
       if (currentUser?.uid) {
         try {
           await save({

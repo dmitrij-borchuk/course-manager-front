@@ -87,7 +87,8 @@ export function SelectDialog<T extends { id: string }>({
   )
   const onCloseEnd = useCallback(() => {
     setSelectedLoading(undefined)
-  }, [])
+    setSelected(initialArray)
+  }, [initialArray])
   const onSubmitClick = useCallback(() => {
     submit()
   }, [submit])

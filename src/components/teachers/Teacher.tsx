@@ -51,19 +51,18 @@ export const Teacher: React.FC<Props> = ({ className = '', data, onDelete, atten
         {/* <div className="break-words">{description}</div> */}
 
         {/* Groups */}
-        <GroupsInfoBlock teacher={data} groups={teachersGroups} attendanceRates={attendanceRates} />
+        <GroupsInfoBlock teacher={data} teachersGroups={teachersGroups} attendanceRates={attendanceRates} />
       </Container>
     </div>
   )
 }
 
 interface GroupsInfoBlockProps {
-  groups?: Group[]
   teacher: OrganizationUser
   attendanceRates: Dictionary<number>
   teachersGroups?: Group[]
 }
-const GroupsInfoBlock = ({ groups, teacher, attendanceRates, teachersGroups = [] }: GroupsInfoBlockProps) => {
+const GroupsInfoBlock = ({ teacher, attendanceRates, teachersGroups = [] }: GroupsInfoBlockProps) => {
   const renderItem = useMemo(() => getGroupItemRender(attendanceRates), [attendanceRates])
 
   // TODO: loading
@@ -74,7 +73,7 @@ const GroupsInfoBlock = ({ groups, teacher, attendanceRates, teachersGroups = []
           <FormattedMessage id="groups.list.title" />
         </Text>
         {/* Assign groups dialog */}
-        {!!groups?.length && (
+        {!!teachersGroups?.length && (
           <AssignGroups
             teacher={teacher}
             trigger={<IconButton type="square" size={40} icon="edit" />}
@@ -83,9 +82,8 @@ const GroupsInfoBlock = ({ groups, teacher, attendanceRates, teachersGroups = []
         )}
       </div>
 
-      {groups?.length ? (
-        // <ListWithLinks items={groups} itemLinkRoot={ROUTES.GROUPS_ROOT} labelProp="name" />
-        <List items={groups} renderItem={renderItem} />
+      {!!teachersGroups?.length ? (
+        <List items={teachersGroups} renderItem={renderItem} />
       ) : (
         <NoGroupsInfoBlock teacher={teacher} />
       )}

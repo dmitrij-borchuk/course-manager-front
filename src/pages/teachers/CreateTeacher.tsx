@@ -9,7 +9,7 @@ import { createTeacher } from '../../services/teachers'
 export const CreateTeacherPage = () => {
   const history = useHistory()
   // TODO: use store
-  const [create, { loading, error, data }] = useApiCallLazy(createTeacher)
+  const [create, { loading, data }] = useApiCallLazy(createTeacher)
 
   useEffect(() => {
     if (data?.user_info.id) {
@@ -20,5 +20,5 @@ export const CreateTeacherPage = () => {
   // TODO: add loading overlay
   // TODO: probably we can preload roles on app start
 
-  return <EditTeacher onSubmit={create} loading={loading} error={error} />
+  return <EditTeacher onSubmit={create} loading={loading} />
 }

@@ -2,11 +2,10 @@ import React from 'react'
 import { Container } from 'react-materialize'
 import { Header } from '../kit/header/Header'
 import { SubmitButton } from '../kit/buttons/SubmitButton'
-import { CustomError } from '../../types/error'
 import { useOrgId } from '../../hooks/useOrgId'
 import { FormLayout } from '../kit/formLayout/FormLayout'
 import { useIntl } from 'react-intl'
-import { useFormWithError } from '../../hooks/useFormWithError'
+import { ExternalError, useFormWithError } from '../../hooks/useFormWithError'
 import { Input } from '../kit/input/Input'
 
 type ConfirmInvitationForm = {
@@ -18,7 +17,7 @@ interface Props {
   loading?: boolean
   className?: string
   disabled?: boolean
-  error?: CustomError
+  error?: ExternalError<ConfirmInvitationForm>
 }
 export const ConfirmInvite: React.FC<Props> = ({ className = '', disabled, onSubmit, loading = false, error }) => {
   const intl = useIntl()

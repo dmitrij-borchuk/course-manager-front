@@ -1,26 +1,43 @@
-import { useCallback } from 'react'
-import { FormattedMessage } from 'react-intl'
+import { useCallback, useState } from 'react'
+import { FormattedMessage, useIntl } from 'react-intl'
 import { useHistory } from 'react-router-dom'
 import { useToasts } from 'react-toast-notifications'
-import { useAuthState, useOrganizationsState } from '../../store'
+import { useOrganizationsState } from '../../store'
 import { EditOrganization, OrganizationForm } from '../../components/organizations/EditOrganization'
 import { ROUTES } from '../../constants'
+import { isFirebaseError } from '../../utils/error'
+import { ExternalError } from '../../hooks/useFormWithError'
+import { useCurrentUser } from '../../hooks/useCurrentUser'
 
 export const CreateOrganizationPage = () => {
   const history = useHistory()
+  const intl = useIntl()
   const { save, submitting } = useOrganizationsState()
-  const { currentUser } = useAuthState()
+  const { currentUser } = useCurrentUser()
   const { addToast } = useToasts()
+  const [error, setError] = useState<ExternalError<OrganizationForm>>()
   const submit = useCallback(
     async (data: OrganizationForm) => {
       if (currentUser?.uid) {
-        // DODO: add try catch
-        await save({
-          ...data,
-          creator: currentUser.uid,
-        })
+        try {
+          await save({
+            ...data,
+            creator: currentUser.uid,
+          })
 
-        history.push(`${ROUTES.ROOT}`)
+          history.push(`${ROUTES.ROOT}`)
+        } catch (error) {
+          if (isFirebaseError(error) && error.code === 'permission-denied') {
+            setError({
+              fields: [
+                {
+                  field: 'id',
+                  message: intl.formatMessage({ id: 'organizations.edit.conflict' }),
+                },
+              ],
+            })
+          }
+        }
       } else {
         addToast(<FormattedMessage id="organizations.edit.noUserId" />, {
           appearance: 'error',
@@ -28,10 +45,10 @@ export const CreateOrganizationPage = () => {
         })
       }
     },
-    [addToast, currentUser?.uid, history, save]
+    [addToast, currentUser?.uid, history, intl, save]
   )
 
-  return <EditOrganization onSubmit={submit} loading={submitting} />
+  return <EditOrganization onSubmit={submit} loading={submitting} error={error} />
 }
 
 export default CreateOrganizationPage

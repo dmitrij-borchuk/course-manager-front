@@ -37,6 +37,7 @@ export function useApiCall<T extends (...args: any) => any>(cb: T) {
   return [data, loading, error] as const
 }
 
+// TODO: do we need it?
 export function useApiCallLazy<T extends (...args: any) => any>(cb: T, done: () => void = noop) {
   const { addToast } = useToasts()
   const [loading, setLoading] = useState(false)

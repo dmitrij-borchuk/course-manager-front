@@ -5,9 +5,8 @@ import { Header } from '../kit/header/Header'
 import { Input } from '../kit/input/Input'
 import { SubmitButton } from '../kit/buttons/SubmitButton'
 import { FormLayout } from '../kit/formLayout/FormLayout'
-import { useFormWithError } from '../../hooks/useFormWithError'
+import { ExternalError, useFormWithError } from '../../hooks/useFormWithError'
 import { useUpdateInitialForm } from '../../hooks/useUpdateInitialForm'
-import { CustomError } from '../../types/error'
 
 export type TeacherFormOutput = {
   name: string
@@ -25,7 +24,7 @@ interface Props {
   isEdit?: boolean
   className?: string
   initial?: TeacherFormInput
-  error?: CustomError
+  error?: ExternalError<TeacherFormOutput>
 }
 export const EditTeacher: React.FC<Props> = ({
   className = '',

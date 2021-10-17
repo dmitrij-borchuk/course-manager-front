@@ -4,9 +4,8 @@ import { Container } from 'react-materialize'
 import { Input } from '../kit/input/Input'
 import { SubmitButton } from '../kit/buttons/SubmitButton'
 import { FormLayout } from '../kit/formLayout/FormLayout'
-import { useFormWithError } from '../../hooks/useFormWithError'
+import { ExternalError, useFormWithError } from '../../hooks/useFormWithError'
 import { useUpdateInitialForm } from '../../hooks/useUpdateInitialForm'
-import { CustomError } from '../../types/error'
 
 export type GroupForm = {
   name: string
@@ -20,7 +19,7 @@ interface Props {
   isEdit?: boolean
   className?: string
   initial?: GroupForm
-  error?: CustomError
+  error?: ExternalError<GroupForm>
 }
 export const EditGroup: React.FC<Props> = ({
   className = '',

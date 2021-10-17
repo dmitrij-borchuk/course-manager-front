@@ -77,6 +77,7 @@ export const messages = {
   'organizations.add.title': 'Add organization',
   'organizations.edit.title': 'Edit organization',
   'organizations.edit.noUserId': 'Looks like user is logged out',
+  'organizations.edit.conflict': 'Organization identifier is taken',
 
   'users.invite.title': 'Invite user',
   'users.list.title': 'Users',

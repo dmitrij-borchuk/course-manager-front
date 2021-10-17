@@ -29,24 +29,28 @@ export default function useOrganizationsBaseStore() {
     }, []),
     // TODO: rename to `add`
     save: useCallback(async (data: Organization) => {
-      setSubmitting(true)
-      await organizations.save(data)
-      const user = await users.getById(data.creator)
-      const userOrganizations = user.organizations || []
-      // TODO: probably move to FireBase functions
-      await users.save({
-        ...user,
-        organizations: userOrganizations.concat([data.id]),
-      })
-      addUserToOrganization(data.id, {
-        ...user,
-        role: ROLES.Administrator,
-      })
-      setById((list) => ({
-        ...list,
-        [data.id]: data,
-      }))
-      setSubmitting(false)
+      try {
+        setSubmitting(true)
+        await organizations.save(data)
+        const user = await users.getById(data.creator)
+        const userOrganizations = user.organizations || []
+        // TODO: probably move to FireBase functions
+        await users.save({
+          ...user,
+          organizations: userOrganizations.concat([data.id]),
+        })
+        addUserToOrganization(data.id, {
+          ...user,
+          role: ROLES.Administrator,
+        })
+        setById((list) => ({
+          ...list,
+          [data.id]: data,
+        }))
+      } catch (error) {
+        setSubmitting(false)
+        throw error
+      }
     }, []),
   }
 }

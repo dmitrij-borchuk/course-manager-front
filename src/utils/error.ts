@@ -53,3 +53,11 @@ export const parseAxiosError = (error: AxiosError): CustomError => {
       .flat(3),
   }
 }
+
+type FirebaseError = Error & {
+  name: 'FirebaseError'
+  code: string
+}
+export function isFirebaseError(error: any): error is FirebaseError {
+  return error.name === 'FirebaseError'
+}

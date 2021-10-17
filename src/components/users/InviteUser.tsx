@@ -5,8 +5,7 @@ import { Header } from '../kit/header/Header'
 import { Input } from '../kit/input/Input'
 import { SubmitButton } from '../kit/buttons/SubmitButton'
 import { FormLayout } from '../kit/formLayout/FormLayout'
-import { useFormWithError } from '../../hooks/useFormWithError'
-import { CustomError } from '../../types/error'
+import { ExternalError, useFormWithError } from '../../hooks/useFormWithError'
 import { InviteForm } from '../../types/invite'
 
 export type TeacherFormOutput = {
@@ -22,7 +21,7 @@ interface Props {
   loading?: boolean
   disabled?: boolean
   className?: string
-  error?: CustomError
+  error?: ExternalError<InviteForm>
   inviteLink?: string
 }
 export const InviteUser: React.FC<Props> = ({

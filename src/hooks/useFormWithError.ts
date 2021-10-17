@@ -1,10 +1,16 @@
 import { useEffect } from 'react'
-import { FieldValues, useForm, UseFormOptions } from 'react-hook-form'
-import { CustomError } from '../types/error'
+import { FieldName, FieldValues, useForm, UseFormOptions } from 'react-hook-form'
 
+type ExternalFieldError<T> = {
+  field: FieldName<T>
+  message: string
+}
+export type ExternalError<T> = {
+  fields: ExternalFieldError<T>[]
+}
 export function useFormWithError<TFieldValues extends FieldValues = FieldValues, TContext extends object = object>(
   options: UseFormOptions<TFieldValues, TContext>,
-  error?: CustomError
+  error?: ExternalError<TFieldValues>
 ) {
   const { setError, ...result } = useForm<TFieldValues, TContext>(options)
 
@@ -13,7 +19,7 @@ export function useFormWithError<TFieldValues extends FieldValues = FieldValues,
       return
     }
     error.fields.forEach((error) => {
-      setError(error.field as any, {
+      setError(error.field, {
         message: error.message,
         shouldFocus: true,
       })

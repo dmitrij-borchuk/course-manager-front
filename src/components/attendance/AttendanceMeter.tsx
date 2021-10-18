@@ -17,12 +17,16 @@ interface Props {
   className?: string
 }
 export const AttendanceMeter: React.FC<Props> = ({ className = '', text = '', progress = 1 }) => {
+  const progressText = `${Math.round(progress * 100)}%`
   return (
     <div className={`${className} attendance-meter flex items-center h-16 rounded p-5 relative overflow-hidden`}>
       <Progress progress={progress} />
-      <Ellipsis className="z-10">
-        <Text size="16">{text}</Text>
-      </Ellipsis>
+      <div className="flex justify-between w-full">
+        <Ellipsis className="z-10">
+          <Text size="16">{text}</Text>
+        </Ellipsis>
+        <Text size="16">{progressText}</Text>
+      </div>
     </div>
   )
 }

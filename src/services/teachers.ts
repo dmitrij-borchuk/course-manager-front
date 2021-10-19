@@ -1,6 +1,6 @@
 import { collection } from '../api/firebase/firestore'
 import { deleteUserRequest } from '../api/users'
-import { TEACHER_ROLE_NAME } from '../constants'
+import { ROLES } from '../config'
 import { getRoles } from '../services/roles'
 import { OrganizationUser } from '../types/user'
 import { createUserInfo } from './userInfo'
@@ -10,7 +10,7 @@ import { createUser } from './users'
 
 export async function getTeachersList(orgId: string) {
   const orgUsers = collection<OrganizationUser>(`organizations/${orgId}/users`)
-  return await orgUsers.query('role', '==', TEACHER_ROLE_NAME)
+  return await orgUsers.query('role', 'in', [ROLES.Teacher, ROLES.Administrator])
 }
 
 export async function getTeacher(orgId: string, id: string) {
@@ -31,10 +31,10 @@ type CreateTeacherProps = {
 }
 export async function createTeacher(data: CreateTeacherProps) {
   const rolesResponse = await getRoles()
-  const teacherRole = rolesResponse.data.roles.find((r) => r.name === TEACHER_ROLE_NAME)
+  const teacherRole = rolesResponse.data.roles.find((r) => r.name === ROLES.Teacher)
 
   if (!teacherRole) {
-    throw new Error(`Can't find role with name ${TEACHER_ROLE_NAME}`)
+    throw new Error(`Can't find role with name ${ROLES.Teacher}`)
   }
 
   const userResponse = await createUser({ ...data, role: teacherRole.id })

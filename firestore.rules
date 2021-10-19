@@ -22,7 +22,7 @@ service cloud.firestore {
         allow write: if isOrgAdmin(request.auth.uid)
       }
       match /groups/{document=**} {
-        allow read: if isOrgMember(request.auth.uid)
+        allow read, write: if isOrgMember(request.auth.uid)
         allow write: if isOrgAdmin(request.auth.uid)
       }
       match /students/{document=**} {

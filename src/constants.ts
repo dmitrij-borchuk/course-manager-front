@@ -43,5 +43,3 @@ export const ROUTES = {
 
   LOGOUT: '/logout',
 }
-
-export const TEACHER_ROLE_NAME = 'Teacher'

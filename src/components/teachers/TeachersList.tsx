@@ -64,7 +64,7 @@ const List = ({ loading, items }: ListProps) => {
       {items.map((item) => (
         <CollectionItemLink key={item.id} to={`/${orgId}${ROUTES.TEACHERS_ROOT}/${item.id}`}>
           {item.name || (
-            <Text color="textGray">
+            <Text color="textGray" className="my-0">
               <FormattedMessage id="common.unknownName" />
             </Text>
           )}

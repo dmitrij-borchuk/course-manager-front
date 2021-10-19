@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react'
 import { users } from '../api/firebase/collections'
 import { collection } from '../api/firebase/firestore'
 import { createUserRequest } from '../api/users'
-import { TEACHER_ROLE_NAME } from '../constants'
+import { ROLES } from '../config'
 import { Invite } from '../types/invite'
 import { NewUser, OrganizationUser } from '../types/user'
 
@@ -43,7 +43,7 @@ export async function confirmInvitation(orgId: string, userId: string, token: st
   await orgUsers.save({
     ...user,
     id: userId,
-    role: TEACHER_ROLE_NAME,
+    role: ROLES.Teacher,
     token,
     name,
   })

@@ -33,7 +33,7 @@ export const Group: React.FC<Props> = ({
 }) => {
   const orgId = useOrgId()
   const intl = useIntl()
-  const { teacher, name, description, id } = data
+  const { teacher, name, id } = data
   const simpleGroup = useMemo(
     () => ({
       ...data,
@@ -54,9 +54,6 @@ export const Group: React.FC<Props> = ({
             onSubmit: onDelete,
           }}
         />
-
-        {/* Description */}
-        <div className="break-words">{description}</div>
 
         {/* Schedule */}
         <ScheduleInfoBlock group={data} />

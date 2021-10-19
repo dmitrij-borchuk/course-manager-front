@@ -2,7 +2,6 @@ import { OrganizationUser } from './user'
 
 export type GroupBase = {
   name: string
-  description?: string
 }
 
 export type Group = GroupBase & {

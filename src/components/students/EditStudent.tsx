@@ -9,7 +9,6 @@ import { useUpdateInitialForm } from '../../hooks/useUpdateInitialForm'
 
 export type StudentForm = {
   name: string
-  description?: string
 }
 
 interface Props {
@@ -34,7 +33,7 @@ export const EditStudent: React.FC<Props> = ({
   const { control, handleSubmit, errors, setValue } = useFormWithError<StudentForm>(
     {
       defaultValues: {
-        description: '',
+        name: '',
         ...initial,
       },
     },
@@ -59,15 +58,6 @@ export const EditStudent: React.FC<Props> = ({
             rules={{ required: true }}
             disabled={loading || disabled}
             error={errors['name']?.message}
-          />
-          {/* TODO: make text area */}
-          <Input
-            id="description"
-            control={control}
-            name="description"
-            label={intl.formatMessage({ id: 'common.form.description.label' })}
-            disabled={loading || disabled}
-            error={errors['description']?.message}
           />
         </FormLayout>
       </Container>

@@ -28,7 +28,7 @@ export const Student: React.FC<Props> = ({
 }) => {
   const intl = useIntl()
   const orgId = useOrgId()
-  const { name, description, id } = data
+  const { name, id } = data
 
   return (
     <div className={className}>
@@ -43,7 +43,6 @@ export const Student: React.FC<Props> = ({
             onSubmit: onDelete,
           }}
         />
-        <div className="break-words">{description}</div>
 
         <GroupsInfoBlock
           student={data}

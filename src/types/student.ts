@@ -3,7 +3,6 @@ import { Group } from './group'
 
 export type StudentBase = {
   name: string
-  description?: string
 }
 
 export type Student = StudentBase & {

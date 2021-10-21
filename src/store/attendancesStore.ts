@@ -66,11 +66,13 @@ export function useAttendancesStore() {
       // setAttendances(response.data)
       // setLoading(false)
     }, []),
-    fetchAttendancesForGroups: useCallback(async (groupsIds: string[]) => {
-      // setLoading(true)
-      // const response = await fetchAttendances(groupsIds, [])
-      // setAttendances(response.data)
-      // setLoading(false)
+    fetchAttendancesForGroups: useCallback(async (orgId: string, groupsIds: string[]) => {
+      setLoading(true)
+      const collection = makeOrgCollection<Attendance>('attendances', orgId)
+      const resp = await collection.query('group', 'in', groupsIds)
+      const itemsById = arrayToDictionary(resp)
+      setAttendancesById(itemsById)
+      setLoading(false)
     }, []),
     saveAttendance: useCallback(async (orgId: string, attendance: AttendanceNew | Attendance) => {
       setLoading(true)

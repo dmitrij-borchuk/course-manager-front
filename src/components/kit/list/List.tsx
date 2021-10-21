@@ -33,17 +33,30 @@ export function List<T>({ loading = false, items, emptyListPlaceholder, renderIt
 export type ListWithLinksProps<T> = Omit<ListProps<T>, 'renderItem'> & {
   itemLinkRoot: string
   labelProp: keyof T
+  renderItem?: (data: T) => JSX.Element
 }
-export function ListWithLinks<T extends { id: string }>({ itemLinkRoot, labelProp, ...rest }: ListWithLinksProps<T>) {
-  const renderLink = useMemo(() => renderLinkItem<T>(labelProp, itemLinkRoot), [itemLinkRoot, labelProp])
+export function ListWithLinks<T extends { id: string }>({
+  itemLinkRoot,
+  labelProp,
+  renderItem,
+  ...rest
+}: ListWithLinksProps<T>) {
+  const renderLink = useMemo(
+    () => renderLinkItem<T>(labelProp, itemLinkRoot, renderItem),
+    [itemLinkRoot, labelProp, renderItem]
+  )
 
   return <List renderItem={renderLink} {...rest} />
 }
 
-function renderLinkItem<T extends { id: string }>(labelProp: keyof T, itemLinkRoot: string) {
+function renderLinkItem<T extends { id: string }>(
+  labelProp: keyof T,
+  itemLinkRoot: string,
+  renderItem?: (data: T) => JSX.Element
+) {
   return (data: T) => (
     <CollectionItemLink key={data.id} to={`${itemLinkRoot}/${data.id}`}>
-      <Ellipsis>{data[labelProp]}</Ellipsis>
+      <Ellipsis>{renderItem ? renderItem(data) : data[labelProp]}</Ellipsis>
     </CollectionItemLink>
   )
 }

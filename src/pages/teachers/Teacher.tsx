@@ -55,12 +55,15 @@ export const TeacherPage = () => {
   }, [fetchGroups, orgId])
 
   useEffect(() => {
-    fetchAttendancesForGroups(groupsOfTeacher.map((g) => g.id))
+    fetchAttendancesForGroups(
+      orgId,
+      groupsOfTeacher.map((g) => g.id)
+    )
 
     return () => {
       clearAttendances()
     }
-  }, [clearAttendances, fetchAttendancesForGroups, groupsOfTeacher])
+  }, [clearAttendances, fetchAttendancesForGroups, groupsOfTeacher, orgId])
 
   // TODO: 404
 

@@ -7,11 +7,13 @@ import { Attendance } from '../../types/attendance'
 import { Dictionary } from '../../types/dictionary'
 import { Group } from '../../types/group'
 import { Student } from '../../types/student'
+import { OrganizationUser } from '../../types/user'
 import { noop } from '../../utils/common'
 import { SubmitButton } from '../kit/buttons/SubmitButton'
 import { Ellipsis } from '../kit/ellipsis/Ellipsis'
 import { FormLayout } from '../kit/formLayout/FormLayout'
 import { List } from '../kit/list/List'
+import { Text } from '../kit/text/Text'
 
 type AttendanceForm = {
   date: Date
@@ -28,6 +30,7 @@ interface Props {
   studentsLoading?: boolean
   submitting?: boolean
   attendance?: Attendance
+  teacher?: OrganizationUser
 }
 export const AttendanceEditor = (props: Props) => {
   const {
@@ -39,6 +42,7 @@ export const AttendanceEditor = (props: Props) => {
     attendance,
     onGroupChanged = noop,
     studentsLoading = false,
+    teacher,
   } = props
   const intl = useIntl()
   const { control, handleSubmit, errors, watch } = useFormWithError<AttendanceForm>({
@@ -76,6 +80,11 @@ export const AttendanceEditor = (props: Props) => {
           controls={<SubmitButton loading={submitting} disabled={submitting || studentsLoading} />}
           onSubmit={handleSubmit(onSubmitInternal)}
         >
+          {/* Teacher */}
+          <div className="mb-12">
+            <Text type="h4">{teacher?.name}</Text>
+          </div>
+
           <div>
             {/* TODO: move to component */}
             {/* Date */}

@@ -8,12 +8,14 @@ import { useCurrentUser } from '../../hooks/useCurrentUser'
 import useStudentsOfGroupStore from '../../store/studentsOfGroupStore'
 import { Group } from '../../types/group'
 import { Dictionary } from '../../types/dictionary'
+import useUsersStore from '../../store/usersStore'
 
 export const AttendanceEditorPage = () => {
   const { id } = useParams<{ id: string }>()
   const { addToast } = useToasts()
   const { fetchGroupsOfTeacher, groupsById, groups, fetching: groupsFetching } = useGroupsState()
   const { organizationUser } = useCurrentUser()
+  const { fetchOrgUser, usersById } = useUsersStore()
   const {
     fetchStudentsOfGroup,
     clearStudentsOfGroup,
@@ -32,6 +34,7 @@ export const AttendanceEditorPage = () => {
     [groupsById]
   )
   const attendance = attendancesById[id]
+  const attendanceTeacher = attendance && usersById[attendance?.teacher]
   const onSubmit = useCallback(
     async (data: { date: Date; group: string; selected: Dictionary<boolean> }) => {
       const dataToSave = {
@@ -54,12 +57,24 @@ export const AttendanceEditorPage = () => {
   )
 
   useEffect(() => {
+    if (id && !attendance) {
+      return
+    }
     // TODO: cleanup
     if (!organizationUser) {
       return
     }
-    fetchGroupsOfTeacher(orgId, organizationUser.id)
-  }, [fetchGroupsOfTeacher, orgId, organizationUser])
+    const attendanceTeacher = attendance?.teacher
+    fetchGroupsOfTeacher(orgId, attendanceTeacher || organizationUser.id)
+  }, [attendance, fetchGroupsOfTeacher, id, orgId, organizationUser])
+
+  useEffect(() => {
+    if (!attendance) {
+      return
+    }
+    // TODO: cleanup
+    fetchOrgUser(orgId, attendance.teacher)
+  }, [attendance, fetchOrgUser, orgId])
 
   const fetchAttendanceById = useCallback(
     async (id: string) => {
@@ -103,6 +118,7 @@ export const AttendanceEditorPage = () => {
       students={studentsOfGroup}
       studentsLoading={studentsFetching}
       onGroupChanged={onGroupChanged}
+      teacher={attendanceTeacher}
     />
   )
 }

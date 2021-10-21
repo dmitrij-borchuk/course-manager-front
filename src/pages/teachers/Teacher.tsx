@@ -55,13 +55,14 @@ export const TeacherPage = () => {
   }, [fetchGroups, orgId])
 
   useEffect(() => {
-    fetchAttendancesForGroups(
-      orgId,
-      groupsOfTeacher.map((g) => g.id)
-    )
-
-    return () => {
-      clearAttendances()
+    if (groupsOfTeacher.length) {
+      fetchAttendancesForGroups(
+        orgId,
+        groupsOfTeacher.map((g) => g.id)
+      )
+      return () => {
+        clearAttendances()
+      }
     }
   }, [clearAttendances, fetchAttendancesForGroups, groupsOfTeacher, orgId])
 

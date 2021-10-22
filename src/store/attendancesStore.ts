@@ -54,6 +54,7 @@ export function useAttendancesStore() {
       setAttendancesById((state) => ({ ...state, [resp.id]: resp }))
       setLoading(false)
     }, []),
+    // TODO: do we need it?
     fetchAttendancesForStudent: useCallback(async (groupsIds: string[], studentId: string) => {
       // setLoading(true)
       // const response = await fetchAttendancesForStudent(groupsIds, studentId)

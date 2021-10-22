@@ -1,34 +1,14 @@
-import { useEffect, useMemo } from 'react'
+import { useEffect } from 'react'
 import { GroupsList } from '../../components/groups/GroupsList'
+import { useAttendanceRateByGroups } from '../../hooks/useAttendanceRate'
 import { useOrgId } from '../../hooks/useOrgId'
 import { useAttendancesState, useGroupsState } from '../../store'
-import { Attendance } from '../../types/attendance'
-import { Dictionary } from '../../types/dictionary'
-import { groupBy } from '../../utils/common'
 
 export const GroupsListPage = () => {
   const { fetchGroups, clearGroups, groups, loading } = useGroupsState()
   const { attendances, clearAttendances, fetchAttendancesForGroups } = useAttendancesState()
   const orgId = useOrgId()
-  const attendancesByGroup = useMemo(() => groupBy(attendances, (a) => a.group), [attendances])
-  const rateByGroup = useMemo(
-    () =>
-      (groups || []).reduce<Dictionary<number>>((acc, g) => {
-        const attendancesOfGroup = attendancesByGroup[g.id] || []
-        const classesRates = attendancesOfGroup.map((a) => getRateOfClass(a))
-        const rate = getAverage(classesRates)
-
-        if (!rate) {
-          return acc
-        }
-
-        return {
-          ...acc,
-          [g.id]: rate,
-        }
-      }, {}),
-    [attendancesByGroup, groups]
-  )
+  const rateByGroup = useAttendanceRateByGroups(groups, attendances)
 
   useEffect(() => {
     if (orgId) {
@@ -55,17 +35,3 @@ export const GroupsListPage = () => {
 }
 
 export default GroupsListPage
-
-function getRateOfClass(attendance: Attendance) {
-  const values = Object.values(attendance.attended)
-  const attended = values.filter((v) => !!v).length
-
-  return attended / values.length
-}
-
-function getAverage(values: number[]) {
-  if (values.length === 0) {
-    return null
-  }
-  return values.reduce((acc, v) => acc + v) / values.length
-}

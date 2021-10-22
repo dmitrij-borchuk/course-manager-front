@@ -5,6 +5,7 @@ import { useAttendancesState } from '../../store'
 import { ROUTES } from '../../constants'
 import { Student } from '../../components/students/Student'
 import { useOrgId } from '../../hooks/useOrgId'
+import { useStudentAttendanceRateByGroups } from '../../hooks/useAttendanceRate'
 
 // TODO: Add loading skeleton
 // TODO: Add 404 state
@@ -13,8 +14,8 @@ export const StudentPage = () => {
   let { id } = useParams<{ id: string }>()
 
   const { fetchStudent, studentsById, deleteStudent } = useStudentsState()
-  const { /* attendances,  */ clearAttendances, fetchAttendancesForStudent } = useAttendancesState()
-  const { /* groups,  */ fetchGroups } = useGroupsState()
+  const { attendances, clearAttendances, fetchAttendancesForGroups } = useAttendancesState()
+  const { groups, fetchGroups, clearGroups } = useGroupsState()
   const {
     fetchGroupsOfStudent,
     clearGroupOfStudents,
@@ -28,30 +29,8 @@ export const StudentPage = () => {
     await deleteStudent(orgId, id)
     history.push(`/${orgId}${ROUTES.STUDENTS_LIST}`)
   }, [deleteStudent, history, id, orgId])
-  // const classesByGroup = useMemo(
-  //   () =>
-  //     groups.reduce<Dictionary<Date[]>>((acc, g) => {
-  //       return {
-  //         ...acc,
-  //         [g.id]: getClassesDates(g, new Date()),
-  //       }
-  //     }, {}),
-  //   [groups]
-  // )
-  // const attendancesByGroup = useMemo(() => groupBy(attendances, (a) => a.group?.id), [attendances])
-  // const rateByGroup = useMemo(
-  //   () =>
-  //     (student?.groups || []).reduce<Dictionary<number>>((acc, g) => {
-  //       const classesCount = classesByGroup[g.id]?.length || 0
-  //       const groupRate = classesCount ? (attendancesByGroup[g.id]?.length || 0) / classesCount : 0
 
-  //       return {
-  //         ...acc,
-  //         [g.id]: groupRate,
-  //       }
-  //     }, {}),
-  //   [attendancesByGroup, classesByGroup, student?.groups]
-  // )
+  const rateByGroups = useStudentAttendanceRateByGroups(id, groups, attendances)
 
   useEffect(() => {
     fetchStudent(orgId, id)
@@ -59,7 +38,10 @@ export const StudentPage = () => {
 
   useEffect(() => {
     fetchGroups(orgId)
-  }, [fetchGroups, orgId])
+    return () => {
+      clearGroups()
+    }
+  }, [clearGroups, fetchGroups, orgId])
 
   useEffect(() => {
     if (student?.id) {
@@ -69,16 +51,18 @@ export const StudentPage = () => {
   }, [clearGroupOfStudents, fetchGroupsOfStudent, orgId, student?.id])
 
   useEffect(() => {
-    if (student) {
-      // fetchAttendancesForStudent(
-      //   student.groups.map((g) => g.id),
-      //   student.id
-      // )
-      return () => {
-        clearAttendances()
-      }
+    if (groups.length) {
+      fetchAttendancesForGroups(
+        orgId,
+        groups.map((g) => g.id)
+      )
     }
-  }, [clearAttendances, fetchAttendancesForStudent, student])
+  }, [clearAttendances, fetchAttendancesForGroups, groups, orgId])
+  useEffect(() => {
+    return () => {
+      clearAttendances()
+    }
+  }, [clearAttendances])
 
   if (!student) {
     return <div>Loading</div>
@@ -88,9 +72,9 @@ export const StudentPage = () => {
     <Student
       data={student}
       onDelete={onDelete}
-      attendanceRates={{}}
       groups={groupsOfStudent}
       loadingGroups={fetchingGroups}
+      attendanceRates={rateByGroups}
     />
   )
 }

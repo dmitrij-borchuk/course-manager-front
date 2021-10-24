@@ -34,16 +34,17 @@ export const TeacherPage = () => {
   }, [clearGroups, fetchGroupsOfTeacher, id, orgId])
 
   useEffect(() => {
-    if (groups.length) {
+    if (groupsOfTeacher.length) {
+      // TODO: probably we need to fetch attendance only for ongoing groups
       fetchAttendancesForGroups(
         orgId,
-        groups.map((g) => g.id)
+        groupsOfTeacher.map((g) => g.id)
       )
       return () => {
         clearAttendances()
       }
     }
-  }, [clearAttendances, fetchAttendancesForGroups, groups, orgId])
+  }, [clearAttendances, fetchAttendancesForGroups, groupsOfTeacher, orgId])
 
   // TODO: 404
 

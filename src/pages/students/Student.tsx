@@ -52,6 +52,7 @@ export const StudentPage = () => {
 
   useEffect(() => {
     if (groups.length) {
+      // TODO: probably we need to fetch attendance only for ongoing groups
       fetchAttendancesForGroups(
         orgId,
         groups.map((g) => g.id)

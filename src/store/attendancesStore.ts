@@ -14,14 +14,18 @@ export function useAttendancesStore() {
     loading,
     attendancesById,
     attendances,
-    fetchAllAttendances: useCallback(async (orgId: string, from: Date, to: Date) => {
+    fetchAllAttendances: useCallback(async (orgId: string, from?: Date, to?: Date) => {
       try {
         setLoading(true)
         const collection = makeOrgCollection<Attendance>('attendances', orgId)
-        const resp = await collection.queryMulti([
-          ['date', '>=', from.getTime()],
-          ['date', '<=', to.getTime()],
-        ])
+        const request =
+          from && to
+            ? collection.queryMulti([
+                ['date', '>=', from.getTime()],
+                ['date', '<=', to.getTime()],
+              ])
+            : collection.getAll()
+        const resp = await request
         const itemsById = arrayToDictionary(resp)
         setAttendancesById(itemsById)
         setLoading(false)

@@ -43,6 +43,7 @@ const StudentPage = withHeader(StudentPageLoadable)
 const SchedulePage = withHeader(SchedulePageLoadable)
 const AttendanceEditor = withHeader(AttendanceEditorLoadable)
 const CreateOrganizationPage = withHeader(CreateOrganizationPageLoadable)
+const TeachersListWithHeader = withHeader(TeachersListPage)
 
 export const Routing = React.memo(function () {
   return (
@@ -92,7 +93,7 @@ export const Routing = React.memo(function () {
       {/* Teachers */}
       <AuthGuardedRoute component={CreateTeacherPage} path={`/:orgId${ROUTES.TEACHERS_ADD}`} exact />
       <AuthGuardedRoute component={EditTeacherPage} path={`/:orgId${ROUTES.TEACHERS_EDIT}/:id`} exact />
-      <AuthGuardedRoute component={TeachersListPage} path={`/:orgId${ROUTES.TEACHERS_LIST}`} exact />
+      <AuthGuardedRoute component={TeachersListWithHeader} path={`/:orgId${ROUTES.TEACHERS_LIST}`} exact />
       <AuthGuardedRoute component={TeacherPage} path={`/:orgId${ROUTES.TEACHERS_ROOT}/:id`} exact />
 
       {/* Groups */}

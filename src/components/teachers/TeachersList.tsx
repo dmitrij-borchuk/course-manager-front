@@ -1,75 +1,51 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { FormattedMessage } from 'react-intl'
-import { Collection, Container } from 'react-materialize'
 import { ROUTES } from '../../constants'
 import { useOrgId } from '../../hooks/useOrgId'
-import { CollectionItemLink } from '../kit/collectionItemLink/CollectionItemLink'
-import { Header } from '../kit/header/Header'
-import { SectionHeader } from '../kit/sectionHeader/SectionHeader'
-import { SkeletonList } from '../kit/skeleton/SkeletonList'
+import { Dictionary } from '../../types/dictionary'
+import { OrganizationUser } from '../../types/user'
+import { AttendanceRateBadge } from '../kit/attendanceRateBadge/AttendancerateBadge'
+import { Ellipsis } from '../kit/ellipsis/Ellipsis'
+import { ListPage } from '../kit/ListPage'
 import { Text } from '../kit/text/Text'
 
-// TODO: add attendance
-interface UserItem {
-  id: string
-  name?: string
-}
 interface Props {
   loading?: boolean
   className?: string
-  items?: UserItem[]
+  items?: OrganizationUser[]
+  attendanceRates?: Dictionary<number>
 }
-export const TeachersList: React.FC<Props> = ({ className = '', loading = false, items = [] }) => {
-  return (
-    <div className={className}>
-      <Header />
-
-      <Container className="px-4">
-        <SectionHeader>
-          <FormattedMessage id="teachers.list.title" />
-        </SectionHeader>
-
-        <List loading={loading} items={items} />
-      </Container>
-
-      {/* <Link to={ROUTES.TEACHERS_ADD}>
-        <FabBtn />
-      </Link> */}
-    </div>
-  )
-}
-
-interface ListProps {
-  loading: boolean
-  items: UserItem[]
-}
-const List = ({ loading, items }: ListProps) => {
+export const TeachersList: React.FC<Props> = ({ className = '', loading = false, items = [], attendanceRates }) => {
   const orgId = useOrgId()
-  if (loading) {
-    return <SkeletonList />
-  }
-
-  if (items.length === 0) {
-    return (
-      <div className="flex justify-center">
-        <Text type="h6" color="textGray">
-          <FormattedMessage id="teachers.list.empty" />
-        </Text>
-      </div>
-    )
-  }
+  const renderItem = useCallback(
+    (d: OrganizationUser) => {
+      const attendanceRate = attendanceRates ? attendanceRates[d.id] : null
+      return (
+        <div className="flex justify-between">
+          <Ellipsis>
+            {d.name || (
+              <Text color="textGray" className="my-0">
+                <FormattedMessage id="common.unknownName" />
+              </Text>
+            )}
+          </Ellipsis>
+          {attendanceRate && <AttendanceRateBadge value={attendanceRate} />}
+        </div>
+      )
+    },
+    [attendanceRates]
+  )
 
   return (
-    <Collection>
-      {items.map((item) => (
-        <CollectionItemLink key={item.id} to={`/${orgId}${ROUTES.TEACHERS_ROOT}/${item.id}`}>
-          {item.name || (
-            <Text color="textGray" className="my-0">
-              <FormattedMessage id="common.unknownName" />
-            </Text>
-          )}
-        </CollectionItemLink>
-      ))}
-    </Collection>
+    <ListPage
+      className={className}
+      items={items}
+      loading={loading}
+      // fabBtnLink={`/${orgId}${ROUTES.GROUPS_ADD}`}
+      itemLinkRoot={`/${orgId}${ROUTES.TEACHERS_ROOT}`}
+      listHeader={<FormattedMessage id="teachers.list.title" />}
+      labelProp="name"
+      renderItem={renderItem}
+    />
   )
 }

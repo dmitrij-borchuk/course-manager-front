@@ -51,6 +51,31 @@ export function useStudentAttendanceRateByGroups(studentId: string, groups: Grou
   return rateByGroup
 }
 
+export function useAttendanceRateByTeacher(attendances: Attendance[]) {
+  const attendancesByTeacher = useMemo(() => groupBy(attendances, 'teacher'), [attendances])
+  const keys = Object.keys(attendancesByTeacher)
+  const rateByTeacher = useMemo(
+    () =>
+      keys.reduce<Dictionary<number>>((acc, key) => {
+        const attendances = attendancesByTeacher[key] || []
+        const classesRates = attendances.map((a) => getRateOfClass(a))
+        const rate = getAverage(classesRates)
+
+        if (!rate) {
+          return acc
+        }
+
+        return {
+          ...acc,
+          [key]: rate,
+        }
+      }, {}),
+    [attendancesByTeacher, keys]
+  )
+
+  return rateByTeacher
+}
+
 function getRateOfClass(attendance: Attendance) {
   const values = Object.values(attendance.attended)
   const attended = values.filter((v) => !!v).length

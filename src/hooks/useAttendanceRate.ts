@@ -76,6 +76,25 @@ export function useAttendanceRateByTeacher(attendances: Attendance[]) {
   return rateByTeacher
 }
 
+export function useAttendanceRateByStudent(attendances: Attendance[]) {
+  return useMemo(() => {
+    const attendancesOfStudents: Dictionary<boolean[]> = {}
+    attendances.forEach((attendance) => {
+      const keys = Object.keys(attendance.attended)
+      keys.forEach((key) => {
+        attendancesOfStudents[key] = attendancesOfStudents[key] || []
+        attendancesOfStudents[key].push(attendance.attended[key])
+      })
+    })
+    const attendancesByStudents: Dictionary<number> = {}
+    Object.entries(attendancesOfStudents).forEach(([key, values]) => {
+      attendancesByStudents[key] = values.filter(Boolean).length / values.length
+    })
+
+    return attendancesByStudents
+  }, [attendances])
+}
+
 function getRateOfClass(attendance: Attendance) {
   const values = Object.values(attendance.attended)
   const attended = values.filter((v) => !!v).length

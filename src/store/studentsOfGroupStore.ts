@@ -122,11 +122,11 @@ export default function useStudentsOfGroupStore() {
         throw error
       }
     }, []),
-    fetchGroupsOfStudent: useCallback(async (orgId: string, studentId: string, date: Date) => {
+    fetchGroupsOfStudent: useCallback(async (orgId: string, studentIds: string[], date: Date) => {
       setFetching(true)
       const collection = makeOrgCollection<StudentOfGroup>('studentsToGroups', orgId)
       const resp = await collection.queryMulti([
-        ['studentId', '==', studentId],
+        ['studentId', 'in', studentIds],
         ['startDate', '<=', date.getTime()],
       ])
       const filtered = resp.filter((item) => item.endDate === null || item.endDate >= date.getTime())

@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
-// import { getClassesDates } from '../../utils/schedule'
 import { useAttendancesState, useGroupsState, useStudentsOfGroupState, useTeachersState } from '../../store'
 import { Group } from '../../components/groups/Group'
 import { useOrgId } from '../../hooks/useOrgId'
+import { useAttendanceRateByStudent } from '../../hooks/useAttendanceRate'
 
 export const GroupPage = () => {
   let { id } = useParams<{ id: string }>()
@@ -15,7 +15,7 @@ export const GroupPage = () => {
     studentsOfGroup,
     fetching: loadingGroups,
   } = useStudentsOfGroupState()
-  const { /* attendances,  */ clearAttendances, fetchAttendancesForGroup } = useAttendancesState()
+  const { attendances, clearAttendances, fetchAttendancesForGroups } = useAttendancesState()
   const group = groupsById[id]
   const teacher = teachersById[group?.teacher || '']
   const groupFull = useMemo(() => {
@@ -30,26 +30,7 @@ export const GroupPage = () => {
   }, [group, teacher])
   const orgId = useOrgId()
   const onDelete = useCallback(() => deleteGroup(orgId, id), [deleteGroup, id, orgId])
-  // const classes = useMemo(() => (group ? getClassesDates(group, new Date()) : []), [group])
-  // const attendancesByStudent = useMemo(() => groupBy(attendances, (a) => a.student?.id), [attendances])
-  const rateByStudent = {}
-  // const rateByStudent = useMemo(
-  //   () =>
-  //     (group?.students || []).reduce<Dictionary<number>>((acc, s) => {
-  //       const classesCount = classes.length
-
-  //       if (!attendancesByStudent[s.id]) {
-  //         return acc
-  //       }
-  //       const rate = classesCount ? attendancesByStudent[s.id].length / classesCount : 0
-
-  //       return {
-  //         ...acc,
-  //         [s.id]: rate,
-  //       }
-  //     }, {}),
-  //   [attendancesByStudent, classes.length, group?.students]
-  // )
+  const attendanceRate = useAttendanceRateByStudent(attendances)
 
   useEffect(() => {
     fetchGroup(orgId, id)
@@ -70,12 +51,12 @@ export const GroupPage = () => {
 
   useEffect(() => {
     if (group) {
-      fetchAttendancesForGroup(group.id)
+      fetchAttendancesForGroups(orgId, [group.id])
       return () => {
         clearAttendances()
       }
     }
-  }, [clearAttendances, fetchAttendancesForGroup, group])
+  }, [clearAttendances, fetchAttendancesForGroups, group, orgId])
 
   if (!groupFull) {
     // Loading when edit schedule and return back
@@ -86,7 +67,7 @@ export const GroupPage = () => {
     <Group
       data={groupFull}
       onDelete={onDelete}
-      attendanceRates={rateByStudent}
+      attendanceRates={attendanceRate}
       studentsOfGroup={studentsOfGroup}
       loadingGroups={loadingGroups}
     />

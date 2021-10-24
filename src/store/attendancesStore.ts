@@ -65,12 +65,6 @@ export function useAttendancesStore() {
       // setAttendances(response.data)
       // setLoading(false)
     }, []),
-    fetchAttendancesForGroup: useCallback(async (groupId: string) => {
-      // setLoading(true)
-      // const response = await fetchAttendances([groupId], [])
-      // setAttendances(response.data)
-      // setLoading(false)
-    }, []),
     fetchAttendancesForGroups: useCallback(async (orgId: string, groupsIds: string[]) => {
       setLoading(true)
       const collection = makeOrgCollection<Attendance>('attendances', orgId)

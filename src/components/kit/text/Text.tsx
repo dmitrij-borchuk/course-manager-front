@@ -60,9 +60,9 @@ const components: Record<TextType, React.ComponentType<HeadingType | ParagraphTy
       </h6>
     )
   },
-  body: ({ children, ...props }: ParagraphType) => {
+  body: ({ children, className, ...props }: ParagraphType) => {
     return (
-      <p className="p" {...props}>
+      <p className={`p ${className}`} {...props}>
         {children}
       </p>
     )

@@ -25,7 +25,9 @@ export const AttendanceMeter: React.FC<Props> = ({ className = '', text = '', pr
         <Ellipsis className="z-10">
           <Text size="16">{text}</Text>
         </Ellipsis>
-        <Text size="16">{progressText}</Text>
+        <Text className="z-10" size="16">
+          {progressText}
+        </Text>
       </div>
     </div>
   )

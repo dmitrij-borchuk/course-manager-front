@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect } from 'react'
-import { useIntl } from 'react-intl'
+import { FormattedMessage, useIntl } from 'react-intl'
 import { ModalProps } from 'react-materialize'
+import { useToasts } from 'react-toast-notifications'
 import { useOrgId } from '../../hooks/useOrgId'
 import { useToggle } from '../../hooks/useToggle'
 import { useGroupsState, useStudentsOfGroupState } from '../../store'
@@ -17,30 +18,45 @@ interface Props {
 }
 export const AssignGroups = ({ student, onDone = noop, trigger, initialGroups }: Props) => {
   const intl = useIntl()
+  const { addToast } = useToasts()
   const orgId = useOrgId()
   const [open, toggler] = useToggle(false)
   const { groups, fetchGroups, fetching } = useGroupsState()
   const { addGroupToStudent, deleteGroupFromStudent } = useStudentsOfGroupState()
   const onSubmit = useCallback(
     async (data: Group[]) => {
-      const initialGroupsIds = (initialGroups || [])?.map((g) => g.id)
-      const resultGroupsIds = data.map((g) => g.id)
-      const { added, removed } = getDiff(initialGroupsIds, resultGroupsIds)
-      await Promise.all(
-        added.map(async (gId) =>
-          addGroupToStudent(orgId, {
-            studentId: student.id,
-            groupId: gId,
-            startDate: new Date().getTime(),
-            endDate: null,
-          })
+      try {
+        const initialGroupsIds = (initialGroups || [])?.map((g) => g.id)
+        const resultGroupsIds = data.map((g) => g.id)
+        const { added, removed } = getDiff(initialGroupsIds, resultGroupsIds)
+        await Promise.all(
+          added.map(async (gId) =>
+            addGroupToStudent(orgId, {
+              studentId: student.id,
+              groupId: gId,
+              startDate: new Date().getTime(),
+              endDate: null,
+            })
+          )
         )
-      )
-      await Promise.all(removed.map(async (gId) => deleteGroupFromStudent(orgId, gId, student.id)))
-      toggler.off()
-      onDone()
+        await Promise.all(removed.map(async (gId) => deleteGroupFromStudent(orgId, gId, student.id)))
+        toggler.off()
+        onDone()
+
+        addToast(<FormattedMessage id="students.assignGroups.success" />, {
+          appearance: 'success',
+          autoDismiss: true,
+        })
+      } catch (error) {
+        if (error instanceof Error) {
+          addToast(error.message, {
+            appearance: 'error',
+            autoDismiss: true,
+          })
+        }
+      }
     },
-    [addGroupToStudent, deleteGroupFromStudent, initialGroups, onDone, orgId, student.id, toggler]
+    [addGroupToStudent, addToast, deleteGroupFromStudent, initialGroups, onDone, orgId, student, toggler]
   )
 
   useEffect(() => {

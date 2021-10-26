@@ -1,4 +1,5 @@
 import React, { useCallback } from 'react'
+import { FormattedMessage } from 'react-intl'
 import { useHistory } from 'react-router'
 import { useToasts } from 'react-toast-notifications'
 import { Loader } from '../../components/kit/loader/Loader'
@@ -20,6 +21,11 @@ export const CreateStudent = () => {
           ...data,
         })
         history.push(`/${orgId}${ROUTES.STUDENTS_ROOT}/${result.id}`)
+
+        addToast(<FormattedMessage id="students.create.success" />, {
+          appearance: 'success',
+          autoDismiss: true,
+        })
       } catch (error) {
         if (error instanceof Error) {
           addToast(error.message, {

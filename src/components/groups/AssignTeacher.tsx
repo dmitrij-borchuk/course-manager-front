@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect } from 'react'
-import { useIntl } from 'react-intl'
+import { FormattedMessage, useIntl } from 'react-intl'
 import { ModalProps } from 'react-materialize'
+import { useToasts } from 'react-toast-notifications'
 import { useOrgId } from '../../hooks/useOrgId'
 import { useToggle } from '../../hooks/useToggle'
 import { useGroupsState, useTeachersState } from '../../store'
@@ -19,17 +20,30 @@ export const AssignTeacher = ({ group, onDone = noop, trigger }: Props) => {
   const orgId = useOrgId()
   const [open, toggler] = useToggle(false)
   const { editGroup } = useGroupsState()
+  const { addToast } = useToasts()
   const { teachers, fetchTeachers, fetching } = useTeachersState()
   const onSubmit = useCallback(
     async (data: OrganizationUser) => {
-      await editGroup(orgId, {
-        id: group.id,
-        teacher: data.id,
-      })
-      toggler.off()
-      onDone()
+      try {
+        await editGroup(orgId, {
+          id: group.id,
+          teacher: data.id,
+        })
+        toggler.off()
+        onDone()
+
+        addToast(<FormattedMessage id="groups.assignTeacher.success" />, {
+          appearance: 'success',
+          autoDismiss: true,
+        })
+      } catch (error: any) {
+        addToast(error.message, {
+          appearance: 'error',
+          autoDismiss: true,
+        })
+      }
     },
-    [editGroup, group.id, onDone, orgId, toggler]
+    [addToast, editGroup, group, onDone, orgId, toggler]
   )
 
   useEffect(() => {

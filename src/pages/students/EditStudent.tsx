@@ -1,5 +1,7 @@
 import React, { useCallback, useEffect } from 'react'
+import { FormattedMessage } from 'react-intl'
 import { useHistory, useParams } from 'react-router-dom'
+import { useToasts } from 'react-toast-notifications'
 import { Loader } from '../../components/kit/loader/Loader'
 import { EditStudent, StudentForm } from '../../components/students/EditStudent'
 import { ROUTES } from '../../constants'
@@ -11,6 +13,7 @@ export const EditStudentPage = () => {
   const orgId = useOrgId()
   let { id } = useParams<{ id: string }>()
   const { fetchStudent, editStudent, fetching, submitting, studentsById } = useStudentsState()
+  const { addToast } = useToasts()
 
   const student = studentsById[id]
   const update = useCallback(
@@ -18,16 +21,29 @@ export const EditStudentPage = () => {
       if (!student) {
         return
       }
+      try {
+        await editStudent(orgId, {
+          ...student,
+          // attendances: student.attendances?.map((a) => a.id),
+          // groups: student.groups?.map((g) => g.id),
+          ...data,
+        })
+        history.push(`/${orgId}${ROUTES.STUDENTS_ROOT}/${student.id}`)
 
-      await editStudent(orgId, {
-        ...student,
-        // attendances: student.attendances?.map((a) => a.id),
-        // groups: student.groups?.map((g) => g.id),
-        ...data,
-      })
-      history.push(`/${orgId}${ROUTES.STUDENTS_ROOT}/${student.id}`)
+        addToast(<FormattedMessage id="students.edit.success" />, {
+          appearance: 'success',
+          autoDismiss: true,
+        })
+      } catch (error) {
+        if (error instanceof Error) {
+          addToast(error.message, {
+            appearance: 'error',
+            autoDismiss: true,
+          })
+        }
+      }
     },
-    [editStudent, history, orgId, student]
+    [addToast, editStudent, history, orgId, student]
   )
 
   useEffect(() => {

@@ -39,6 +39,7 @@ export const messages = {
   'teachers.delete.text': 'Are you sure you want to delete this teacher?',
   'teachers.groups.assignDialog.header': 'Assign Groups',
   'teachers.groups.assignBtn.label': 'Assign Groups',
+  'teachers.editGroups.success': "Teacher's groups has been successfully updated",
 
   'groups.list.title': 'Groups',
   'groups.add.title': 'Add group',
@@ -55,6 +56,10 @@ export const messages = {
   'groups.students.empty': 'No students assigned',
   'groups.delete.header': 'Remove group',
   'groups.delete.text': 'Are you sure you want to delete this group?',
+  'groups.create.success': 'Group has been successfully created',
+  'groups.edit.success': 'Group has been successfully updated',
+  'groups.assignTeacher.success': 'Teacher has been successfully assigned',
+  'groups.assignStudents.success': 'Students has been successfully assigned',
 
   'students.add.title': 'Add student',
   'students.edit.title': 'Edit student',
@@ -64,6 +69,9 @@ export const messages = {
   'students.delete.text': 'Are you sure you want to delete this student?',
   'students.groups.assignDialog.header': 'Assign Groups',
   'students.groups.assignBtn.label': 'Assign Groups',
+  'students.create.success': 'Student has been successfully created',
+  'students.edit.success': 'Student has been successfully updated',
+  'students.assignGroups.success': 'Groups has been successfully assigned',
 
   'schedule.list.title': 'Schedule',
   'schedule.form.title': 'Schedule',
@@ -86,6 +94,7 @@ export const messages = {
   'attendance.header.add': 'Add Attendance',
   'attendance.header.edit': 'Edit Attendance',
   'attendance.groupSelector.placeholder': 'Group',
+  'attendance.edit.success': 'Report has been successfully submitted',
 }
 
 export default messages

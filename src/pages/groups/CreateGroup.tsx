@@ -1,4 +1,5 @@
 import { useCallback } from 'react'
+import { FormattedMessage } from 'react-intl'
 import { useToasts } from 'react-toast-notifications'
 import { EditGroup, GroupForm } from '../../components/groups/EditGroup'
 import { Loader } from '../../components/kit/loader/Loader'
@@ -15,6 +16,11 @@ export const CreateGroupPage = () => {
         try {
           await createGroup(orgId, {
             ...data,
+          })
+
+          addToast(<FormattedMessage id="groups.create.success" />, {
+            appearance: 'success',
+            autoDismiss: true,
           })
         } catch (error: any) {
           addToast(error.message, {

@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { useToasts } from 'react-toast-notifications'
+import { FormattedMessage } from 'react-intl'
 import { useAttendancesState, useGroupsState } from '../../store'
 import AttendanceEditor from '../../components/attendance/AttendanceEditor'
 import { useOrgId } from '../../hooks/useOrgId'
@@ -37,23 +38,35 @@ export const AttendanceEditorPage = () => {
   const attendanceTeacher = attendance && usersById[attendance?.teacher]
   const onSubmit = useCallback(
     async (data: { date: Date; group: string; selected: Dictionary<boolean> }) => {
-      const dataToSave = {
-        date: data.date.getTime(),
-        attended: data.selected,
-        group: data.group,
-      }
-      if (attendance?.id) {
-        await saveAttendance(orgId, {
-          id: attendance?.id,
-          teacher: organizationUser.id,
-          ...dataToSave,
+      try {
+        const dataToSave = {
+          date: data.date.getTime(),
+          attended: data.selected,
+          group: data.group,
+        }
+        if (attendance?.id) {
+          await saveAttendance(orgId, {
+            id: attendance?.id,
+            teacher: organizationUser.id,
+            ...dataToSave,
+          })
+        } else {
+          await saveAttendance(orgId, { ...dataToSave, teacher: organizationUser.id })
+        }
+
+        addToast(<FormattedMessage id="attendance.edit.success" />, {
+          appearance: 'success',
+          autoDismiss: true,
         })
-      } else {
-        await saveAttendance(orgId, { ...dataToSave, teacher: organizationUser.id })
+        history.push(`/${orgId}`)
+      } catch (error: any) {
+        addToast(error.message, {
+          appearance: 'error',
+          autoDismiss: true,
+        })
       }
-      history.push(`/${orgId}`)
     },
-    [attendance?.id, history, orgId, organizationUser, saveAttendance]
+    [addToast, attendance, history, orgId, organizationUser, saveAttendance]
   )
 
   useEffect(() => {

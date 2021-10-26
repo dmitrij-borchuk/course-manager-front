@@ -1,6 +1,7 @@
-import React, { useCallback, useEffect } from 'react'
-import { useIntl } from 'react-intl'
+import React, { useCallback } from 'react'
+import { FormattedMessage, useIntl } from 'react-intl'
 import { ModalProps } from 'react-materialize'
+import { useToasts } from 'react-toast-notifications'
 import { useOrgId } from '../../hooks/useOrgId'
 import { useToggle } from '../../hooks/useToggle'
 import { useGroupsState } from '../../store'
@@ -19,21 +20,34 @@ export const AssignGroups = ({ teacher, onDone = noop, trigger, teachersGroups =
   const intl = useIntl()
   const orgId = useOrgId()
   const [open, toggler] = useToggle(false)
+  const { addToast } = useToasts()
   const { groups, fetchGroups, fetching, editGroup } = useGroupsState()
   const onSubmit = useCallback(
     async (data: Group[]) => {
-      for (let index = 0; index < data.length; index++) {
-        const group = data[index]
-        // TODO: fix unselect groups
-        await editGroup(orgId, {
-          id: group.id,
-          teacher: teacher.id,
+      try {
+        for (let index = 0; index < data.length; index++) {
+          const group = data[index]
+          // TODO: fix unselect groups
+          await editGroup(orgId, {
+            id: group.id,
+            teacher: teacher.id,
+          })
+        }
+        toggler.off()
+        onDone()
+
+        addToast(<FormattedMessage id="teachers.editGroups.success" />, {
+          appearance: 'success',
+          autoDismiss: true,
+        })
+      } catch (error: any) {
+        addToast(error.message, {
+          appearance: 'error',
+          autoDismiss: true,
         })
       }
-      toggler.off()
-      onDone()
     },
-    [editGroup, onDone, orgId, teacher.id, toggler]
+    [addToast, editGroup, onDone, orgId, teacher.id, toggler]
   )
   const onTriggerClick = useCallback(async () => {
     toggler.on()

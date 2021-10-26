@@ -1,5 +1,7 @@
 import { useCallback, useEffect } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
+import { useToasts } from 'react-toast-notifications'
+import { FormattedMessage } from 'react-intl'
 import { useGroupsState } from '../../store'
 import { ROUTES } from '../../constants'
 import { EditGroup, GroupForm } from '../../components/groups/EditGroup'
@@ -10,6 +12,7 @@ export const EditGroupPage = () => {
   const history = useHistory()
   const orgId = useOrgId()
   let { id } = useParams<{ id: string }>()
+  const { addToast } = useToasts()
   const { fetchGroup, editGroup, fetching, submitting, groupsById } = useGroupsState()
 
   const group = groupsById[id]
@@ -18,14 +21,25 @@ export const EditGroupPage = () => {
       if (!group) {
         return
       }
+      try {
+        await editGroup(orgId, {
+          id: group.id,
+          ...data,
+        })
+        history.push(`/${orgId}${ROUTES.GROUPS_ROOT}/${group.id}`)
 
-      await editGroup(orgId, {
-        id: group.id,
-        ...data,
-      })
-      history.push(`/${orgId}${ROUTES.GROUPS_ROOT}/${group.id}`)
+        addToast(<FormattedMessage id="groups.edit.success" />, {
+          appearance: 'success',
+          autoDismiss: true,
+        })
+      } catch (error: any) {
+        addToast(error.message, {
+          appearance: 'error',
+          autoDismiss: true,
+        })
+      }
     },
-    [editGroup, group, history, orgId]
+    [addToast, editGroup, group, history, orgId]
   )
 
   useEffect(() => {

@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect } from 'react'
-import { useIntl } from 'react-intl'
+import { FormattedMessage, useIntl } from 'react-intl'
 import { ModalProps } from 'react-materialize'
 import { useToasts } from 'react-toast-notifications'
 import { useOrgId } from '../../hooks/useOrgId'
@@ -42,6 +42,11 @@ export const AssignStudents = ({ group, onDone = noop, trigger, studentsOfGroup 
         await Promise.all(removed.map(async (sId) => deleteStudentFromGroup(orgId, sId, group.id)))
         toggler.off()
         onDone()
+
+        addToast(<FormattedMessage id="groups.assignStudents.success" />, {
+          appearance: 'success',
+          autoDismiss: true,
+        })
       } catch (error) {
         if (error instanceof Error) {
           addToast(error.message, {

@@ -10,11 +10,9 @@ export const Providers: React.FC<Props> = ({ children }) => {
   return (
     <Router>
       <StoreProvider>
-        <ToastProvider>
-          <IntlProvider messages={messages} locale="en" defaultLocale="en">
-            {children}
-          </IntlProvider>
-        </ToastProvider>
+        <IntlProvider messages={messages} locale="en" defaultLocale="en">
+          <ToastProvider>{children}</ToastProvider>
+        </IntlProvider>
       </StoreProvider>
     </Router>
   )

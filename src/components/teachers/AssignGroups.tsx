@@ -35,14 +35,14 @@ export const AssignGroups = ({ teacher, onDone = noop, trigger, teachersGroups =
     },
     [editGroup, onDone, orgId, teacher.id, toggler]
   )
-
-  useEffect(() => {
+  const onTriggerClick = useCallback(async () => {
+    toggler.on()
     fetchGroups(orgId)
-  }, [fetchGroups, orgId])
+  }, [fetchGroups, orgId, toggler])
 
   return (
     <>
-      <span onClick={toggler.on}>{trigger}</span>
+      <span onClick={onTriggerClick}>{trigger}</span>
       <SelectDialog
         loading={fetching}
         open={open}

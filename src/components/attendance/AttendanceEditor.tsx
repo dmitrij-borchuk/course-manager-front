@@ -99,7 +99,7 @@ export const AttendanceEditor = (props: Props) => {
                   message: 'Required',
                 },
               }}
-              render={({ value, ...renderProps }, ddd) => {
+              render={({ value, ...renderProps }) => {
                 return (
                   <DatePicker
                     id="date"
@@ -112,7 +112,8 @@ export const AttendanceEditor = (props: Props) => {
                     // @ts-ignore
                     label={`${intl.formatMessage({ id: 'common.date' })} *`}
                     disabled={submitting}
-                    {...renderProps}
+                    onChange={renderProps.onChange}
+                    name={renderProps.name}
                   />
                 )
               }}
@@ -153,7 +154,9 @@ export const AttendanceEditor = (props: Props) => {
                   }}
                   error={error}
                   className={validationClass}
-                  {...renderProps}
+                  onChange={renderProps.onChange}
+                  value={renderProps.value}
+                  name={renderProps.name}
                 >
                   <option disabled value="">
                     {intl.formatMessage({ id: 'attendance.groupSelector.placeholder' })}

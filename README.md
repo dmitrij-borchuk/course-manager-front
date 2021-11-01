@@ -12,6 +12,22 @@ TODO: Write about firebase emulator
 
 TODO: Write about firebase emulator
 
+TODO: write about Cypress
+Test users:
+`Admin`:
+
+```
+Login: test.admin@domain.com
+Password: test.admin
+```
+
+`Teacher`:
+
+```
+Login: test.teacher@domain.com
+Password: test.teacher
+```
+
 ## Configuration
 
 ### Environment variables

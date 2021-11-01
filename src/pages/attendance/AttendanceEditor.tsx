@@ -25,7 +25,13 @@ export const AttendanceEditorPage = () => {
   } = useStudentsOfGroupStore()
   const history = useHistory()
   const orgId = useOrgId()
-  const { saveAttendance, fetchAttendance, attendancesById, loading: attendancesLoading } = useAttendancesState()
+  const {
+    saveAttendance,
+    fetchAttendance,
+    attendancesById,
+    loading: attendancesLoading,
+    removeAttendance,
+  } = useAttendancesState()
   // TODO: add 404
   const [group, setGroup] = useState<Group>()
   const onGroupChanged = useCallback(
@@ -34,6 +40,10 @@ export const AttendanceEditorPage = () => {
     },
     [groupsById]
   )
+  const onDelete = useCallback(() => {
+    removeAttendance(orgId, id)
+    history.replace(`/${orgId}`)
+  }, [history, id, orgId, removeAttendance])
   const attendance = attendancesById[id]
   const attendanceTeacher = attendance && usersById[attendance?.teacher]
   const onSubmit = useCallback(
@@ -132,6 +142,7 @@ export const AttendanceEditorPage = () => {
       studentsLoading={studentsFetching}
       onGroupChanged={onGroupChanged}
       teacher={attendanceTeacher}
+      onDelete={onDelete}
     />
   )
 }

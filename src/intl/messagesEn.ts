@@ -95,6 +95,8 @@ export const messages = {
   'attendance.header.edit': 'Edit Attendance',
   'attendance.groupSelector.placeholder': 'Group',
   'attendance.edit.success': 'Report has been successfully submitted',
+  'attendance.delete.header': 'Remove attendance report',
+  'attendance.delete.text': 'Are you sure you want to delete this attendance report?',
 }
 
 export default messages

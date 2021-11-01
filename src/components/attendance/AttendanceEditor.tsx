@@ -12,6 +12,7 @@ import { noop } from '../../utils/common'
 import { SubmitButton } from '../kit/buttons/SubmitButton'
 import { Ellipsis } from '../kit/ellipsis/Ellipsis'
 import { FormLayout } from '../kit/formLayout/FormLayout'
+import { HeadingWithControls } from '../kit/headingWithControls/HeadingWithControls'
 import { List } from '../kit/list/List'
 import { Text } from '../kit/text/Text'
 
@@ -31,6 +32,7 @@ interface Props {
   submitting?: boolean
   attendance?: Attendance
   teacher?: OrganizationUser
+  onDelete?: () => void
 }
 export const AttendanceEditor = (props: Props) => {
   const {
@@ -43,6 +45,7 @@ export const AttendanceEditor = (props: Props) => {
     onGroupChanged = noop,
     studentsLoading = false,
     teacher,
+    onDelete = noop,
   } = props
   const intl = useIntl()
   const { control, handleSubmit, errors, watch } = useFormWithError<AttendanceForm>({
@@ -75,8 +78,15 @@ export const AttendanceEditor = (props: Props) => {
   return (
     <div className={className}>
       <Container className="px-4">
+        <HeadingWithControls
+          text={<FormattedMessage id={attendance ? 'attendance.header.edit' : 'attendance.header.add'} />}
+          deleteProps={{
+            header: intl.formatMessage({ id: 'attendance.delete.header' }),
+            content: <FormattedMessage id="attendance.delete.text" />,
+            onSubmit: onDelete,
+          }}
+        />
         <FormLayout
-          header={<FormattedMessage id={attendance ? 'attendance.header.edit' : 'attendance.header.add'} />}
           controls={<SubmitButton loading={submitting} disabled={submitting || studentsLoading} />}
           onSubmit={handleSubmit(onSubmitInternal)}
         >

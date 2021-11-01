@@ -1,4 +1,4 @@
-import React, { ComponentProps } from 'react'
+import React, { ComponentProps, ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 import { IconButton } from '../buttons/IconButton'
 import { DeleteIconWithDialog } from '../deleteIconWithDialog/DeleteIconWithDialog'
@@ -6,7 +6,7 @@ import { Ellipsis } from '../ellipsis/Ellipsis'
 import { SectionHeader } from '../sectionHeader/SectionHeader'
 
 interface Props {
-  text: string
+  text: ReactNode
   editPath?: string
   deleteProps?: ComponentProps<typeof DeleteIconWithDialog>
 }

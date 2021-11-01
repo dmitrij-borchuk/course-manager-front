@@ -25,7 +25,7 @@ export function ListPage<T extends { id: string }>({
       </Container>
 
       {fabBtnLink && (
-        <Link to={fabBtnLink}>
+        <Link to={fabBtnLink} data-testid="fab-btn">
           <FabBtn />
         </Link>
       )}

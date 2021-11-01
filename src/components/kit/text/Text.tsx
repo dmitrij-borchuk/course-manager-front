@@ -75,13 +75,15 @@ interface Props {
   className?: string
   size?: Size
   color?: 'primary' | 'secondary' | 'textGray' | 'textLight' | 'text' | 'alert' | 'warning'
+  'data-testid'?: string
 }
-export const Text: React.FC<Props> = ({ children, type = 'body', className = '', size, color }) => {
+export const Text: React.FC<Props> = ({ children, type = 'body', className = '', size, color, ...props }) => {
   const Component = components[type]
   return (
     <Component
       className={`${color ? color2className[color] : ''} ${className}`}
       style={{ fontSize: size ? `${size}px` : undefined }}
+      {...props}
     >
       {children}
     </Component>

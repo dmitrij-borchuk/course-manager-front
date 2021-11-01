@@ -22,7 +22,7 @@ function Initiator() {
     return (
       <div>
         {/* TODO: add splash screen */}
-        <Loader show />
+        <Loader show data-testid="app-preloader" />
       </div>
     )
   }

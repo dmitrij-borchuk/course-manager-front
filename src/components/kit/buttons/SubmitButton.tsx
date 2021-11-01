@@ -10,7 +10,7 @@ interface Props {
 }
 export const SubmitButton: React.FC<Props> = ({ loading = false, disabled = false, children, onSubmit }) => {
   return (
-    <ButtonWithLoader loading={loading} disabled={disabled} onClick={onSubmit}>
+    <ButtonWithLoader loading={loading} disabled={disabled} onClick={onSubmit} data-testid="submit">
       {children || <FormattedMessage id="common.submitLabel" />}
       <Icon right>send</Icon>
     </ButtonWithLoader>

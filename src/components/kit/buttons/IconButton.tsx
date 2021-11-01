@@ -2,12 +2,13 @@ import React from 'react'
 import { Button, ButtonProps, Icon } from 'react-materialize'
 import './styles.css'
 
-interface Props extends ButtonProps {
+export interface IconButtonProps extends ButtonProps {
   icon: string
   size?: number
   type?: 'round' | 'square'
+  'data-testid'?: string
 }
-export const IconButton: React.FC<Props> = ({ icon, size = 36, type = 'round', className, ...rest }) => {
+export const IconButton: React.FC<IconButtonProps> = ({ icon, size = 36, type = 'round', className, ...rest }) => {
   return (
     <Button
       className={`icon-btn icon-btn-type-${type} ${className}`}

@@ -110,13 +110,14 @@ export default function useStudentsOfGroupStore() {
           return []
         }
         const students = makeOrgCollection<Student>('students', orgId)
-        const studentsList = await students.query('id', 'in', studentIds)
-        const studentsById = arrayToDictionary(studentsList)
+        const studentsList = await students.getAll()
+        const filteredByStudents = studentsList.filter((item) => studentIds.includes(item.id))
+        const studentsById = arrayToDictionary(filteredByStudents)
         setStudentsOfGroupById(studentsById)
 
         setFetching(false)
 
-        return studentsList
+        return filteredByStudents
       } catch (error) {
         setFetching(false)
         throw error
@@ -125,24 +126,23 @@ export default function useStudentsOfGroupStore() {
     fetchGroupsOfStudent: useCallback(async (orgId: string, studentIds: string[], date: Date) => {
       setFetching(true)
       const collection = makeOrgCollection<StudentOfGroup>('studentsToGroups', orgId)
-      const resp = await collection.queryMulti([
-        ['studentId', 'in', studentIds],
-        ['startDate', '<=', date.getTime()],
-      ])
-      const filtered = resp.filter((item) => item.endDate === null || item.endDate >= date.getTime())
-      const groupIds = filtered.map((item) => item.groupId)
+      const resp = await collection.queryMulti([['startDate', '<=', date.getTime()]])
+      const filteredByTime = resp.filter((item) => item.endDate === null || item.endDate >= date.getTime())
+      const filteredByStudents = filteredByTime.filter((item) => studentIds.includes(item.studentId))
+      const groupIds = filteredByStudents.map((item) => item.groupId)
 
       if (!groupIds.length) {
         setFetching(false)
         return []
       }
       const groups = makeOrgCollection<Group>('groups', orgId)
-      const groupsList = await groups.query('id', 'in', groupIds)
-      const groupsById = arrayToDictionary(groupsList)
+      const groupsList = await groups.getAll()
+      const filteredGroups = groupsList.filter((item) => groupIds.includes(item.id))
+      const groupsById = arrayToDictionary(filteredGroups)
       setGroupsOfStudentById(groupsById)
       setFetching(false)
 
-      return groupsList
+      return filteredGroups
     }, []),
     clearStudentsOfGroup: useCallback(() => {
       setStudentsOfGroupById({})

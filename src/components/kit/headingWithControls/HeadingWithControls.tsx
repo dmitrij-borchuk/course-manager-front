@@ -18,11 +18,11 @@ export const HeadingWithControls = ({ text, editPath, deleteProps }: Props) => {
       </SectionHeader>
       <div className="flex items-center space-x-2 pt-4">
         {editPath && (
-          <Link to={editPath}>
+          <Link to={editPath} data-testid="edit-btn">
             <IconButton type="square" size={40} icon="edit" />
           </Link>
         )}
-        {deleteProps && <DeleteIconWithDialog {...deleteProps} />}
+        {deleteProps && <DeleteIconWithDialog triggerProps={{ 'data-testid': 'delete-btn' }} {...deleteProps} />}
       </div>
     </div>
   )

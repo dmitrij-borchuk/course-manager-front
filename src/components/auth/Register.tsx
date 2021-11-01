@@ -53,7 +53,7 @@ export const Register: React.FC<Props> = ({ onSubmit, loading = false }) => {
             disabled={loading}
           />
           <div className="flex justify-end">
-            <ButtonWithLoader loading={loading}>
+            <ButtonWithLoader loading={loading} data-testId="submit">
               <FormattedMessage id="common.submitLabel" />
               <Icon right>send</Icon>
             </ButtonWithLoader>

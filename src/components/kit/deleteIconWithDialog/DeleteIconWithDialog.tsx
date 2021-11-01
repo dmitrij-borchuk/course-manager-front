@@ -3,15 +3,16 @@ import { FormattedMessage } from 'react-intl'
 import { Button, Modal } from 'react-materialize'
 import { noop } from '../../../utils/common'
 import { ButtonWithLoader } from '../buttons/ButtonWithLoader'
-import { IconButton } from '../buttons/IconButton'
+import { IconButton, IconButtonProps } from '../buttons/IconButton'
 
 interface Props {
   onSubmit?: () => void
   header?: string
   content?: ReactNode
+  triggerProps?: Partial<IconButtonProps>
 }
 // TODO: make ConfirmationDialog
-export const DeleteIconWithDialog = ({ onSubmit = noop, header, content }: Props) => {
+export const DeleteIconWithDialog = ({ onSubmit = noop, header, content, triggerProps }: Props) => {
   const [loading, setLoading] = useState(false)
   const onSubmitClick = useCallback(async () => {
     setLoading(true)
@@ -22,10 +23,17 @@ export const DeleteIconWithDialog = ({ onSubmit = noop, header, content }: Props
   return (
     <Modal
       actions={[
-        <Button flat modal="close" disabled={loading}>
+        <Button flat modal="close" disabled={loading} data-testid="dialog-btn-no">
           <FormattedMessage id="common.dialog.btn.no" />
         </Button>,
-        <ButtonWithLoader loading={loading} flat node="button" className="color-alert" onClick={onSubmitClick}>
+        <ButtonWithLoader
+          loading={loading}
+          flat
+          node="button"
+          className="color-alert"
+          onClick={onSubmitClick}
+          data-testid="dialog-btn-yes"
+        >
           <FormattedMessage id="common.dialog.btn.yes" />
         </ButtonWithLoader>,
       ]}
@@ -42,7 +50,7 @@ export const DeleteIconWithDialog = ({ onSubmit = noop, header, content }: Props
         preventScrolling: true,
         startingTop: '4%',
       }}
-      trigger={<IconButton type="square" size={40} icon="delete" className="color-alert" />}
+      trigger={<IconButton type="square" size={40} icon="delete" className="color-alert" {...triggerProps} />}
     >
       {content}
     </Modal>

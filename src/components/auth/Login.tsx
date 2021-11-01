@@ -60,7 +60,7 @@ export const Login: React.FC<Props> = ({ onSubmit, loading = false }) => {
 
           {/* Submit */}
           <div className="flex justify-end">
-            <ButtonWithLoader loading={loading}>
+            <ButtonWithLoader loading={loading} data-testId="submit">
               {/* TODO: translate */}
               Submit
               <Icon right>send</Icon>

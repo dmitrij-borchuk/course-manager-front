@@ -20,7 +20,7 @@ export function List<T>({ loading = false, items, emptyListPlaceholder, renderIt
   if (items.length === 0) {
     return (
       <div className="flex justify-center">
-        <Text type="h6" color="textGray">
+        <Text type="h6" color="textGray" data-testid="empty-list-text">
           {emptyListPlaceholder ? emptyListPlaceholder : <FormattedMessage id="common.list.empty" />}
         </Text>
       </div>
@@ -55,7 +55,7 @@ function renderLinkItem<T extends { id: string }>(
   renderItem?: (data: T) => JSX.Element
 ) {
   return (data: T) => (
-    <CollectionItemLink key={data.id} to={`${itemLinkRoot}/${data.id}`}>
+    <CollectionItemLink key={data.id} to={`${itemLinkRoot}/${data.id}`} data-testid="list-link-item">
       <Ellipsis>{renderItem ? renderItem(data) : data[labelProp]}</Ellipsis>
     </CollectionItemLink>
   )

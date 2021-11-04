@@ -17,10 +17,10 @@ export const CreateStudent = () => {
   const submit = useCallback(
     async (data: StudentForm) => {
       try {
-        const result = await createStudent(orgId, {
+        await createStudent(orgId, {
           ...data,
         })
-        history.push(`/${orgId}${ROUTES.STUDENTS_ROOT}/${result.id}`)
+        history.push(`/${orgId}${ROUTES.STUDENTS_LIST}`)
 
         addToast(<FormattedMessage id="students.create.success" />, {
           appearance: 'success',

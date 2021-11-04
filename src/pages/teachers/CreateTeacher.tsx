@@ -13,7 +13,7 @@ export const CreateTeacherPage = () => {
 
   useEffect(() => {
     if (data?.user_info.id) {
-      history.push(`${ROUTES.TEACHERS_ROOT}/${data?.user_info.id}`)
+      history.push(`${ROUTES.TEACHERS_LIST}`)
     }
   }, [data?.user_info.id, history])
 

@@ -5,7 +5,7 @@ import { useOrgId } from '../../hooks/useOrgId'
 import { useAttendancesState, useGroupsState } from '../../store'
 
 export const GroupsListPage = () => {
-  const { fetchGroups, clearGroups, groups, loading } = useGroupsState()
+  const { fetchGroups, clearGroups, groups, fetching } = useGroupsState()
   const { attendances, clearAttendances, fetchAttendancesForGroups } = useAttendancesState()
   const orgId = useOrgId()
   const rateByGroup = useAttendanceRateByGroups(groups, attendances)
@@ -32,7 +32,7 @@ export const GroupsListPage = () => {
     }
   }, [clearAttendances, fetchAttendancesForGroups, groups, orgId])
 
-  return <GroupsList items={groups} loading={loading} attendanceRates={rateByGroup} />
+  return <GroupsList items={groups} loading={fetching} attendanceRates={rateByGroup} />
 }
 
 export default GroupsListPage

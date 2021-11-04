@@ -11,7 +11,6 @@ import { StudentOfGroup } from '../types/studentOfGroup'
 
 export default function useGroupsStore() {
   const history = useHistory()
-  const [loading, setLoading] = useState(false)
   const [groupsById, setGroupsById] = useState<Dictionary<Group>>({})
   const groups = useDictionaryToArray(groupsById)
   const [fetching, setFetching] = useState(false)
@@ -28,7 +27,6 @@ export default function useGroupsStore() {
   return {
     groups,
     groupsById,
-    loading,
     submitting,
     fetching,
 
@@ -67,25 +65,21 @@ export default function useGroupsStore() {
         throw error
       }
     }, []),
-    createGroup: useCallback(
-      async (orgId: string, data: NewGroup) => {
-        setSubmitting(true)
-        const groupsCollection = makeOrgCollection<Group>('groups', orgId)
-        try {
-          const result = await groupsCollection.save({ ...data, id: nanoid() })
-          setGroupsById((state) => ({ ...state, [result.id]: { ...data, id: result.id } }))
-          history.push(`/${orgId}${ROUTES.GROUPS_ROOT}/${result.id}`)
-          setSubmitting(false)
-        } catch (error) {
-          setSubmitting(false)
-          throw error
-        }
-      },
-      [history]
-    ),
+    createGroup: useCallback(async (orgId: string, data: NewGroup) => {
+      setSubmitting(true)
+      const groupsCollection = makeOrgCollection<Group>('groups', orgId)
+      try {
+        const result = await groupsCollection.save({ ...data, id: nanoid() })
+        setGroupsById((state) => ({ ...state, [result.id]: { ...data, id: result.id } }))
+        setSubmitting(false)
+        return result
+      } catch (error) {
+        setSubmitting(false)
+        throw error
+      }
+    }, []),
     clearGroups: useCallback(() => {
       setGroupsById({})
-      setLoading(false)
       setFetching(false)
     }, []),
     deleteGroup: useCallback(

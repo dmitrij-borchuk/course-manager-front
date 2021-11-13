@@ -1,16 +1,8 @@
-import { isProduction } from '../../config'
-import firebase from './index'
-
-const auth = firebase.auth()
-export default auth
-
-if (!isProduction) {
-  // TODO: move to env var
-  auth.useEmulator('http://localhost:9099')
-}
+import { createUserWithEmailAndPassword, sendPasswordResetEmail, signInWithEmailAndPassword } from 'firebase/auth'
+import { auth } from './index'
 
 export async function login(email: string, password: string) {
-  const userCredential = await firebase.auth().signInWithEmailAndPassword(email, password)
+  const userCredential = await signInWithEmailAndPassword(auth, email, password)
   return userCredential.user
 }
 
@@ -19,9 +11,9 @@ export async function logout() {
 }
 
 export function register(email: string, password: string) {
-  return auth.createUserWithEmailAndPassword(email, password)
+  return createUserWithEmailAndPassword(auth, email, password)
 }
 
 export function resetPassword(email: string) {
-  return auth.sendPasswordResetEmail(email)
+  return sendPasswordResetEmail(auth, email)
 }

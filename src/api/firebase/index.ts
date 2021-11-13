@@ -1,11 +1,14 @@
 // Firebase App (the core Firebase SDK) is always required and must be listed first
-import firebase from 'firebase/app'
+import { initializeApp } from 'firebase/app'
 
 // If you enabled Analytics in your project, add the Firebase SDK for Analytics
-import 'firebase/analytics'
+import { getAnalytics } from 'firebase/analytics'
 
-import 'firebase/auth'
-import 'firebase/firestore'
+import { connectAuthEmulator, getAuth } from 'firebase/auth'
+import { connectFirestoreEmulator, initializeFirestore } from 'firebase/firestore'
+import { isProduction } from '../../config'
+
+const win = window as any
 
 // TODO: Replace the following with your app's Firebase project configuration
 // For Firebase JavaScript SDK v7.20.0 and later, `measurementId` is an optional field
@@ -21,7 +24,22 @@ const firebaseConfig = {
 }
 
 // Initialize Firebase
-const firebaseApp = firebase.initializeApp(firebaseConfig)
-firebaseApp.analytics()
+const firebaseApp = initializeApp(firebaseConfig)
 
 export default firebaseApp
+
+export const auth = getAuth(firebaseApp)
+
+export const db = initializeFirestore(firebaseApp, {
+  // Needed for Firestore support in Cypress (see https://github.com/cypress-io/cypress/issues/6350)
+  experimentalForceLongPolling: !!win.Cypress,
+})
+
+if (isProduction) {
+  getAnalytics(firebaseApp)
+}
+if (!isProduction) {
+  // TODO: move path to env var
+  connectAuthEmulator(auth, 'http://localhost:9099')
+  connectFirestoreEmulator(db, 'localhost', 8080)
+}

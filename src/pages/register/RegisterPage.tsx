@@ -17,7 +17,7 @@ export const RegisterPage = () => {
   const onSubmit = useCallback(
     async (data: SubmitData) => {
       try {
-        await register(data.email, data.password)
+        await register(data.name, data.email, data.password)
 
         history.push(`${orgPrefix}${ROUTES.ROOT}`)
       } catch (error: any) {

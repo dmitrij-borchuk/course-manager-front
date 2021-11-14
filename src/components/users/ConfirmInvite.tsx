@@ -3,33 +3,16 @@ import { Container } from 'react-materialize'
 import { Header } from '../kit/header/Header'
 import { SubmitButton } from '../kit/buttons/SubmitButton'
 import { useOrgId } from '../../hooks/useOrgId'
-import { FormLayout } from '../kit/formLayout/FormLayout'
-import { useIntl } from 'react-intl'
-import { ExternalError, useFormWithError } from '../../hooks/useFormWithError'
-import { Input } from '../kit/input/Input'
-
-type ConfirmInvitationForm = {
-  name: string
-}
+import { SectionHeader } from '../kit/sectionHeader/SectionHeader'
 
 interface Props {
-  onSubmit: (data: ConfirmInvitationForm) => void
+  onSubmit: () => void
   loading?: boolean
   className?: string
   disabled?: boolean
-  error?: ExternalError<ConfirmInvitationForm>
 }
-export const ConfirmInvite: React.FC<Props> = ({ className = '', disabled, onSubmit, loading = false, error }) => {
-  const intl = useIntl()
+export const ConfirmInvite: React.FC<Props> = ({ className = '', disabled, onSubmit, loading = false }) => {
   const orgId = useOrgId()
-  const { control, handleSubmit, errors } = useFormWithError<ConfirmInvitationForm>(
-    {
-      defaultValues: {
-        name: '',
-      },
-    },
-    error
-  )
 
   return (
     <div className={className}>
@@ -38,22 +21,12 @@ export const ConfirmInvite: React.FC<Props> = ({ className = '', disabled, onSub
         {/* TODO: use org name */}
         {/* TODO: use translations */}
         {/* TODO: check valid invite */}
-
-        <FormLayout
-          header={`You have been invited to organization ${orgId}.`}
-          controls={<SubmitButton loading={loading} disabled={disabled} />}
-          onSubmit={handleSubmit(onSubmit)}
-        >
-          <Input
-            id="name"
-            control={control}
-            name="name"
-            label={`${intl.formatMessage({ id: 'common.form.name.label' })} *`}
-            rules={{ required: true }}
-            disabled={loading || disabled}
-            error={errors['name']?.message}
-          />
-        </FormLayout>
+        <SectionHeader>You have been invited to organization {orgId}.</SectionHeader>
+        <div className="flex justify-center mt-10">
+          <SubmitButton loading={loading} disabled={disabled} onSubmit={onSubmit}>
+            Confirm
+          </SubmitButton>
+        </div>
       </Container>
     </div>
   )

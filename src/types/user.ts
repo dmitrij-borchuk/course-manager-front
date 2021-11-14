@@ -23,6 +23,8 @@ export type NewUser = UserBase & {
 
 export type UserMetadata = {
   id: string
+  name: string
+  email?: string
   organizations?: string[]
 }
 

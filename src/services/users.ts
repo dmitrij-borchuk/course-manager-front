@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react'
 import { users } from '../api/firebase/collections'
 import { collection } from '../api/firebase/firestore'
 import { createUserRequest } from '../api/users'
-import { ROLES } from '../config'
+import { Role } from '../config'
 import { Invite } from '../types/invite'
 import { NewUser, OrganizationUser } from '../types/user'
 
@@ -36,16 +36,15 @@ export async function inviteUser(orgId: string, data: Invite) {
   const invites = collection<Invite>(`organizations/${orgId}/invites`)
   return await invites.save(data)
 }
-export async function confirmInvitation(orgId: string, userId: string, token: string, name: string) {
+export async function confirmInvitation(orgId: string, userId: string, token: string, role: Role) {
   // TODO: fix any
   const orgUsers = collection<any>(`organizations/${orgId}/users`)
   const user = await users.getById(userId)
   await orgUsers.save({
     ...user,
     id: userId,
-    role: ROLES.Teacher,
+    role,
     token,
-    name,
   })
 
   const userOrganizations = user.organizations || []

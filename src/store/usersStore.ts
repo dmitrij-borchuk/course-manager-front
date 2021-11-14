@@ -1,6 +1,7 @@
 import { useCallback, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { makeOrgCollection } from '../api/firebase/collections'
+import { Role } from '../config'
 import { useDictionaryToArray } from '../hooks/useDictionaryToArray'
 import { confirmInvitation, getUsersList, inviteUser } from '../services/users'
 import { Dictionary } from '../types/dictionary'
@@ -34,10 +35,10 @@ export default function useUsersStore() {
       }
     }, []),
     confirmInvitation: useCallback(
-      async (orgId: string, userId: string, token: string, name: string) => {
+      async (orgId: string, userId: string, token: string, role: Role) => {
         setSubmitting(true)
         try {
-          await confirmInvitation(orgId, userId, token, name)
+          await confirmInvitation(orgId, userId, token, role)
           setSubmitting(false)
 
           history.push(`/${orgId}/`)

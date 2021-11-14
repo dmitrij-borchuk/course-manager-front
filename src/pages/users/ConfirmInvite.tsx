@@ -10,15 +10,12 @@ export const ConfirmInvitePage = () => {
   const { currentUser } = useAuthStore()
   const { token } = useParams<{ token: string }>()
   const orgId = useOrgId()
-  const onSubmit = useCallback(
-    async ({ name }) => {
-      if (orgId && currentUser?.uid) {
-        // TODO: error handling
-        await confirmInvitation(orgId, currentUser.uid, token, name)
-      }
-    },
-    [confirmInvitation, currentUser?.uid, orgId, token]
-  )
+  const onSubmit = useCallback(async () => {
+    if (orgId && currentUser?.uid) {
+      // TODO: error handling
+      await confirmInvitation(orgId, currentUser.uid, token, 'Teacher')
+    }
+  }, [confirmInvitation, currentUser?.uid, orgId, token])
 
   return <ConfirmInvite onSubmit={onSubmit} loading={submitting} />
 }

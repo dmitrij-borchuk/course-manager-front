@@ -10,6 +10,7 @@ import { SectionHeader } from '../kit/sectionHeader/SectionHeader'
 import './styles.css'
 
 interface FormData {
+  name: string
   email: string
   password: string
 }
@@ -23,6 +24,7 @@ export const Register: React.FC<Props> = ({ onSubmit, loading = false }) => {
   const intl = useIntl()
   const { control, handleSubmit } = useForm<FormData>({
     defaultValues: {
+      name: '',
       email: '',
       password: '',
     },
@@ -35,6 +37,14 @@ export const Register: React.FC<Props> = ({ onSubmit, loading = false }) => {
           <FormattedMessage id="auth.register.title" />
         </SectionHeader>
         <form onSubmit={handleSubmit(onSubmit)}>
+          <Input
+            id="name"
+            control={control}
+            name="name"
+            label={`${intl.formatMessage({ id: 'common.form.name.label' })} *`}
+            rules={{ required: true }}
+            disabled={loading}
+          />
           <Input
             id="email"
             control={control}

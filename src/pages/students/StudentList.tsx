@@ -6,7 +6,7 @@ import { useAttendancesState, useStudentsState } from '../../store'
 import useStudentsOfGroupStore from '../../store/studentsOfGroupStore'
 
 export const StudentListPage = () => {
-  const { fetchStudents, students } = useStudentsState()
+  const { fetchStudents, students, fetching } = useStudentsState()
   const { fetchGroupsOfStudent } = useStudentsOfGroupStore()
   const { attendances, clearAttendances, fetchAttendancesForGroups } = useAttendancesState()
   const attendanceRate = useAttendanceRateByStudent(attendances)
@@ -37,7 +37,7 @@ export const StudentListPage = () => {
     }
   }, [clearAttendances, fetchAttendance, students.length])
 
-  return <StudentList items={students} attendanceRates={attendanceRate} />
+  return <StudentList items={students} attendanceRates={attendanceRate} loading={fetching} />
 }
 
 export default StudentListPage

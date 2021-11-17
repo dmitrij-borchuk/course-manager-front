@@ -118,6 +118,7 @@ export const AttendanceEditor = (props: Props) => {
                       format: 'mmm dd, yyyy',
                       defaultDate: value,
                       setDefaultDate: true,
+                      maxDate: new Date(),
                     }}
                     // @ts-ignore
                     label={`${intl.formatMessage({ id: 'common.date' })} *`}

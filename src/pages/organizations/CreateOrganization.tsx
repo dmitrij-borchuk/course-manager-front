@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { FormattedMessage, useIntl } from 'react-intl'
 import { useHistory } from 'react-router-dom'
 import { useToasts } from 'react-toast-notifications'
@@ -12,7 +12,7 @@ import { useCurrentUser } from '../../hooks/useCurrentUser'
 export const CreateOrganizationPage = () => {
   const history = useHistory()
   const intl = useIntl()
-  const { save, submitting, allItems } = useOrganizationsState()
+  const { save, submitting, allItems, fetchAll, loading } = useOrganizationsState()
   const { currentUser } = useCurrentUser()
   const { addToast } = useToasts()
   const [error, setError] = useState<ExternalError<OrganizationForm>>()
@@ -61,7 +61,13 @@ export const CreateOrganizationPage = () => {
     [addToast, allItems, currentUser, history, intl, save]
   )
 
-  return <EditOrganization onSubmit={submit} loading={submitting} error={error} />
+  useEffect(() => {
+    if (currentUser?.uid) {
+      fetchAll(currentUser?.uid)
+    }
+  }, [currentUser?.uid, fetchAll])
+
+  return <EditOrganization onSubmit={submit} loading={submitting || loading} error={error} />
 }
 
 export default CreateOrganizationPage

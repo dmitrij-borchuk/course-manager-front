@@ -6,6 +6,8 @@ export const messages = {
   'common.form.email.label': 'Email',
   'common.form.password.label': 'Password',
   'common.form.description.label': 'Description',
+  'common.form.tag.label': 'Tag',
+  'common.form.newTag.label': 'New tag',
   'common.dialog.btn.yes': 'Yes',
   'common.dialog.btn.no': 'No',
   'common.dialog.btn.ok': 'Ok',
@@ -72,6 +74,9 @@ export const messages = {
   'students.create.success': 'Student has been successfully created',
   'students.edit.success': 'Student has been successfully updated',
   'students.assignGroups.success': 'Groups have been successfully assigned',
+  'students.tags': 'Tags',
+  'students.tags.empty': 'No tags have been assigned',
+  'students.tags.editInfo': 'Click on tag to edit',
 
   'schedule.list.title': 'Schedule',
   'schedule.form.title': 'Schedule',

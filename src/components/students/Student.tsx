@@ -7,6 +7,7 @@ import { Dictionary } from '../../types/dictionary'
 import { Group } from '../../types/group'
 import { Student as StudentType } from '../../types/student'
 import { HeadingWithControls } from '../kit/headingWithControls/HeadingWithControls'
+import { Tag } from '../kit/tag/Tag'
 import { GroupsInfoBlock } from './GroupsInfoBlock'
 
 // TODO: add edit
@@ -28,7 +29,7 @@ export const Student: React.FC<Props> = ({
 }) => {
   const intl = useIntl()
   const orgId = useOrgId()
-  const { name, id } = data
+  const { name, id, tags } = data
 
   return (
     <div className={className}>
@@ -43,6 +44,17 @@ export const Student: React.FC<Props> = ({
             onSubmit: onDelete,
           }}
         />
+
+        {tags?.map((t, i) => (
+          <Tag
+            key={t}
+            className="mr-1"
+            // TODO: show filtered students by tag
+            // onClick={() => {}}
+          >
+            {t}
+          </Tag>
+        ))}
 
         <GroupsInfoBlock
           student={data}

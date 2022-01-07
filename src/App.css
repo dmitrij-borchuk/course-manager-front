@@ -21,8 +21,17 @@ code {
 }
 
 /* TODO: add other colors */
+.color-primary {
+  color: var(--color-primary);
+}
+.bg-primary {
+  background-color: var(--color-primary);
+}
 .color-secondary {
   color: var(--color-secondary);
+}
+.bg-secondary {
+  background-color: var(--color-secondary);
 }
 .color-text-gray {
   color: var(--color-text-gray);

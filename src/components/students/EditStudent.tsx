@@ -1,14 +1,16 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { FormattedMessage, useIntl } from 'react-intl'
 import { Container } from 'react-materialize'
 import { Input } from '../kit/input/Input'
 import { SubmitButton } from '../kit/buttons/SubmitButton'
 import { FormLayout } from '../kit/formLayout/FormLayout'
+import { TagsEditor } from '../kit/tag/TagsEditor'
 import { ExternalError, useFormWithError } from '../../hooks/useFormWithError'
 import { useUpdateInitialForm } from '../../hooks/useUpdateInitialForm'
 
 export type StudentForm = {
   name: string
+  tags?: string[]
 }
 
 interface Props {
@@ -30,17 +32,28 @@ export const EditStudent: React.FC<Props> = ({
   error,
 }) => {
   const intl = useIntl()
-  const { control, handleSubmit, errors, setValue } = useFormWithError<StudentForm>(
+  const { control, handleSubmit, errors, setValue, watch, register } = useFormWithError<StudentForm>(
     {
       defaultValues: {
         name: '',
+        tags: [],
         ...initial,
       },
     },
     error
   )
 
+  const onTagsUpdate = useCallback(
+    (newTags: string[]) => {
+      setValue('tags', newTags)
+    },
+    [setValue]
+  )
+
+  const tags = watch('tags')
+
   useUpdateInitialForm(setValue, initial)
+  register('tags')
 
   return (
     <div className={className}>
@@ -59,6 +72,8 @@ export const EditStudent: React.FC<Props> = ({
             disabled={loading || disabled}
             error={errors['name']?.message}
           />
+
+          <TagsEditor loading={loading} disabled={disabled} value={tags} onUpdate={onTagsUpdate} />
         </FormLayout>
       </Container>
     </div>

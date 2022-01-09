@@ -31,6 +31,7 @@ import { CreateOrganizationPageLoadable } from './pages/organizations'
 import { InviteUserPage } from './pages/users/InviteUser'
 import { ConfirmInvitePage } from './pages/users/ConfirmInvite'
 import { UsersListPage } from './pages/users/UsersList'
+import { StudentImportPageLoadable } from './pages/import/students'
 
 const GroupsListPage = withHeader(GroupsListPageLoadable)
 const CreateGroupPage = withHeader(CreateGroupPageLoadable)
@@ -44,6 +45,7 @@ const SchedulePage = withHeader(SchedulePageLoadable)
 const AttendanceEditor = withHeader(AttendanceEditorLoadable)
 const CreateOrganizationPage = withHeader(CreateOrganizationPageLoadable)
 const TeachersListWithHeader = withHeader(TeachersListPage)
+const StudentImportPage = withHeader(StudentImportPageLoadable)
 
 export const Routing = React.memo(function () {
   return (
@@ -118,6 +120,9 @@ export const Routing = React.memo(function () {
 
       {/* Organizations */}
       <AuthGuardedRoute component={CreateOrganizationPage} path={`${ROUTES.ORGANIZATIONS_ADD}`} exact />
+
+      {/* Import */}
+      <AuthGuardedRoute component={StudentImportPage} path="/:orgId/import" exact />
 
       {/* 404 */}
       <Route path={`/*`}>404</Route>

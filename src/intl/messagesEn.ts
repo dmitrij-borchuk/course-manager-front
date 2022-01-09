@@ -102,6 +102,19 @@ export const messages = {
   'attendance.edit.success': 'Report has been successfully submitted',
   'attendance.delete.header': 'Remove attendance report',
   'attendance.delete.text': 'Are you sure you want to delete this attendance report?',
+
+  'import.student.header': 'Import students',
+  'import.student.file.label': '.csv file',
+  'import.student.name.label': 'Column for the name',
+  'import.student.name': 'Name',
+  'import.student.tags.label': 'Column for the tags',
+  'import.student.tags': 'Tags',
+  'import.student.tags.isMultiple.label': 'Is multiple tags',
+  'import.form.read': 'Read',
+  'import.preview.header': 'Preview',
+  'import.parse.emptyName': 'All records should have name value in the column {column}',
+  'import.parse.success': 'Please review the result and submit data to the server by clicking "Submit" under the table',
+  'import.submitting.success': 'You have successfully imported new records',
 }
 
 export default messages

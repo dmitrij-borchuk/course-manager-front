@@ -104,10 +104,10 @@ export const messages = {
   'attendance.delete.text': 'Are you sure you want to delete this attendance report?',
 
   'import.student.header': 'Import students',
-  'import.student.file.label': '.csv file',
-  'import.student.name.label': 'Column for the name',
+  'import.student.file.label': 'file',
+  'import.student.name.label': 'Key for the name',
   'import.student.name': 'Name',
-  'import.student.tags.label': 'Column for the tags',
+  'import.student.tags.label': 'Key for the tags',
   'import.student.tags': 'Tags',
   'import.student.tags.isMultiple.label': 'Is multiple tags',
   'import.form.read': 'Read',
@@ -115,6 +115,8 @@ export const messages = {
   'import.parse.emptyName': 'All records should have name value in the column {column}',
   'import.parse.success': 'Please review the result and submit data to the server by clicking "Submit" under the table',
   'import.submitting.success': 'You have successfully imported new records',
+  'import.fileType.json': 'JSON',
+  'import.fileType.csv': 'CSV',
 }
 
 export default messages

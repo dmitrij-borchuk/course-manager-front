@@ -1,6 +1,6 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { FormattedMessage, useIntl } from 'react-intl'
-import { Checkbox, Container, TextInput } from 'react-materialize'
+import { Checkbox, Container, Select, TextInput } from 'react-materialize'
 import { Controller } from 'react-hook-form'
 import csv from 'csvtojson'
 import { SubmitButton } from '../../../components/kit/buttons/SubmitButton'
@@ -23,33 +23,36 @@ export const StudentsImport = () => {
   const { createStudent, submitting } = useStudentsState()
   const [processed, setProcessed] = useState(0)
   const loading = submitting || reading
-  const { control, handleSubmit } = useFormWithError<ImportStudentsForm>({
+  const { control, handleSubmit, setValue, watch, register } = useFormWithError<ImportStudentsForm>({
     defaultValues: {
+      fileType: 'json',
       file: '',
-      nameColumn: 'Please, indicate your name and last name',
-      tagsColumn: 'Select your branch',
+      nameColumn: '',
+      tagsColumn: '',
       isMultipleTags: false,
     },
   })
+  const fileType = watch('fileType')
   const onSubmit = useCallback(
     async (d) => {
       setReading(true)
       try {
         const textData = await d.file.text()
-        const data = await csv().fromString(textData)
+        const data = await fromFileToJson(fileType, textData)
         const { nameColumn, tagsColumn, isMultipleTags } = d
-        setPreviewData(
-          data.map((item) => ({
-            name: item[nameColumn],
-            tags: isMultipleTags ? item[tagsColumn].split(',') : [item[tagsColumn]],
-          }))
-        )
 
         if (!data.every((item) => item[d.nameColumn])) {
           addToast(intl.formatMessage({ id: 'import.parse.emptyName' }, { column: d.nameColumn }), {
             appearance: 'error',
             autoDismiss: true,
           })
+        } else {
+          setPreviewData(
+            data.map((item) => ({
+              name: item[nameColumn],
+              tags: isMultipleTags ? item[tagsColumn].split(',') : [item[tagsColumn]],
+            }))
+          )
         }
       } catch (error: any) {
         addToast(error.message, {
@@ -59,7 +62,7 @@ export const StudentsImport = () => {
       }
       setReading(false)
     },
-    [addToast, intl]
+    [addToast, fileType, intl]
   )
   const onSaveList = useCallback(async () => {
     if (!previewData) {
@@ -92,6 +95,10 @@ export const StudentsImport = () => {
     <></>
   )
 
+  useEffect(() => {
+    register('fileType')
+  }, [register])
+
   return (
     <Container className="px-4">
       <FormLayout
@@ -99,6 +106,31 @@ export const StudentsImport = () => {
         controls={<SubmitButton loading={loading} children={<FormattedMessage id="import.form.read" />} />}
         onSubmit={handleSubmit(onSubmit)}
       >
+        {/* File type */}
+        <Select
+          id="source-selector"
+          multiple={false}
+          options={{
+            dropdownOptions: {
+              alignment: 'left',
+              autoTrigger: true,
+              closeOnClick: true,
+              constrainWidth: true,
+              coverTrigger: true,
+              hover: false,
+              inDuration: 150,
+              outDuration: 250,
+            },
+          }}
+          onChange={(e) => setValue('fileType', e.target.value)}
+          value={fileType}
+          name={'fileType'}
+        >
+          {fileTypes.map((type) => (
+            <option value={type}>{intl.formatMessage({ id: `import.fileType.${type}` })}</option>
+          ))}
+        </Select>
+
         {/* File */}
         <Controller
           control={control}
@@ -110,7 +142,7 @@ export const StudentsImport = () => {
               <TextInput
                 type="file"
                 // @ts-ignore
-                accept=".csv"
+                accept={`.${fileType}`}
                 label={`${intl.formatMessage({ id: 'import.student.file.label' })} *`}
                 onChange={(e) => {
                   const files = e.target.files || []
@@ -154,7 +186,9 @@ export const StudentsImport = () => {
               onChange={(e: any) => {
                 onChange(!!e.target.checked)
               }}
-              value={value && value.toString()}
+              disabled={fileType === 'json'}
+              value={fileType === 'json' ? true : value && value.toString()}
+              checked={fileType === 'json' ? true : value && value.toString()}
               {...renderProps}
             />
           )}
@@ -209,8 +243,20 @@ export const StudentsImport = () => {
 export default StudentsImport
 
 interface ImportStudentsForm {
+  fileType: string
   file: File | null
   nameColumn: string
   tagsColumn: string
   isMultipleTags: boolean
+}
+
+const fileTypes = ['json', 'csv']
+
+async function fromFileToJson(type: string, data: string): Promise<any[]> {
+  if (type === 'csv') {
+    return await csv().fromString(data)
+  }
+
+  // JSON
+  return JSON.parse(data)
 }

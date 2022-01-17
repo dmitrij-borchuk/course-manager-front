@@ -48,10 +48,11 @@ export const StudentsImport = () => {
           })
         } else {
           setPreviewData(
-            data.map((item) => ({
-              name: item[nameColumn],
-              tags: isMultipleTags ? item[tagsColumn].split(',') : [item[tagsColumn]],
-            }))
+            fromJsonToData(fileType, data, {
+              isMultipleTags,
+              nameColumn,
+              tagsColumn,
+            })
           )
         }
       } catch (error: any) {
@@ -64,6 +65,13 @@ export const StudentsImport = () => {
     },
     [addToast, fileType, intl]
   )
+  const processStudent = useCallback(
+    async (orgId: string, element: StudentBase) => {
+      await createStudent(orgId, element)
+      setProcessed((p) => p + 1)
+    },
+    [createStudent]
+  )
   const onSaveList = useCallback(async () => {
     if (!previewData) {
       return
@@ -72,21 +80,15 @@ export const StudentsImport = () => {
       for (let index = 0; index < previewData.length; index++) {
         const element = previewData[index]
 
-        await createStudent(orgId, element)
-        setProcessed(index)
+        processStudent(orgId, element)
       }
-
-      addToast(intl.formatMessage({ id: 'import.submitting.success' }), {
-        appearance: 'success',
-        autoDismiss: true,
-      })
     } catch (error: any) {
       addToast(error.message, {
         appearance: 'error',
         autoDismiss: true,
       })
     }
-  }, [addToast, createStudent, intl, orgId, previewData])
+  }, [addToast, orgId, previewData, processStudent])
   const processedEl = processed ? (
     <>
       {processed}/{previewData?.length}
@@ -94,6 +96,15 @@ export const StudentsImport = () => {
   ) : (
     <></>
   )
+
+  useEffect(() => {
+    if (processed === previewData?.length) {
+      addToast(intl.formatMessage({ id: 'import.submitting.success' }), {
+        appearance: 'success',
+        autoDismiss: true,
+      })
+    }
+  }, [addToast, intl, previewData?.length, processed])
 
   useEffect(() => {
     register('fileType')
@@ -259,4 +270,26 @@ async function fromFileToJson(type: string, data: string): Promise<any[]> {
 
   // JSON
   return JSON.parse(data)
+}
+
+interface Config {
+  nameColumn: string
+  tagsColumn: string
+  isMultipleTags: boolean
+}
+function fromJsonToData(type: string, data: any, config: Config): StudentBase[] {
+  const { isMultipleTags, nameColumn, tagsColumn } = config
+
+  if (type === 'csv') {
+    return data.map((item: any) => ({
+      name: item[nameColumn],
+      tags: isMultipleTags ? item[tagsColumn].split(',') : [item[tagsColumn]],
+    }))
+  }
+
+  // JSON
+  return data.map((item: any) => ({
+    name: item[nameColumn],
+    tags: item[tagsColumn],
+  }))
 }

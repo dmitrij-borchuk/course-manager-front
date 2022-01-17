@@ -11,7 +11,7 @@ export default function useStudentsStore() {
   const [fetching, setFetching] = useState(false)
   const [studentsById, setStudentsById] = useState<Dictionary<Student>>({})
   const students = useDictionaryToArray(studentsById)
-  const [submitting, setSubmitting] = useState(false)
+  const [submittingSemaphore, setSubmittingSemaphore] = useState(0)
   const fetchStudent = useCallback(async (orgId: string, id: string) => {
     setFetching(true)
     const collection = makeOrgCollection<Student>('students', orgId)
@@ -24,7 +24,7 @@ export default function useStudentsStore() {
     students,
     studentsById,
     fetching,
-    submitting,
+    submitting: submittingSemaphore > 0,
     fetchStudents: useCallback(async (orgId: string) => {
       setFetching(true)
       const collection = makeOrgCollection<Student>('students', orgId)
@@ -35,21 +35,21 @@ export default function useStudentsStore() {
     }, []),
     fetchStudent,
     createStudent: useCallback(async (orgId: string, data: NewStudent) => {
-      setSubmitting(true)
+      setSubmittingSemaphore((v) => v + 1)
       const collection = makeOrgCollection<Student>('students', orgId)
 
       try {
         const result = await collection.save({ ...data, id: nanoid() })
         setStudentsById((state) => ({ ...state, [result.id]: { ...data, id: result.id } }))
-        setSubmitting(false)
+        setSubmittingSemaphore((v) => v - 1)
         return result
       } catch (error) {
-        setSubmitting(false)
+        setSubmittingSemaphore((v) => v - 1)
         throw error
       }
     }, []),
     editStudent: useCallback(async (orgId: string, data: Student) => {
-      setSubmitting(true)
+      setSubmittingSemaphore((v) => v + 1)
       const collection = makeOrgCollection<Student>('students', orgId)
       try {
         const result = await collection.save(data)
@@ -60,9 +60,9 @@ export default function useStudentsStore() {
             ...data,
           },
         }))
-        setSubmitting(false)
+        setSubmittingSemaphore((v) => v - 1)
       } catch (error) {
-        setSubmitting(false)
+        setSubmittingSemaphore((v) => v - 1)
         throw error
       }
     }, []),

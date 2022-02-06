@@ -1,9 +1,10 @@
+import { nanoid } from 'nanoid'
 import { useCallback, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { makeOrgCollection } from '../api/firebase/collections'
 import { Role } from '../config'
 import { useDictionaryToArray } from '../hooks/useDictionaryToArray'
-import { confirmInvitation, getUsersList, inviteUser } from '../services/users'
+import { confirmInvitation, getUsersList } from '../services/users'
 import { Dictionary } from '../types/dictionary'
 import { Invite } from '../types/invite'
 import { OrganizationUser } from '../types/user'
@@ -23,15 +24,18 @@ export default function useUsersStore() {
     fetching,
     usersById,
     users,
+    // TODO: fix `Invite` type (there is no `id` field)
     inviteUser: useCallback(async (orgId: string, data: Invite) => {
       setSubmitting(true)
+      const collection = makeOrgCollection<Invite>('invites', orgId)
       try {
-        const result = await inviteUser(orgId, data)
+        const result = await collection.save({ ...data, id: nanoid() })
         setSubmitting(false)
         return result
       } catch (error: any) {
         setError(error)
         setSubmitting(false)
+        throw error
       }
     }, []),
     confirmInvitation: useCallback(

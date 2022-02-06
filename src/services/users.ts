@@ -3,7 +3,6 @@ import { users } from '../api/firebase/collections'
 import { collection } from '../api/firebase/firestore'
 import { createUserRequest } from '../api/users'
 import { Role } from '../config'
-import { Invite } from '../types/invite'
 import { NewUser, OrganizationUser } from '../types/user'
 
 // TODO: cleanup
@@ -32,10 +31,6 @@ export async function addUserToOrganization(orgId: string, user: OrganizationUse
   await orgUsers.save(user)
 }
 
-export async function inviteUser(orgId: string, data: Invite) {
-  const invites = collection<Invite>(`organizations/${orgId}/invites`)
-  return await invites.save(data)
-}
 export async function confirmInvitation(orgId: string, userId: string, token: string, role: Role) {
   // TODO: fix any
   const orgUsers = collection<any>(`organizations/${orgId}/users`)

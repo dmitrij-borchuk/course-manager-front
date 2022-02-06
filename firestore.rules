@@ -19,7 +19,7 @@ service cloud.firestore {
       }
 
       match /invites/{document=**} {
-        allow write: if isOrgAdmin(request.auth.uid)
+        allow read, write: if isOrgAdmin(request.auth.uid)
       }
       match /groups/{document=**} {
         allow read, write: if isOrgMember(request.auth.uid)

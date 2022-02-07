@@ -44,7 +44,10 @@ export default function useStudentsOfGroupStore() {
       const collection = makeOrgCollection<StudentOfGroup>('studentsToGroups', orgId)
 
       try {
-        const result = await collection.save(data)
+        const result = await collection.save({
+          id: nanoid(),
+          ...data,
+        })
         const students = makeOrgCollection<Student>('students', orgId)
         const studentData = await students.getById(data.studentId)
         setStudentsOfGroupById((state) => ({ ...state, [studentData.id]: studentData }))

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { Button, Icon, Modal, ModalProps } from 'react-materialize'
 import { ButtonWithLoader } from '../buttons/ButtonWithLoader'
@@ -85,10 +85,16 @@ export function SelectDialog<T extends { id: string }>({
     },
     [multiSelect, selected, submit, submitting]
   )
-  const onCloseEnd = useCallback(() => {
+  const resetSelected = useCallback(() => {
     setSelectedLoading(undefined)
     setSelected(initialArray)
   }, [initialArray])
+
+  // We need this workaround to make sure that we call last version of `resetSelected` callback
+  // `onCloseEnd` is saved in the `Modal` component once at the mount and never changed
+  const onCloseEnd = useRef<any>(resetSelected)
+  onCloseEnd.current = resetSelected
+
   const onSubmitClick = useCallback(() => {
     submit()
   }, [submit])
@@ -141,7 +147,7 @@ export function SelectDialog<T extends { id: string }>({
         preventScrolling: true,
         startingTop: '4%',
         onCloseStart,
-        onCloseEnd,
+        onCloseEnd: () => onCloseEnd.current(),
       }}
     >
       <List items={items} loading={loading} renderItem={renderItem} />

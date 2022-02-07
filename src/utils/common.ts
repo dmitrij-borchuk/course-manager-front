@@ -53,3 +53,8 @@ export function getDiff(initial: string[], result: string[]) {
     removed,
   }
 }
+
+const emptyObject = {}
+export function getEmptyDictionary<T>() {
+  return emptyObject as Dictionary<T>
+}

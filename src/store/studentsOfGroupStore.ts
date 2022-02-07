@@ -1,3 +1,4 @@
+import { nanoid } from 'nanoid'
 import { useCallback, useState } from 'react'
 import { makeOrgCollection } from '../api/firebase/collections'
 import { useDictionaryToArray } from '../hooks/useDictionaryToArray'
@@ -59,7 +60,10 @@ export default function useStudentsOfGroupStore() {
       const collection = makeOrgCollection<StudentOfGroup>('studentsToGroups', orgId)
 
       try {
-        const result = await collection.save(data)
+        const result = await collection.save({
+          id: nanoid(),
+          ...data,
+        })
         const groups = makeOrgCollection<Group>('groups', orgId)
         const groupData = await groups.getById(data.groupId)
         setGroupsOfStudentById((state) => ({ ...state, [groupData.id]: groupData }))

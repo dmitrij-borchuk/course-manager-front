@@ -3,6 +3,7 @@ import { FormattedMessage, useIntl } from 'react-intl'
 import { Button, Chip, Icon, Modal, ModalProps } from 'react-materialize'
 import { Student } from '../../types/student'
 import { ButtonWithLoader } from '../kit/buttons/ButtonWithLoader'
+import './styles.css'
 
 interface Props {
   items: Student[]
@@ -111,6 +112,8 @@ export function SelectStudentsDialog(props: Props) {
         onCloseStart,
         onCloseEnd: () => onCloseEnd.current(),
       }}
+      // @ts-ignore
+      className="students-select-dialog"
     >
       <Chip
         close={false}

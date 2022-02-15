@@ -8,7 +8,7 @@ import { useStudentsOfGroupState, useStudentsState } from '../../store'
 import { Group } from '../../types/group'
 import { Student } from '../../types/student'
 import { getDiff, noop } from '../../utils/common'
-import { SelectDialog } from '../kit/selectDialog/SelectDialog'
+import { SelectStudentsDialog } from './SelectStudentsDialog'
 
 interface Props {
   group: Group
@@ -66,16 +66,14 @@ export const AssignStudents = ({ group, onDone = noop, trigger, studentsOfGroup 
   return (
     <>
       <span onClick={toggler.on}>{trigger}</span>
-      <SelectDialog
+      <SelectStudentsDialog
         loading={fetching}
         open={open}
         header={intl.formatMessage({ id: 'groups.students.assignDialog.header' })}
         items={students}
         onSubmit={onSubmit}
-        labelProp={(g) => g.name}
         onCloseStart={toggler.off}
         initial={studentsOfGroup}
-        multiSelect
       />
     </>
   )

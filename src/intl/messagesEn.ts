@@ -62,6 +62,8 @@ export const messages = {
   'groups.edit.success': 'Group has been successfully updated',
   'groups.assignTeacher.success': 'Teacher has been successfully assigned',
   'groups.assignStudents.success': 'Students have been successfully assigned',
+  'groups.assignStudents.namePlaceholder': 'Enter a name',
+  'groups.assignStudents.moreNamePlaceholder': '+ name',
 
   'students.add.title': 'Add student',
   'students.edit.title': 'Edit student',

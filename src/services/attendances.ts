@@ -55,5 +55,5 @@ function getMeterProgress(attendance: Attendance, group: Group) {
   const groupMembers = Object.keys(attendance.attended).length
   const groupAtt = Object.values(attendance.attended).filter(Boolean).length
 
-  return groupAtt / groupMembers
+  return groupMembers === 0 ? 0 : groupAtt / groupMembers
 }

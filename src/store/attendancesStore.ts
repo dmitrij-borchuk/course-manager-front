@@ -4,6 +4,7 @@ import { makeOrgCollection } from '../api/firebase/collections'
 import { useDictionaryToArray } from '../hooks/useDictionaryToArray'
 import { Dictionary } from '../types/dictionary'
 import { arrayToDictionary } from '../utils/common'
+import { nanoid } from 'nanoid'
 
 export function useAttendancesStore() {
   const [loading, setLoading] = useState(false)
@@ -79,7 +80,7 @@ export function useAttendancesStore() {
     saveAttendance: useCallback(async (orgId: string, attendance: AttendanceNew | Attendance) => {
       setLoading(true)
       const groupsCollection = makeOrgCollection<Attendance>('attendances', orgId)
-      await groupsCollection.save(attendance, { merge: false })
+      await groupsCollection.save({ ...attendance, id: nanoid() }, { merge: false })
       setLoading(false)
     }, []),
     removeAttendance: useCallback(async (orgId: string, id: string) => {

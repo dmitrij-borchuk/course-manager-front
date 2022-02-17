@@ -99,6 +99,8 @@ export const messages = {
   'users.list.empty': 'There is no users yet',
 
   'attendance.header.add': 'Add Attendance',
+  'attendance.students.list.empty': 'No students assigned to this group',
+  'attendance.group.notSelected': 'Please select group',
   'attendance.header.edit': 'Edit Attendance',
   'attendance.groupSelector.placeholder': 'Group',
   'attendance.edit.success': 'Report has been successfully submitted',

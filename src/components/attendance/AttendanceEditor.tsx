@@ -70,6 +70,7 @@ export const AttendanceEditor = (props: Props) => {
     setSelected(attendance)
   }, [])
   const group = watch('group')
+  const noStudents = students.length === 0
 
   useEffect(() => {
     onGroupChanged(group)
@@ -87,7 +88,7 @@ export const AttendanceEditor = (props: Props) => {
           }}
         />
         <FormLayout
-          controls={<SubmitButton loading={submitting} disabled={submitting || studentsLoading} />}
+          controls={<SubmitButton loading={submitting} disabled={submitting || studentsLoading || noStudents} />}
           onSubmit={handleSubmit(onSubmitInternal)}
         >
           {/* Teacher */}
@@ -188,7 +189,11 @@ export const AttendanceEditor = (props: Props) => {
             </div>
           )}
 
-          <StudentsSelector students={students} onChange={onStudentsChanged} initialSelected={attendance?.attended} />
+          {!group ? (
+            <GroupIsNotSelected />
+          ) : (
+            <StudentsSelector students={students} onChange={onStudentsChanged} initialSelected={attendance?.attended} />
+          )}
         </FormLayout>
       </Container>
     </div>
@@ -260,4 +265,18 @@ const StudentsSelector = ({ students, onChange = noop, initialSelected }: Studen
 }
 
 // TODO: add implementation
-const NoStudents = () => <div />
+const NoStudents = () => (
+  <div className="flex justify-center">
+    <Text type="h6" color="textGray">
+      <FormattedMessage id="attendance.students.list.empty" />
+    </Text>
+  </div>
+)
+
+const GroupIsNotSelected = () => (
+  <div className="flex justify-center">
+    <Text type="h6" color="textGray">
+      <FormattedMessage id="attendance.group.notSelected" />
+    </Text>
+  </div>
+)

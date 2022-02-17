@@ -30,10 +30,13 @@ export const InviteUserPage = () => {
     },
     [addToast, inviteUser, orgId]
   )
+  const onDialogClose = useCallback(() => {
+    setLink('')
+  }, [])
 
   return (
     <>
-      <InviteUser onSubmit={onSubmit} loading={submitting} inviteLink={link} />
+      <InviteUser onSubmit={onSubmit} loading={submitting} inviteLink={link} onDialogClose={onDialogClose} />
     </>
   )
 }

@@ -5,18 +5,24 @@ import { Link } from 'react-router-dom'
 import { ROUTES } from '../../../constants'
 import { useAccessManager } from '../../../hooks/useAccessManager'
 import { useOrgIdNotStrict } from '../../../hooks/useOrgId'
+import { useAuthStore } from '../../../store/authStore'
 
 // TODO: use logo
 
 export const Header = () => {
+  const { currentUser } = useAuthStore()
   const orgId = useOrgIdNotStrict()
   const { hasAccess } = useAccessManager()
   const orgItems = useMemo(() => {
-    const items: JSX.Element[] = [
-      <Link key="dashboard" to={`/${orgId}`}>
-        <FormattedMessage id="header.nav.dashboard" />
-      </Link>,
-    ]
+    const items: JSX.Element[] = []
+
+    if (currentUser) {
+      items.push(
+        <Link key="dashboard" to={`/${orgId}`}>
+          <FormattedMessage id="header.nav.dashboard" />
+        </Link>
+      )
+    }
 
     if (hasAccess('MANAGE_TEACHERS')) {
       items.push(
@@ -46,11 +52,18 @@ export const Header = () => {
       // <FormattedMessage id="header.nav.users" />
       // </Link>
       <Divider key="divider" />,
-      <Link key="logout" to={`/${orgId}${ROUTES.LOGOUT}`}>
-        <FormattedMessage id="header.nav.logout" />
-      </Link>,
+
+      currentUser ? (
+        <Link key="logout" to={`/${orgId}${ROUTES.LOGOUT}`}>
+          <FormattedMessage id="header.nav.logout" />
+        </Link>
+      ) : (
+        <Link to={ROUTES.LOGIN}>
+          <FormattedMessage id="header.nav.login" />
+        </Link>
+      ),
     ])
-  }, [hasAccess, orgId])
+  }, [currentUser, hasAccess, orgId])
 
   return (
     <Navbar
@@ -67,10 +80,15 @@ export const Header = () => {
         preventScrolling: true,
       }}
     >
-      {orgId && orgItems}
-      {!orgId && (
+      {orgId ? (
+        orgItems
+      ) : currentUser ? (
         <Link to={ROUTES.LOGOUT}>
           <FormattedMessage id="header.nav.logout" />
+        </Link>
+      ) : (
+        <Link to={ROUTES.LOGIN}>
+          <FormattedMessage id="header.nav.login" />
         </Link>
       )}
     </Navbar>

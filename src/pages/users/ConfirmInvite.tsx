@@ -17,5 +17,5 @@ export const ConfirmInvitePage = () => {
     }
   }, [confirmInvitation, currentUser?.uid, orgId, token])
 
-  return <ConfirmInvite onSubmit={onSubmit} loading={submitting} />
+  return <ConfirmInvite onSubmit={onSubmit} loading={submitting} user={currentUser} />
 }

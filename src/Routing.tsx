@@ -84,7 +84,7 @@ export const Routing = React.memo(function () {
       <AuthGuardedRoute component={DashboardPage} path="/:orgId/" exact />
 
       <AuthGuardedRoute component={InviteUserPage} path="/:orgId/invite" exact />
-      <AuthGuardedRoute component={ConfirmInvitePage} path="/:orgId/invite/confirm/:token" exact />
+      <Route component={ConfirmInvitePage} path="/:orgId/invite/confirm/:token" exact />
 
       {/* Users */}
       {/* <AuthGuardedRoute component={CreateTeacherPage} path={`/:orgId${ROUTES.TEACHERS_ADD}`} exact />

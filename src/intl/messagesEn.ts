@@ -31,6 +31,7 @@ export const messages = {
   'header.nav.groups': 'Groups',
   'header.nav.students': 'Students',
   'header.nav.logout': 'Logout',
+  'header.nav.login': 'Sign in',
 
   'teachers.list.title': 'Teachers',
   'teachers.list.empty': 'There are no teachers yet',
@@ -42,6 +43,8 @@ export const messages = {
   'teachers.groups.assignDialog.header': 'Assign Groups',
   'teachers.groups.assignBtn.label': 'Assign Groups',
   'teachers.editGroups.success': "Teacher's groups have been successfully updated",
+  'teachers.invite.copyAndClose': 'Copy link to clipboard and close',
+  'teachers.invite.linkCopied': 'The link have been successfully copied to the clipboard',
 
   'groups.list.title': 'Groups',
   'groups.add.title': 'Add group',
@@ -95,6 +98,8 @@ export const messages = {
   'organizations.edit.conflict': 'Organization identifier is taken',
 
   'users.invite.title': 'Invite user',
+  'users.invite.confirmation.needLogin': 'You need to be signed in to proceed',
+  'users.invite.confirmation.loginLink': 'Go to the login',
   'users.list.title': 'Users',
   'users.list.empty': 'There is no users yet',
 

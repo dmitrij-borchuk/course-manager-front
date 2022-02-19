@@ -30,6 +30,7 @@ export const messages = {
   'header.nav.teachers': 'Teachers',
   'header.nav.groups': 'Groups',
   'header.nav.students': 'Students',
+  'header.nav.reports': 'Reports',
   'header.nav.logout': 'Logout',
   'header.nav.login': 'Sign in',
 

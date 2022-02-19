@@ -4,6 +4,7 @@ import { login, register, logout, resetPassword } from '../api/firebase/auth'
 import { auth } from '../api/firebase'
 import { AppUser } from '../types/user'
 import { users } from '../api/firebase/collections'
+import { setUser } from '../utils/rollbar'
 
 export function useAuthStore() {
   const [loading, setLoading] = useState(false)
@@ -19,6 +20,7 @@ export function useAuthStore() {
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
       setCurrentUser(user)
+      setUser(user)
       setInitiatingAuth(false)
     })
   }, [])

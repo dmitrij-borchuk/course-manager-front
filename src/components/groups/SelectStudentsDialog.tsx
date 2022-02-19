@@ -125,7 +125,7 @@ export function SelectStudentsDialog(props: Props) {
           autocompleteOptions: {
             data: autoComplete,
             limit: Infinity,
-            minLength: 2,
+            minLength: 1,
           },
           onChipAdd: function noRefCheck(elements, chip) {
             const names = Object.keys(autoComplete)

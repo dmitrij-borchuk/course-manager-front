@@ -127,6 +127,9 @@ export const messages = {
   'import.submitting.success': 'You have successfully imported new records',
   'import.fileType.json': 'JSON',
   'import.fileType.csv': 'CSV',
+
+  'reports.header': 'Reports',
+  'reports.submitButton': 'Generate report',
 }
 
 export default messages

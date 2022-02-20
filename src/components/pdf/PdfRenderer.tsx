@@ -14,18 +14,24 @@ const styles = StyleSheet.create({
   },
 })
 
-// Create Document Component
 export const PdfRenderer = () => (
   <PDFViewer width={'100%'} height={'100%'}>
-    <Document>
-      <Page size="A4" style={styles.page}>
-        <View style={styles.section}>
-          <Text>Section #1</Text>
-        </View>
-        <View style={styles.section}>
-          <Text>Section #2</Text>
-        </View>
-      </Page>
-    </Document>
+    <TestDocument />
   </PDFViewer>
+)
+
+// Create Document Component
+export const TestDocument = () => (
+  // <PDFViewer width={'100%'} height={'100%'}>
+  <Document>
+    <Page size="A4" style={styles.page}>
+      <View style={styles.section}>
+        <Text>Section #1</Text>
+      </View>
+      <View style={styles.section}>
+        <Text>Section #2</Text>
+      </View>
+    </Page>
+  </Document>
+  // </PDFViewer>
 )

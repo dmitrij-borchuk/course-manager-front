@@ -65,7 +65,7 @@ export const Header = () => {
           <FormattedMessage id="header.nav.logout" />
         </Link>
       ) : (
-        <Link to={ROUTES.LOGIN}>
+        <Link key="login" to={ROUTES.LOGIN}>
           <FormattedMessage id="header.nav.login" />
         </Link>
       ),

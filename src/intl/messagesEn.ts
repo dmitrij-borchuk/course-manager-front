@@ -15,6 +15,8 @@ export const messages = {
   'common.list.empty': 'The list is empty',
   'common.unknownName': 'Unknown name',
   'common.date': 'Date',
+  'common.sort.asc': 'Ascending',
+  'common.sort.desc': 'Descending',
 
   'Auth.form.error.invalid': 'Identifier or password invalid.',
   'Auth.form.error.500': 'Something went wrong',
@@ -130,6 +132,10 @@ export const messages = {
 
   'reports.header': 'Reports',
   'reports.submitButton': 'Generate report',
+  'reports.tabs.byGroup': 'By group',
+  'reports.noGroups': 'Please create some group to be able to generate report',
+  'reports.noGroupSelected': 'Please select a group to be able to generate report',
+  'reports.sortOrder': 'Sort order',
 }
 
 export default messages

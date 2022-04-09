@@ -101,7 +101,7 @@ export default function useStudentsOfGroupStore() {
       },
       [unassignStudentFromGroup]
     ),
-    fetchStudentsOfGroup: useCallback(async (orgId: string, groupId: string, date: Date) => {
+    fetchStudentsOfGroup: useCallback(async (orgId: string, groupId: string, date = new Date()) => {
       setFetching(true)
       try {
         const collection = makeOrgCollection<StudentOfGroup>('studentsToGroups', orgId)

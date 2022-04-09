@@ -1,12 +1,12 @@
-import { usePDF } from '@react-pdf/renderer'
-import { FormattedMessage } from 'react-intl'
-import { Button, Container } from 'react-materialize'
+import { FormattedMessage, useIntl } from 'react-intl'
+import { Container, Tab, Tabs } from 'react-materialize'
 import { SectionHeader } from '../../components/kit/sectionHeader/SectionHeader'
-import { TestDocument } from '../../components/pdf/PdfRenderer'
+import { ReportByGroupTab } from './ReportByGroupTab'
 import './styles.css'
 
 export const Reports = () => {
-  const [instance, updateInstance] = usePDF({ document: <TestDocument /> })
+  const intl = useIntl()
+
   return (
     <div className="report-page-wrapper flex flex-col">
       <Container className="px-4">
@@ -14,17 +14,11 @@ export const Reports = () => {
           <FormattedMessage id="reports.header" />
         </SectionHeader>
 
-        {instance.url && (
-          <Button
-            // @ts-ignore
-            href={instance.url}
-            node="a"
-            waves="light"
-            download="report.pdf"
-          >
-            <FormattedMessage id="reports.submitButton" />
-          </Button>
-        )}
+        <Tabs className="">
+          <Tab active title={intl.formatMessage({ id: 'reports.tabs.byGroup' })}>
+            <ReportByGroupTab />
+          </Tab>
+        </Tabs>
       </Container>
     </div>
   )

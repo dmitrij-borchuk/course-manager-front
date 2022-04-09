@@ -9,7 +9,6 @@ import { Ellipsis } from '../kit/ellipsis/Ellipsis'
 import { ListPage } from '../kit/ListPage'
 import { Text } from '../kit/text/Text'
 
-// TODO: add attendance
 interface Props {
   loading?: boolean
   className?: string
@@ -30,7 +29,7 @@ export const StudentList: React.FC<Props> = ({ className = '', loading = false, 
               </Text>
             )}
           </Ellipsis>
-          {attendanceRate && <AttendanceRateBadge value={attendanceRate} />}
+          {typeof attendanceRate === 'number' && <AttendanceRateBadge value={attendanceRate} />}
         </div>
       )
     },

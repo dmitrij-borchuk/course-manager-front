@@ -15,6 +15,9 @@ export const messages = {
   'common.list.empty': 'The list is empty',
   'common.unknownName': 'Unknown name',
   'common.date': 'Date',
+  'common.sort.asc': 'Ascending',
+  'common.sort.desc': 'Descending',
+  'common.tags.empty': 'No tags have been selected',
 
   'Auth.form.error.invalid': 'Identifier or password invalid.',
   'Auth.form.error.500': 'Something went wrong',
@@ -30,6 +33,7 @@ export const messages = {
   'header.nav.teachers': 'Teachers',
   'header.nav.groups': 'Groups',
   'header.nav.students': 'Students',
+  'header.nav.reports': 'Reports',
   'header.nav.logout': 'Logout',
   'header.nav.login': 'Sign in',
 
@@ -126,6 +130,16 @@ export const messages = {
   'import.submitting.success': 'You have successfully imported new records',
   'import.fileType.json': 'JSON',
   'import.fileType.csv': 'CSV',
+
+  'reports.header': 'Reports',
+  'reports.submitButton': 'Generate report',
+  'reports.tabs.byGroup': 'By group',
+  'reports.tabs.byTag': 'By tag',
+  'reports.noGroups': 'Please create some group to be able to generate report',
+  'reports.noGroupSelected': 'Please select a group to be able to generate report',
+  'reports.sortOrder': 'Sort order',
+  'reports.noTagsSelected': 'Please select at least one tag to be able to generate report',
+  'reports.noReports': 'No reports',
 }
 
 export default messages

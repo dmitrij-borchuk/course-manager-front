@@ -38,6 +38,9 @@ export const ROUTES = {
   ATTENDANCE_EDIT: '/attendance/edit',
   ATTENDANCE_ADD: '/attendance/add',
 
+  // Reports
+  REPORTS_ROOT: '/reports',
+
   // Organizations
   ORGANIZATIONS_ADD: '/organizations/add',
 

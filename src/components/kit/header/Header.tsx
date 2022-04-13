@@ -45,6 +45,13 @@ export const Header = () => {
         </Link>
       )
     }
+    if (hasAccess('VIEW_REPORTS')) {
+      items.push(
+        <Link key="reports" to={`/${orgId}${ROUTES.REPORTS_ROOT}`}>
+          <FormattedMessage id="header.nav.reports" />
+        </Link>
+      )
+    }
 
     return items.concat([
       // TODO
@@ -58,7 +65,7 @@ export const Header = () => {
           <FormattedMessage id="header.nav.logout" />
         </Link>
       ) : (
-        <Link to={ROUTES.LOGIN}>
+        <Link key="login" to={ROUTES.LOGIN}>
           <FormattedMessage id="header.nav.login" />
         </Link>
       ),

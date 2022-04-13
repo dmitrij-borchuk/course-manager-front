@@ -11,6 +11,7 @@ export const Tag: React.FC<Props> = ({ children, className, onClose, onClick }) 
     <div
       className={`break-words border-gray-300 border border-solid rounded px-2 inline-block max-w-full ${className}`}
       onClick={onClick}
+      data-testid="tag-container"
     >
       {children}
       {onClose && (

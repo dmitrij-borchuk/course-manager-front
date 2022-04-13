@@ -1,4 +1,4 @@
-import { usePDF, Page, Text, View, Document, StyleSheet } from '@react-pdf/renderer'
+import { usePDF } from '@react-pdf/renderer'
 import { useEffect } from 'react'
 import { FormattedMessage, useIntl } from 'react-intl'
 import { Button } from 'react-materialize'

@@ -17,6 +17,7 @@ export const messages = {
   'common.date': 'Date',
   'common.sort.asc': 'Ascending',
   'common.sort.desc': 'Descending',
+  'common.tags.empty': 'No tags have been selected',
 
   'Auth.form.error.invalid': 'Identifier or password invalid.',
   'Auth.form.error.500': 'Something went wrong',
@@ -133,9 +134,12 @@ export const messages = {
   'reports.header': 'Reports',
   'reports.submitButton': 'Generate report',
   'reports.tabs.byGroup': 'By group',
+  'reports.tabs.byTag': 'By tag',
   'reports.noGroups': 'Please create some group to be able to generate report',
   'reports.noGroupSelected': 'Please select a group to be able to generate report',
   'reports.sortOrder': 'Sort order',
+  'reports.noTagsSelected': 'Please select at least one tag to be able to generate report',
+  'reports.noReports': 'No reports',
 }
 
 export default messages

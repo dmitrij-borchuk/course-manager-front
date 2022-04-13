@@ -1,21 +1,20 @@
-import { usePDF, Page, Text, View, Document, StyleSheet } from '@react-pdf/renderer'
+import { usePDF } from '@react-pdf/renderer'
 import { useEffect } from 'react'
 import { FormattedMessage, useIntl } from 'react-intl'
 import { Button } from 'react-materialize'
 import { useAttendanceRateByStudent } from '../../hooks/useAttendanceRate'
 import { Attendance } from '../../types/attendance'
-import { Group } from '../../types/group'
 import { SortOrder } from '../../types/sorting'
 import { Student } from '../../types/student'
 import { AttendanceReportTemplate } from '../pdf/AttendanceReportTemplate'
 
 type ReportByGroupProps = {
-  group: Group
+  tags: string[]
   attendances: Attendance[]
   students: Student[]
   order: SortOrder
 }
-export const ReportByGroup = ({ group, attendances, students, order }: ReportByGroupProps) => {
+export const ReportByTag = ({ tags, attendances, students, order }: ReportByGroupProps) => {
   const intl = useIntl()
   const attendanceRate = useAttendanceRateByStudent(attendances)
   const attendancesReport = students
@@ -33,8 +32,10 @@ export const ReportByGroup = ({ group, attendances, students, order }: ReportByG
         value: rate,
       }
     })
+  const tagsStr = tags.join(', ')
   const [instance, updateInstance] = usePDF({
-    document: <AttendanceReportTemplate title={group.name} heading={group.name} attendances={attendancesReport} />,
+    // TODO: Show message if no records
+    document: <AttendanceReportTemplate title={tagsStr} heading={tagsStr} attendances={attendancesReport} />,
   })
   const date = new Date().toLocaleDateString()
 
@@ -42,7 +43,7 @@ export const ReportByGroup = ({ group, attendances, students, order }: ReportByG
     // Need to call this callback when data is changed
     // otherwise PDF will not be updated
     updateInstance()
-  }, [attendancesReport, group, updateInstance])
+  }, [attendancesReport, tagsStr, updateInstance])
 
   return (
     <>
@@ -52,7 +53,7 @@ export const ReportByGroup = ({ group, attendances, students, order }: ReportByG
           href={instance.url}
           node="a"
           waves="light"
-          download={`attendance-report-${group.name}-${date}.pdf`}
+          download={`attendance-report-${tags.join('-')}-${date}.pdf`}
         >
           <FormattedMessage id="reports.submitButton" />
         </Button>

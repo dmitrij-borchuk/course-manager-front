@@ -71,6 +71,7 @@ export const ReportByGroupTab = () => {
     )
   }
 
+  // TODO: responsive
   return (
     <div className="flex items-center space-x-2 pt-4">
       <Select onChange={(e) => setGroup(groupsById[e.target.value])}>

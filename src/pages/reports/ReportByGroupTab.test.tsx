@@ -19,7 +19,7 @@ jest.mock('@react-pdf/renderer', () => {
   return {
     usePDF: jest.fn(),
     Page: ({ children }: any) => <div>Page{children}</div>,
-    Text: ({ children }: any) => <div data-testid="pdf-text">Text{children}</div>,
+    Text: ({ children }: any) => <div data-testid="pdf-text">{children}</div>,
     View: ({ children }: any) => <div>View{children}</div>,
     Document: ({ children }: any) => <div>Document{children}</div>,
     StyleSheet: {
@@ -75,9 +75,9 @@ describe('ReportByGroupTab', () => {
       // Get text
       .map((e) => e.textContent)
 
-    expect(persents[0]).toBe('Text0%')
-    expect(persents[1]).toBe('Text50%')
-    expect(persents[2]).toBe('Text100%')
+    expect(persents[0]).toBe('0%')
+    expect(persents[1]).toBe('50%')
+    expect(persents[2]).toBe('100%')
   })
   test('should generate report with desc sorting', async () => {
     const { attendances, groups, students, studentsOfGroup } = getSortingDataMocks()
@@ -108,9 +108,9 @@ describe('ReportByGroupTab', () => {
       // Get text
       .map((e) => e.textContent)
 
-    expect(persents[0]).toBe('Text100%')
-    expect(persents[1]).toBe('Text50%')
-    expect(persents[2]).toBe('Text0%')
+    expect(persents[0]).toBe('100%')
+    expect(persents[1]).toBe('50%')
+    expect(persents[2]).toBe('0%')
   })
   test('should render attendance rate as integer', async () => {
     const groups: Group[] = [
@@ -156,10 +156,21 @@ describe('ReportByGroupTab', () => {
         startDate: new Date().getTime(),
         studentId: 's1',
       },
+      {
+        id: 'g1s2',
+        endDate: null,
+        groupId: 'g1',
+        startDate: new Date().getTime(),
+        studentId: 's2',
+      },
     ]
     const students: Student[] = [
       {
         id: 's1',
+        name: 'st 1',
+      },
+      {
+        id: 's2',
         name: 'st 1',
       },
     ]
@@ -187,7 +198,8 @@ describe('ReportByGroupTab', () => {
       // Get text
       .map((e) => e.textContent)
 
-    expect(persents[0]).toBe('Text33%')
+    expect(persents[0]).toBe('33%')
+    expect(persents[1]).toBe('No reports')
   })
 })
 

@@ -10,26 +10,33 @@ interface Props {
   error?: string
   value?: string[]
   onUpdate?: (value: string[]) => void
+  inputClassName?: string
 }
-export const TagsEditor = ({ disabled, loading, error, value = [], onUpdate }: Props) => {
+export const TagsEditor = ({ disabled, loading, error, value = [], onUpdate, inputClassName }: Props) => {
   const intl = useIntl()
   const inputRef = useRef<HTMLInputElement>(null)
   const [editIndex, setEditIndex] = useState<number | null>(null)
   const onKeyDown = useCallback(
     (e) => {
-      if (e.key === 'Enter') {
-        e.preventDefault()
-        const newTag = e.target.value
-        const clone = [...value]
-        if (editIndex !== null) {
-          clone.splice(editIndex, 1, newTag)
-        } else {
-          clone.push(newTag)
-        }
-        onUpdate && onUpdate(clone)
-        e.target.value = ''
-        setEditIndex(null)
+      if (e.key !== 'Enter') {
+        return
       }
+      e.preventDefault()
+      const newTag = e.target.value //?
+      const clone = [...value]
+      if (editIndex !== null) {
+        const foundIndex = clone.indexOf(newTag) //?
+        if (foundIndex !== -1 && foundIndex !== editIndex) {
+          clone.splice(editIndex, 1)
+        } else {
+          clone.splice(editIndex, 1, newTag)
+        }
+      } else if (!clone.includes(newTag)) {
+        clone.push(newTag)
+      }
+      onUpdate && onUpdate(clone)
+      e.target.value = ''
+      setEditIndex(null)
     },
     [editIndex, onUpdate, value]
   )
@@ -81,7 +88,7 @@ export const TagsEditor = ({ disabled, loading, error, value = [], onUpdate }: P
       )}
       {value.length === 0 ? (
         <Text type="body" className="color-text-gray">
-          <FormattedMessage id="students.tags.empty" />
+          <FormattedMessage id="common.tags.empty" />
         </Text>
       ) : (
         value.map((t, i) => (
@@ -95,12 +102,14 @@ export const TagsEditor = ({ disabled, loading, error, value = [], onUpdate }: P
           </Tag>
         ))
       )}
-      <div className="mt-6">
+      <div className="mt-6 row">
         <TextInput
+          inputClassName={inputClassName}
           error={error}
           label={`${intl.formatMessage({ id: 'common.form.newTag.label' })}`}
           ref={inputRef}
           disabled={disabled || loading}
+          s={12}
         />
       </div>
     </div>

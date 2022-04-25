@@ -18,6 +18,7 @@ export const AttendanceEditorPage = () => {
   const { organizationUser } = useCurrentUser()
   const { fetchOrgUser, usersById } = useUsersStore()
   const {
+    // TODO: optimize
     fetchStudentsOfGroup,
     clearStudentsOfGroup,
     studentsOfGroup,

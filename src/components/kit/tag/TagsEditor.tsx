@@ -22,10 +22,10 @@ export const TagsEditor = ({ disabled, loading, error, value = [], onUpdate, inp
         return
       }
       e.preventDefault()
-      const newTag = e.target.value //?
+      const newTag = e.target.value
       const clone = [...value]
       if (editIndex !== null) {
-        const foundIndex = clone.indexOf(newTag) //?
+        const foundIndex = clone.indexOf(newTag)
         if (foundIndex !== -1 && foundIndex !== editIndex) {
           clone.splice(editIndex, 1)
         } else {

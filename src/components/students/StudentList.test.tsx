@@ -45,7 +45,6 @@ describe('StudentList', () => {
     )
 
     const badge = screen.getAllByTestId('attendance-rate-badge')
-    const t = badge.map((b) => b.textContent) //?
 
     expect(badge).toHaveLength(2)
     expect(badge[0].textContent).toBe('0%')

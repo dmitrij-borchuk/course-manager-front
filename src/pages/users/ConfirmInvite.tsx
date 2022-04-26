@@ -1,11 +1,13 @@
 import { useCallback } from 'react'
 import { useParams } from 'react-router'
+import { useToasts } from 'react-toast-notifications'
 import { ConfirmInvite } from '../../components/users/ConfirmInvite'
 import { useOrgId } from '../../hooks/useOrgId'
 import { useAuthStore } from '../../store/authStore'
 import useUsersStore from '../../store/usersStore'
 
 export const ConfirmInvitePage = () => {
+  const { addToast } = useToasts()
   const { submitting, confirmInvitation } = useUsersStore()
   const { currentUser } = useAuthStore()
   const { token } = useParams<{ token: string }>()
@@ -13,9 +15,16 @@ export const ConfirmInvitePage = () => {
   const onSubmit = useCallback(async () => {
     if (orgId && currentUser?.uid) {
       // TODO: error handling
-      await confirmInvitation(orgId, currentUser.uid, token, 'Teacher')
+      try {
+        await confirmInvitation(orgId, currentUser.uid, token, 'Teacher')
+      } catch (error: any) {
+        addToast(error.message, {
+          appearance: 'error',
+          autoDismiss: true,
+        })
+      }
     }
-  }, [confirmInvitation, currentUser?.uid, orgId, token])
+  }, [addToast, confirmInvitation, currentUser?.uid, orgId, token])
 
   return <ConfirmInvite onSubmit={onSubmit} loading={submitting} user={currentUser} />
 }

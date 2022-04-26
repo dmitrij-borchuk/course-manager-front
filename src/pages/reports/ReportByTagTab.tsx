@@ -23,12 +23,14 @@ export const ReportByTagTab = () => {
     },
     [setTags]
   )
+  const tagsLower = tags.map((t) => t.toLowerCase())
   const studentsWithTags = students.filter((s) => {
     if (!s.tags) {
       return false
     }
 
-    return s.tags.filter((sTag) => tags.includes(sTag)).length > 0
+    // TODO: At least one or all of
+    return s.tags.filter((sTag) => tagsLower.includes(sTag.toLowerCase())).length > 0
   })
 
   useEffect(() => {
@@ -46,6 +48,7 @@ export const ReportByTagTab = () => {
       </div>
     )
   }
+  // TODO: Dates
 
   return (
     <div>

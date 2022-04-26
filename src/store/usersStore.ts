@@ -49,6 +49,7 @@ export default function useUsersStore() {
         } catch (error: any) {
           setError(error)
           setSubmitting(false)
+          throw error
         }
       },
       [history]

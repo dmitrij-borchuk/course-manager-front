@@ -96,3 +96,7 @@ export default function useStudentsStore() {
     }, []),
   }
 }
+
+export function resetCache() {
+  cache.students = undefined
+}

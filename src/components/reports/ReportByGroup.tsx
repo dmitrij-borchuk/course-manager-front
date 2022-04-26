@@ -8,6 +8,7 @@ import { Group } from '../../types/group'
 import { SortOrder } from '../../types/sorting'
 import { Student } from '../../types/student'
 import { AttendanceReportTemplate } from '../pdf/AttendanceReportTemplate'
+import { sortAttendanceReport } from './utils'
 
 type ReportByGroupProps = {
   group: Group
@@ -18,21 +19,21 @@ type ReportByGroupProps = {
 export const ReportByGroup = ({ group, attendances, students, order }: ReportByGroupProps) => {
   const intl = useIntl()
   const attendanceRate = useAttendanceRateByStudent(attendances)
-  const attendancesReport = students
-    .map((s) => ({
+  const attendancesReport = sortAttendanceReport(
+    order,
+    students.map((s) => ({
       label: s.name,
       value: attendanceRate[s.id] && attendanceRate[s.id] * 100,
     }))
-    .sort((a, b) => (order === 'asc' ? a.value - b.value : b.value - a.value))
-    .map((r) => {
-      const rate =
-        typeof r.value === 'number' ? `${Math.round(r.value)}%` : intl.formatMessage({ id: 'reports.noReports' })
+  ).map((r) => {
+    const rate =
+      typeof r.value === 'number' ? `${Math.round(r.value)}%` : intl.formatMessage({ id: 'reports.noReports' })
 
-      return {
-        label: r.label,
-        value: rate,
-      }
-    })
+    return {
+      label: r.label,
+      value: rate,
+    }
+  })
   const [instance, updateInstance] = usePDF({
     document: <AttendanceReportTemplate title={group.name} heading={group.name} attendances={attendancesReport} />,
   })

@@ -7,6 +7,7 @@ import { Attendance } from '../../types/attendance'
 import { SortOrder } from '../../types/sorting'
 import { Student } from '../../types/student'
 import { AttendanceReportTemplate } from '../pdf/AttendanceReportTemplate'
+import { sortAttendanceReport } from './utils'
 
 type ReportByGroupProps = {
   tags: string[]
@@ -17,21 +18,21 @@ type ReportByGroupProps = {
 export const ReportByTag = ({ tags, attendances, students, order }: ReportByGroupProps) => {
   const intl = useIntl()
   const attendanceRate = useAttendanceRateByStudent(attendances)
-  const attendancesReport = students
-    .map((s) => ({
+  const attendancesReport = sortAttendanceReport(
+    order,
+    students.map((s) => ({
       label: s.name,
       value: attendanceRate[s.id] && attendanceRate[s.id] * 100,
     }))
-    .sort((a, b) => (order === 'asc' ? a.value - b.value : b.value - a.value))
-    .map((r) => {
-      const rate =
-        typeof r.value === 'number' ? `${Math.round(r.value)}%` : intl.formatMessage({ id: 'reports.noReports' })
+  ).map((r) => {
+    const rate =
+      typeof r.value === 'number' ? `${Math.round(r.value)}%` : intl.formatMessage({ id: 'reports.noReports' })
 
-      return {
-        label: r.label,
-        value: rate,
-      }
-    })
+    return {
+      label: r.label,
+      value: rate,
+    }
+  })
   const tagsStr = tags.join(', ')
   const [instance, updateInstance] = usePDF({
     // TODO: Show message if no records

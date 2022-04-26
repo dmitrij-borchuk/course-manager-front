@@ -3,11 +3,12 @@ import * as firestore from 'firebase/firestore'
 import * as reactPdf from '@react-pdf/renderer'
 import userEvent from '@testing-library/user-event'
 import { asMock, getFirebaseSnapshotFromArray, TestWrapper } from '../../utils/test'
-import { ReportByGroupTab } from './ReportByGroupTab'
+import { ReportByTagTab } from './ReportByTagTab'
 import { Group } from '../../types/group'
 import { Attendance } from '../../types/attendance'
 import { StudentOfGroup } from '../../types/studentOfGroup'
 import { Student } from '../../types/student'
+import { resetCache } from '../../store/studentsStore'
 
 jest.mock('react-router-dom', () => {
   return {
@@ -33,8 +34,9 @@ const { usePDF } = asMock(reactPdf)
 
 const { useParams } = jest.requireMock('react-router-dom')
 
-describe('ReportByGroupTab', () => {
+describe('ReportByTagTab', () => {
   beforeEach(() => {
+    resetCache()
     useParams.mockReturnValue({
       orgId: 'orgId',
     })
@@ -44,7 +46,7 @@ describe('ReportByGroupTab', () => {
     await act(async () => {
       render(
         <TestWrapper>
-          <ReportByGroupTab />
+          <ReportByTagTab />
         </TestWrapper>
       )
     })
@@ -54,12 +56,18 @@ describe('ReportByGroupTab', () => {
     mockGetDocs(groups, studentsOfGroup, attendances, students)
     usePDF.mockReturnValue([{} as any, jest.fn()])
 
+    let result!: ReturnType<typeof render>
     await act(async () => {
-      render(
+      result = render(
         <TestWrapper>
-          <ReportByGroupTab />
+          <ReportByTagTab />
         </TestWrapper>
       )
+    })
+
+    const tagsEditorInput = result.getByLabelText('New tag')
+    await act(async () => {
+      userEvent.type(tagsEditorInput, 'Lviv{enter}')
     })
 
     const lastCall = usePDF.mock.calls[usePDF.mock.calls.length - 1]
@@ -76,113 +84,26 @@ describe('ReportByGroupTab', () => {
       .map((e) => e.textContent)
 
     expect(persents[0]).toBe('0%')
-    expect(persents[1]).toBe('50%')
-    expect(persents[2]).toBe('100%')
+    expect(persents[1]).toBe('100%')
+    expect(persents[2]).toBe('N/A')
   })
-  test('should generate report with desc sorting', async () => {
+  test('should generate report for students with case insensitive tags', async () => {
     const { attendances, groups, students, studentsOfGroup } = getSortingDataMocks()
     mockGetDocs(groups, studentsOfGroup, attendances, students)
     usePDF.mockReturnValue([{} as any, jest.fn()])
 
+    let result!: ReturnType<typeof render>
     await act(async () => {
-      render(
+      result = render(
         <TestWrapper>
-          <ReportByGroupTab />
+          <ReportByTagTab />
         </TestWrapper>
       )
     })
 
-    const sortOrderSelector = screen.getByLabelText('Sort order')
-    userEvent.selectOptions(sortOrderSelector, 'Descending')
-
-    const lastCall = usePDF.mock.calls[usePDF.mock.calls.length - 1]
-    const document = lastCall[0].document
-    render(document)
-
-    const el = await screen.findAllByTestId('pdf-text')
-    const persents = el
-      // Remove header
-      .splice(1)
-      // Filter out student names
-      .filter((e, i) => i % 2 === 1)
-      // Get text
-      .map((e) => e.textContent)
-
-    expect(persents[0]).toBe('100%')
-    expect(persents[1]).toBe('50%')
-    expect(persents[2]).toBe('0%')
-  })
-  test('should render attendance rate as integer', async () => {
-    const groups: Group[] = [
-      {
-        id: 'g1',
-        name: 'g1',
-      },
-    ]
-    const attendances: Attendance[] = [
-      {
-        id: 'a1',
-        attended: {
-          s1: true,
-        },
-        date: new Date().getTime(),
-        group: 'g1',
-        teacher: '',
-      },
-      {
-        id: 'a2',
-        attended: {
-          s1: false,
-        },
-        date: new Date().getTime(),
-        group: 'g1',
-        teacher: '',
-      },
-      {
-        id: 'a3',
-        attended: {
-          s1: false,
-        },
-        date: new Date().getTime(),
-        group: 'g1',
-        teacher: '',
-      },
-    ]
-    const studentsOfGroup: StudentOfGroup[] = [
-      {
-        id: 'g1',
-        endDate: null,
-        groupId: 'g1',
-        startDate: new Date().getTime(),
-        studentId: 's1',
-      },
-      {
-        id: 'g1s2',
-        endDate: null,
-        groupId: 'g1',
-        startDate: new Date().getTime(),
-        studentId: 's2',
-      },
-    ]
-    const students: Student[] = [
-      {
-        id: 's1',
-        name: 'st 1',
-      },
-      {
-        id: 's2',
-        name: 'st 1',
-      },
-    ]
-    mockGetDocs(groups, studentsOfGroup, attendances, students)
-    usePDF.mockReturnValue([{} as any, jest.fn()])
-
+    const tagsEditorInput = result.getByLabelText('New tag')
     await act(async () => {
-      render(
-        <TestWrapper>
-          <ReportByGroupTab />
-        </TestWrapper>
-      )
+      userEvent.type(tagsEditorInput, 'Lviv{enter}')
     })
 
     const lastCall = usePDF.mock.calls[usePDF.mock.calls.length - 1]
@@ -198,8 +119,7 @@ describe('ReportByGroupTab', () => {
       // Get text
       .map((e) => e.textContent)
 
-    expect(persents[0]).toBe('33%')
-    expect(persents[1]).toBe('N/A')
+    expect(persents).toHaveLength(4)
   })
 })
 
@@ -238,9 +158,8 @@ function getSortingDataMocks() {
     {
       id: 'a1',
       attended: {
-        s1: true,
-        s2: false,
-        s3: true,
+        s1: false,
+        s2: true,
       },
       date: new Date().getTime(),
       group: 'g1',
@@ -249,9 +168,8 @@ function getSortingDataMocks() {
     {
       id: 'a2',
       attended: {
-        s1: true,
-        s2: false,
-        s3: false,
+        s1: false,
+        s2: true,
       },
       date: new Date().getTime(),
       group: 'g1',
@@ -283,15 +201,27 @@ function getSortingDataMocks() {
   ]
   const students: Student[] = [
     {
-      id: 's1',
-      name: 'st 1',
+      id: 's3',
+      name: 'st 3',
+      tags: ['Lviv'],
     },
     {
       id: 's2',
       name: 'st 2',
+      tags: ['Lviv'],
     },
     {
-      id: 's3',
+      id: 's1',
+      name: 'st 1',
+      tags: ['Lviv'],
+    },
+    {
+      id: 's4',
+      name: 'st 3',
+      tags: ['lviv'],
+    },
+    {
+      id: 's5',
       name: 'st 3',
     },
   ]

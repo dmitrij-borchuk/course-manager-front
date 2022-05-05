@@ -4,8 +4,8 @@ import { initializeApp } from 'firebase/app'
 // If you enabled Analytics in your project, add the Firebase SDK for Analytics
 import { getAnalytics } from 'firebase/analytics'
 
-import { connectAuthEmulator, getAuth } from 'firebase/auth'
-import { connectFirestoreEmulator, initializeFirestore } from 'firebase/firestore'
+import { getAuth } from 'firebase/auth'
+import { initializeFirestore } from 'firebase/firestore'
 import { isProduction } from '../../config'
 
 const win = window as any
@@ -37,9 +37,4 @@ export const db = initializeFirestore(firebaseApp, {
 
 if (isProduction) {
   getAnalytics(firebaseApp)
-}
-if (!isProduction) {
-  // TODO: move path to env var
-  connectAuthEmulator(auth, 'http://localhost:9099')
-  connectFirestoreEmulator(db, 'localhost', 8080)
 }

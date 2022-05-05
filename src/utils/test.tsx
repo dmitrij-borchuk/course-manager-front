@@ -1,12 +1,16 @@
-import { QuerySnapshot } from 'firebase/firestore'
+import { DocumentSnapshot, QuerySnapshot } from 'firebase/firestore'
+import * as firestore from 'firebase/firestore'
 import { IntlProvider } from 'react-intl'
+import { ToastProvider } from 'react-toast-notifications'
 import messages from '../intl/messagesEn'
 import StoreProvider from '../store'
 
 export const TestWrapper: React.FC = ({ children }) => {
   return (
     <IntlProvider messages={messages} locale="en" defaultLocale="en">
-      <StoreProvider>{children}</StoreProvider>
+      <ToastProvider>
+        <StoreProvider>{children}</StoreProvider>
+      </ToastProvider>
     </IntlProvider>
   )
 }
@@ -25,4 +29,62 @@ export function getFirebaseSnapshotFromArray<T extends { id: string }>(arr: T[])
         })
       }),
   } as QuerySnapshot<T>
+}
+
+export function getFirebaseSnapshotFromEntity<T extends { id: string }>(entity: T | undefined) {
+  if (entity) {
+    return {
+      id: entity.id,
+      data: () => entity,
+    } as DocumentSnapshot<T>
+  }
+
+  return {
+    id: '',
+    data: () => undefined,
+  } as DocumentSnapshot<T>
+}
+
+const { getDocs, getDoc } = asMock(firestore)
+
+export function mockGetDocs() {
+  let pathToData: Record<string, any[]> = {}
+  getDocs.mockImplementation((query) => {
+    const queryString = query as unknown as string
+    const currentData = pathToData[queryString]
+    if (currentData) {
+      return Promise.resolve(getFirebaseSnapshotFromArray(currentData))
+    }
+    return Promise.resolve(getFirebaseSnapshotFromArray([]))
+  })
+
+  return {
+    mockDataByPath: (path: string, data: any[]) => {
+      pathToData[path] = data
+    },
+    resetMock: () => {
+      pathToData = {}
+    },
+  }
+}
+
+export function mockDoc() {
+  let pathToData: Record<string, any> = {}
+  getDoc.mockImplementation((docRef) => {
+    const path = docRef as unknown as string
+    const currentData = pathToData[path]
+    if (currentData) {
+      return Promise.resolve(getFirebaseSnapshotFromEntity(currentData))
+    }
+    return Promise.resolve(getFirebaseSnapshotFromEntity(undefined))
+  })
+
+  return {
+    mockDocByPath: (path: string, data: any) => {
+      pathToData[path] = data
+    },
+    resetMock: () => {
+      pathToData = {}
+    },
+  }
 }

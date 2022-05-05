@@ -80,7 +80,11 @@ export function useAttendancesStore() {
     saveAttendance: useCallback(async (orgId: string, attendance: AttendanceNew | Attendance) => {
       setLoading(true)
       const groupsCollection = makeOrgCollection<Attendance>('attendances', orgId)
-      await groupsCollection.save({ ...attendance, id: nanoid() }, { merge: false })
+      if ('id' in attendance) {
+        await groupsCollection.save({ ...attendance, id: attendance.id }, { merge: false })
+      } else {
+        await groupsCollection.save({ ...attendance, id: nanoid() }, { merge: false })
+      }
       setLoading(false)
     }, []),
     removeAttendance: useCallback(async (orgId: string, id: string) => {

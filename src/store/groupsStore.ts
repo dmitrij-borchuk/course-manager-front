@@ -31,20 +31,30 @@ export default function useGroupsStore() {
     fetching,
 
     fetchGroups: useCallback(async (orgId: string) => {
-      setFetching(true)
-      const groupsCollection = makeOrgCollection<Group>('groups', orgId)
-      const resp = await groupsCollection.getAll()
-      const newGroupsById = arrayToDictionary(resp)
-      setGroupsById(newGroupsById)
-      setFetching(false)
+      try {
+        setFetching(true)
+        const groupsCollection = makeOrgCollection<Group>('groups', orgId)
+        const resp = await groupsCollection.getAll()
+        const newGroupsById = arrayToDictionary(resp)
+        setGroupsById(newGroupsById)
+        setFetching(false)
+      } catch (error) {
+        setFetching(false)
+        throw error
+      }
     }, []),
     fetchGroupsOfTeacher: useCallback(async (orgId: string, teacherId: string) => {
-      setFetching(true)
-      const groupsCollection = makeOrgCollection<Group>('groups', orgId)
-      const resp = await groupsCollection.query('teacher', '==', teacherId)
-      const newGroupsById = arrayToDictionary(resp)
-      setGroupsById(newGroupsById)
-      setFetching(false)
+      try {
+        setFetching(true)
+        const groupsCollection = makeOrgCollection<Group>('groups', orgId)
+        const resp = await groupsCollection.query('teacher', '==', teacherId)
+        const newGroupsById = arrayToDictionary(resp)
+        setGroupsById(newGroupsById)
+        setFetching(false)
+      } catch (error) {
+        setFetching(false)
+        throw error
+      }
     }, []),
     fetchGroup,
     editGroup: useCallback(async (orgId: string, data: Partial<Group>) => {

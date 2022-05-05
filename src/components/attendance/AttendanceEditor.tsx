@@ -27,6 +27,7 @@ interface Props {
   groups: Group[]
   onSubmit?: (data: AttendanceForm) => void
   onGroupChanged?: (id: string) => void
+  onDateChanged?: (date: Date) => void
   students: Student[]
   studentsLoading?: boolean
   submitting?: boolean
@@ -43,6 +44,7 @@ export const AttendanceEditor = (props: Props) => {
     submitting = false,
     attendance,
     onGroupChanged = noop,
+    onDateChanged = noop,
     studentsLoading = false,
     teacher,
     onDelete = noop,
@@ -70,11 +72,16 @@ export const AttendanceEditor = (props: Props) => {
     setSelected(attendance)
   }, [])
   const group = watch('group')
+  const date = watch('date')
   const noStudents = students.length === 0
 
   useEffect(() => {
     onGroupChanged(group)
   }, [group, onGroupChanged])
+
+  useEffect(() => {
+    onDateChanged(date)
+  }, [date, onDateChanged])
 
   return (
     <div className={className}>
@@ -136,7 +143,7 @@ export const AttendanceEditor = (props: Props) => {
             id="group"
             control={control}
             name="group"
-            // label={`${intl.formatMessage({ id: 'attendance.groupSelector.placeholder' })} *`}
+            label={`${intl.formatMessage({ id: 'attendance.groupSelector.placeholder' })} *`}
             rules={{
               required: {
                 value: true,
@@ -169,6 +176,7 @@ export const AttendanceEditor = (props: Props) => {
                   onChange={renderProps.onChange}
                   value={renderProps.value}
                   name={renderProps.name}
+                  data-testid="group-selector"
                 >
                   <option disabled value="">
                     {intl.formatMessage({ id: 'attendance.groupSelector.placeholder' })}

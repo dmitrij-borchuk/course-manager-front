@@ -41,6 +41,10 @@ export const AttendanceEditorPage = () => {
     },
     [groupsById]
   )
+  const [date, setDate] = useState<Date>()
+  const onDateChanged = useCallback((date: Date) => {
+    setDate(date)
+  }, [])
   const onDelete = useCallback(() => {
     removeAttendance(orgId, id)
     history.replace(`/${orgId}`)
@@ -122,11 +126,10 @@ export const AttendanceEditorPage = () => {
 
   useEffect(() => {
     if (group?.id) {
-      const date = attendance ? new Date(attendance.date) : new Date()
       fetchStudentsOfGroup(orgId, group.id, date)
       return () => clearStudentsOfGroup()
     }
-  }, [attendance, clearStudentsOfGroup, fetchStudentsOfGroup, group?.id, orgId])
+  }, [clearStudentsOfGroup, date, fetchStudentsOfGroup, group?.id, orgId])
 
   if (groupsFetching || attendancesLoading) {
     // TODO
@@ -142,6 +145,7 @@ export const AttendanceEditorPage = () => {
       students={studentsOfGroup}
       studentsLoading={studentsFetching}
       onGroupChanged={onGroupChanged}
+      onDateChanged={onDateChanged}
       teacher={attendanceTeacher}
       onDelete={onDelete}
     />

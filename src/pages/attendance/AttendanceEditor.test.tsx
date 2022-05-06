@@ -20,12 +20,6 @@ jest.mock('react-materialize', () => ({
 const { useParams } = asMock(reactRouterDom)
 const { setDoc } = asMock(firestore)
 
-// TODO:
-// edit should preserve teacher (?)
-// test('should not create new instance when edit', async () => {
-// edit should show students of the group
-// create should show students on the specific date
-
 const treeDaysInMs = 1000 * 60 * 60 * 24 * 3
 const twoDaysInMs = 1000 * 60 * 60 * 24 * 2
 const oneDayInMs = 1000 * 60 * 60 * 24 * 1

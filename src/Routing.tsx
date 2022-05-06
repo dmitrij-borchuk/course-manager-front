@@ -3,7 +3,7 @@ import { Switch, Route } from 'react-router-dom'
 import { ROUTES } from './constants'
 import { withHeader } from './hocs/withHeader'
 import { AuthGuardedRoute } from './components/guardedRoute/GuardedRoute'
-import { LoginPage } from './pages/login/LoginPage'
+import { LoginPageLoadable } from './pages/login'
 import { ResetPasswordPage } from './pages/resetPassword/ResetPasswordPage'
 import { RegisterPage } from './pages/register/RegisterPage'
 import { DashboardPage } from './pages/dashboard/Dashboard'
@@ -54,8 +54,7 @@ export const Routing = React.memo(function () {
     <Switch>
       {/* Default auth flow */}
       <Route path={ROUTES.LOGIN}>
-        {/* TODO: add lazy loading */}
-        <LoginPage />
+        <LoginPageLoadable />
       </Route>
       <Route path={ROUTES.RESET}>
         {/* TODO: add lazy loading */}
@@ -72,7 +71,7 @@ export const Routing = React.memo(function () {
       {/* Organization auth flow */}
       <Route path={`/:orgId${ROUTES.LOGIN}`}>
         {/* TODO: add lazy loading */}
-        <LoginPage />
+        <LoginPageLoadable />
       </Route>
       <Route path={`/:orgId${ROUTES.LOGOUT}`}>
         <LogoutPage />

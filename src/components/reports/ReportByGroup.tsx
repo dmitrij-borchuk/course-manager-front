@@ -15,8 +15,9 @@ type ReportByGroupProps = {
   attendances: Attendance[]
   students: Student[]
   order: SortOrder
+  loading: boolean
 }
-export const ReportByGroup = ({ group, attendances, students, order }: ReportByGroupProps) => {
+export const ReportByGroup = ({ group, attendances, students, order, loading }: ReportByGroupProps) => {
   const intl = useIntl()
   const attendanceRate = useAttendanceRateByStudent(attendances)
   const attendancesReport = sortAttendanceReport(
@@ -54,6 +55,7 @@ export const ReportByGroup = ({ group, attendances, students, order }: ReportByG
           node="a"
           waves="light"
           download={`attendance-report-${group.name}-${date}.pdf`}
+          disabled={loading}
         >
           <FormattedMessage id="reports.submitButton" />
         </Button>

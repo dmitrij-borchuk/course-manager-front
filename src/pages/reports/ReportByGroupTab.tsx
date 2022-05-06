@@ -53,7 +53,7 @@ export const ReportByGroupTab = () => {
     }
   }, [groups])
 
-  if (studentsFetching || groupsFetching) {
+  if (groupsFetching) {
     return (
       <div className="flex justify-center pt-4">
         <Preloader color="red" flashing={false} size="medium" />
@@ -91,14 +91,22 @@ export const ReportByGroupTab = () => {
         <option value="desc">{intl.formatMessage({ id: 'common.sort.desc' })}</option>
       </Select>
 
-      <ReportBody attendances={attendances} group={group} students={studentsOfGroup} order={order} />
+      <ReportBody
+        attendances={attendances}
+        group={group}
+        students={studentsOfGroup}
+        order={order}
+        loading={studentsFetching}
+      />
     </div>
   )
 }
 
 const orderStoreKey = 'reports.attendance.order'
-const ReportBody = (props: Omit<ComponentProps<typeof ReportByGroup>, 'group'> & { group?: Group }) => {
-  const { group } = props
+const ReportBody = (
+  props: Omit<ComponentProps<typeof ReportByGroup>, 'group'> & { group?: Group; loading: boolean }
+) => {
+  const { group, loading } = props
   if (!group) {
     return (
       <Text type="h6" color="textGray">
@@ -107,5 +115,5 @@ const ReportBody = (props: Omit<ComponentProps<typeof ReportByGroup>, 'group'> &
     )
   }
 
-  return <ReportByGroup {...props} group={group} />
+  return <ReportByGroup {...props} group={group} loading={loading} />
 }

@@ -16,10 +16,10 @@ export const Reports = () => {
         </SectionHeader>
 
         <Tabs className="">
-          <Tab active title={intl.formatMessage({ id: 'reports.tabs.byTag' })}>
+          <Tab title={intl.formatMessage({ id: 'reports.tabs.byTag' })} idx="tags">
             <ReportByTagTab />
           </Tab>
-          <Tab title={intl.formatMessage({ id: 'reports.tabs.byGroup' })}>
+          <Tab title={intl.formatMessage({ id: 'reports.tabs.byGroup' })} idx="group">
             <ReportByGroupTab />
           </Tab>
         </Tabs>

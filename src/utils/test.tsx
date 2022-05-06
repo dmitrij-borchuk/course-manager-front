@@ -71,7 +71,7 @@ export function mockGetDocs() {
 export function mockDoc() {
   let pathToData: Record<string, any> = {}
   getDoc.mockImplementation((docRef) => {
-    const path = docRef as unknown as string
+    const { path } = docRef as any
     const currentData = pathToData[path]
     if (currentData) {
       return Promise.resolve(getFirebaseSnapshotFromEntity(currentData))

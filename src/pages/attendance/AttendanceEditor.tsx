@@ -60,12 +60,14 @@ export const AttendanceEditorPage = () => {
           group: data.group,
         }
         if (attendance?.id) {
+          // Edit
           await saveAttendance(orgId, {
             id: attendance?.id,
-            teacher: organizationUser.id,
+            teacher: attendance.teacher,
             ...dataToSave,
           })
         } else {
+          // Create
           await saveAttendance(orgId, { ...dataToSave, teacher: organizationUser.id })
         }
 

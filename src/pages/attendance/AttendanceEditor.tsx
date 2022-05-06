@@ -2,21 +2,20 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { useToasts } from 'react-toast-notifications'
 import { FormattedMessage } from 'react-intl'
-import { useAttendancesState, useGroupsState } from '../../store'
+import { useAttendancesState, useGroupsState, useUsersState } from '../../store'
 import AttendanceEditor from '../../components/attendance/AttendanceEditor'
 import { useOrgId } from '../../hooks/useOrgId'
 import { useCurrentUser } from '../../hooks/useCurrentUser'
 import useStudentsOfGroupStore from '../../store/studentsOfGroupStore'
 import { Group } from '../../types/group'
 import { Dictionary } from '../../types/dictionary'
-import useUsersStore from '../../store/usersStore'
 
 export const AttendanceEditorPage = () => {
   const { id } = useParams<{ id: string }>()
   const { addToast } = useToasts()
   const { fetchGroupsOfTeacher, groupsById, groups, fetching: groupsFetching } = useGroupsState()
   const { organizationUser } = useCurrentUser()
-  const { fetchOrgUser, usersById } = useUsersStore()
+  const { fetchOrgUser, usersById } = useUsersState()
   const {
     // TODO: optimize
     fetchStudentsOfGroup,

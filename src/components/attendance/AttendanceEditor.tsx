@@ -221,8 +221,8 @@ const StudentsSelector = ({ students, onChange = noop, initialSelected }: Studen
     setSelected((d) => ({ ...d, [id]: value }))
   }, [])
   const renderItem = useMemo(
-    () => (s: Student) =>
-      (
+    () => (s: Student) => {
+      return (
         <div
           key={s.id}
           className="collection-item flex justify-between items-center cursor-pointer"
@@ -244,7 +244,8 @@ const StudentsSelector = ({ students, onChange = noop, initialSelected }: Studen
             </div>
           )}
         </div>
-      ),
+      )
+    },
     [onClick, selected]
   )
 
@@ -252,22 +253,16 @@ const StudentsSelector = ({ students, onChange = noop, initialSelected }: Studen
     setSelected((selected) => {
       const newSelected: Record<string, boolean> = {}
       students.forEach((s) => {
-        newSelected[s.id] = selected[s.id] || false
+        newSelected[s.id] = !!(initialSelected && initialSelected[s.id])
       })
 
       return newSelected
     })
-  }, [students])
+  }, [students, initialSelected])
 
   useEffect(() => {
     onChange(selected)
   }, [onChange, selected])
-
-  useEffect(() => {
-    if (initialSelected) {
-      setSelected(initialSelected)
-    }
-  }, [initialSelected])
 
   return <>{students?.length ? <List items={students} renderItem={renderItem} /> : <NoStudents />}</>
 }

@@ -78,9 +78,6 @@ export const TagsEditor = ({ disabled, loading, error, value = [], onUpdate, inp
 
   return (
     <div>
-      <Text type="h5" className="color-primary">
-        <FormattedMessage id="students.tags" />
-      </Text>
       {value.length > 0 && (
         <Text type="body" className="color-text-gray">
           <FormattedMessage id="students.tags.editInfo" />

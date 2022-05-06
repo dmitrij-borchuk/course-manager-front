@@ -18,6 +18,8 @@ export const messages = {
   'common.sort.asc': 'Ascending',
   'common.sort.desc': 'Descending',
   'common.tags.empty': 'No tags have been selected',
+  'common.from': 'From',
+  'common.to': 'To',
 
   'Auth.form.error.invalid': 'Identifier or password invalid.',
   'Auth.form.error.500': 'Something went wrong',

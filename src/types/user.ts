@@ -1,5 +1,3 @@
-import { UserInfo } from './userInfo'
-
 type UserBase = {
   username: string
   email: string
@@ -8,10 +6,10 @@ type UserBase = {
   blocked?: boolean
 }
 
-export type User = UserBase & {
+export type User = {
   id: string
-  role?: {}
-  user_info?: UserInfo
+  name: string
+  email: string
 }
 
 // TODO: do we need it?
@@ -28,6 +26,7 @@ export type UserMetadata = {
   organizations?: string[]
 }
 
+// TODO: do we need it?
 export type AppUser = {
   name?: string
   avatar?: string

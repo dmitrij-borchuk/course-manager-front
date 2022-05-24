@@ -16,8 +16,3 @@ export type UserInfoFull = UserInfoBase & {
   updated_by?: string
   groups?: Group[]
 }
-// TODO: do weed it?
-export type UserInfo = Omit<UserInfoFull, 'user' | 'groups'> & {
-  user?: string
-  groups?: string[]
-}

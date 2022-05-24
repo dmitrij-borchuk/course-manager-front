@@ -5,6 +5,7 @@ import { auth } from '../api/firebase'
 import { AppUser } from '../types/user'
 import { users } from '../api/firebase/collections'
 import { setUser } from '../utils/rollbar'
+import { setHeader } from '../api/request'
 
 export function useAuthStore() {
   const [loading, setLoading] = useState(false)
@@ -22,6 +23,7 @@ export function useAuthStore() {
       setCurrentUser(user)
       setUser(user)
       setInitiatingAuth(false)
+      user?.getIdToken().then((t) => setHeader('authorization', t))
     })
   }, [])
 

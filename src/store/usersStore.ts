@@ -2,16 +2,18 @@ import { nanoid } from 'nanoid'
 import { useCallback, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { makeOrgCollection } from '../api/firebase/collections'
+import { getProfile } from '../api/users'
 import { Role } from '../config'
 import { useDictionaryToArray } from '../hooks/useDictionaryToArray'
 import { confirmInvitation, getUsersList } from '../services/users'
 import { Dictionary } from '../types/dictionary'
 import { Invite } from '../types/invite'
-import { OrganizationUser } from '../types/user'
+import { OrganizationUser, User } from '../types/user'
 import { arrayToDictionary } from '../utils/common'
 
 export default function useUsersStore() {
   const history = useHistory()
+  const [profile, setProfile] = useState<User>()
   const [usersById, setUsersById] = useState<Dictionary<OrganizationUser>>({})
   const users = useDictionaryToArray(usersById)
   const [submitting, setSubmitting] = useState(false)
@@ -19,6 +21,7 @@ export default function useUsersStore() {
   const [fetching, setFetching] = useState(false)
 
   return {
+    profile,
     submitting,
     error,
     fetching,
@@ -66,6 +69,12 @@ export default function useUsersStore() {
       const collection = makeOrgCollection<OrganizationUser>('users', orgId)
       const res = await collection.getById(id)
       setUsersById((items) => ({ ...items, [res.id]: res }))
+      setFetching(false)
+    }, []),
+    fetchProfile: useCallback(async () => {
+      setFetching(true)
+      const result = await getProfile()
+      setProfile(result.data)
       setFetching(false)
     }, []),
   }

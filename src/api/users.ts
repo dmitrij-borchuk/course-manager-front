@@ -16,3 +16,7 @@ export function getUserRequest(id: string) {
 export function deleteUserRequest(id: string) {
   return request.delete<void>(`/users/${id}`)
 }
+
+export function getProfile() {
+  return request.get<User>('/auth/me')
+}

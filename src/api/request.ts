@@ -1,17 +1,22 @@
 import axios from 'axios'
 
-// TODO: do we need it?
+const headers: Record<string, string> = {}
 const request = axios.create({
-  baseURL: process.env.REACT_APP_API_SERVER,
-  headers: {},
+  baseURL: process.env.REACT_APP_API_GATEWAY,
+  headers: headers,
 })
 
 request.interceptors.request.use(function (config) {
   config.headers = {
     ...config.headers,
+    ...headers,
   }
 
   return config
 })
+
+export function setHeader(key: string, value: string) {
+  headers[key] = value
+}
 
 export default request

@@ -1,12 +1,15 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { Container, Preloader } from 'react-materialize'
 import { Link } from 'react-router-dom'
 import { ROUTES } from '../../constants'
 import { Organization } from '../../types/organization'
-import { AppUser } from '../../types/user'
+import { User } from '../../types/user'
+import { Ellipsis } from '../kit/ellipsis/Ellipsis'
 import { FabBtn } from '../kit/FabBtn/FabBtn'
 import { Header } from '../kit/header/Header'
+import { ListWithLinks } from '../kit/list/List'
+import { Loader } from '../kit/loader/Loader'
 import { Text } from '../kit/text/Text'
 
 // TODO: add loading
@@ -14,34 +17,43 @@ import { Text } from '../kit/text/Text'
 interface Props {
   className?: string
   organizations?: Organization[]
-  user: AppUser
+  user?: User
   organizationsLoading?: boolean
 }
 export const Profile = (props: Props) => {
   const { className, organizations = [], user, organizationsLoading = false } = props
 
+  if (!user) {
+    return <Loader />
+  }
   return (
     <div className={className}>
       <Header />
-      <Container className="px-4">
-        {user.name ? (
-          <Text type="h3">{user.name}</Text>
-        ) : (
-          <Text type="h3" color="textGray">
-            <FormattedMessage id="profile.user.noName" />
-          </Text>
-        )}
-        <Text type="h5">
+      <Container className="px-4 pb-6">
+        <div className="flex w-full justify-between items-center -mt-5">
+          <div className="min-w-0">
+            {user.name ? (
+              <Text type="h3" className="truncate">
+                {user.name}
+              </Text>
+            ) : (
+              <Text type="h3" color="textGray" className="truncate">
+                <FormattedMessage id="profile.user.noName" />
+              </Text>
+            )}
+          </div>
+          {/* TODO: add this for the profile editing */}
+          {/* <div className="mt-3">
+            <IconButton type="square" size={40} icon="edit" />
+          </div> */}
+        </div>
+        <Text type="h6" color="textGray" className="-mt-2 truncate">
+          {user.email}
+        </Text>
+        <Text type="h5" color="primary">
           <FormattedMessage id="profile.organizations.header" />
         </Text>
-        {/* TODO: avatar */}
-        {!organizationsLoading &&
-          organizations.map((org) => (
-            <div key={org.id} className="mt-4">
-              <Link to={`/${org.id}`}>{org.name}</Link>
-            </div>
-          ))}
-        {organizationsLoading && <Preloader color="red" flashing={false} size="medium" />}
+        <OrganizationList items={organizations} loading={organizationsLoading} />
 
         <Link to={ROUTES.ORGANIZATIONS_ADD}>
           <FabBtn />
@@ -49,4 +61,29 @@ export const Profile = (props: Props) => {
       </Container>
     </div>
   )
+}
+
+type OrganizationListProps = {
+  loading: boolean
+  items: Organization[]
+}
+const OrganizationList = (props: OrganizationListProps) => {
+  const { items, loading } = props
+  const renderItem = useCallback((o: Organization) => {
+    return (
+      <div className="flex justify-between">
+        <Ellipsis>{o.name}</Ellipsis>
+      </div>
+    )
+  }, [])
+
+  if (loading) {
+    return (
+      <div className="flex justify-center">
+        <Preloader color="red" flashing={false} size="medium" />
+      </div>
+    )
+  }
+
+  return <ListWithLinks items={items} loading={loading} itemLinkRoot={``} labelProp="name" renderItem={renderItem} />
 }

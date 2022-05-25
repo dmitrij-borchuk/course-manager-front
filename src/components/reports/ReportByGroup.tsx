@@ -16,8 +16,10 @@ type ReportByGroupProps = {
   students: Student[]
   order: SortOrder
   loading: boolean
+  from: Date
+  to: Date
 }
-export const ReportByGroup = ({ group, attendances, students, order, loading }: ReportByGroupProps) => {
+export const ReportByGroup = ({ group, attendances, students, order, loading, from, to }: ReportByGroupProps) => {
   const intl = useIntl()
   const attendanceRate = useAttendanceRateByStudent(attendances)
   const attendancesReport = sortAttendanceReport(
@@ -44,7 +46,7 @@ export const ReportByGroup = ({ group, attendances, students, order, loading }: 
     // Need to call this callback when data is changed
     // otherwise PDF will not be updated
     updateInstance()
-  }, [attendancesReport, group, updateInstance])
+  }, [attendancesReport, group, from, to, updateInstance])
 
   return (
     <>

@@ -49,6 +49,7 @@ describe('ReportByGroupTab', () => {
     useParams.mockReturnValue({
       orgId: 'orgId',
     })
+    localStorage.clear()
   })
   test('should not fail', async () => {
     getDocs.mockResolvedValue([] as any)

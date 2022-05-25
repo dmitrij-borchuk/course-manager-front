@@ -6,7 +6,7 @@ TODO: uml
 
 ## Development
 
-TODO: Write about firebase emulator
+We are using https://www.conventionalcommits.org/en/v1.0.0/#specification
 
 ## Testing
 

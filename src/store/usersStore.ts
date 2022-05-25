@@ -72,10 +72,15 @@ export default function useUsersStore() {
       setFetching(false)
     }, []),
     fetchProfile: useCallback(async () => {
-      setFetching(true)
-      const result = await getProfile()
-      setProfile(result.data)
-      setFetching(false)
+      try {
+        setFetching(true)
+        const result = await getProfile()
+        setProfile(result.data)
+        setFetching(false)
+      } catch (error) {
+        setFetching(false)
+        throw error
+      }
     }, []),
   }
 }

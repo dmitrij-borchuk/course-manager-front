@@ -82,7 +82,7 @@ export const ReportByGroupTab = () => {
 
   // TODO: responsive
   return (
-    <div className="flex items-center space-x-2 pt-4">
+    <div>
       {/* Range */}
       <div className="pt-4 grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="">
@@ -118,33 +118,34 @@ export const ReportByGroupTab = () => {
           />
         </div>
       </div>
+      <div className="pt-4 grid grid-cols-1 md:grid-cols-3 gap-6">
+        <Select onChange={(e) => setGroup(groupsById[e.target.value])}>
+          {groups.map((g) => (
+            <option key={g.id} value={g.id}>
+              {g.name}
+            </option>
+          ))}
+        </Select>
+        <Select
+          onChange={(e) => setOrder(e.target.value as SortOrder)}
+          id="sortSelect"
+          label={intl.formatMessage({ id: 'reports.sortOrder' })}
+          value={order}
+        >
+          <option value="asc">{intl.formatMessage({ id: 'common.sort.asc' })}</option>
+          <option value="desc">{intl.formatMessage({ id: 'common.sort.desc' })}</option>
+        </Select>
 
-      <Select onChange={(e) => setGroup(groupsById[e.target.value])}>
-        {groups.map((g) => (
-          <option key={g.id} value={g.id}>
-            {g.name}
-          </option>
-        ))}
-      </Select>
-      <Select
-        onChange={(e) => setOrder(e.target.value as SortOrder)}
-        id="sortSelect"
-        label={intl.formatMessage({ id: 'reports.sortOrder' })}
-        value={order}
-      >
-        <option value="asc">{intl.formatMessage({ id: 'common.sort.asc' })}</option>
-        <option value="desc">{intl.formatMessage({ id: 'common.sort.desc' })}</option>
-      </Select>
-
-      <ReportBody
-        attendances={attendancesForReport}
-        group={group}
-        students={studentsOfGroup}
-        order={order}
-        loading={studentsFetching}
-        from={from}
-        to={to}
-      />
+        <ReportBody
+          attendances={attendancesForReport}
+          group={group}
+          students={studentsOfGroup}
+          order={order}
+          loading={studentsFetching}
+          from={from}
+          to={to}
+        />
+      </div>
     </div>
   )
 }

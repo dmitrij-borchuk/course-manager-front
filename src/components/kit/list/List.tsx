@@ -11,8 +11,9 @@ export interface ListProps<T> {
   items: T[]
   emptyListPlaceholder?: React.ReactNode
   renderItem: (data: T) => JSX.Element
+  className?: string
 }
-export function List<T>({ loading = false, items, emptyListPlaceholder, renderItem }: ListProps<T>) {
+export function List<T>({ loading = false, items, emptyListPlaceholder, renderItem, className }: ListProps<T>) {
   if (loading) {
     return <SkeletonList />
   }
@@ -27,7 +28,7 @@ export function List<T>({ loading = false, items, emptyListPlaceholder, renderIt
     )
   }
 
-  return <Collection>{items.map(renderItem)}</Collection>
+  return <Collection className={className}>{items.map(renderItem)}</Collection>
 }
 
 export type ListWithLinksProps<T> = Omit<ListProps<T>, 'renderItem'> & {

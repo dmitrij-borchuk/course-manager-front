@@ -71,8 +71,11 @@ export const messages = {
   'groups.edit.success': 'Group has been successfully updated',
   'groups.assignTeacher.success': 'Teacher has been successfully assigned',
   'groups.assignStudents.success': 'Students have been successfully assigned',
+  'groups.unassignStudents.success': 'Students have been successfully removed from group',
+  'groups.unassignStudents.error': 'Error while removing student from group: {message}',
   'groups.assignStudents.namePlaceholder': 'Enter a name',
   'groups.assignStudents.moreNamePlaceholder': '+ name',
+  'groups.studentList.removeBtn': 'Remove from group',
 
   'students.add.title': 'Add student',
   'students.edit.title': 'Edit student',

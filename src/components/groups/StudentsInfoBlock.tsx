@@ -139,7 +139,7 @@ const StudentWithAttendance = ({
           <Link to={`/${orgId}${ROUTES.STUDENTS_ROOT}/${data.id}`}>{data.name}</Link>
         </Ellipsis>
       </div>
-      <div className="">
+      <div className="flex">
         {/* TODO: add loading */}
         {attendanceRate !== undefined && <AttendanceRateBadge value={attendanceRate} />}
         {/* <Icon right>more_horiz</Icon> */}

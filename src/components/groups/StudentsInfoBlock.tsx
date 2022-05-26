@@ -145,7 +145,6 @@ const StudentWithAttendance = ({
         {/* <Icon right>more_horiz</Icon> */}
 
         <Dropdown
-          id="Dropdown_8"
           options={{
             alignment: 'right',
             autoTrigger: true,

@@ -20,6 +20,7 @@ export const messages = {
   'common.tags.empty': 'No tags have been selected',
   'common.from': 'From',
   'common.to': 'To',
+  'common.name.label': 'Name',
 
   'Auth.form.error.invalid': 'Identifier or password invalid.',
   'Auth.form.error.500': 'Something went wrong',
@@ -80,6 +81,7 @@ export const messages = {
   'students.add.title': 'Add student',
   'students.edit.title': 'Edit student',
   'students.list.title': 'Students',
+  'students.list.attendanceRate.label': 'Attendance Rate',
   'students.groups.empty': 'Student is not attending any classes',
   'students.delete.header': 'Remove student',
   'students.delete.text': 'Are you sure you want to delete this student?',

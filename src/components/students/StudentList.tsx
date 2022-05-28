@@ -85,10 +85,10 @@ function useSortingByHeader(items: Student[] = [], attendanceRates?: Dictionary<
         if (aValue === bValue) {
           return 0
         }
-        if (!aValue) {
+        if (aValue === undefined) {
           return sortOrder === 'asc' ? -1 : 1
         }
-        if (!bValue) {
+        if (bValue === undefined) {
           return sortOrder === 'asc' ? 1 : -1
         }
         if (sortOrder === 'asc') {

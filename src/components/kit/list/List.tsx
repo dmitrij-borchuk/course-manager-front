@@ -1,10 +1,11 @@
-import React, { useMemo } from 'react'
+import React, { ComponentProps, useMemo } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { Collection } from 'react-materialize'
 import { CollectionItemLink } from '../collectionItemLink/CollectionItemLink'
 import { SkeletonList } from '../skeleton/SkeletonList'
 import { Text } from '../text/Text'
 import { Ellipsis } from '../ellipsis/Ellipsis'
+import { ListHeader } from './ListHeader'
 
 export interface ListProps<T> {
   loading?: boolean
@@ -12,8 +13,9 @@ export interface ListProps<T> {
   emptyListPlaceholder?: React.ReactNode
   renderItem: (data: T) => JSX.Element
   className?: string
+  header?: HeaderProps
 }
-export function List<T>({ loading = false, items, emptyListPlaceholder, renderItem, className }: ListProps<T>) {
+export function List<T>({ loading = false, items, emptyListPlaceholder, renderItem, className, header }: ListProps<T>) {
   if (loading) {
     return <SkeletonList />
   }
@@ -28,7 +30,16 @@ export function List<T>({ loading = false, items, emptyListPlaceholder, renderIt
     )
   }
 
-  return <Collection className={className}>{items.map(renderItem)}</Collection>
+  return (
+    <div>
+      {header && (
+        <div className="mx-5">
+          <ListHeader {...header} />
+        </div>
+      )}
+      <Collection className={className}>{items.map(renderItem)}</Collection>
+    </div>
+  )
 }
 
 export type ListWithLinksProps<T> = Omit<ListProps<T>, 'renderItem'> & {
@@ -61,3 +72,5 @@ function renderLinkItem<T extends { id: string }>(
     </CollectionItemLink>
   )
 }
+
+type HeaderProps = ComponentProps<typeof ListHeader>

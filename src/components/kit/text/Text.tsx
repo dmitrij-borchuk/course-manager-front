@@ -2,7 +2,7 @@ import React, { ReactNode } from 'react'
 import './styles.css'
 
 type Color = 'primary' | 'secondary' | 'textGray' | 'textLight' | 'text' | 'alert' | 'warning'
-type Size = '16' | '25' | '34' | '43' | '52' | '63'
+type Size = '12' | '16' | '25' | '34' | '43' | '52' | '63'
 type HeadingType = React.HTMLAttributes<HTMLHeadingElement>
 type ParagraphType = React.HTMLAttributes<HTMLParagraphElement>
 type TextType = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'body'

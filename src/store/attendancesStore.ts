@@ -28,7 +28,7 @@ export function useAttendancesStore() {
             : collection.getAll()
         const resp = await request
         const itemsById = arrayToDictionary(resp)
-        setAttendancesById(itemsById)
+        setAttendancesById((att) => ({ ...att, ...itemsById }))
         setLoading(false)
       } catch (error) {
         setLoading(false)
@@ -45,7 +45,7 @@ export function useAttendancesStore() {
           ['teacher', '==', teacherId],
         ])
         const itemsById = arrayToDictionary(resp)
-        setAttendancesById(itemsById)
+        setAttendancesById((att) => ({ ...att, ...itemsById }))
         setLoading(false)
       } catch (error) {
         setLoading(false)

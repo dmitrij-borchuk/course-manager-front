@@ -17,6 +17,9 @@ export const AttendanceDateBlock: React.FC<Props> = ({ date, items = [], classNa
   return (
     <div className={`${className} flex`}>
       <div className="flex flex-col items-center mr-3 w-8">
+        <Text type="body" className="m-0">
+          <FormattedDate value={date} month="short" />
+        </Text>
         <Text size="25" color="primary" className="m-0">
           {date.getDate()}
         </Text>

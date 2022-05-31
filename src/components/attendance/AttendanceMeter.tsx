@@ -23,7 +23,9 @@ export const AttendanceMeter: React.FC<Props> = ({ className = '', text = '', pr
       <Progress progress={progress} />
       <div className="flex justify-between w-full">
         <Ellipsis className="z-10">
-          <Text size="16">{text}</Text>
+          <Text size="16" className="overflow-ellipsis overflow-hidden">
+            {text}
+          </Text>
         </Ellipsis>
         <Text className="z-10" size="16">
           {progressText}

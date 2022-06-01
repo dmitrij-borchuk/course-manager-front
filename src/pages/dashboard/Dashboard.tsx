@@ -2,7 +2,6 @@ import { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 're
 import { Preloader } from 'react-materialize'
 import { useToasts } from 'react-toast-notifications'
 import { Dashboard } from '../../components/dashboard/Dashboard'
-import { FabBtn } from '../../components/kit/FabBtn/FabBtn'
 import { ROLES } from '../../config'
 import { useCurrentUser } from '../../hooks/useCurrentUser'
 import { useOrgId } from '../../hooks/useOrgId'
@@ -19,8 +18,6 @@ export function DashboardPage() {
         {loading && <Preloader color="red" flashing={false} size="medium" />}
         <LazyLoading loadMore={loadMore} />
       </div>
-
-      <FabBtn />
     </div>
   )
 }

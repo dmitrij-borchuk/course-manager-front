@@ -1,71 +1,43 @@
 import { useCallback, useEffect, useState } from 'react'
-import { FormattedMessage, useIntl } from 'react-intl'
 import { useHistory } from 'react-router-dom'
-import { useToasts } from 'react-toast-notifications'
 import { useOrganizationsState } from '../../store'
-import { EditOrganization, OrganizationForm } from '../../components/organizations/EditOrganization'
+import { EditOrganization } from '../../components/organizations/EditOrganization'
 import { ROUTES } from '../../constants'
-import { isFirebaseError } from '../../utils/error'
 import { ExternalError } from '../../hooks/useFormWithError'
-import { useCurrentUser } from '../../hooks/useCurrentUser'
+import { OrganizationCreate } from '../../types/organization'
+import { isAxiosError } from '../../api/request'
 
 export const CreateOrganizationPage = () => {
   const history = useHistory()
-  const intl = useIntl()
-  const { save, submitting, allItems, fetchAll, loading } = useOrganizationsState()
-  const { currentUser } = useCurrentUser()
-  const { addToast } = useToasts()
-  const [error, setError] = useState<ExternalError<OrganizationForm>>()
+  const { save, submitting, fetchAll, loading } = useOrganizationsState()
+  const [error, setError] = useState<ExternalError<OrganizationCreate>>()
   const submit = useCallback(
-    async (data: OrganizationForm) => {
-      // Check if we already have such org id
-      if (allItems.find((o) => o.id === data.id)) {
-        setError({
-          fields: [
-            {
-              field: 'id',
-              message: intl.formatMessage({ id: 'organizations.edit.conflict' }),
-            },
-          ],
+    async (data: OrganizationCreate) => {
+      try {
+        await save({
+          ...data,
         })
 
-        return
-      }
-      if (currentUser?.uid) {
-        try {
-          await save({
-            ...data,
-            creator: currentUser.uid,
+        history.push(`${ROUTES.ROOT}`)
+      } catch (error) {
+        if (isAxiosError(error)) {
+          setError({
+            fields: [
+              {
+                field: 'key',
+                message: error.response?.data.message,
+              },
+            ],
           })
-
-          history.push(`${ROUTES.ROOT}`)
-        } catch (error) {
-          if (isFirebaseError(error) && error.code === 'permission-denied') {
-            setError({
-              fields: [
-                {
-                  field: 'id',
-                  message: intl.formatMessage({ id: 'organizations.edit.conflict' }),
-                },
-              ],
-            })
-          }
         }
-      } else {
-        addToast(<FormattedMessage id="organizations.edit.noUserId" />, {
-          appearance: 'error',
-          autoDismiss: true,
-        })
       }
     },
-    [addToast, allItems, currentUser, history, intl, save]
+    [history, save]
   )
 
   useEffect(() => {
-    if (currentUser?.uid) {
-      fetchAll(currentUser?.uid)
-    }
-  }, [currentUser?.uid, fetchAll])
+    fetchAll()
+  }, [fetchAll])
 
   return <EditOrganization onSubmit={submit} loading={submitting || loading} error={error} />
 }

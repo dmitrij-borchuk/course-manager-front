@@ -8,7 +8,7 @@ import { ExternalError, useFormWithError } from '../../hooks/useFormWithError'
 import { useUpdateInitialForm } from '../../hooks/useUpdateInitialForm'
 
 export type OrganizationForm = {
-  id: string
+  key: string
   name: string
 }
 
@@ -34,7 +34,7 @@ export const EditOrganization: React.FC<Props> = ({
   const { control, handleSubmit, errors, setValue } = useFormWithError<OrganizationForm>(
     {
       defaultValues: {
-        id: '',
+        key: '',
         name: '',
         ...initial,
       },
@@ -59,13 +59,13 @@ export const EditOrganization: React.FC<Props> = ({
           onSubmit={handleSubmit(onSubmit)}
         >
           <Input
-            id="id"
+            id="key"
             control={control}
-            name="id"
+            name="key"
             label={`${intl.formatMessage({ id: 'common.form.id.label' })} *`}
             rules={{ required: true }}
             disabled={loading || disabled}
-            error={errors['id']?.message}
+            error={errors['key']?.message}
           />
           <Input
             id="name"

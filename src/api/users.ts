@@ -20,3 +20,7 @@ export function deleteUserRequest(id: string) {
 export function getProfile() {
   return request.get<User>('/auth/me')
 }
+
+export function migrateUsers() {
+  return request.post<string>('/auth/migrate')
+}

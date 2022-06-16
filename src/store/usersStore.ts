@@ -2,7 +2,7 @@ import { nanoid } from 'nanoid'
 import { useCallback, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { makeOrgCollection } from '../api/firebase/collections'
-import { getProfile } from '../api/users'
+import { getProfile, migrateUsers } from '../api/users'
 import { Role } from '../config'
 import { useDictionaryToArray } from '../hooks/useDictionaryToArray'
 import { confirmInvitation, getUsersList } from '../services/users'
@@ -64,6 +64,7 @@ export default function useUsersStore() {
       setUsersById(itemsById)
       setFetching(false)
     }, []),
+    // TODO: remove
     fetchOrgUser: useCallback(async (orgId: string, id: string) => {
       setFetching(true)
       const collection = makeOrgCollection<OrganizationUser>('users', orgId)
@@ -79,6 +80,17 @@ export default function useUsersStore() {
         setFetching(false)
       } catch (error) {
         setFetching(false)
+        throw error
+      }
+    }, []),
+    migrate: useCallback(async () => {
+      try {
+        setSubmitting(true)
+        const result = await migrateUsers()
+        setSubmitting(false)
+        return result
+      } catch (error) {
+        setSubmitting(false)
         throw error
       }
     }, []),

@@ -5,10 +5,11 @@ import { Link } from 'react-router-dom'
 import { ROUTES } from '../../constants'
 import { Organization } from '../../types/organization'
 import { User } from '../../types/user'
+import { CollectionItemLink } from '../kit/collectionItemLink/CollectionItemLink'
 import { Ellipsis } from '../kit/ellipsis/Ellipsis'
 import { FabBtn } from '../kit/FabBtn/FabBtn'
 import { Header } from '../kit/header/Header'
-import { ListWithLinks } from '../kit/list/List'
+import { List } from '../kit/list/List'
 import { Loader } from '../kit/loader/Loader'
 import { Text } from '../kit/text/Text'
 
@@ -71,9 +72,11 @@ const OrganizationList = (props: OrganizationListProps) => {
   const { items, loading } = props
   const renderItem = useCallback((o: Organization) => {
     return (
-      <div className="flex justify-between">
-        <Ellipsis>{o.name}</Ellipsis>
-      </div>
+      <CollectionItemLink to={`/${o.key}`} data-testid="list-link-item">
+        <div className="flex justify-between">
+          <Ellipsis>{o.name}</Ellipsis>
+        </div>
+      </CollectionItemLink>
     )
   }, [])
 
@@ -85,5 +88,5 @@ const OrganizationList = (props: OrganizationListProps) => {
     )
   }
 
-  return <ListWithLinks items={items} loading={loading} itemLinkRoot={``} labelProp="name" renderItem={renderItem} />
+  return <List items={items} loading={loading} renderItem={renderItem} />
 }

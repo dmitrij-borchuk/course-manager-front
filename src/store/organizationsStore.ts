@@ -1,51 +1,38 @@
 import { useCallback, useState } from 'react'
-import { organizations, users } from '../api/firebase/collections'
-import { ROLES } from '../config'
+import { createOrganizations, getUserOrganizations, migrateOrganizations } from '../api/organizations'
 import { useDictionaryToArray } from '../hooks/useDictionaryToArray'
-import { addUserToOrganization } from '../services/users'
 import { Dictionary } from '../types/dictionary'
-import { Organization } from '../types/organization'
+import { Organization, OrganizationCreate } from '../types/organization'
 import { arrayToDictionary } from '../utils/common'
 
 export default function useOrganizationsBaseStore() {
   const [loading, setLoading] = useState(false)
   const [submitting, setSubmitting] = useState(false)
-  const [byId, setById] = useState<Dictionary<Organization>>({})
-  const allItems = useDictionaryToArray(byId)
+  const [byId, setById] = useState<Dictionary<Organization>>()
+  const allItems = useDictionaryToArray(byId || empty)
 
   return {
     allItems,
     byId,
     loading,
     submitting,
-    fetchAll: useCallback(async (userId: string) => {
+    fetchAll: useCallback(async () => {
       setLoading(true)
-      const user = await users.getById(userId)
-      const promises = user.organizations?.map((id) => organizations.getById(id)) || []
-      const resp = await Promise.all(promises)
-      const groupsById = arrayToDictionary(resp)
+      const organizations = await getUserOrganizations()
+      const groupsById = arrayToDictionary(organizations.data)
       setById(groupsById)
       setLoading(false)
     }, []),
     // TODO: rename to `add`
-    save: useCallback(async (data: Organization) => {
+    save: useCallback(async (data: OrganizationCreate) => {
+      // TODO: remove `creator`
       try {
         setSubmitting(true)
-        await organizations.save(data)
-        const user = await users.getById(data.creator)
-        const userOrganizations = user.organizations || []
-        // TODO: probably move to FireBase functions
-        await users.save({
-          ...user,
-          organizations: userOrganizations.concat([data.id]),
-        })
-        await addUserToOrganization(data.id, {
-          ...user,
-          role: ROLES.Administrator,
-        })
+        const result = await createOrganizations(data)
+
         setById((list) => ({
           ...list,
-          [data.id]: data,
+          [result.data.id]: result.data,
         }))
         setSubmitting(false)
       } catch (error) {
@@ -53,5 +40,18 @@ export default function useOrganizationsBaseStore() {
         throw error
       }
     }, []),
+    migrate: useCallback(async () => {
+      try {
+        setSubmitting(true)
+        const result = await migrateOrganizations()
+        setSubmitting(false)
+        return result
+      } catch (error) {
+        setSubmitting(false)
+        throw error
+      }
+    }, []),
   }
 }
+
+const empty: Dictionary<Organization> = {}

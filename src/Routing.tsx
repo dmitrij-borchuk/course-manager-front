@@ -33,6 +33,7 @@ import { ConfirmInvitePage } from './pages/users/ConfirmInvite'
 import { UsersListPage } from './pages/users/UsersList'
 import { StudentImportPageLoadable } from './pages/import/students'
 import { ReportsPageLoadable } from './pages/reports'
+import { AdminPageLoadable } from './pages/admin'
 
 const GroupsListPage = withHeader(GroupsListPageLoadable)
 const CreateGroupPage = withHeader(CreateGroupPageLoadable)
@@ -48,6 +49,11 @@ const CreateOrganizationPage = withHeader(CreateOrganizationPageLoadable)
 const TeachersListWithHeader = withHeader(TeachersListPage)
 const StudentImportPage = withHeader(StudentImportPageLoadable)
 const ReportsPage = withHeader(ReportsPageLoadable)
+const AdminPage = () => (
+  <>
+    <AdminPageLoadable />
+  </>
+)
 
 export const Routing = React.memo(function () {
   return (
@@ -67,6 +73,9 @@ export const Routing = React.memo(function () {
       <Route path={ROUTES.LOGOUT}>
         <LogoutPage />
       </Route>
+
+      {/* Admin */}
+      <AuthGuardedRoute component={AdminPage} path="/admin" exact />
 
       {/* Organization auth flow */}
       <Route path={`/:orgId${ROUTES.LOGIN}`}>

@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
 
 const headers: Record<string, string> = {}
 const request = axios.create({
@@ -20,3 +20,7 @@ export function setHeader(key: string, value: string) {
 }
 
 export default request
+
+export function isAxiosError(error: any): error is AxiosError {
+  return error.isAxiosError
+}

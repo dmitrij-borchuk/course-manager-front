@@ -20,6 +20,7 @@ export function useCurrentUser() {
   return useMemo(
     () => ({
       currentUser,
+      // TODO: remove
       organizationUser,
       loading: isLoading,
     }),

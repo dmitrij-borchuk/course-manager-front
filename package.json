@@ -17,6 +17,7 @@
     "@loadable/component": "^5.14.1",
     "@react-pdf/renderer": "^2.1.1",
     "@tailwindcss/postcss7-compat": "^2.0.2",
+    "@testing-library/cypress": "^8.0.3",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",

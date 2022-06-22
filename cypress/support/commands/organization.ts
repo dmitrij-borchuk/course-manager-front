@@ -43,6 +43,7 @@ function deleteOrganization(key: string, id: string) {
     })
   })
 
+  cy.callFirestore('delete', `organizations/${key}/groups`)
   cy.callFirestore('delete', `organizations/${key}/users`)
   cy.callFirestore('delete', `organizations/${key}`)
 }

@@ -2,6 +2,7 @@ import React, { useCallback, useEffect } from 'react'
 import { FormattedMessage, useIntl } from 'react-intl'
 import { ModalProps } from 'react-materialize'
 import { useToasts } from 'react-toast-notifications'
+import { useCurrentOrg } from '../../hooks/useCurrentOrg'
 import { useOrgId } from '../../hooks/useOrgId'
 import { useToggle } from '../../hooks/useToggle'
 import { useGroupsState, useTeachersState } from '../../store'
@@ -17,6 +18,7 @@ interface Props {
 }
 export const AssignTeacher = ({ group, onDone = noop, trigger }: Props) => {
   const intl = useIntl()
+  const org = useCurrentOrg()
   const orgId = useOrgId()
   const [open, toggler] = useToggle(false)
   const { editGroup } = useGroupsState()
@@ -47,10 +49,10 @@ export const AssignTeacher = ({ group, onDone = noop, trigger }: Props) => {
   )
 
   useEffect(() => {
-    if (orgId) {
-      fetchTeachers(orgId)
+    if (org?.id) {
+      fetchTeachers(org.id)
     }
-  }, [fetchTeachers, orgId])
+  }, [fetchTeachers, org?.id])
 
   return (
     <>

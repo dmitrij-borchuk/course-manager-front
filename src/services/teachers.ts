@@ -8,16 +8,6 @@ import { createUser } from './users'
 
 // TODO: rename to userInfoService
 
-export async function getTeachersList(orgId: string) {
-  const orgUsers = collection<OrganizationUser>(`organizations/${orgId}/users`)
-  return await orgUsers.query('role', 'in', [ROLES.Teacher, ROLES.Administrator])
-}
-
-export async function getTeacher(orgId: string, id: string) {
-  const orgUsers = collection<OrganizationUser>(`organizations/${orgId}/users`)
-  return await orgUsers.getById(id)
-}
-
 export async function deleteTeacher(id: string) {
   return deleteUserRequest(id)
 }

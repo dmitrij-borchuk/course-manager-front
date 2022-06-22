@@ -1,8 +1,9 @@
 import { useCallback, useState } from 'react'
 import { useHistory } from 'react-router'
+import { getUserRequest, getUsersRequest } from '../api/users'
 import { ROUTES } from '../constants'
 import { useDictionaryToArray } from '../hooks/useDictionaryToArray'
-import { deleteTeacher, editTeacher, getTeacher, getTeachersList } from '../services/teachers'
+import { deleteTeacher, editTeacher } from '../services/teachers'
 import { Dictionary } from '../types/dictionary'
 import { OrganizationUser } from '../types/user'
 import { arrayToDictionary } from '../utils/common'
@@ -34,15 +35,15 @@ export default function useTeachersStore() {
     }, []),
     fetchTeachers: useCallback(async (orgId: string) => {
       setFetching(true)
-      const resp = await getTeachersList(orgId)
-      const itemsById = arrayToDictionary(resp)
+      const resp = await getUsersRequest(orgId)
+      const itemsById = arrayToDictionary(resp.data)
       setTeachersById(itemsById)
       setFetching(false)
     }, []),
     fetchTeacher: useCallback(async (orgId: string, id: string) => {
       setFetching(true)
-      const resp = await getTeacher(orgId, id)
-      setTeachersById((state) => ({ ...state, [id]: resp }))
+      const resp = await getUserRequest(orgId, id)
+      setTeachersById((state) => ({ ...state, [id]: resp.data }))
       setFetching(false)
     }, []),
     editTeacher: useCallback(async (orgId: string, data: OrganizationUser) => {

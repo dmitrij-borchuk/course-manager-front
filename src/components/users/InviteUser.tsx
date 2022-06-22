@@ -9,6 +9,7 @@ import { ExternalError, useFormWithError } from '../../hooks/useFormWithError'
 import { InviteForm } from '../../types/invite'
 import { InviteLinkDialog } from '../auth/InviteLinkDialog'
 import { noop } from '../../utils/common'
+import { Message } from '../kit/message/Message'
 
 export type TeacherFormOutput = {
   name: string
@@ -50,7 +51,11 @@ export const InviteUser: React.FC<Props> = ({
     <div className={className}>
       <Header />
       <Container className="px-4">
-        <FormLayout
+        <Message type="error" className="p-4">
+          Sorry, inviting doesn't work right now. We are working hard to fix the problem 😔
+        </Message>
+
+        {/* <FormLayout
           header={<FormattedMessage id="users.invite.title" />}
           controls={<SubmitButton loading={loading} disabled={disabled} />}
           onSubmit={handleSubmit(onSubmit)}
@@ -64,7 +69,7 @@ export const InviteUser: React.FC<Props> = ({
             disabled={loading || disabled}
             error={errors['email']?.message}
           />
-        </FormLayout>
+        </FormLayout> */}
       </Container>
 
       {inviteLink && <InviteLinkDialog link={inviteLink} onClose={onDialogClose} />}

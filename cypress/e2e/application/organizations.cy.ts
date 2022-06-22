@@ -23,8 +23,8 @@ describe('Organizations', () => {
   it('User should not be able to create organizations with the same key', () => {
     const id = nanoid()
     cy.createOrganization({
-      key: getOrgKey(id),
-      name: getOrgName(id),
+      key: cy.getOrgKey(id),
+      name: cy.getOrgName(id),
     }).as('create')
     cy.get('@create')
       .its('body')
@@ -38,8 +38,8 @@ describe('Organizations', () => {
   it('User should not see deleted organization in the list', () => {
     const id = nanoid()
     cy.createOrganization({
-      key: getOrgKey(id),
-      name: getOrgName(id),
+      key: cy.getOrgKey(id),
+      name: cy.getOrgName(id),
     }).as('create')
 
     cy.get('@create')
@@ -50,22 +50,22 @@ describe('Organizations', () => {
 
     cy.visit('/')
     cy.testId('loader-spinner').should('not.exist')
-    cy.findByText(getOrgName(id)).should('not.exist')
+    cy.findByText(cy.getOrgName(id)).should('not.exist')
   })
   it.skip('User should not be able to visit deleted organization', () => {
     const id = nanoid()
     cy.createOrganization({
-      key: getOrgKey(id),
-      name: getOrgName(id),
+      key: cy.getOrgKey(id),
+      name: cy.getOrgName(id),
     }).as('create')
 
     cy.get('@create')
       .its('body')
       .then((body) => {
-        cy.deleteOrganization(getOrgKey(id), body.rows[0].id)
+        cy.deleteOrganization(cy.getOrgKey(id), body.rows[0].id)
       })
 
-    cy.visit(`/${getOrgKey(id)}`)
+    cy.visit(`/${cy.getOrgKey(id)}`)
     cy.testId('loader-spinner').should('not.exist')
     cy.findByText('Dashboard').should('not.exist')
     cy.findByText('This organization does not exist').should('be.visible')
@@ -78,14 +78,7 @@ describe('Organizations', () => {
 
 function createOrganization(id: string) {
   cy.testId('main-button').click()
-  cy.findByLabelText('Identifier *').type(getOrgKey(id))
-  cy.findByLabelText('Name *').type(getOrgName(id))
+  cy.findByLabelText('Identifier *').type(cy.getOrgKey(id))
+  cy.findByLabelText('Name *').type(cy.getOrgName(id))
   cy.findByRole('button', { name: /Submit/i }).click()
-}
-
-function getOrgKey(id: string) {
-  return `test-organization-key-${id}`
-}
-function getOrgName(id: string) {
-  return `test-organization-name-${id}`
 }

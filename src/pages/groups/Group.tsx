@@ -4,6 +4,7 @@ import { useAttendancesState, useGroupsState, useStudentsOfGroupState, useTeache
 import { Group } from '../../components/groups/Group'
 import { useOrgId } from '../../hooks/useOrgId'
 import { useAttendanceRateByStudent } from '../../hooks/useAttendanceRate'
+import { useCurrentOrg } from '../../hooks/useCurrentOrg'
 
 export const GroupPage = () => {
   let { id } = useParams<{ id: string }>()
@@ -36,11 +37,12 @@ export const GroupPage = () => {
     fetchGroup(orgId, id)
   }, [fetchGroup, id, orgId])
 
+  const org = useCurrentOrg()
   useEffect(() => {
-    if (group?.teacher && !teacher) {
-      fetchTeacher(orgId, group.teacher)
+    if (group?.teacher && !teacher && org?.id) {
+      fetchTeacher(org.id, group.teacher)
     }
-  }, [fetchTeacher, group?.teacher, orgId, teacher])
+  }, [fetchTeacher, group?.teacher, org?.id, teacher])
 
   useEffect(() => {
     if (group?.id) {

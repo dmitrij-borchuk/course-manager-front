@@ -13,7 +13,7 @@ We are using https://www.conventionalcommits.org/en/v1.0.0/#specification
 TODO: Write about firebase emulator
 
 TODO: write about Cypress
-Test users:
+Test users (todo: check it):
 `Admin`:
 
 ```
@@ -27,6 +27,27 @@ Password: test.admin
 Login: test.teacher@domain.com
 Password: test.teacher
 ```
+
+Test strategies:
+
+- CRUD:
+  - Create
+    - Success
+    - Error
+      - Validation
+      - Conflict
+  - Read (render)
+    - Empty list
+    - Not existing
+    - One
+    - Multiple
+    - Min info
+    - Max info
+  - Update
+    - Success
+    - Error
+      - Validation
+  - Delete
 
 ## Configuration
 

@@ -1,16 +1,16 @@
-import { NewUser, User } from '../types/user'
+import { NewUser, OrganizationUser, User } from '../types/user'
 import request from './request'
 
 export function createUserRequest(data: NewUser) {
   return request.post<User>('/users', data)
 }
 
-export function getUsersRequest(params?: string) {
-  return request.get<User[]>(`/users?${params || ''}`)
+export function getUsersRequest(orgId: string) {
+  return request.get<OrganizationUser[]>(`/users/${orgId}`)
 }
 
-export function getUserRequest(id: string) {
-  return request.get<User>(`/users/${id}`)
+export function getUserRequest(orgId: string, id: string) {
+  return request.get<OrganizationUser>(`/users/${orgId}/${id}`)
 }
 
 export function deleteUserRequest(id: string) {

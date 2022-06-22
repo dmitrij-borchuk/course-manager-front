@@ -31,6 +31,8 @@ import 'firebase/compat/firestore'
 import { attachCustomCommands } from 'cypress-firebase'
 import '@testing-library/cypress/add-commands'
 import './commands/organization'
+import { getOrgKey, getOrgName, getSpinner } from './commands/utils'
+import { addGroupDirectly } from './commands/groups'
 
 const firebaseConfig = {
   apiKey: Cypress.env('FIREBASE_API_KEY'),
@@ -46,3 +48,29 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig)
 
 attachCustomCommands({ Cypress, cy, firebase })
+
+declare global {
+  namespace Cypress {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    interface Chainable<Subject> {
+      getSpinner: typeof getSpinner
+
+      /**
+       * @example cy.getOrgName('id')
+       */
+      getOrgName: typeof getOrgName
+      /**
+       * @example cy.getOrgKey('id')
+       */
+      getOrgKey: typeof getOrgKey
+      /**
+       * @example cy.addGroupDirectly('org1', {})
+       */
+      addGroupDirectly: typeof addGroupDirectly
+    }
+  }
+}
+Cypress.Commands.add('addGroupDirectly', addGroupDirectly)
+Cypress.Commands.add('getOrgKey', getOrgKey)
+Cypress.Commands.add('getOrgName', getOrgName)
+Cypress.Commands.add('getSpinner', getSpinner)

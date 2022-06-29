@@ -1,6 +1,6 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { useHistory } from 'react-router'
-import { getUserRequest, getUsersRequest } from '../api/users'
+import { getUserByOuterIdRequest, getUserRequest, getUsersRequest } from '../api/users'
 import { ROUTES } from '../constants'
 import { useDictionaryToArray } from '../hooks/useDictionaryToArray'
 import { deleteTeacher, editTeacher } from '../services/teachers'
@@ -14,10 +14,20 @@ export default function useTeachersStore() {
   const teachers = useDictionaryToArray(teachersById)
   const [fetching, setFetching] = useState(false)
   const [submitting, setSubmitting] = useState(false)
+  const teachersByOuterId = useMemo(() => {
+    const result: Dictionary<OrganizationUser> = {}
+    teachers.forEach((teacher) => {
+      if (teacher.outerId) {
+        result[teacher.outerId] = teacher
+      }
+    })
+    return result
+  }, [teachers])
 
   return {
     teachers,
     teachersById,
+    teachersByOuterId,
     fetching,
     submitting,
     setTeacher: useCallback((id: string, data?: OrganizationUser) => {
@@ -37,13 +47,19 @@ export default function useTeachersStore() {
       setFetching(true)
       const resp = await getUsersRequest(orgId)
       const itemsById = arrayToDictionary(resp.data)
-      setTeachersById(itemsById)
+      setTeachersById((state) => ({ ...state, ...itemsById }))
       setFetching(false)
     }, []),
     fetchTeacher: useCallback(async (orgId: string, id: string) => {
       setFetching(true)
       const resp = await getUserRequest(orgId, id)
       setTeachersById((state) => ({ ...state, [id]: resp.data }))
+      setFetching(false)
+    }, []),
+    fetchTeacherByOuterId: useCallback(async (orgId: string, id: string) => {
+      setFetching(true)
+      const resp = await getUserByOuterIdRequest(orgId, id)
+      setTeachersById((state) => ({ ...state, [resp.data.id]: resp.data }))
       setFetching(false)
     }, []),
     editTeacher: useCallback(async (orgId: string, data: OrganizationUser) => {

@@ -5,16 +5,15 @@ import { FormattedMessage } from 'react-intl'
 import { useAttendancesState, useGroupsState, useUsersState } from '../../store'
 import AttendanceEditor from '../../components/attendance/AttendanceEditor'
 import { useOrgId } from '../../hooks/useOrgId'
-import { useCurrentUser } from '../../hooks/useCurrentUser'
 import useStudentsOfGroupStore from '../../store/studentsOfGroupStore'
 import { Group } from '../../types/group'
 import { Dictionary } from '../../types/dictionary'
+import { useCurrentUser } from '../../hooks/useCurrentUser'
 
 export const AttendanceEditorPage = () => {
   const { id } = useParams<{ id: string }>()
   const { addToast } = useToasts()
   const { fetchGroupsOfTeacher, groupsById, groups, fetching: groupsFetching } = useGroupsState()
-  const { organizationUser } = useCurrentUser()
   const { fetchOrgUser, usersById } = useUsersState()
   const {
     // TODO: optimize
@@ -49,9 +48,13 @@ export const AttendanceEditorPage = () => {
     history.replace(`/${orgId}`)
   }, [history, id, orgId, removeAttendance])
   const attendance = attendancesById[id]
+  const { organizationUser } = useCurrentUser()
   const attendanceTeacher = attendance && usersById[attendance?.teacher]
   const onSubmit = useCallback(
     async (data: { date: Date; group: string; selected: Dictionary<boolean> }) => {
+      if (!organizationUser) {
+        return
+      }
       try {
         const dataToSave = {
           date: data.date.getTime(),

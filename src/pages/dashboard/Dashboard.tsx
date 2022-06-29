@@ -3,10 +3,11 @@ import { Preloader } from 'react-materialize'
 import { useToasts } from 'react-toast-notifications'
 import { Dashboard } from '../../components/dashboard/Dashboard'
 import { ROLES } from '../../config'
+import { useCurrentOrg } from '../../hooks/useCurrentOrg'
 import { useCurrentUser } from '../../hooks/useCurrentUser'
 import { useOrgId } from '../../hooks/useOrgId'
 import { useAttendanceGrouping } from '../../services/attendances'
-import { useAttendancesState, useGroupsState } from '../../store'
+import { useAttendancesState, useGroupsState, useUsersState } from '../../store'
 
 export function DashboardPage() {
   const { loadMore, timelineData, loading } = useAttendance()
@@ -46,7 +47,7 @@ const LazyLoading = ({ loadMore, children }: { loadMore: () => void; children?: 
 
 function useAttendance() {
   const { addToast } = useToasts()
-  const orgId = useOrgId()
+  const orgKey = useOrgId()
   const now = useMemo(() => Date.now(), [])
   const { organizationUser, loading: userLoading } = useCurrentUser()
   const toDate = useMemo(() => new Date(now - oneDay * 0), [now])
@@ -62,18 +63,20 @@ function useAttendance() {
   const { fetchGroups, fetchGroupsOfTeacher, groups, fetching: fetchingGroups } = useGroupsState()
   const isLoading = loadingAttendances || fetchingGroups || userLoading
   const timelineData = useAttendanceGrouping(fromDate, toDate, attendances, groups)
+  const org = useCurrentOrg()
+  const { profile } = useUsersState()
 
   const fetchAttendances = useCallback(
     async (fromDate: Date, toDate: Date) => {
-      if (!organizationUser) {
+      if (!org || !profile) {
         return
       }
 
       try {
-        if (organizationUser.role === ROLES.Administrator) {
-          await fetchAllAttendances(orgId, fromDate, toDate)
+        if (org.role === ROLES.Administrator) {
+          await fetchAllAttendances(orgKey, fromDate, toDate)
         } else {
-          await fetchAttendancesForTeacher(orgId, organizationUser.id, fromDate, toDate)
+          await fetchAttendancesForTeacher(orgKey, profile.id, fromDate, toDate)
         }
       } catch (error: any) {
         addToast(error.message, {
@@ -82,17 +85,17 @@ function useAttendance() {
         })
       }
     },
-    [addToast, fetchAllAttendances, fetchAttendancesForTeacher, orgId, organizationUser]
+    [addToast, fetchAllAttendances, fetchAttendancesForTeacher, org, orgKey, profile]
   )
   const fetchNeededGroups = useCallback(async () => {
-    if (!organizationUser) {
+    if (!org || !organizationUser) {
       return
     }
     try {
-      if (organizationUser.role === ROLES.Administrator) {
-        await fetchGroups(orgId)
+      if (org.role === ROLES.Administrator) {
+        await fetchGroups(orgKey)
       } else {
-        await fetchGroupsOfTeacher(orgId, organizationUser.id)
+        await fetchGroupsOfTeacher(orgKey, organizationUser.id)
       }
     } catch (error: any) {
       addToast(error.message, {
@@ -100,7 +103,7 @@ function useAttendance() {
         autoDismiss: true,
       })
     }
-  }, [addToast, fetchGroups, fetchGroupsOfTeacher, orgId, organizationUser])
+  }, [addToast, fetchGroups, fetchGroupsOfTeacher, org, orgKey, organizationUser])
   const loadMore = useCallback(() => {
     if (isLoading) {
       return

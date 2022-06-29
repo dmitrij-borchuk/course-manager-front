@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Switch, Route } from 'react-router-dom'
 import { ROUTES } from './constants'
 import { withHeader } from './hocs/withHeader'
@@ -34,6 +34,7 @@ import { UsersListPage } from './pages/users/UsersList'
 import { StudentImportPageLoadable } from './pages/import/students'
 import { ReportsPageLoadable } from './pages/reports'
 import { AdminPageLoadable } from './pages/admin'
+import { useUsersState } from './store'
 
 const GroupsListPage = withHeader(GroupsListPageLoadable)
 const CreateGroupPage = withHeader(CreateGroupPageLoadable)
@@ -56,6 +57,11 @@ const AdminPage = () => (
 )
 
 export const Routing = React.memo(function () {
+  const { fetchProfile } = useUsersState()
+  useEffect(() => {
+    fetchProfile()
+  }, [fetchProfile])
+
   return (
     <Switch>
       {/* Default auth flow */}

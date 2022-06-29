@@ -36,4 +36,5 @@ export type OrganizationUser = {
   id: string
   role?: string
   name?: string
+  outerId?: string
 }

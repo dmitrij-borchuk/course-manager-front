@@ -9,7 +9,7 @@ import { useCurrentOrg } from '../../hooks/useCurrentOrg'
 export const GroupPage = () => {
   let { id } = useParams<{ id: string }>()
   const { fetchGroup, groupsById, deleteGroup } = useGroupsState()
-  const { fetchTeacher, teachersById } = useTeachersState()
+  const { fetchTeacherByOuterId, teachersByOuterId } = useTeachersState()
   const {
     fetchStudentsOfGroup,
     clearStudentsOfGroup,
@@ -18,7 +18,7 @@ export const GroupPage = () => {
   } = useStudentsOfGroupState()
   const { attendances, clearAttendances, fetchAttendancesForGroups } = useAttendancesState()
   const group = groupsById[id]
-  const teacher = teachersById[group?.teacher || '']
+  const teacher = teachersByOuterId[group?.teacher || '']
   const groupFull = useMemo(() => {
     if (!group || (group?.teacher && !teacher)) {
       return undefined
@@ -40,9 +40,9 @@ export const GroupPage = () => {
   const org = useCurrentOrg()
   useEffect(() => {
     if (group?.teacher && !teacher && org?.id) {
-      fetchTeacher(org.id, group.teacher)
+      fetchTeacherByOuterId(org.id, group.teacher)
     }
-  }, [fetchTeacher, group?.teacher, org?.id, teacher])
+  }, [fetchTeacherByOuterId, group?.teacher, org?.id, teacher])
 
   useEffect(() => {
     if (group?.id) {

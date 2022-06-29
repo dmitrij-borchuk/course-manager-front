@@ -4,6 +4,7 @@ import { Header } from '../../components/kit/header/Header'
 import { Loader } from '../../components/kit/loader/Loader'
 import { Teacher } from '../../components/teachers/Teacher'
 import { useAttendanceRateByGroups } from '../../hooks/useAttendanceRate'
+import { useCurrentOrg } from '../../hooks/useCurrentOrg'
 import { useOrgId } from '../../hooks/useOrgId'
 import { useAttendancesState, useGroupsState, useTeachersState } from '../../store'
 
@@ -18,13 +19,14 @@ export const TeacherPage = () => {
   const onDelete = useCallback(() => deleteTeacher(id), [deleteTeacher, id])
   const rateByGroup = useAttendanceRateByGroups(groups, attendances)
   const groupsOfTeacher = useMemo(() => groups.filter((g) => g.teacher === teacher?.id), [groups, teacher?.id])
+  const org = useCurrentOrg()
 
   useEffect(() => {
-    if (orgId) {
-      fetchTeacher(orgId, id)
+    if (org) {
+      fetchTeacher(org.id, id)
       // TODO: clear
     }
-  }, [fetchTeacher, id, orgId])
+  }, [fetchTeacher, id, org])
 
   useEffect(() => {
     fetchGroupsOfTeacher(orgId, id)

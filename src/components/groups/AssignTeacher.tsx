@@ -29,7 +29,7 @@ export const AssignTeacher = ({ group, onDone = noop, trigger }: Props) => {
       try {
         await editGroup(orgId, {
           id: group.id,
-          teacher: data.id,
+          teacher: data.outerId,
         })
         toggler.off()
         onDone()

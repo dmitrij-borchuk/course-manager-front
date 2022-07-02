@@ -88,11 +88,13 @@ export const AttendanceEditor = (props: Props) => {
       <Container className="px-4">
         <HeadingWithControls
           text={<FormattedMessage id={attendance ? 'attendance.header.edit' : 'attendance.header.add'} />}
-          deleteProps={{
-            header: intl.formatMessage({ id: 'attendance.delete.header' }),
-            content: <FormattedMessage id="attendance.delete.text" />,
-            onSubmit: onDelete,
-          }}
+          deleteProps={
+            attendance && {
+              header: intl.formatMessage({ id: 'attendance.delete.header' }),
+              content: <FormattedMessage id="attendance.delete.text" />,
+              onSubmit: onDelete,
+            }
+          }
         />
         <FormLayout
           controls={<SubmitButton loading={submitting} disabled={submitting || studentsLoading || noStudents} />}

@@ -69,7 +69,7 @@ describe('StudentList', () => {
     const items = screen.getAllByTestId('list-link-item')
     expect(items).toHaveLength(3)
 
-    const badges = items.map((i) => i.querySelector('[data-testId=attendance-rate-badge]'))
+    const badges = items.map((i) => i.querySelector('[data-testid=attendance-rate-badge]'))
     expect(badges[0]).toBe(null)
     expect(badges[1]?.textContent).toBe('0%')
     expect(badges[2]?.textContent).toBe('33%')

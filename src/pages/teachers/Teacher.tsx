@@ -6,7 +6,7 @@ import { Teacher } from '../../components/teachers/Teacher'
 import { useAttendanceRateByGroups } from '../../hooks/useAttendanceRate'
 import { useCurrentOrg } from '../../hooks/useCurrentOrg'
 import { useOrgId } from '../../hooks/useOrgId'
-import { useAttendancesState, useAuthState, useGroupsState, useTeachersState } from '../../store'
+import { useAttendancesState, useGroupsState, useTeachersState } from '../../store'
 
 // TODO: Add loading skeleton
 export const TeacherPage = () => {
@@ -14,7 +14,6 @@ export const TeacherPage = () => {
   const { fetchTeacher, teachersById, fetching, deleteTeacher } = useTeachersState()
   const { attendances, clearAttendances, fetchAttendancesForGroups } = useAttendancesState()
   const { groups, fetchGroupsOfTeacher, clearGroups } = useGroupsState()
-  const { currentUser } = useAuthState()
   const teacher = teachersById[id]
   const orgId = useOrgId()
   const onDelete = useCallback(() => deleteTeacher(id), [deleteTeacher, id])

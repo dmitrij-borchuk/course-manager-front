@@ -6,7 +6,7 @@ import { Teacher } from '../../components/teachers/Teacher'
 import { useAttendanceRateByGroups } from '../../hooks/useAttendanceRate'
 import { useCurrentOrg } from '../../hooks/useCurrentOrg'
 import { useOrgId } from '../../hooks/useOrgId'
-import { useAttendancesState, useGroupsState, useTeachersState } from '../../store'
+import { useAttendancesState, useAuthState, useGroupsState, useTeachersState } from '../../store'
 
 // TODO: Add loading skeleton
 export const TeacherPage = () => {
@@ -14,11 +14,15 @@ export const TeacherPage = () => {
   const { fetchTeacher, teachersById, fetching, deleteTeacher } = useTeachersState()
   const { attendances, clearAttendances, fetchAttendancesForGroups } = useAttendancesState()
   const { groups, fetchGroupsOfTeacher, clearGroups } = useGroupsState()
+  const { currentUser } = useAuthState()
   const teacher = teachersById[id]
   const orgId = useOrgId()
   const onDelete = useCallback(() => deleteTeacher(id), [deleteTeacher, id])
   const rateByGroup = useAttendanceRateByGroups(groups, attendances)
-  const groupsOfTeacher = useMemo(() => groups.filter((g) => g.teacher === teacher?.id), [groups, teacher?.id])
+  const groupsOfTeacher = useMemo(
+    () => groups.filter((g) => g.teacher === teacher?.outerId),
+    [groups, teacher?.outerId]
+  )
   const org = useCurrentOrg()
 
   useEffect(() => {
@@ -29,11 +33,14 @@ export const TeacherPage = () => {
   }, [fetchTeacher, id, org])
 
   useEffect(() => {
-    fetchGroupsOfTeacher(orgId, id)
+    if (!teacher) {
+      return
+    }
+    fetchGroupsOfTeacher(orgId, teacher.outerId || '')
     return () => {
       clearGroups()
     }
-  }, [clearGroups, fetchGroupsOfTeacher, id, orgId])
+  }, [clearGroups, fetchGroupsOfTeacher, teacher, orgId])
 
   useEffect(() => {
     if (groupsOfTeacher.length) {

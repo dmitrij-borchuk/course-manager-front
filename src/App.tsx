@@ -19,14 +19,14 @@ function App() {
 export default App
 
 function Initiator() {
-  const { initiatingAuth } = useAuthState()
+  const { initiatingAuth, currentUser } = useAuthState()
   const { fetchAll, loading, byId } = useOrganizationsState()
 
   useEffect(() => {
-    if (!initiatingAuth && !loading && !byId) {
+    if (!initiatingAuth && !loading && !byId && currentUser) {
       fetchAll()
     }
-  }, [byId, fetchAll, initiatingAuth, loading])
+  }, [byId, fetchAll, initiatingAuth, loading, currentUser])
 
   if (initiatingAuth || !byId) {
     return (

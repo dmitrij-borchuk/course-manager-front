@@ -91,6 +91,10 @@ export function useAttendancesStore() {
       setLoading(true)
       const groupsCollection = makeOrgCollection<Attendance>('attendances', orgId)
       await groupsCollection.delete(id)
+      setAttendancesById((att) => {
+        delete att[id]
+        return att
+      })
       setLoading(false)
     }, []),
     clearAttendances: useCallback(() => {

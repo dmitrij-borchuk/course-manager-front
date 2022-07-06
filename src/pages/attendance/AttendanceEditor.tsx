@@ -43,8 +43,8 @@ export const AttendanceEditorPage = () => {
   const onDateChanged = useCallback((date: Date) => {
     setDate(date)
   }, [])
-  const onDelete = useCallback(() => {
-    removeAttendance(orgId, id)
+  const onDelete = useCallback(async () => {
+    await removeAttendance(orgId, id)
     history.replace(`/${orgId}`)
   }, [history, id, orgId, removeAttendance])
   const attendance = attendancesById[id]

@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { Providers } from './Providers'
 import { Routing } from './Routing'
 import 'materialize-css'
-import { useAuthState, useOrganizationsState } from './store'
+import { useAuthState } from './store'
 import { Loader } from './components/kit/loader/Loader'
 import { updateConfiguration } from './utils/rollbar'
 
@@ -19,16 +19,9 @@ function App() {
 export default App
 
 function Initiator() {
-  const { initiatingAuth, currentUser } = useAuthState()
-  const { fetchAll, loading, byId } = useOrganizationsState()
+  const { initiatingAuth } = useAuthState()
 
-  useEffect(() => {
-    if (!initiatingAuth && !loading && !byId && currentUser) {
-      fetchAll()
-    }
-  }, [byId, fetchAll, initiatingAuth, loading, currentUser])
-
-  if (initiatingAuth || !byId) {
+  if (initiatingAuth) {
     return (
       <div>
         {/* TODO: add splash screen */}

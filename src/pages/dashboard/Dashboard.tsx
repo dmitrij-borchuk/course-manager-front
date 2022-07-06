@@ -2,6 +2,7 @@ import { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 're
 import { Preloader } from 'react-materialize'
 import { useToasts } from 'react-toast-notifications'
 import { Dashboard } from '../../components/dashboard/Dashboard'
+import { Loader } from '../../components/kit/loader/Loader'
 import { ROLES } from '../../config'
 import { useCurrentOrg } from '../../hooks/useCurrentOrg'
 import { useCurrentUser } from '../../hooks/useCurrentUser'
@@ -10,6 +11,17 @@ import { useAttendanceGrouping } from '../../services/attendances'
 import { useAttendancesState, useGroupsState } from '../../store'
 
 export function DashboardPage() {
+  const org = useCurrentOrg()
+  const { organizationUser } = useCurrentUser()
+
+  if (!org || !organizationUser) {
+    return <Loader color="red" />
+  }
+
+  return <DashboardContent />
+}
+
+export function DashboardContent() {
   const { loadMore, timelineData, loading } = useAttendance()
 
   return (

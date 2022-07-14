@@ -90,8 +90,7 @@ export function collection<T extends { id: string }>(name: string, converter?: F
     delete: async (id: string) => {
       // TODO: Think about sub collections https://firebase.google.com/docs/firestore/manage-data/delete-data
       const docRef = doc(db, name, id)
-      await deleteDoc(docRef)
-      return
+      return await deleteDoc(docRef)
     },
   }
 }

@@ -1,22 +1,22 @@
 import { useCallback, useState } from 'react'
 import { useToasts } from 'react-toast-notifications'
 import { InviteUser } from '../../components/users/InviteUser'
-import { useOrgId } from '../../hooks/useOrgId'
+import { useCurrentOrg } from '../../hooks/useCurrentOrg'
 import useUsersStore from '../../store/usersStore'
 
 export const InviteUserPage = () => {
   const { submitting, inviteUser } = useUsersStore()
-  const orgId = useOrgId()
+  const org = useCurrentOrg()
   const [link, setLink] = useState('')
   const { addToast } = useToasts()
   const onSubmit = useCallback(
     async (data) => {
-      if (orgId) {
+      if (org) {
         try {
-          const result = await inviteUser(orgId, data)
+          const result = (await inviteUser(org.id, data)).data
 
-          if (result?.id) {
-            setLink(`${document.location.origin}/${orgId}/invite/confirm/${result.id}`)
+          if (result.id) {
+            setLink(`${document.location.origin}/${org.key}/invite/confirm/${result.token}`)
           }
         } catch (error) {
           if (error instanceof Error) {
@@ -28,7 +28,7 @@ export const InviteUserPage = () => {
         }
       }
     },
-    [addToast, inviteUser, orgId]
+    [addToast, inviteUser, org]
   )
   const onDialogClose = useCallback(() => {
     setLink('')

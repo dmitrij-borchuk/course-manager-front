@@ -1,3 +1,4 @@
+import { InviteResponse } from '../types/invite'
 import { NewUser, OrganizationUser, User } from '../types/user'
 import request from './request'
 
@@ -26,4 +27,16 @@ export function getProfile() {
 
 export function migrateUsers() {
   return request.post<string>('/auth/migrate')
+}
+
+type UserInviteData = {
+  email: string
+  role: string
+  orgId: string
+}
+export function inviteUser(data: UserInviteData) {
+  return request.post<InviteResponse>('/users/invite', data)
+}
+export function confirmInvitation(token: string) {
+  return request.post('/users/confirmInvitation', { token })
 }

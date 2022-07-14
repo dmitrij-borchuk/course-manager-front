@@ -1,13 +1,12 @@
-import { nanoid } from 'nanoid'
 import { useCallback, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { makeOrgCollection } from '../api/firebase/collections'
-import { getProfile, migrateUsers } from '../api/users'
+import { confirmInvitation, getProfile, inviteUser, migrateUsers } from '../api/users'
 import { Role } from '../config'
 import { useDictionaryToArray } from '../hooks/useDictionaryToArray'
-import { confirmInvitation, getUsersList } from '../services/users'
+import { getUsersList } from '../services/users'
 import { Dictionary } from '../types/dictionary'
-import { Invite } from '../types/invite'
+import { InviteForm } from '../types/invite'
 import { OrganizationUser, User } from '../types/user'
 import { arrayToDictionary } from '../utils/common'
 
@@ -27,12 +26,14 @@ export default function useUsersStore() {
     fetching,
     usersById,
     users,
-    // TODO: fix `Invite` type (there is no `id` field)
-    inviteUser: useCallback(async (orgId: string, data: Invite) => {
+    inviteUser: useCallback(async (orgId: string, data: InviteForm) => {
       setSubmitting(true)
-      const collection = makeOrgCollection<Invite>('invites', orgId)
       try {
-        const result = await collection.save({ ...data, id: nanoid() })
+        const result = await inviteUser({
+          email: data.email,
+          role: 'teacher',
+          orgId,
+        })
         setSubmitting(false)
         return result
       } catch (error: any) {
@@ -45,7 +46,7 @@ export default function useUsersStore() {
       async (orgId: string, userId: string, token: string, role: Role) => {
         setSubmitting(true)
         try {
-          await confirmInvitation(orgId, userId, token, role)
+          await confirmInvitation(token)
           setSubmitting(false)
 
           history.push(`/${orgId}/`)

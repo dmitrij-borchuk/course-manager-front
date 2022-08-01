@@ -1,10 +1,12 @@
 import { useCallback, useEffect, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
+import { Helmet } from 'react-helmet'
 import { useAttendancesState, useGroupsState, useStudentsOfGroupState, useTeachersState } from '../../store'
 import { Group } from '../../components/groups/Group'
 import { useOrgId } from '../../hooks/useOrgId'
 import { useAttendanceRateByStudent } from '../../hooks/useAttendanceRate'
 import { useCurrentOrg } from '../../hooks/useCurrentOrg'
+import { TITLE_POSTFIX } from '../../config'
 
 export const GroupPage = () => {
   let { id } = useParams<{ id: string }>()
@@ -66,13 +68,18 @@ export const GroupPage = () => {
   }
 
   return (
-    <Group
-      data={groupFull}
-      onDelete={onDelete}
-      attendanceRates={attendanceRate}
-      studentsOfGroup={studentsOfGroup}
-      loadingGroups={loadingGroups}
-    />
+    <>
+      <Helmet>
+        <title>Group{TITLE_POSTFIX}</title>
+      </Helmet>
+      <Group
+        data={groupFull}
+        onDelete={onDelete}
+        attendanceRates={attendanceRate}
+        studentsOfGroup={studentsOfGroup}
+        loadingGroups={loadingGroups}
+      />
+    </>
   )
 }
 

@@ -1,8 +1,10 @@
 import { useCallback, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
+import { Helmet } from 'react-helmet'
 import { ROUTES } from '../../constants'
 import { useOrgIdNotStrict } from '../../hooks/useOrgId'
 import { useAuthState } from '../../store'
+import { TITLE_POSTFIX } from '../../config'
 
 export const LogoutPage = () => {
   const history = useHistory()
@@ -23,5 +25,11 @@ export const LogoutPage = () => {
     onLogout()
   }, [onLogout])
 
-  return null
+  return (
+    <>
+      <Helmet>
+        <title>Logout{TITLE_POSTFIX}</title>
+      </Helmet>
+    </>
+  )
 }

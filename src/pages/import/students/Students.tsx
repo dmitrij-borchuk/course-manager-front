@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { FormattedMessage, useIntl } from 'react-intl'
 import { Checkbox, Container, Select, TextInput } from 'react-materialize'
 import { Controller } from 'react-hook-form'
+import { Helmet } from 'react-helmet'
 import csv from 'csvtojson'
 import { SubmitButton } from '../../../components/kit/buttons/SubmitButton'
 import { useFormWithError } from '../../../hooks/useFormWithError'
@@ -13,6 +14,7 @@ import { Text } from '../../../components/kit/text/Text'
 import { useStudentsState } from '../../../store'
 import { useOrgId } from '../../../hooks/useOrgId'
 import { Message } from '../../../components/kit/message/Message'
+import { TITLE_POSTFIX } from '../../../config'
 
 export const StudentsImport = () => {
   const intl = useIntl()
@@ -112,6 +114,10 @@ export const StudentsImport = () => {
 
   return (
     <Container className="px-4">
+      <Helmet>
+        <title>Import Students{TITLE_POSTFIX}</title>
+      </Helmet>
+
       <FormLayout
         header={<FormattedMessage id="import.student.header" />}
         controls={<SubmitButton loading={loading} children={<FormattedMessage id="import.form.read" />} />}

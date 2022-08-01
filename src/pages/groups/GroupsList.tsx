@@ -1,5 +1,7 @@
 import { useEffect } from 'react'
+import { Helmet } from 'react-helmet'
 import { GroupsList } from '../../components/groups/GroupsList'
+import { TITLE_POSTFIX } from '../../config'
 import { useAttendanceRateByGroups } from '../../hooks/useAttendanceRate'
 import { useOrgId } from '../../hooks/useOrgId'
 import { useAttendancesState, useGroupsState } from '../../store'
@@ -32,7 +34,14 @@ export const GroupsListPage = () => {
     }
   }, [clearAttendances, fetchAttendancesForGroups, groups, orgId])
 
-  return <GroupsList items={groups} loading={fetching} attendanceRates={rateByGroup} />
+  return (
+    <>
+      <Helmet>
+        <title>Groups{TITLE_POSTFIX}</title>
+      </Helmet>
+      <GroupsList items={groups} loading={fetching} attendanceRates={rateByGroup} />
+    </>
+  )
 }
 
 export default GroupsListPage

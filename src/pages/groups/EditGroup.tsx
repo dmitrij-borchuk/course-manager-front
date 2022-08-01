@@ -2,11 +2,13 @@ import { useCallback, useEffect } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { useToasts } from 'react-toast-notifications'
 import { FormattedMessage } from 'react-intl'
+import { Helmet } from 'react-helmet'
 import { useGroupsState } from '../../store'
 import { ROUTES } from '../../constants'
 import { EditGroup, GroupForm } from '../../components/groups/EditGroup'
 import { Loader } from '../../components/kit/loader/Loader'
 import { useOrgId } from '../../hooks/useOrgId'
+import { TITLE_POSTFIX } from '../../config'
 
 export const EditGroupPage = () => {
   const history = useHistory()
@@ -48,9 +50,18 @@ export const EditGroupPage = () => {
   // TODO: implement 404
 
   return (
-    <Loader show={fetching}>
-      <EditGroup onSubmit={update} loading={submitting} initial={group} isEdit />
-    </Loader>
+    <>
+      <Helmet>
+        <title>
+          Edit Group
+          {TITLE_POSTFIX}
+        </title>
+      </Helmet>
+
+      <Loader show={fetching}>
+        <EditGroup onSubmit={update} loading={submitting} initial={group} isEdit />
+      </Loader>
+    </>
   )
 }
 

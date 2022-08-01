@@ -2,8 +2,10 @@ import React, { useCallback } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { useHistory } from 'react-router'
 import { useToasts } from 'react-toast-notifications'
+import { Helmet } from 'react-helmet'
 import { Loader } from '../../components/kit/loader/Loader'
 import { EditStudent, StudentForm } from '../../components/students/EditStudent'
+import { TITLE_POSTFIX } from '../../config'
 import { ROUTES } from '../../constants'
 import { useOrgId } from '../../hooks/useOrgId'
 import { useStudentsState } from '../../store'
@@ -39,9 +41,15 @@ export const CreateStudent = () => {
   )
 
   return (
-    <Loader show={fetching}>
-      <EditStudent onSubmit={submit} loading={submitting} />
-    </Loader>
+    <>
+      <Helmet>
+        <title>Create Student{TITLE_POSTFIX}</title>
+      </Helmet>
+
+      <Loader show={fetching}>
+        <EditStudent onSubmit={submit} loading={submitting} />
+      </Loader>
+    </>
   )
 }
 

@@ -10,7 +10,7 @@ type PDFTemplateProps = {
 }
 export const AttendanceReportTemplate = ({ title, heading, attendances }: PDFTemplateProps) => (
   // TODO: move `creator` and `producer` to the config
-  <Document creator="Learnify" producer="Learnify" title={title}>
+  <Document creator="Checkinizer" producer="Checkinizer" title={title}>
     <Page size="A4" style={[styles.page, styles.column]}>
       <View style={[styles.header, styles.flex]} fixed>
         <Text>{heading}</Text>

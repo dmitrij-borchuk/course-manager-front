@@ -1,10 +1,12 @@
 import { useCallback, useEffect, useMemo } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
+import { Helmet } from 'react-helmet'
 import { Loader } from '../../components/kit/loader/Loader'
 import { EditTeacher, TeacherFormOutput } from '../../components/teachers/EditTeacher'
 import { ROUTES } from '../../constants'
 import { useOrgId } from '../../hooks/useOrgId'
 import { useTeachersState } from '../../store'
+import { TITLE_POSTFIX } from '../../config'
 
 export const EditTeacherPage = () => {
   const history = useHistory()
@@ -41,8 +43,14 @@ export const EditTeacherPage = () => {
   // TODO: implement 404
 
   return (
-    <Loader show={fetching}>
-      <EditTeacher onSubmit={update} loading={submitting} initial={formData} isEdit />
-    </Loader>
+    <>
+      <Helmet>
+        <title>Edit Teacher{TITLE_POSTFIX}</title>
+      </Helmet>
+
+      <Loader show={fetching}>
+        <EditTeacher onSubmit={update} loading={submitting} initial={formData} isEdit />
+      </Loader>
+    </>
   )
 }

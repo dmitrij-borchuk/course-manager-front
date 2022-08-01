@@ -6,6 +6,7 @@ import { Dictionary } from '../types/dictionary'
 import { NewStudent, Student } from '../types/student'
 import { arrayToDictionary } from '../utils/common'
 import { StudentOfGroup } from '../types/studentOfGroup'
+import { fetchStudentsByOrg, migrateStudents } from '../api/students'
 
 type StudentsCache = {
   students?: Student[]
@@ -32,15 +33,14 @@ export default function useStudentsStore() {
     studentsById,
     fetching,
     submitting: submittingSemaphore > 0,
-    fetchStudents: useCallback(async (orgId: string) => {
+    fetchStudents: useCallback(async (orgId: number) => {
       if (cache.students) {
         return
       }
       setFetching(true)
-      const collection = makeOrgCollection<Student>('students', orgId)
-      const resp = await collection.getAll()
-      cache.students = resp
-      const studentsById = arrayToDictionary(resp)
+      const resp = await fetchStudentsByOrg(orgId)
+      cache.students = resp.data
+      const studentsById = arrayToDictionary(resp.data)
       setStudentsById(studentsById)
       setFetching(false)
     }, []),
@@ -93,6 +93,17 @@ export default function useStudentsStore() {
     }, []),
     clearStudents: useCallback(() => {
       setStudentsById({})
+    }, []),
+    migrate: useCallback(async () => {
+      try {
+        setSubmittingSemaphore((v) => v + 1)
+        const result = await migrateStudents()
+        setSubmittingSemaphore((v) => v - 1)
+        return result
+      } catch (error) {
+        setSubmittingSemaphore((v) => v - 1)
+        throw error
+      }
     }, []),
   }
 }

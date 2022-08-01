@@ -1,6 +1,7 @@
 import { useCallback, useEffect } from 'react'
 import { StudentList } from '../../components/students/StudentList'
 import { useAttendanceRateByStudent } from '../../hooks/useAttendanceRate'
+import { useCurrentOrg } from '../../hooks/useCurrentOrg'
 import { useOrgId } from '../../hooks/useOrgId'
 import { useAttendancesState, useStudentsState } from '../../store'
 import useStudentsOfGroupStore from '../../store/studentsOfGroupStore'
@@ -10,6 +11,7 @@ export const StudentListPage = () => {
   const { fetchGroupsOfStudent } = useStudentsOfGroupStore()
   const { attendances, clearAttendances, fetchAttendancesForGroups } = useAttendancesState()
   const attendanceRate = useAttendanceRateByStudent(attendances)
+  const org = useCurrentOrg()
   const orgId = useOrgId()
   const fetchAttendance = useCallback(async () => {
     const groups = await fetchGroupsOfStudent(
@@ -24,8 +26,10 @@ export const StudentListPage = () => {
   }, [fetchAttendancesForGroups, fetchGroupsOfStudent, orgId, students])
 
   useEffect(() => {
-    fetchStudents(orgId)
-  }, [fetchStudents, orgId])
+    if (org?.id) {
+      fetchStudents(org.id)
+    }
+  }, [fetchStudents, org?.id])
 
   useEffect(() => {
     if (students.length === 0) {

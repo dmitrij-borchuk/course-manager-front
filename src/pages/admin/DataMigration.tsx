@@ -1,5 +1,6 @@
 import { Divider } from 'react-materialize'
 import { OrganizationMigration } from './OrganizationMigration'
+import { StudentsMigration } from './StudentsMigration'
 import { UsersMigration } from './UsersMigration'
 
 export const DataMigration = () => {
@@ -13,6 +14,12 @@ export const DataMigration = () => {
       </div>
 
       <OrganizationMigration />
+
+      <div className="my-3">
+        <Divider />
+      </div>
+
+      <StudentsMigration />
     </div>
   )
 }

@@ -26,7 +26,7 @@ export default function useUsersStore() {
     fetching,
     usersById,
     users,
-    inviteUser: useCallback(async (orgId: string, data: InviteForm) => {
+    inviteUser: useCallback(async (orgId: number, data: InviteForm) => {
       setSubmitting(true)
       try {
         const result = await inviteUser({

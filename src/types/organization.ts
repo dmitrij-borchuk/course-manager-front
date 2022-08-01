@@ -4,7 +4,7 @@ export type OrganizationFirebase = {
   creator: string
 }
 export type Organization = {
-  id: string
+  id: number
   key: string
   name: string
   owner: number

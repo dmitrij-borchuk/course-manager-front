@@ -10,6 +10,7 @@ export const LogoutPage = () => {
   const { logout } = useAuthState()
   const onLogout = useCallback(async () => {
     await logout()
+    // TODO: clear profile
 
     if (orgId) {
       history.push(`/${orgId}${ROUTES.LOGIN}`)

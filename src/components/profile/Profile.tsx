@@ -72,7 +72,7 @@ const OrganizationList = (props: OrganizationListProps) => {
   const { items, loading } = props
   const renderItem = useCallback((o: Organization) => {
     return (
-      <CollectionItemLink to={`/${o.key}`} data-testid="list-link-item">
+      <CollectionItemLink to={`/${o.key}`} data-testid="list-link-item" key={o.id}>
         <div className="flex justify-between">
           <Ellipsis>{o.name}</Ellipsis>
         </div>

@@ -5,6 +5,7 @@ import { Select } from '../../components/kit/select/Select'
 import { TagsEditor } from '../../components/kit/tag/TagsEditor'
 import { Text } from '../../components/kit/text/Text'
 import { ReportByTag } from '../../components/reports/ReportByTag'
+import { useCurrentOrg } from '../../hooks/useCurrentOrg'
 import { useOrgId } from '../../hooks/useOrgId'
 import { usePersistenceState } from '../../hooks/usePersistenceState'
 import { useAttendancesState, useStudentsState } from '../../store'
@@ -12,7 +13,9 @@ import { SortOrder } from '../../types/sorting'
 
 export const ReportByTagTab = () => {
   const intl = useIntl()
-  const orgId = useOrgId()
+  const orgKey = useOrgId()
+  const org = useCurrentOrg()
+  const orgId = org?.id
   const [to, setTo] = useState(new Date())
   const [from, setFrom] = useState(subMonth(to))
   const [order, setOrder] = usePersistenceState<SortOrder>(orderStoreKey, 'asc')
@@ -37,12 +40,14 @@ export const ReportByTagTab = () => {
   })
 
   useEffect(() => {
-    fetchStudents(orgId)
+    if (orgId) {
+      fetchStudents(orgId)
+    }
   }, [fetchStudents, orgId])
 
   useEffect(() => {
-    fetchAllAttendances(orgId, from, to)
-  }, [fetchAllAttendances, from, orgId, to])
+    fetchAllAttendances(orgKey, from, to)
+  }, [fetchAllAttendances, from, orgKey, to])
 
   if (studentsFetching) {
     return (

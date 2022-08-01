@@ -35,6 +35,7 @@ export const TeachersListPage = () => {
   }, [fetchList])
 
   useEffect(() => {
+    // TODO: optimize this
     fetchAllAttendances(orgId)
     return () => {
       clearAttendances()

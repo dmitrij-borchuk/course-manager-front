@@ -2,6 +2,7 @@ import React, { useCallback, useEffect } from 'react'
 import { FormattedMessage, useIntl } from 'react-intl'
 import { ModalProps } from 'react-materialize'
 import { useToasts } from 'react-toast-notifications'
+import { useCurrentOrg } from '../../hooks/useCurrentOrg'
 import { useOrgId } from '../../hooks/useOrgId'
 import { useToggle } from '../../hooks/useToggle'
 import { useStudentsOfGroupState, useStudentsState } from '../../store'
@@ -19,7 +20,7 @@ interface Props {
 export const AssignStudents = ({ group, onDone = noop, trigger, studentsOfGroup }: Props) => {
   const { addToast } = useToasts()
   const intl = useIntl()
-  const orgId = useOrgId()
+  const orgKey = useOrgId()
   const [open, toggler] = useToggle(false)
   const { students, fetching, fetchStudents } = useStudentsState()
   const { addStudentToGroup, deleteStudentFromGroup } = useStudentsOfGroupState()
@@ -31,7 +32,7 @@ export const AssignStudents = ({ group, onDone = noop, trigger, studentsOfGroup 
         const { added, removed } = getDiff(initialStudentsIds, resultStudentsIds)
         await Promise.all(
           added.map(async (sId) =>
-            addStudentToGroup(orgId, {
+            addStudentToGroup(orgKey, {
               studentId: sId,
               groupId: group.id,
               startDate: new Date().getTime(),
@@ -39,7 +40,7 @@ export const AssignStudents = ({ group, onDone = noop, trigger, studentsOfGroup 
             })
           )
         )
-        await Promise.all(removed.map(async (sId) => deleteStudentFromGroup(orgId, sId, group.id)))
+        await Promise.all(removed.map(async (sId) => deleteStudentFromGroup(orgKey, sId, group.id)))
         toggler.off()
         onDone()
 
@@ -56,11 +57,15 @@ export const AssignStudents = ({ group, onDone = noop, trigger, studentsOfGroup 
         }
       }
     },
-    [addStudentToGroup, addToast, deleteStudentFromGroup, group.id, onDone, orgId, studentsOfGroup, toggler]
+    [addStudentToGroup, addToast, deleteStudentFromGroup, group.id, onDone, orgKey, studentsOfGroup, toggler]
   )
+  const org = useCurrentOrg()
+  const orgId = org?.id
 
   useEffect(() => {
-    fetchStudents(orgId)
+    if (orgId) {
+      fetchStudents(orgId)
+    }
   }, [fetchStudents, orgId])
 
   return (

@@ -1,9 +1,11 @@
 import { useEffect } from 'react'
 import { useHistory } from 'react-router'
+import { Helmet } from 'react-helmet'
 import { EditTeacher } from '../../components/teachers/EditTeacher'
 import { ROUTES } from '../../constants'
 import { useApiCallLazy } from '../../hooks/useApiCall'
 import { createTeacher } from '../../services/teachers'
+import { TITLE_POSTFIX } from '../../config'
 
 // TODO: do we need it
 export const CreateTeacherPage = () => {
@@ -20,5 +22,13 @@ export const CreateTeacherPage = () => {
   // TODO: add loading overlay
   // TODO: probably we can preload roles on app start
 
-  return <EditTeacher onSubmit={create} loading={loading} />
+  return (
+    <>
+      <Helmet>
+        <title>Create Teacher{TITLE_POSTFIX}</title>
+      </Helmet>
+
+      <EditTeacher onSubmit={create} loading={loading} />
+    </>
+  )
 }

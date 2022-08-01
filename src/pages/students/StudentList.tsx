@@ -1,5 +1,7 @@
 import { useCallback, useEffect } from 'react'
+import { Helmet } from 'react-helmet'
 import { StudentList } from '../../components/students/StudentList'
+import { TITLE_POSTFIX } from '../../config'
 import { useAttendanceRateByStudent } from '../../hooks/useAttendanceRate'
 import { useOrgId } from '../../hooks/useOrgId'
 import { useAttendancesState, useStudentsState } from '../../store'
@@ -37,7 +39,15 @@ export const StudentListPage = () => {
     }
   }, [clearAttendances, fetchAttendance, students.length])
 
-  return <StudentList items={students} attendanceRates={attendanceRate} loading={fetching} />
+  return (
+    <>
+      <Helmet>
+        <title>Students{TITLE_POSTFIX}</title>
+      </Helmet>
+
+      <StudentList items={students} attendanceRates={attendanceRate} loading={fetching} />
+    </>
+  )
 }
 
 export default StudentListPage

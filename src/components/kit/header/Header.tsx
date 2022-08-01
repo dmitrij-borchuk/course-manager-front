@@ -75,7 +75,7 @@ export const Header = () => {
   return (
     <Navbar
       alignLinks="right"
-      brand={<Link to="/">Learnify</Link>}
+      brand={<Link to="/">Checkinizer</Link>}
       id="mobile-nav"
       menuIcon={<Icon>menu</Icon>}
       centerChildren

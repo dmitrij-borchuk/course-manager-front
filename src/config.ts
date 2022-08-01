@@ -8,3 +8,6 @@ export const ROLES = {
   Teacher: 'Teacher',
 }
 export type Role = keyof typeof ROLES
+
+export const APP_NAME_TITLE = 'Checkinizer'
+export const TITLE_POSTFIX = ` | ${APP_NAME_TITLE}`

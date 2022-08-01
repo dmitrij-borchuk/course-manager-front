@@ -2,11 +2,13 @@ import React, { useCallback, useEffect } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { useHistory, useParams } from 'react-router-dom'
 import { useToasts } from 'react-toast-notifications'
+import { Helmet } from 'react-helmet'
 import { Loader } from '../../components/kit/loader/Loader'
 import { EditStudent, StudentForm } from '../../components/students/EditStudent'
 import { ROUTES } from '../../constants'
 import { useOrgId } from '../../hooks/useOrgId'
 import { useStudentsState } from '../../store'
+import { TITLE_POSTFIX } from '../../config'
 
 export const EditStudentPage = () => {
   const history = useHistory()
@@ -52,9 +54,15 @@ export const EditStudentPage = () => {
   // TODO: implement 404
 
   return (
-    <Loader show={fetching}>
-      <EditStudent onSubmit={update} loading={submitting} initial={student} isEdit />
-    </Loader>
+    <>
+      <Helmet>
+        <title>Edit Student{TITLE_POSTFIX}</title>
+      </Helmet>
+
+      <Loader show={fetching}>
+        <EditStudent onSubmit={update} loading={submitting} initial={student} isEdit />
+      </Loader>
+    </>
   )
 }
 

@@ -1,10 +1,12 @@
 import { ComponentProps, useCallback } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useToasts } from 'react-toast-notifications'
+import { Helmet } from 'react-helmet'
 import { ROUTES } from '../../constants'
 import { useAuthState } from '../../store'
 import { Login } from '../../components/auth/Login'
 import { useOrgIdNotStrict } from '../../hooks/useOrgId'
+import { TITLE_POSTFIX } from '../../config'
 
 type SubmitData = Parameters<ComponentProps<typeof Login>['onSubmit']>[0]
 
@@ -32,6 +34,10 @@ export const LoginPage = () => {
 
   return (
     <>
+      <Helmet>
+        <title>Login{TITLE_POSTFIX}</title>
+      </Helmet>
+
       <Login onSubmit={onLoginSubmit} loading={loading} />
     </>
   )

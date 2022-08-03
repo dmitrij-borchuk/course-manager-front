@@ -20,7 +20,7 @@ export const TeachersListPage = () => {
   const org = useCurrentOrg()
   const fetchList = useCallback(async () => {
     if (!org?.id) {
-      throw new Error('Organization name not found')
+      return
     }
     try {
       await fetchTeachers(org.id)
@@ -33,8 +33,10 @@ export const TeachersListPage = () => {
   }, [addToast, fetchTeachers, org?.id])
 
   useEffect(() => {
-    fetchList()
-  }, [fetchList])
+    if (org?.id) {
+      fetchList()
+    }
+  }, [fetchList, org])
 
   useEffect(() => {
     fetchAllAttendances(orgId)

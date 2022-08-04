@@ -75,6 +75,9 @@ const OrganizationList = (props: OrganizationListProps) => {
       <CollectionItemLink to={`/${o.key}`} data-testid="list-link-item">
         <div className="flex justify-between">
           <Ellipsis>{o.name}</Ellipsis>
+          <Text type="body" color="textGray" className="m-0">
+            {o.role}
+          </Text>
         </div>
       </CollectionItemLink>
     )

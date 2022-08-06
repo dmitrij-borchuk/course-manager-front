@@ -2,6 +2,7 @@ import { DocumentSnapshot, QuerySnapshot } from 'firebase/firestore'
 import * as firestore from 'firebase/firestore'
 import { IntlProvider } from 'react-intl'
 import { ToastProvider } from 'react-toast-notifications'
+import * as reactRouterDom from 'react-router-dom'
 import messages from '../intl/messagesEn'
 import StoreProvider from '../store'
 
@@ -87,4 +88,11 @@ export function mockDoc() {
       pathToData = {}
     },
   }
+}
+
+const { useParams } = asMock(reactRouterDom)
+export function mockOrgId(id: string) {
+  useParams.mockReturnValue({
+    orgId: id,
+  })
 }

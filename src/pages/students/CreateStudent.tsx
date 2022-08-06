@@ -3,7 +3,6 @@ import { FormattedMessage } from 'react-intl'
 import { useHistory } from 'react-router'
 import { useToasts } from 'react-toast-notifications'
 import { Helmet } from 'react-helmet'
-import { Loader } from '../../components/kit/loader/Loader'
 import { EditStudent, StudentForm } from '../../components/students/EditStudent'
 import { TITLE_POSTFIX } from '../../config'
 import { ROUTES } from '../../constants'
@@ -14,7 +13,7 @@ export const CreateStudent = () => {
   const { addToast } = useToasts()
   const history = useHistory()
   const orgId = useOrgId()
-  const { createStudent, fetching, submitting } = useStudentsState()
+  const { createStudent, submitting } = useStudentsState()
 
   const submit = useCallback(
     async (data: StudentForm) => {
@@ -46,9 +45,7 @@ export const CreateStudent = () => {
         <title>Create Student{TITLE_POSTFIX}</title>
       </Helmet>
 
-      <Loader show={fetching}>
-        <EditStudent onSubmit={submit} loading={submitting} />
-      </Loader>
+      <EditStudent onSubmit={submit} loading={submitting} />
     </>
   )
 }

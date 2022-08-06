@@ -33,7 +33,7 @@ export const messages = {
   'auth.reset.success': 'Reset password email has been sent.',
   'header.nav.dashboard': 'Dashboard',
   'header.nav.users': 'Users',
-  'header.nav.teachers': 'Teachers',
+  'header.nav.teachers': 'Users',
   'header.nav.groups': 'Groups',
   'header.nav.students': 'Students',
   'header.nav.reports': 'Reports',

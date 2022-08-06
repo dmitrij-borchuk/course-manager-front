@@ -40,8 +40,8 @@ export const messages = {
   'header.nav.logout': 'Logout',
   'header.nav.login': 'Sign in',
 
-  'teachers.list.title': 'Teachers',
-  'teachers.list.empty': 'There are no teachers yet',
+  'teachers.list.title': 'Users',
+  'teachers.list.empty': 'There are no users yet',
   'teachers.add.title': 'Invite teacher',
   'teachers.edit.title': 'Edit teacher',
   'teachers.groups.empty': "The teacher doesn't have any classes",

@@ -81,7 +81,7 @@ function useAttendance() {
   const [fromDate, setFromDate] = useState(new Date(toDate.getTime() - oneDay * 6))
   const [lastLoadDate, setLastLoadDate] = useState(toDate)
   const {
-    fetchAllAttendances,
+    fetchAttendancesByDate,
     fetchAttendancesForTeacher,
     attendances,
     clearAttendances,
@@ -100,7 +100,7 @@ function useAttendance() {
 
       try {
         if (org.role === ROLES.Administrator) {
-          await fetchAllAttendances(orgKey, fromDate, toDate)
+          await fetchAttendancesByDate(orgKey, fromDate, toDate)
         } else {
           await fetchAttendancesForTeacher(orgKey, organizationUser.id, fromDate, toDate)
         }
@@ -111,7 +111,7 @@ function useAttendance() {
         })
       }
     },
-    [addToast, fetchAllAttendances, fetchAttendancesForTeacher, org, orgKey, organizationUser]
+    [addToast, fetchAttendancesByDate, fetchAttendancesForTeacher, org, orgKey, organizationUser]
   )
   const fetchNeededGroups = useCallback(async () => {
     if (!org || !organizationUser) {

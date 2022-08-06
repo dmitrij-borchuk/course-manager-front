@@ -18,7 +18,9 @@ ReactDOM.render(
 reportWebVitals(sendToAnalytics)
 
 function sendToAnalytics({ id, name, value }: Metric) {
-  gtag('event', name, {
+  // @ts-ignore
+  dataLayer.push({
+    event: name,
     event_category: 'Web Vitals',
     event_value: Math.round(name === 'CLS' ? value * 1000 : value), // values must be integers
     event_label: id, // id unique to current page load

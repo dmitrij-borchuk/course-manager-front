@@ -8,6 +8,7 @@ import { getUsersList } from '../services/users'
 import { Dictionary } from '../types/dictionary'
 import { InviteForm } from '../types/invite'
 import { OrganizationUser, User } from '../types/user'
+import { sendToAnalytics } from '../utils/analitics'
 import { arrayToDictionary } from '../utils/common'
 
 export default function useUsersStore() {
@@ -79,6 +80,12 @@ export default function useUsersStore() {
         const result = await getProfile()
         setProfile(result.data)
         setFetching(false)
+
+        sendToAnalytics({
+          user_Id: result.data.id,
+        })
+
+        return result.data
       } catch (error) {
         setFetching(false)
         throw error

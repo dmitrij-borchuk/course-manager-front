@@ -5,6 +5,7 @@ import { ROUTES } from '../../constants'
 import { useOrgIdNotStrict } from '../../hooks/useOrgId'
 import { useAuthState } from '../../store'
 import { TITLE_POSTFIX } from '../../config'
+import { sendToAnalytics } from '../../utils/analitics'
 
 export const LogoutPage = () => {
   const history = useHistory()
@@ -12,6 +13,10 @@ export const LogoutPage = () => {
   const { logout } = useAuthState()
   const onLogout = useCallback(async () => {
     await logout()
+
+    sendToAnalytics({
+      user_Id: null,
+    })
 
     if (orgId) {
       history.push(`/${orgId}${ROUTES.LOGIN}`)

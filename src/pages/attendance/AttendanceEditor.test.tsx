@@ -14,7 +14,7 @@ jest.mock('react-materialize', () => ({
       <input onChange={(e) => onChange(new Date(e.currentTarget.value))} {...props} />
     </label>
   ),
-  Button: (props: any) => <button {...props} />,
+  Button: ({ flat, ...props }: any) => <button {...props} />,
 }))
 
 const { useParams } = asMock(reactRouterDom)

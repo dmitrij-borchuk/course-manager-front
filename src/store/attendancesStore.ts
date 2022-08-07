@@ -124,3 +124,7 @@ export function useAttendancesStore() {
 // We use a lot of attendance data,
 // to optimize reading from Firebase, we going to fetch it only once
 let isFetched = false
+
+export function resetAttendanceCache() {
+  isFetched = false
+}

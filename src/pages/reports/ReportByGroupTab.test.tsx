@@ -8,6 +8,7 @@ import { Group } from '../../types/group'
 import { Attendance } from '../../types/attendance'
 import { StudentOfGroup } from '../../types/studentOfGroup'
 import { Student } from '../../types/student'
+import { resetAttendanceCache } from '../../store/attendancesStore'
 
 jest.mock('react-router-dom', () => {
   return {
@@ -46,6 +47,7 @@ const { useParams } = jest.requireMock('react-router-dom')
 
 describe('ReportByGroupTab', () => {
   beforeEach(() => {
+    resetAttendanceCache()
     useParams.mockReturnValue({
       orgId: 'orgId',
     })
@@ -53,27 +55,24 @@ describe('ReportByGroupTab', () => {
   })
   test('should not fail', async () => {
     getDocs.mockResolvedValue([] as any)
-    await act(async () => {
-      render(
-        <TestWrapper>
-          <ReportByGroupTab />
-        </TestWrapper>
-      )
-    })
+    render(
+      <TestWrapper>
+        <ReportByGroupTab />
+      </TestWrapper>
+    )
   })
   test('should generate report with sorting', async () => {
     const { attendances, groups, students, studentsOfGroup } = getSortingDataMocks()
     mockGetDocs(groups, studentsOfGroup, attendances, students)
-    usePDF.mockReturnValue([{} as any, jest.fn()])
+    usePDF.mockReturnValue([{ url: 'instance.url' } as any, jest.fn()])
 
-    await act(async () => {
-      render(
-        <TestWrapper>
-          <ReportByGroupTab />
-        </TestWrapper>
-      )
-    })
+    render(
+      <TestWrapper>
+        <ReportByGroupTab />
+      </TestWrapper>
+    )
 
+    await screen.findByRole('button', { name: 'Generate report' })
     const lastCall = usePDF.mock.calls[usePDF.mock.calls.length - 1]
     const document = lastCall[0].document
     render(document)
@@ -96,15 +95,13 @@ describe('ReportByGroupTab', () => {
     mockGetDocs(groups, studentsOfGroup, attendances, students)
     usePDF.mockReturnValue([{} as any, jest.fn()])
 
-    await act(async () => {
-      render(
-        <TestWrapper>
-          <ReportByGroupTab />
-        </TestWrapper>
-      )
-    })
+    render(
+      <TestWrapper>
+        <ReportByGroupTab />
+      </TestWrapper>
+    )
 
-    const sortOrderSelector = screen.getByLabelText('Sort order')
+    const sortOrderSelector = await screen.findByLabelText('Sort order')
     userEvent.selectOptions(sortOrderSelector, 'Descending')
 
     const lastCall = usePDF.mock.calls[usePDF.mock.calls.length - 1]

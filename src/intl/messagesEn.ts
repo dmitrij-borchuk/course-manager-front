@@ -21,6 +21,7 @@ export const messages = {
   'common.from': 'From',
   'common.to': 'To',
   'common.name.label': 'Name',
+  'common.unknownError': 'Unknown error',
 
   'Auth.form.error.invalid': 'Identifier or password invalid.',
   'Auth.form.error.500': 'Something went wrong',
@@ -31,6 +32,7 @@ export const messages = {
   'auth.register.title': 'Register',
   'auth.resetLink.label': 'Forgot password?',
   'auth.reset.success': 'Reset password email has been sent.',
+  'auth.login.wrongLoginPassword': 'Login or password is incorrect',
   'header.nav.dashboard': 'Dashboard',
   'header.nav.users': 'Users',
   'header.nav.teachers': 'Users',

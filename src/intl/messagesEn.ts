@@ -103,6 +103,8 @@ export const messages = {
   'profile.organizations.header': 'Your organizations',
   'profile.user.noName': 'No name',
 
+  'organizations.notFound': 'Organization not found',
+  'organizations.notFound.backHome': 'back to home',
   'organizations.add.title': 'Add organization',
   'organizations.edit.title': 'Edit organization',
   'organizations.edit.noUserId': 'Looks like user is logged out',

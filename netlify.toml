@@ -5,6 +5,6 @@
 
 [[redirects]]
   from = "https://gifted-hoover-fc2e5f.netlify.app/*"
-  to = "https://app.checkinizer.com"
+  to = "https://app.checkinizer.com/:splat"
   status = 301
   force = true

@@ -1,10 +1,10 @@
 [[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
-
-[[redirects]]
-  from = "gifted-hoover-fc2e5f.netlify.app/*"
+  from = "https://gifted-hoover-fc2e5f.netlify.app/*"
   to = "https://app.checkinizer.com/:splat"
   status = 301
   force = true
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

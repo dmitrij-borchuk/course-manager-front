@@ -4,7 +4,7 @@
   status = 200
 
 [[redirects]]
-  from = "https://gifted-hoover-fc2e5f.netlify.app"
+  from = "https://gifted-hoover-fc2e5f.netlify.app/*"
   to = "https://app.checkinizer.com"
   status = 301
   force = true

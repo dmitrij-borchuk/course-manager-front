@@ -137,7 +137,7 @@ const OrganizationGuardedRoute = () => {
   }
 
   return (
-    <>
+    <Switch>
       <AuthGuardedRoute component={DashboardPage} path="/:orgId/" exact />
 
       <AuthGuardedRoute component={InviteUserPage} path="/:orgId/invite" exact />
@@ -179,6 +179,6 @@ const OrganizationGuardedRoute = () => {
 
       {/* Import */}
       <AuthGuardedRoute component={StudentImportPage} path="/:orgId/import" exact />
-    </>
+    </Switch>
   )
 }

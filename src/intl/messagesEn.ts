@@ -83,7 +83,6 @@ export const messages = {
   'students.add.title': 'Add student',
   'students.edit.title': 'Edit student',
   'students.list.title': 'Students',
-  'students.list.attendanceRate.label': 'Attendance Rate',
   'students.groups.empty': 'Student is not attending any classes',
   'students.delete.header': 'Remove student',
   'students.delete.text': 'Are you sure you want to delete this student?',
@@ -126,6 +125,7 @@ export const messages = {
   'attendance.edit.success': 'Report has been successfully submitted',
   'attendance.delete.header': 'Remove attendance report',
   'attendance.delete.text': 'Are you sure you want to delete this attendance report?',
+  'attendance.listItem.header.title': 'Attendance Rate',
 
   'import.student.header': 'Import students',
   'import.student.file.label': 'file',

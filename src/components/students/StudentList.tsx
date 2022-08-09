@@ -47,7 +47,7 @@ export const StudentList: React.FC<Props> = ({ className = '', loading = false, 
         sortId,
         items: [
           { id: 'name', label: <FormattedMessage id="common.name.label" />, sortable: true },
-          { id: 'attendanceRate', label: <FormattedMessage id="students.list.attendanceRate.label" />, sortable: true },
+          { id: 'attendanceRate', label: <FormattedMessage id="attendance.listItem.header.title" />, sortable: true },
         ],
         onSort,
         sortOrder,

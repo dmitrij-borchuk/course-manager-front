@@ -19,12 +19,12 @@ request.interceptors.response.use(
   function (config) {
     return config
   },
-  function (config) {
-    if (config.response.status === 401 && window.location.pathname !== '/login') {
+  function (error) {
+    if (error.response.status === 401 && window.location.pathname !== '/login') {
       window.location.assign('/login')
     }
 
-    return config
+    throw error
   }
 )
 

@@ -15,6 +15,19 @@ request.interceptors.request.use(function (config) {
   return config
 })
 
+request.interceptors.response.use(
+  function (config) {
+    return config
+  },
+  function (config) {
+    if (config.response.status === 401) {
+      window.location.assign('/login')
+    }
+
+    return config
+  }
+)
+
 export function setHeader(key: string, value: string) {
   headers[key] = value
 }

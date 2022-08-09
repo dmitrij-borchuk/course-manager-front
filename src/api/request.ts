@@ -20,7 +20,7 @@ request.interceptors.response.use(
     return config
   },
   function (config) {
-    if (config.response.status === 401) {
+    if (config.response.status === 401 && window.location.pathname !== '/login') {
       window.location.assign('/login')
     }
 

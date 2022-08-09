@@ -20,7 +20,6 @@ export function useAuthStore() {
   const [initiatingAuth, setInitiatingAuth] = useState(true)
   useEffect(() => {
     auth.onIdTokenChanged(async (user) => {
-      console.log('=-= onIdTokenChanged', user)
       setCurrentUser(user)
       setUser(user)
       if (user) {

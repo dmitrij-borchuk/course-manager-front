@@ -34,7 +34,7 @@ import { UsersListPage } from './pages/users/UsersList'
 import { StudentImportPageLoadable } from './pages/import/students'
 import { ReportsPageLoadable } from './pages/reports'
 import { AdminPageLoadable } from './pages/admin'
-import { useOrganizationsState, useUsersState } from './store'
+import { useAuthState, useOrganizationsState, useUsersState } from './store'
 import { useCurrentOrg } from './hooks/useCurrentOrg'
 import { Loader } from './components/kit/loader/Loader'
 import { FormattedMessage } from 'react-intl'
@@ -61,10 +61,13 @@ const AdminPage = () => (
 )
 
 export const Routing = React.memo(function () {
+  const { currentUser } = useAuthState()
   const { fetchProfile } = useUsersState()
   useEffect(() => {
-    fetchProfile()
-  }, [fetchProfile])
+    if (currentUser) {
+      fetchProfile()
+    }
+  }, [fetchProfile, currentUser])
 
   return (
     <Switch>

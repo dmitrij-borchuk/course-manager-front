@@ -43,10 +43,14 @@ export const EditSchedule: React.FC<Props> = ({
       try {
         await onSubmit(d)
       } catch (error) {
-        setError('start', {
-          message: error.message,
-          shouldFocus: true,
-        })
+        if (error instanceof Error) {
+          setError('start', {
+            message: error.message,
+            shouldFocus: true,
+          })
+          return
+        }
+        throw error
       }
     },
     [onSubmit, setError]

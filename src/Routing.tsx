@@ -7,8 +7,6 @@ import { LoginPageLoadable } from './pages/login'
 import { ResetPasswordPage } from './pages/resetPassword/ResetPasswordPage'
 import { RegisterPage } from './pages/register/RegisterPage'
 import { DashboardPage } from './pages/dashboard/Dashboard'
-import { EditTeacherPage } from './pages/teachers/EditTeacher'
-import { CreateTeacherPage } from './pages/teachers/CreateTeacher'
 import { TeachersListPage } from './pages/teachers/TeachersList'
 import { TeacherPage } from './pages/teachers/Teacher'
 import {
@@ -152,8 +150,6 @@ const OrganizationGuardedRoute = () => {
       {/* <AuthGuardedRoute component={TeacherPage} path={`/:orgId$/{ROUTES.TEACHERS_ROOT}/:id`} exact /> */}
 
       {/* Teachers */}
-      <AuthGuardedRoute component={CreateTeacherPage} path={`/:orgId${ROUTES.TEACHERS_ADD}`} exact />
-      <AuthGuardedRoute component={EditTeacherPage} path={`/:orgId${ROUTES.TEACHERS_EDIT}/:id`} exact />
       <AuthGuardedRoute component={TeachersListWithHeader} path={`/:orgId${ROUTES.TEACHERS_LIST}`} exact />
       <AuthGuardedRoute component={TeacherPage} path={`/:orgId${ROUTES.TEACHERS_ROOT}/:id`} exact />
 

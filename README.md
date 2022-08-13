@@ -10,8 +10,6 @@ We are using https://www.conventionalcommits.org/en/v1.0.0/#specification
 
 ## Testing
 
-TODO: Write about firebase emulator
-
 TODO: write about Cypress
 Test users (todo: check it):
 `Admin`:

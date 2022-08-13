@@ -1,6 +1,8 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { FormattedMessage, useIntl } from 'react-intl'
-import { Button, Chip, Icon, Modal, ModalProps } from 'react-materialize'
+import { Button, Modal, ModalProps } from 'react-materialize'
+import Autocomplete from '@mui/material/Autocomplete'
+import TextField from '@mui/material/TextField'
 import { Student } from '../../types/student'
 import { ButtonWithLoader } from '../kit/buttons/ButtonWithLoader'
 import './styles.css'
@@ -41,24 +43,6 @@ export function SelectStudentsDialog(props: Props) {
     },
     [onSubmit, selected]
   )
-  const onSelect = useCallback(
-    async (name: string) => {
-      const indexInItems = items.findIndex((s) => s.name === name)
-      if (indexInItems < 0) {
-        return
-      }
-
-      const index = selected.findIndex((s) => s.name === name)
-      if (index < 0) {
-        return setSelected([...selected, items[indexInItems]])
-      }
-      const copy = [...selected]
-      copy.splice(index, 1)
-
-      setSelected(copy)
-    },
-    [items, selected]
-  )
   const resetSelected = useCallback(() => {
     setSelected(initialArray)
   }, [initialArray])
@@ -76,17 +60,6 @@ export function SelectStudentsDialog(props: Props) {
       <FormattedMessage id="common.dialog.btn.ok" />
     </ButtonWithLoader>
   )
-
-  const autoComplete = items.reduce<Record<string, string | null>>((acc, item) => {
-    return {
-      ...acc,
-      [item.name]: null,
-    }
-  }, {})
-
-  const selectedItems = selected.map((item) => ({
-    tag: item.name,
-  }))
 
   return (
     <Modal
@@ -114,38 +87,30 @@ export function SelectStudentsDialog(props: Props) {
       }}
       // @ts-ignore
       className="students-select-dialog"
+      data-testid="students-select-dialog"
     >
-      <Chip
-        close={false}
-        closeIcon={<Icon className="close">close</Icon>}
-        options={{
-          data: selectedItems,
-          placeholder: intl.formatMessage({ id: 'groups.assignStudents.namePlaceholder' }),
-          secondaryPlaceholder: intl.formatMessage({ id: 'groups.assignStudents.moreNamePlaceholder' }),
-          autocompleteOptions: {
-            data: autoComplete,
-            limit: Infinity,
-            minLength: 1,
-          },
-          onChipAdd: function noRefCheck(elements, chip) {
-            const names = Object.keys(autoComplete)
-            const name = elements[0].querySelector('input').value
-            if (names.includes(name)) {
-              onSelect(name)
-              return
-            }
-
-            // Unknown name, removing it
-            const close = chip.querySelector('.close')
-            if (close instanceof HTMLElement) {
-              close.click()
-            }
-          },
-          onChipDelete: function (elements, tagElement) {
-            const name = tagElement.childNodes[0]
-            onSelect(name.textContent || '')
-          },
-        }}
+      <Autocomplete<Student, true>
+        multiple
+        autoSelect
+        autoHighlight
+        id="tags-standard"
+        options={items}
+        getOptionLabel={(option) => option.name}
+        value={selected}
+        onChange={(event, value) => setSelected(value)}
+        isOptionEqualToValue={(option, value) => option.id === value.id}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            inputProps={{
+              ...params.inputProps,
+              className: 'browser-default',
+            }}
+            variant="standard"
+            label={<FormattedMessage id="groups.assignStudents.namePlaceholder" />}
+            placeholder={intl.formatMessage({ id: 'groups.assignStudents.moreNamePlaceholder' })}
+          />
+        )}
       />
     </Modal>
   )

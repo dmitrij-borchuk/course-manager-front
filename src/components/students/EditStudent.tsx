@@ -5,7 +5,6 @@ import { Input } from '../kit/input/Input'
 import { SubmitButton } from '../kit/buttons/SubmitButton'
 import { FormLayout } from '../kit/formLayout/FormLayout'
 import { TagsEditor } from '../kit/tag/TagsEditor'
-import { Text } from '../kit/text/Text'
 import { ExternalError, useFormWithError } from '../../hooks/useFormWithError'
 import { useUpdateInitialForm } from '../../hooks/useUpdateInitialForm'
 

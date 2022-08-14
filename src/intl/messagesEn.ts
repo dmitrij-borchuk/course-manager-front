@@ -81,6 +81,7 @@ export const messages = {
   'groups.studentList.removeBtn': 'Remove from group',
 
   'students.add.title': 'Add student',
+  'students.add': 'Add student',
   'students.edit.title': 'Edit student',
   'students.list.title': 'Students',
   'students.groups.empty': 'Student is not attending any classes',

@@ -1,20 +1,27 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { FormattedMessage, useIntl } from 'react-intl'
 import { Button } from 'react-materialize'
-import Autocomplete from '@mui/material/Autocomplete'
-import TextField from '@mui/material/TextField'
+import { Link } from 'react-router-dom'
+import Icon from '@mui/material/Icon'
 import Dialog from '@mui/material/Dialog'
+import Tooltip from '@mui/material/Tooltip'
+import TextField from '@mui/material/TextField'
+import IconButton from '@mui/material/IconButton'
 import DialogTitle from '@mui/material/DialogTitle'
 import { useTheme } from '@mui/material/styles'
+import Autocomplete from '@mui/material/Autocomplete'
 import DialogContent from '@mui/material/DialogContent'
 import DialogActions from '@mui/material/DialogActions'
 import useMediaQuery from '@mui/material/useMediaQuery'
-import { Student } from '../../types/student'
 import { ButtonWithLoader } from '../kit/buttons/ButtonWithLoader'
+import { useOrgId } from '../../hooks/useOrgId'
+import { Student } from '../../types/student'
+import { ROUTES } from '../../constants'
 import './styles.css'
 
 interface Props {
   items: Student[]
+  groupId: string
   header?: string
   open?: boolean
   loading?: boolean
@@ -23,7 +30,7 @@ interface Props {
   initial?: Student[]
 }
 export function SelectStudentsDialog(props: Props) {
-  const { onSubmit, open = false, header, items, onClose, initial } = props
+  const { onSubmit, open = false, header, items, onClose, initial, groupId } = props
   const theme = useTheme()
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'))
   const intl = useIntl()
@@ -71,7 +78,10 @@ export function SelectStudentsDialog(props: Props) {
         className="students-select-dialog"
         data-testid="students-select-dialog"
       >
-        <DialogTitle>{header}</DialogTitle>
+        <DialogTitle className="flex justify-between">
+          {header}
+          <AddNewItemBtn group={groupId} />
+        </DialogTitle>
         <DialogContent>
           <Autocomplete<Student, true>
             multiple
@@ -108,5 +118,22 @@ export function SelectStudentsDialog(props: Props) {
         </DialogActions>
       </Dialog>
     </>
+  )
+}
+
+function AddNewItemBtn({ group }: { group: string }) {
+  const intl = useIntl()
+  const orgId = useOrgId()
+
+  return (
+    <Tooltip title={intl.formatMessage({ id: 'students.add' })}>
+      <Link
+        to={`/${orgId}${ROUTES.STUDENTS_ADD}?backUrl=/${orgId}${ROUTES.GROUPS_ROOT}/${group}?action=openStudentsDialog`}
+      >
+        <IconButton aria-label={intl.formatMessage({ id: 'students.add' })}>
+          <Icon>person_add</Icon>
+        </IconButton>
+      </Link>
+    </Tooltip>
   )
 }

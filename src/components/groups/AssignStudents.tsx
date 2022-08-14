@@ -1,8 +1,10 @@
 import React, { useCallback, useEffect } from 'react'
 import { FormattedMessage, useIntl } from 'react-intl'
 import { ModalProps } from 'react-materialize'
+import { useHistory } from 'react-router-dom'
 import { useToasts } from 'react-toast-notifications'
 import { useOrgId } from '../../hooks/useOrgId'
+import { useQuery } from '../../hooks/useQuery'
 import { useToggle } from '../../hooks/useToggle'
 import { useStudentsOfGroupState, useStudentsState } from '../../store'
 import { Group } from '../../types/group'
@@ -18,9 +20,12 @@ interface Props {
 }
 export const AssignStudents = ({ group, onDone = noop, trigger, studentsOfGroup }: Props) => {
   const { addToast } = useToasts()
+  const query = useQuery()
+  const history = useHistory()
+  const action = query.get('action')
   const intl = useIntl()
   const orgId = useOrgId()
-  const [open, toggler] = useToggle(false)
+  const [open, toggler] = useToggle(action === 'openStudentsDialog')
   const { students, fetching, fetchStudents } = useStudentsState()
   const { addStudentToGroup, deleteStudentFromGroup } = useStudentsOfGroupState()
   const onSubmit = useCallback(
@@ -63,6 +68,15 @@ export const AssignStudents = ({ group, onDone = noop, trigger, studentsOfGroup 
     fetchStudents(orgId)
   }, [fetchStudents, orgId])
 
+  useEffect(() => {
+    if (query.get('action') && !open) {
+      query.delete('action')
+      history.replace({
+        search: query.toString(),
+      })
+    }
+  }, [open, history, query])
+
   return (
     <>
       <span onClick={toggler.on}>{trigger}</span>
@@ -74,6 +88,7 @@ export const AssignStudents = ({ group, onDone = noop, trigger, studentsOfGroup 
         onSubmit={onSubmit}
         onClose={toggler.off}
         initial={studentsOfGroup}
+        groupId={group.id}
       />
     </>
   )

@@ -85,7 +85,6 @@ export function SelectStudentsDialog(props: Props) {
         <DialogContent>
           <Autocomplete<Student, true>
             multiple
-            autoSelect
             autoHighlight
             id="tags-standard"
             options={items}

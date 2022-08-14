@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { fireEvent, render, screen, waitForElementToBeRemoved } from '@testing-library/react'
 import { ComponentProps } from 'react'
 import { resetCache } from '../../store/studentsStore'
 import { mockGetDocs, mockOrgId, TestWrapper } from '../../utils/test'
@@ -101,6 +101,5 @@ async function closeDialog() {
   const cancelBtn = await screen.findByRole('button', { name: /cancel/i })
   fireEvent.click(cancelBtn)
   const dialog = screen.getByTestId('students-select-dialog')
-  // Check that dialog is closed
-  await waitFor(() => expect(dialog.style.display).toBe('none'))
+  await waitForElementToBeRemoved(dialog)
 }

@@ -1,5 +1,6 @@
-.students-select-dialog.modal {
-  overflow-y: unset;
+.students-select-dialog {
+  max-width: 100vw;
+  max-height: 100vh;
 }
 
 .collection-menu-btn {

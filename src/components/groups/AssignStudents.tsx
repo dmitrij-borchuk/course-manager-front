@@ -72,7 +72,7 @@ export const AssignStudents = ({ group, onDone = noop, trigger, studentsOfGroup 
         header={intl.formatMessage({ id: 'groups.students.assignDialog.header' })}
         items={students}
         onSubmit={onSubmit}
-        onCloseStart={toggler.off}
+        onClose={toggler.off}
         initial={studentsOfGroup}
       />
     </>

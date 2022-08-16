@@ -1,8 +1,7 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { FormattedMessage, useIntl } from 'react-intl'
-import { TextInput } from 'react-materialize'
-import { Text } from '../text/Text'
-import { Tag } from './Tag'
+import TextField from '@mui/material/TextField'
+import Autocomplete from '@mui/material/Autocomplete'
 
 interface Props {
   loading?: boolean
@@ -14,99 +13,42 @@ interface Props {
 }
 export const TagsEditor = ({ disabled, loading, error, value = [], onUpdate, inputClassName }: Props) => {
   const intl = useIntl()
-  const inputRef = useRef<HTMLInputElement>(null)
-  const [editIndex, setEditIndex] = useState<number | null>(null)
-  const onKeyDown = useCallback(
-    (e) => {
-      if (e.key !== 'Enter') {
-        return
-      }
-      e.preventDefault()
-      const newTag = e.target.value
-      const clone = [...value]
-      if (editIndex !== null) {
-        const foundIndex = clone.indexOf(newTag)
-        if (foundIndex !== -1 && foundIndex !== editIndex) {
-          clone.splice(editIndex, 1)
-        } else {
-          clone.splice(editIndex, 1, newTag)
-        }
-      } else if (!clone.includes(newTag)) {
-        clone.push(newTag)
-      }
-      onUpdate && onUpdate(clone)
-      e.target.value = ''
-      setEditIndex(null)
-    },
-    [editIndex, onUpdate, value]
-  )
-  const onRemove = useCallback(
-    (index: number) => {
-      const clone = [...value]
-      clone.splice(index, 1)
-      onUpdate && onUpdate(clone)
-    },
-    [onUpdate, value]
-  )
-  const onEdit = useCallback((index: number) => {
-    setEditIndex(index)
-  }, [])
+  const [selected, setSelected] = useState<string[]>(value)
   useEffect(() => {
-    const el = inputRef.current
-    if (!el) {
-      return
-    }
-    el.addEventListener('keydown', onKeyDown)
-
-    return () => {
-      el.removeEventListener('keydown', onKeyDown)
-    }
-  }, [onKeyDown])
-  useEffect(() => {
-    if (inputRef.current) {
-      if (editIndex !== null) {
-        inputRef.current.value = value[editIndex]
-        inputRef.current?.focus()
-      } else {
-        inputRef.current.value = ''
-      }
-    }
-  }, [editIndex, value])
-  useEffect(() => {
-    setEditIndex(null)
-  }, [value])
+    onUpdate && onUpdate(selected)
+  }, [onUpdate, selected])
 
   return (
     <div>
-      {value.length > 0 && (
-        <Text type="body" className="color-text-gray">
-          <FormattedMessage id="students.tags.editInfo" />
-        </Text>
-      )}
-      {value.length === 0 ? (
-        <Text type="body" className="color-text-gray">
-          <FormattedMessage id="common.tags.empty" />
-        </Text>
-      ) : (
-        value.map((t, i) => (
-          <Tag
-            key={t}
-            className={`mr-1 ${editIndex === i ? 'bg-secondary' : ''}`}
-            onClose={() => onRemove(i)}
-            onClick={() => onEdit(i)}
-          >
-            {t}
-          </Tag>
-        ))
-      )}
       <div className="mt-6 row">
-        <TextInput
-          inputClassName={inputClassName}
-          error={error}
-          label={`${intl.formatMessage({ id: 'common.form.newTag.label' })}`}
-          ref={inputRef}
+        <Autocomplete<string, true, false, true>
+          multiple
+          freeSolo
+          selectOnFocus
+          autoSelect
+          autoHighlight
+          id="tags-standard"
+          options={[]}
+          value={selected}
+          onChange={(event, value) => setSelected(value)}
+          sx={{
+            minHeight: '55px',
+          }}
           disabled={disabled || loading}
-          s={12}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              inputProps={{
+                ...params.inputProps,
+                className: `${params.inputProps.className} ${inputClassName} browser-default`,
+              }}
+              variant="standard"
+              label={<FormattedMessage id="common.form.tags.label" />}
+              placeholder={intl.formatMessage({ id: 'common.form.newTag.label' })}
+              error={!!error}
+              helperText={error}
+            />
+          )}
         />
       </div>
     </div>

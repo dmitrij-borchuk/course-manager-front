@@ -5,7 +5,6 @@ import { Input } from '../kit/input/Input'
 import { SubmitButton } from '../kit/buttons/SubmitButton'
 import { FormLayout } from '../kit/formLayout/FormLayout'
 import { TagsEditor } from '../kit/tag/TagsEditor'
-import { Text } from '../kit/text/Text'
 import { ExternalError, useFormWithError } from '../../hooks/useFormWithError'
 import { useUpdateInitialForm } from '../../hooks/useUpdateInitialForm'
 
@@ -74,9 +73,6 @@ export const EditStudent: React.FC<Props> = ({
             error={errors['name']?.message}
           />
 
-          <Text type="h5" className="color-primary">
-            <FormattedMessage id="students.tags" />
-          </Text>
           <TagsEditor loading={loading} disabled={disabled} value={tags} onUpdate={onTagsUpdate} />
         </FormLayout>
       </Container>

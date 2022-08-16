@@ -86,18 +86,24 @@ export function SelectStudentsDialog(props: Props) {
           <Autocomplete<Student, true>
             multiple
             autoHighlight
+            handleHomeEndKeys
             id="tags-standard"
             options={items}
             getOptionLabel={(option) => option.name}
             value={selected}
             onChange={(event, value) => setSelected(value)}
             isOptionEqualToValue={(option, value) => option.id === value.id}
+            sx={{
+              width: {
+                md: 500,
+              },
+            }}
             renderInput={(params) => (
               <TextField
                 {...params}
                 inputProps={{
                   ...params.inputProps,
-                  className: 'browser-default',
+                  className: `${params.inputProps.className} browser-default`,
                 }}
                 variant="standard"
                 label={<FormattedMessage id="groups.assignStudents.namePlaceholder" />}

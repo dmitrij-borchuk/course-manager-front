@@ -7,7 +7,7 @@ import { TITLE_POSTFIX } from '../../config'
 
 export const ProfilePage = () => {
   const { fetchAll, allItems, loading } = useOrganizationsState()
-  const { fetchProfile, profile } = useUsersState()
+  const { fetchProfile, profile, updateUser } = useUsersState()
   const { showError } = useNotification()
 
   useEffect(() => {
@@ -25,7 +25,7 @@ export const ProfilePage = () => {
         <title>Profile{TITLE_POSTFIX}</title>
       </Helmet>
 
-      <Profile organizations={allItems} user={profile} organizationsLoading={loading} />
+      <Profile organizations={allItems} user={profile} organizationsLoading={loading} onEdit={updateUser} />
     </>
   )
 }

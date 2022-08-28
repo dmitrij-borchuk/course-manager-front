@@ -20,7 +20,8 @@ request.interceptors.response.use(
     return config
   },
   function (error) {
-    if (error.response.status === 401 && window.location.pathname !== '/login') {
+    if (error.response?.status === 401 && window.location.pathname !== '/login') {
+      // Redirect ot login page when unauthorized
       window.location.assign('/login')
     }
 

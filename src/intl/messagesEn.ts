@@ -102,6 +102,7 @@ export const messages = {
 
   'profile.organizations.header': 'Your organizations',
   'profile.user.noName': 'No name',
+  'profile.user.nameChanged': 'Name has been changed successfully',
 
   'organizations.notFound': 'Organization not found',
   'organizations.notFound.backHome': 'back to home',

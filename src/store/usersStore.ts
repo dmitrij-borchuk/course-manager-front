@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { makeOrgCollection } from '../api/firebase/collections'
-import { confirmInvitation, getProfile, inviteUser, migrateUsers } from '../api/users'
+import { confirmInvitation, getProfile, inviteUser, migrateUsers, updateUser } from '../api/users'
 import { Role } from '../config'
 import { useDictionaryToArray } from '../hooks/useDictionaryToArray'
 import { getUsersList } from '../services/users'
@@ -102,5 +102,22 @@ export default function useUsersStore() {
         throw error
       }
     }, []),
+    updateUser: useCallback(
+      async (user: User) => {
+        try {
+          setSubmitting(true)
+          const result = await updateUser(user.id, user.name)
+          if (profile && profile.id === user.id) {
+            setProfile(result.data)
+          }
+          setSubmitting(false)
+          return result
+        } catch (error) {
+          setSubmitting(false)
+          throw error
+        }
+      },
+      [profile]
+    ),
   }
 }

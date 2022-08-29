@@ -20,7 +20,7 @@ describe('TeachersList', () => {
       />
     )
 
-    screen.getByText('Teacher')
+    await screen.findByText('Teacher')
   })
 })
 

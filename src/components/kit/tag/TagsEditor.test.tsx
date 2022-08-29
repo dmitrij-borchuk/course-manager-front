@@ -1,4 +1,4 @@
-import { render } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import { TestWrapper } from '../../../utils/test'
 import { TagsEditor } from './TagsEditor'
 
@@ -9,5 +9,8 @@ describe('TagsEditor', () => {
         <TagsEditor />
       </TestWrapper>
     )
+
+    const input = await screen.findByLabelText(/Tags/i)
+    expect(input).toBeInTheDocument()
   })
 })

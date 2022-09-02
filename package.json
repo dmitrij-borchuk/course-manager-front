@@ -30,6 +30,7 @@
     "assert": "^2.0.0",
     "autoprefixer": "^9.8.6",
     "axios": "^0.21.4",
+    "axios-mock-adapter": "^1.21.2",
     "browserify-zlib": "^0.2.0",
     "buffer": "^6.0.3",
     "constate": "^3.2.0",
@@ -101,5 +102,11 @@
     "firebase-admin": "^9.12.0",
     "graphql-tag": "^2.11.0",
     "serve": "^12.0.1"
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx,ts,tsx}",
+      "!src/api/**/*.{js,jsx,ts,tsx}"
+    ]
   }
 }

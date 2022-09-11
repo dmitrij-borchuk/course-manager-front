@@ -92,7 +92,7 @@ export function mockDoc() {
 }
 
 const { useParams } = asMock(reactRouterDom)
-export function mockOrgId(id: string) {
+export function mockOrgId(id?: string) {
   useParams.mockReturnValue({
     orgId: id,
   })

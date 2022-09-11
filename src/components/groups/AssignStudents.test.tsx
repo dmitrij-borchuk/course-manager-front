@@ -89,8 +89,8 @@ function queryChip(label: string) {
 
 async function selectItem(name: string, opt?: { disableCheck?: boolean }) {
   const { disableCheck } = opt || {}
-  const input = await screen.findByLabelText('Enter a name')
-  fireEvent.change(input, { target: { value: name } })
+  const openBtn = await screen.findByRole('button', { name: 'Open' })
+  fireEvent.click(openBtn)
   const itemToSelect = await screen.findByRole('option', { name: name })
   fireEvent.click(itemToSelect)
   if (!disableCheck) {

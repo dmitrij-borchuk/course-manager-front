@@ -94,7 +94,3 @@ const students: Student[] = [
     name: 'st3',
   },
 ]
-const rates = {
-  s1: 0,
-  s3: 0.3333333,
-}

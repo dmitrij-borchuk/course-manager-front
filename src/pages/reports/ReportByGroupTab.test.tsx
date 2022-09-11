@@ -176,16 +176,15 @@ describe('ReportByGroupTab', () => {
       },
     ]
     mockGetDocs(groups, studentsOfGroup, attendances, students)
-    usePDF.mockReturnValue([{} as any, jest.fn()])
+    usePDF.mockReturnValue([{ url: 'url' } as any, jest.fn()])
 
-    await act(async () => {
-      render(
-        <TestWrapper>
-          <ReportByGroupTab />
-        </TestWrapper>
-      )
-    })
+    render(
+      <TestWrapper>
+        <ReportByGroupTab />
+      </TestWrapper>
+    )
 
+    await screen.findByRole('button', { name: 'Generate report' })
     const lastCall = usePDF.mock.calls[usePDF.mock.calls.length - 1]
     const document = lastCall[0].document
     render(document)
@@ -270,22 +269,16 @@ describe('ReportByGroupTab', () => {
     mockGetDocs(groups, studentsOfGroup, attendances, students)
     usePDF.mockReturnValue([{} as any, jest.fn()])
 
-    await act(async () => {
-      render(
-        <TestWrapper>
-          <ReportByGroupTab />
-        </TestWrapper>
-      )
-    })
+    render(
+      <TestWrapper>
+        <ReportByGroupTab />
+      </TestWrapper>
+    )
 
-    const datePickerFrom = screen.getByLabelText('From *')
-    await act(async () => {
-      userEvent.type(datePickerFrom, `${new Date('Wed May 17 2022 19:00:00').toLocaleDateString()}`)
-    })
-    const datePickerTo = screen.getByLabelText('To *')
-    await act(async () => {
-      userEvent.type(datePickerTo, `${new Date('Wed May 22 2022 19:00:00').toLocaleDateString()}`)
-    })
+    const datePickerFrom = await screen.findByLabelText(/From/i)
+    userEvent.type(datePickerFrom, `${new Date('Wed May 17 2022 19:00:00').toLocaleDateString()}`)
+    const datePickerTo = await screen.findByLabelText(/To/i)
+    userEvent.type(datePickerTo, `${new Date('Wed May 22 2022 19:00:00').toLocaleDateString()}`)
 
     const lastCall = usePDF.mock.calls[usePDF.mock.calls.length - 1]
     const document = lastCall[0].document

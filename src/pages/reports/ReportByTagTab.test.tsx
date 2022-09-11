@@ -43,16 +43,6 @@ describe('ReportByTagTab', () => {
       orgId: 'orgId',
     })
   })
-  test('should not fail', async () => {
-    getDocs.mockResolvedValue([] as any)
-    await act(async () => {
-      render(
-        <TestWrapper>
-          <ReportByTagTab />
-        </TestWrapper>
-      )
-    })
-  })
   test('should generate report with sorting', async () => {
     const { attendances, groups, students, studentsOfGroup } = getSortingDataMocks()
     mockGetDocs(groups, studentsOfGroup, attendances, students)

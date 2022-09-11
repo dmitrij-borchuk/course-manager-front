@@ -1,4 +1,4 @@
-import { act, render, screen } from '@testing-library/react'
+import { act, fireEvent, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import * as reactRouterDom from 'react-router-dom'
 import { asMock, mockDoc, mockGetDocs, TestWrapper } from '../../utils/test'
@@ -35,13 +35,14 @@ describe('AttendanceEditor', () => {
   })
 
   test('should not fail', async () => {
-    await act(async () => {
-      render(
-        <TestWrapper>
-          <AttendanceEditorPage />
-        </TestWrapper>
-      )
-    })
+    render(
+      <TestWrapper>
+        <AttendanceEditorPage />
+      </TestWrapper>
+    )
+
+    await screen.findByLabelText('Date *')
+    await screen.findByRole('option', { name: 'Group' })
   })
 
   // TODO: rewrite test when new API will be used
@@ -54,21 +55,17 @@ describe('AttendanceEditor', () => {
       mockDataByPath,
     } = defaultMock()
 
-    await act(async () => {
-      render(
-        <TestWrapper>
-          <AttendanceEditorPage />
-        </TestWrapper>
-      )
-    })
-    const groupOption = screen.getByTestId('group-selector')
-    await act(async () => {
-      userEvent.selectOptions(groupOption, group.name)
-    })
+    render(
+      <TestWrapper>
+        <AttendanceEditorPage />
+      </TestWrapper>
+    )
+    await screen.findAllByText(group.name)
+    await selectGroup(group.id)
 
     // Check that both students are exist
-    expect(screen.queryByText(student1.name)).not.toBeNull()
-    expect(screen.queryByText(student2.name)).not.toBeNull()
+    await screen.findByText(student1.name)
+    await screen.findByText(student2.name)
 
     const studentsToGroupFiltered = [
       {
@@ -81,14 +78,12 @@ describe('AttendanceEditor', () => {
     mockDataByPath('organizations/orgId/studentsToGroups', studentsToGroupFiltered)
 
     const datePicker = screen.getByLabelText('Date *')
-    await act(async () => {
-      const time = new Date().getTime() - twoDaysInMs
-      userEvent.type(datePicker, `${new Date(time).toLocaleDateString()}`)
-    })
+    const time = new Date().getTime() - twoDaysInMs
+    userEvent.type(datePicker, `${new Date(time).toLocaleDateString()}`)
 
     // Check that only one student is exist
+    await screen.findByText(student2.name)
     expect(screen.queryByText(student1.name)).toBeNull()
-    expect(screen.queryByText(student2.name)).not.toBeNull()
   })
 
   test('while editing a teacher should preserved', async () => {
@@ -110,35 +105,24 @@ describe('AttendanceEditor', () => {
     }
     mockDocByPath('organizations/orgId/attendances', attendance)
 
-    // Render
-    await act(async () => {
-      render(
-        <TestWrapper>
-          <AttendanceEditorPage />
-        </TestWrapper>
-      )
+    render(
+      <TestWrapper>
+        <AttendanceEditorPage />
+      </TestWrapper>
+    )
+
+    await selectGroup(group.id)
+
+    const submitBtn = await screen.findByRole('button', {
+      name: /Submit/i,
     })
 
-    // Select group
-    const groupOption = screen.getByTestId('group-selector')
-    await act(async () => {
-      userEvent.selectOptions(groupOption, group.name)
-    })
-
-    // Submit
-    // const submitBtn = screen.getByTestId('submit')
-    const submitBtn = screen.getByText('Submit').closest('button')
-
-    if (!submitBtn) {
-      throw new Error('Submit button not found')
-    }
-    // const submitBtn = screen.getByRole('button')
     expect(submitBtn).toBeEnabled()
-    await act(async () => {
-      userEvent.click(submitBtn)
-    })
+    fireEvent.click(submitBtn)
 
-    expect(setDoc.mock.calls.length).toBe(1)
+    await screen.findByText('Report has been successfully submitted')
+
+    expect(setDoc).toBeCalled()
     expect(setDoc.mock.calls[0][1]).toHaveProperty('teacher', attendance.teacher)
   })
 })
@@ -190,4 +174,9 @@ function defaultMock() {
       students: [student1, student2],
     },
   }
+}
+
+async function selectGroup(id: string) {
+  const groupSelect = await screen.findByTestId('group-selector')
+  fireEvent.change(groupSelect, { target: { value: id } })
 }

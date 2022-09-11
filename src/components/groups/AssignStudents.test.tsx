@@ -76,6 +76,7 @@ function renderComponent(props: Partial<ComponentProps<typeof AssignStudents>> =
 async function openDialog() {
   const trigger = await screen.findByText('Open dialog')
   fireEvent.click(trigger)
+  await screen.findByTestId('students-select-dialog')
 }
 
 async function findChip(label: string) {

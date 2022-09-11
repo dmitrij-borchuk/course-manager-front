@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { queryByTestId, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { StudentList } from './StudentList'
 import * as reactRouterDom from 'react-router-dom'
@@ -72,7 +72,8 @@ describe('StudentList', () => {
     const items = await screen.findAllByTestId('list-link-item')
     expect(items).toHaveLength(3)
 
-    const badges = items.map((i) => i.querySelector('[data-testid=attendance-rate-badge]'))
+    // eslint-disable-next-line testing-library/prefer-screen-queries
+    const badges = items.map((i) => queryByTestId(i, 'attendance-rate-badge'))
     expect(badges[0]).toBe(null)
     expect(badges[1]?.textContent).toBe('0%')
     expect(badges[2]?.textContent).toBe('33%')

@@ -9,7 +9,8 @@
     "serve-build": "serve ./build --single",
     "firebase-emulator": "firebase emulators:start --import=./local-firebase-data --export-on-exit",
     "firebase-emulator:test": "firebase emulators:start --import=./test-firebase-data",
-    "cypress": "cypress open"
+    "cypress": "cypress open",
+    "lint": "eslint ./src/**/*.{tsx,ts}"
   },
   "dependencies": {
     "@craco/craco": "^7.0.0-alpha.7",

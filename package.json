@@ -5,7 +5,7 @@
   "scripts": {
     "start": "craco start",
     "build": "craco build",
-    "test": "craco test --coverage",
+    "test": "craco test",
     "test-coverage": "craco test --coverage --watchAll=false",
     "serve-build": "serve ./build --single",
     "firebase-emulator": "firebase emulators:start --import=./local-firebase-data --export-on-exit",

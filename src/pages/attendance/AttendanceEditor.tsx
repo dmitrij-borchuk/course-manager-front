@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { useToasts } from 'react-toast-notifications'
 import { FormattedMessage } from 'react-intl'
+import { Helmet } from 'react-helmet'
 import { useAttendancesState, useGroupsState, useUsersState } from '../../store'
 import AttendanceEditor from '../../components/attendance/AttendanceEditor'
 import { useOrgId } from '../../hooks/useOrgId'
@@ -9,6 +10,7 @@ import useStudentsOfGroupStore from '../../store/studentsOfGroupStore'
 import { Group } from '../../types/group'
 import { Dictionary } from '../../types/dictionary'
 import { useCurrentUser } from '../../hooks/useCurrentUser'
+import { TITLE_POSTFIX } from '../../config'
 
 export const AttendanceEditorPage = () => {
   const { id } = useParams<{ id: string }>()
@@ -141,18 +143,24 @@ export const AttendanceEditorPage = () => {
   }
 
   return (
-    <AttendanceEditor
-      currentGroup={group}
-      groups={groups}
-      onSubmit={onSubmit}
-      attendance={attendance}
-      students={studentsOfGroup}
-      studentsLoading={studentsFetching}
-      onGroupChanged={onGroupChanged}
-      onDateChanged={onDateChanged}
-      teacher={attendanceTeacher}
-      onDelete={onDelete}
-    />
+    <>
+      <Helmet>
+        <title>Attendance editor{TITLE_POSTFIX}</title>
+      </Helmet>
+
+      <AttendanceEditor
+        currentGroup={group}
+        groups={groups}
+        onSubmit={onSubmit}
+        attendance={attendance}
+        students={studentsOfGroup}
+        studentsLoading={studentsFetching}
+        onGroupChanged={onGroupChanged}
+        onDateChanged={onDateChanged}
+        teacher={attendanceTeacher}
+        onDelete={onDelete}
+      />
+    </>
   )
 }
 

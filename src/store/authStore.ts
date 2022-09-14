@@ -19,11 +19,14 @@ export function useAuthStore() {
   )
   const [initiatingAuth, setInitiatingAuth] = useState(true)
   useEffect(() => {
-    auth.onAuthStateChanged((user) => {
+    auth.onIdTokenChanged(async (user) => {
       setCurrentUser(user)
       setUser(user)
+      if (user) {
+        const token = await user.getIdToken()
+        setHeader('authorization', token)
+      }
       setInitiatingAuth(false)
-      user?.getIdToken().then((t) => setHeader('authorization', t))
     })
   }, [])
 

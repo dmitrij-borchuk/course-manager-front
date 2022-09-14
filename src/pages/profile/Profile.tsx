@@ -1,11 +1,13 @@
 import React, { useEffect } from 'react'
+import { Helmet } from 'react-helmet'
 import { useOrganizationsState, useUsersState } from '../../store'
 import { Profile } from '../../components/profile/Profile'
 import { useNotification } from '../../hooks/useNotification'
+import { TITLE_POSTFIX } from '../../config'
 
 export const ProfilePage = () => {
   const { fetchAll, allItems, loading } = useOrganizationsState()
-  const { fetchProfile, profile } = useUsersState()
+  const { fetchProfile, profile, updateUser } = useUsersState()
   const { showError } = useNotification()
 
   useEffect(() => {
@@ -17,5 +19,13 @@ export const ProfilePage = () => {
     })
   }, [fetchProfile, showError])
 
-  return <Profile organizations={allItems} user={profile} organizationsLoading={loading} />
+  return (
+    <>
+      <Helmet>
+        <title>Profile{TITLE_POSTFIX}</title>
+      </Helmet>
+
+      <Profile organizations={allItems} user={profile} organizationsLoading={loading} onEdit={updateUser} />
+    </>
+  )
 }

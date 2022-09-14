@@ -1,13 +1,14 @@
 import { useCallback, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { makeOrgCollection } from '../api/firebase/collections'
-import { confirmInvitation, getProfile, inviteUser, migrateUsers } from '../api/users'
+import { confirmInvitation, getProfile, inviteUser, migrateUsers, updateUser } from '../api/users'
 import { Role } from '../config'
 import { useDictionaryToArray } from '../hooks/useDictionaryToArray'
 import { getUsersList } from '../services/users'
 import { Dictionary } from '../types/dictionary'
 import { InviteForm } from '../types/invite'
 import { OrganizationUser, User } from '../types/user'
+import { sendToAnalytics } from '../utils/analitics'
 import { arrayToDictionary } from '../utils/common'
 
 export default function useUsersStore() {
@@ -79,6 +80,12 @@ export default function useUsersStore() {
         const result = await getProfile()
         setProfile(result.data)
         setFetching(false)
+
+        sendToAnalytics({
+          user_Id: result.data.id,
+        })
+
+        return result.data
       } catch (error) {
         setFetching(false)
         throw error
@@ -95,5 +102,22 @@ export default function useUsersStore() {
         throw error
       }
     }, []),
+    updateUser: useCallback(
+      async (user: User) => {
+        try {
+          setSubmitting(true)
+          const result = await updateUser(user.id, user.name)
+          if (profile && profile.id === user.id) {
+            setProfile(result.data)
+          }
+          setSubmitting(false)
+          return result
+        } catch (error) {
+          setSubmitting(false)
+          throw error
+        }
+      },
+      [profile]
+    ),
   }
 }

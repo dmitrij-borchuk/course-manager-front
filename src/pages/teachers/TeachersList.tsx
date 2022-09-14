@@ -1,10 +1,12 @@
 import { useCallback, useEffect } from 'react'
 import { useToasts } from 'react-toast-notifications'
+import { Helmet } from 'react-helmet'
 import { useOrgId } from '../../hooks/useOrgId'
 import { TeachersList } from '../../components/teachers/TeachersList'
 import { useAttendancesState, useTeachersState } from '../../store'
 import { useAttendanceRateByTeacher } from '../../hooks/useAttendanceRate'
 import { useCurrentOrg } from '../../hooks/useCurrentOrg'
+import { TITLE_POSTFIX } from '../../config'
 
 export const TeachersListPage = () => {
   const { teachers, fetchTeachers, fetching } = useTeachersState()
@@ -18,7 +20,7 @@ export const TeachersListPage = () => {
   const org = useCurrentOrg()
   const fetchList = useCallback(async () => {
     if (!org?.id) {
-      throw new Error('Organization name not found')
+      return
     }
     try {
       await fetchTeachers(org.id)
@@ -31,8 +33,10 @@ export const TeachersListPage = () => {
   }, [addToast, fetchTeachers, org?.id])
 
   useEffect(() => {
-    fetchList()
-  }, [fetchList])
+    if (org?.id) {
+      fetchList()
+    }
+  }, [fetchList, org])
 
   useEffect(() => {
     // TODO: optimize this
@@ -42,5 +46,13 @@ export const TeachersListPage = () => {
     }
   }, [clearAttendances, fetchAllAttendances, orgId])
 
-  return <TeachersList items={teachers} loading={fetching} attendanceRates={rateByTeacher} />
+  return (
+    <>
+      <Helmet>
+        <title>Teachers{TITLE_POSTFIX}</title>
+      </Helmet>
+
+      <TeachersList items={teachers} loading={fetching} attendanceRates={rateByTeacher} />
+    </>
+  )
 }

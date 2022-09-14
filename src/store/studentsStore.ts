@@ -50,7 +50,7 @@ export default function useStudentsStore() {
       const collection = makeOrgCollection<Student>('students', orgId)
 
       try {
-        const result = await collection.save({ ...data, id: nanoid() })
+        const result = await collection.save({ ...data, name: data.name.trim(), id: nanoid() })
         setStudentsById((state) => ({ ...state, [result.id]: { ...data, id: result.id } }))
         setSubmittingSemaphore((v) => v - 1)
         return result

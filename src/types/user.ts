@@ -7,7 +7,7 @@ type UserBase = {
 }
 
 export type User = {
-  id: string
+  id: number
   name: string
   email: string
 }

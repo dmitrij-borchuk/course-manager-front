@@ -1,4 +1,4 @@
-import { act, render, screen } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import * as firestore from 'firebase/firestore'
 import * as reactPdf from '@react-pdf/renderer'
 import userEvent from '@testing-library/user-event'
@@ -9,6 +9,7 @@ import { Attendance } from '../../types/attendance'
 import { StudentOfGroup } from '../../types/studentOfGroup'
 import { Student } from '../../types/student'
 import { resetCache } from '../../store/studentsStore'
+import { resetAttendanceCache } from '../../store/attendancesStore'
 
 jest.mock('react-router-dom', () => {
   return {
@@ -37,18 +38,9 @@ const { useParams } = jest.requireMock('react-router-dom')
 describe('ReportByTagTab', () => {
   beforeEach(() => {
     resetCache()
+    resetAttendanceCache()
     useParams.mockReturnValue({
       orgId: 'orgId',
-    })
-  })
-  test('should not fail', async () => {
-    getDocs.mockResolvedValue([] as any)
-    await act(async () => {
-      render(
-        <TestWrapper>
-          <ReportByTagTab />
-        </TestWrapper>
-      )
     })
   })
   test('should generate report with sorting', async () => {
@@ -56,19 +48,14 @@ describe('ReportByTagTab', () => {
     mockGetDocs(groups, studentsOfGroup, attendances, students)
     usePDF.mockReturnValue([{} as any, jest.fn()])
 
-    let result!: ReturnType<typeof render>
-    await act(async () => {
-      result = render(
-        <TestWrapper>
-          <ReportByTagTab />
-        </TestWrapper>
-      )
-    })
+    render(
+      <TestWrapper>
+        <ReportByTagTab />
+      </TestWrapper>
+    )
 
-    const tagsEditorInput = result.getByLabelText('New tag')
-    await act(async () => {
-      userEvent.type(tagsEditorInput, 'Lviv{enter}')
-    })
+    const tagsEditorInput = await screen.findByLabelText('Tags')
+    userEvent.type(tagsEditorInput, 'Lviv{enter}')
 
     const lastCall = usePDF.mock.calls[usePDF.mock.calls.length - 1]
     const document = lastCall[0].document
@@ -92,19 +79,14 @@ describe('ReportByTagTab', () => {
     mockGetDocs(groups, studentsOfGroup, attendances, students)
     usePDF.mockReturnValue([{} as any, jest.fn()])
 
-    let result!: ReturnType<typeof render>
-    await act(async () => {
-      result = render(
-        <TestWrapper>
-          <ReportByTagTab />
-        </TestWrapper>
-      )
-    })
+    render(
+      <TestWrapper>
+        <ReportByTagTab />
+      </TestWrapper>
+    )
 
-    const tagsEditorInput = result.getByLabelText('New tag')
-    await act(async () => {
-      userEvent.type(tagsEditorInput, 'Lviv{enter}')
-    })
+    const tagsEditorInput = await screen.findByLabelText('Tags')
+    userEvent.type(tagsEditorInput, 'Lviv{enter}')
 
     const lastCall = usePDF.mock.calls[usePDF.mock.calls.length - 1]
     const document = lastCall[0].document

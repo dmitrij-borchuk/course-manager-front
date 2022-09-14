@@ -4,7 +4,9 @@ export const collection = (_, path) => path
 export const query = (path) => path
 export const doc = (_, path) => ({
   path,
-  withConverter: jest.fn(),
+  withConverter: () => ({
+    path,
+  }),
 })
 export const getDocs = jest.fn()
 export const getDoc = jest.fn()

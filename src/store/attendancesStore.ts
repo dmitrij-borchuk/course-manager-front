@@ -16,17 +16,31 @@ export function useAttendancesStore() {
     loading,
     attendancesById,
     attendances,
-    fetchAllAttendances: useCallback(async (orgId: string, from?: Date, to?: Date) => {
+    fetchAllAttendances: useCallback(async (orgId: string) => {
+      if (isFetched) {
+        return
+      }
       try {
         setLoading(true)
         const collection = makeOrgCollection<Attendance>('attendances', orgId)
-        const request =
-          from && to
-            ? collection.queryMulti([
-                ['date', '>=', from.getTime()],
-                ['date', '<=', to.getTime()],
-              ])
-            : collection.getAll()
+        const resp = await collection.getAll()
+        const itemsById = arrayToDictionary(resp)
+        setAttendancesById((att) => ({ ...att, ...itemsById }))
+        isFetched = true
+        setLoading(false)
+      } catch (error) {
+        setLoading(false)
+        throw error
+      }
+    }, []),
+    fetchAttendancesByDate: useCallback(async (orgId: string, from: Date, to: Date) => {
+      try {
+        setLoading(true)
+        const collection = makeOrgCollection<Attendance>('attendances', orgId)
+        const request = collection.queryMulti([
+          ['date', '>=', from.getTime()],
+          ['date', '<=', to.getTime()],
+        ])
         const resp = await request
         const itemsById = arrayToDictionary(resp)
         setAttendancesById((att) => ({ ...att, ...itemsById }))
@@ -60,39 +74,42 @@ export function useAttendancesStore() {
       setAttendancesById((state) => ({ ...state, [resp.id]: resp }))
       setLoading(false)
     }, []),
-    // TODO: do we need it?
-    fetchAttendancesForStudent: useCallback(async (groupsIds: string[], studentId: string) => {
-      // setLoading(true)
-      // const response = await fetchAttendancesForStudent(groupsIds, studentId)
-      // setAttendances(response.data)
-      // setLoading(false)
-    }, []),
     fetchAttendancesForGroups: useCallback(async (orgId: string, groupsIds: string[]) => {
+      // TODO: optimize this
+      if (isFetched) {
+        return
+      }
       setLoading(true)
       const collection = makeOrgCollection<Attendance>('attendances', orgId)
-      if (groupsIds.length) {
-        // TODO: optimize this
-        const resp = await collection.getAll()
-        const filtered = resp.filter((item) => groupsIds.includes(item.group))
-        const itemsById = arrayToDictionary(filtered)
-        setAttendancesById(itemsById)
-      }
+      // TODO: optimize this
+      const resp = await collection.getAll()
+      const itemsById = arrayToDictionary(resp)
+      setAttendancesById((att) => ({ ...att, ...itemsById }))
+      isFetched = true
       setLoading(false)
     }, []),
     saveAttendance: useCallback(async (orgId: string, attendance: AttendanceNew | Attendance) => {
       setLoading(true)
-      const groupsCollection = makeOrgCollection<Attendance>('attendances', orgId)
+      const collection = makeOrgCollection<Attendance>('attendances', orgId)
       if ('id' in attendance) {
-        await groupsCollection.save({ ...attendance, id: attendance.id }, { merge: false })
+        const newRecord = await collection.save({ ...attendance, id: attendance.id }, { merge: false })
+        setAttendancesById((att) => {
+          att[newRecord.id] = newRecord
+          return att
+        })
       } else {
-        await groupsCollection.save({ ...attendance, id: nanoid() }, { merge: false })
+        const newRecord = await collection.save({ ...attendance, id: nanoid() }, { merge: false })
+        setAttendancesById((att) => {
+          att[newRecord.id] = newRecord
+          return att
+        })
       }
       setLoading(false)
     }, []),
     removeAttendance: useCallback(async (orgId: string, id: string) => {
       setLoading(true)
-      const groupsCollection = makeOrgCollection<Attendance>('attendances', orgId)
-      await groupsCollection.delete(id)
+      const collection = makeOrgCollection<Attendance>('attendances', orgId)
+      await collection.delete(id)
       setAttendancesById((att) => {
         delete att[id]
         return att
@@ -100,7 +117,16 @@ export function useAttendancesStore() {
       setLoading(false)
     }, []),
     clearAttendances: useCallback(() => {
-      setAttendancesById({})
+      // We are trying to optimize requests to the firebase so disable cleaning
+      // setAttendancesById({})
     }, []),
   }
+}
+
+// We use a lot of attendance data,
+// to optimize reading from Firebase, we going to fetch it only once
+let isFetched = false
+
+export function resetAttendanceCache() {
+  isFetched = false
 }

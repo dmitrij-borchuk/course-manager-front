@@ -2,10 +2,6 @@ import { useCallback, useEffect, useState } from 'react'
 import { getRolesRequest } from '../api/roles'
 import { Role } from '../types/role'
 
-export function getRoles() {
-  return getRolesRequest()
-}
-
 export function useRoles() {
   const [roles, setRoles] = useState<Role[]>([])
   const [loading, setLoading] = useState(false)

@@ -77,7 +77,7 @@ export const Register: React.FC<Props> = ({ onSubmit, loading = false }) => {
             </div>
             <div className="h-px bg-gray-400 w-full" />
           </div>
-          <Link to={`${orgPrefix}${ROUTES.LOGIN}`}>
+          <Link to={`${orgPrefix}${ROUTES.LOGIN}`} role="link">
             <FormattedMessage id="auth.loginLink.title" />
           </Link>
         </div>

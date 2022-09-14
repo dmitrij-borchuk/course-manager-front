@@ -1,8 +1,10 @@
 import { useCallback, useEffect } from 'react'
 import { useToasts } from 'react-toast-notifications'
+import { Helmet } from 'react-helmet'
 import { useOrgId } from '../../hooks/useOrgId'
 import useUsersStore from '../../store/usersStore'
 import { UsersList } from '../../components/users/UsersList'
+import { TITLE_POSTFIX } from '../../config'
 
 export const UsersListPage = () => {
   const { users, fetchUsers, fetching } = useUsersStore()
@@ -26,5 +28,13 @@ export const UsersListPage = () => {
     fetchList()
   }, [fetchList])
 
-  return <UsersList items={users} loading={fetching} />
+  return (
+    <>
+      <Helmet>
+        <title>Users{TITLE_POSTFIX}</title>
+      </Helmet>
+
+      <UsersList items={users} loading={fetching} />
+    </>
+  )
 }

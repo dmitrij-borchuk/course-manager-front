@@ -1,10 +1,12 @@
 import { ComponentProps, useCallback } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useToasts } from 'react-toast-notifications'
+import { Helmet } from 'react-helmet'
 import { ROUTES } from '../../constants'
 import { useAuthState } from '../../store'
 import { useOrgIdNotStrict } from '../../hooks/useOrgId'
 import { Register } from '../../components/auth/Register'
+import { TITLE_POSTFIX } from '../../config'
 
 type SubmitData = Parameters<ComponentProps<typeof Register>['onSubmit']>[0]
 
@@ -32,6 +34,10 @@ export const RegisterPage = () => {
 
   return (
     <>
+      <Helmet>
+        <title>Register{TITLE_POSTFIX}</title>
+      </Helmet>
+
       <Register onSubmit={onSubmit} loading={loading} />
     </>
   )

@@ -1,11 +1,13 @@
 import { useCallback, useEffect } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
+import { Helmet } from 'react-helmet'
 import { useGroupsState, useStudentsOfGroupState, useStudentsState } from '../../store'
 import { useAttendancesState } from '../../store'
 import { ROUTES } from '../../constants'
 import { Student } from '../../components/students/Student'
 import { useOrgId } from '../../hooks/useOrgId'
 import { useStudentAttendanceRateByGroups } from '../../hooks/useAttendanceRate'
+import { TITLE_POSTFIX } from '../../config'
 
 // TODO: Add loading skeleton
 // TODO: Add 404 state
@@ -70,13 +72,19 @@ export const StudentPage = () => {
   }
 
   return (
-    <Student
-      data={student}
-      onDelete={onDelete}
-      groups={groupsOfStudent}
-      loadingGroups={fetchingGroups}
-      attendanceRates={rateByGroups}
-    />
+    <>
+      <Helmet>
+        <title>Student{TITLE_POSTFIX}</title>
+      </Helmet>
+
+      <Student
+        data={student}
+        onDelete={onDelete}
+        groups={groupsOfStudent}
+        loadingGroups={fetchingGroups}
+        attendanceRates={rateByGroups}
+      />
+    </>
   )
 }
 

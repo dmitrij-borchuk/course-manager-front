@@ -29,6 +29,9 @@ export const TeachersList: React.FC<Props> = ({ className = '', loading = false,
               </Text>
             )}
           </Ellipsis>
+          <Text type="body" color="textGray" className="m-0">
+            {d.role}
+          </Text>
           {attendanceRate && <AttendanceRateBadge value={attendanceRate} />}
         </div>
       )

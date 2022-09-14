@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { queryByTestId, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { StudentList } from './StudentList'
 import * as reactRouterDom from 'react-router-dom'
@@ -13,14 +13,17 @@ describe('StudentList', () => {
       orgId: 'orgId',
     })
   })
-  test('Should not fail', () => {
+  test('Should not fail', async () => {
     render(
       <TestWrapper>
         <StudentList />
       </TestWrapper>
     )
+
+    const header = await screen.findByRole('heading', { name: /Students/i })
+    expect(header).toBeInTheDocument()
   })
-  test('Should render attendance rate', () => {
+  test('Should render attendance rate', async () => {
     const students: Student[] = [
       {
         id: 's1',
@@ -45,11 +48,11 @@ describe('StudentList', () => {
       </TestWrapper>
     )
 
-    const badge = screen.getAllByTestId('attendance-rate-badge')
+    const badges = await screen.findAllByTestId('attendance-rate-badge')
 
-    expect(badge).toHaveLength(2)
-    expect(badge[0].textContent).toBe('0%')
-    expect(badge[1].textContent).toBe('33%')
+    expect(badges).toHaveLength(2)
+    expect(badges[0].textContent).toBe('0%')
+    expect(badges[1].textContent).toBe('33%')
   })
   test('Should sort 0 attendance lower than `no attendance`', async () => {
     render(
@@ -66,10 +69,11 @@ describe('StudentList', () => {
 
     userEvent.click(screen.getByText('Attendance Rate'))
 
-    const items = screen.getAllByTestId('list-link-item')
+    const items = await screen.findAllByTestId('list-link-item')
     expect(items).toHaveLength(3)
 
-    const badges = items.map((i) => i.querySelector('[data-testid=attendance-rate-badge]'))
+    // eslint-disable-next-line testing-library/prefer-screen-queries
+    const badges = items.map((i) => queryByTestId(i, 'attendance-rate-badge'))
     expect(badges[0]).toBe(null)
     expect(badges[1]?.textContent).toBe('0%')
     expect(badges[2]?.textContent).toBe('33%')
@@ -90,7 +94,3 @@ const students: Student[] = [
     name: 'st3',
   },
 ]
-const rates = {
-  s1: 0,
-  s3: 0.3333333,
-}

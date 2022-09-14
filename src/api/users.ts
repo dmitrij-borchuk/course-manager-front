@@ -40,3 +40,7 @@ export function inviteUser(data: UserInviteData) {
 export function confirmInvitation(token: string) {
   return request.post('/users/confirmInvitation', { token })
 }
+
+export function updateUser(id: number, name: string) {
+  return request.put<User>(`/users/${id}`, { name })
+}

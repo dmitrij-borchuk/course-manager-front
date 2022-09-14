@@ -1,4 +1,4 @@
-import { act, render, screen } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import * as firestore from 'firebase/firestore'
 import * as reactPdf from '@react-pdf/renderer'
 import userEvent from '@testing-library/user-event'
@@ -8,6 +8,7 @@ import { Group } from '../../types/group'
 import { Attendance } from '../../types/attendance'
 import { StudentOfGroup } from '../../types/studentOfGroup'
 import { Student } from '../../types/student'
+import { resetAttendanceCache } from '../../store/attendancesStore'
 
 jest.mock('react-router-dom', () => {
   return {
@@ -46,34 +47,24 @@ const { useParams } = jest.requireMock('react-router-dom')
 
 describe('ReportByGroupTab', () => {
   beforeEach(() => {
+    resetAttendanceCache()
     useParams.mockReturnValue({
       orgId: 'orgId',
     })
     localStorage.clear()
   })
-  test('should not fail', async () => {
-    getDocs.mockResolvedValue([] as any)
-    await act(async () => {
-      render(
-        <TestWrapper>
-          <ReportByGroupTab />
-        </TestWrapper>
-      )
-    })
-  })
   test('should generate report with sorting', async () => {
     const { attendances, groups, students, studentsOfGroup } = getSortingDataMocks()
     mockGetDocs(groups, studentsOfGroup, attendances, students)
-    usePDF.mockReturnValue([{} as any, jest.fn()])
+    usePDF.mockReturnValue([{ url: 'instance.url' } as any, jest.fn()])
 
-    await act(async () => {
-      render(
-        <TestWrapper>
-          <ReportByGroupTab />
-        </TestWrapper>
-      )
-    })
+    render(
+      <TestWrapper>
+        <ReportByGroupTab />
+      </TestWrapper>
+    )
 
+    await screen.findByRole('button', { name: 'Generate report' })
     const lastCall = usePDF.mock.calls[usePDF.mock.calls.length - 1]
     const document = lastCall[0].document
     render(document)
@@ -96,15 +87,13 @@ describe('ReportByGroupTab', () => {
     mockGetDocs(groups, studentsOfGroup, attendances, students)
     usePDF.mockReturnValue([{} as any, jest.fn()])
 
-    await act(async () => {
-      render(
-        <TestWrapper>
-          <ReportByGroupTab />
-        </TestWrapper>
-      )
-    })
+    render(
+      <TestWrapper>
+        <ReportByGroupTab />
+      </TestWrapper>
+    )
 
-    const sortOrderSelector = screen.getByLabelText('Sort order')
+    const sortOrderSelector = await screen.findByLabelText('Sort order')
     userEvent.selectOptions(sortOrderSelector, 'Descending')
 
     const lastCall = usePDF.mock.calls[usePDF.mock.calls.length - 1]
@@ -187,16 +176,15 @@ describe('ReportByGroupTab', () => {
       },
     ]
     mockGetDocs(groups, studentsOfGroup, attendances, students)
-    usePDF.mockReturnValue([{} as any, jest.fn()])
+    usePDF.mockReturnValue([{ url: 'url' } as any, jest.fn()])
 
-    await act(async () => {
-      render(
-        <TestWrapper>
-          <ReportByGroupTab />
-        </TestWrapper>
-      )
-    })
+    render(
+      <TestWrapper>
+        <ReportByGroupTab />
+      </TestWrapper>
+    )
 
+    await screen.findByRole('button', { name: 'Generate report' })
     const lastCall = usePDF.mock.calls[usePDF.mock.calls.length - 1]
     const document = lastCall[0].document
     render(document)
@@ -281,22 +269,16 @@ describe('ReportByGroupTab', () => {
     mockGetDocs(groups, studentsOfGroup, attendances, students)
     usePDF.mockReturnValue([{} as any, jest.fn()])
 
-    await act(async () => {
-      render(
-        <TestWrapper>
-          <ReportByGroupTab />
-        </TestWrapper>
-      )
-    })
+    render(
+      <TestWrapper>
+        <ReportByGroupTab />
+      </TestWrapper>
+    )
 
-    const datePickerFrom = screen.getByLabelText('From *')
-    await act(async () => {
-      userEvent.type(datePickerFrom, `${new Date('Wed May 17 2022 19:00:00').toLocaleDateString()}`)
-    })
-    const datePickerTo = screen.getByLabelText('To *')
-    await act(async () => {
-      userEvent.type(datePickerTo, `${new Date('Wed May 22 2022 19:00:00').toLocaleDateString()}`)
-    })
+    const datePickerFrom = await screen.findByLabelText(/From/i)
+    userEvent.type(datePickerFrom, `${new Date('Wed May 17 2022 19:00:00').toLocaleDateString()}`)
+    const datePickerTo = await screen.findByLabelText(/To/i)
+    userEvent.type(datePickerTo, `${new Date('Wed May 22 2022 19:00:00').toLocaleDateString()}`)
 
     const lastCall = usePDF.mock.calls[usePDF.mock.calls.length - 1]
     const document = lastCall[0].document

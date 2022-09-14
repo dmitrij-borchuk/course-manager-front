@@ -1,11 +1,13 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
+import { Helmet } from 'react-helmet'
 import { useOrganizationsState } from '../../store'
 import { EditOrganization } from '../../components/organizations/EditOrganization'
 import { ROUTES } from '../../constants'
 import { ExternalError } from '../../hooks/useFormWithError'
 import { OrganizationCreate } from '../../types/organization'
 import { isAxiosError } from '../../api/request'
+import { TITLE_POSTFIX } from '../../config'
 
 export const CreateOrganizationPage = () => {
   const history = useHistory()
@@ -39,7 +41,15 @@ export const CreateOrganizationPage = () => {
     fetchAll()
   }, [fetchAll])
 
-  return <EditOrganization onSubmit={submit} loading={submitting || loading} error={error} />
+  return (
+    <>
+      <Helmet>
+        <title>Create Organization{TITLE_POSTFIX}</title>
+      </Helmet>
+
+      <EditOrganization onSubmit={submit} loading={submitting || loading} error={error} />
+    </>
+  )
 }
 
 export default CreateOrganizationPage

@@ -15,6 +15,20 @@ request.interceptors.request.use(function (config) {
   return config
 })
 
+request.interceptors.response.use(
+  function (config) {
+    return config
+  },
+  function (error) {
+    if (error.response?.status === 401 && window.location.pathname !== '/login') {
+      // Redirect ot login page when unauthorized
+      window.location.assign('/login')
+    }
+
+    throw error
+  }
+)
+
 export function setHeader(key: string, value: string) {
   headers[key] = value
 }

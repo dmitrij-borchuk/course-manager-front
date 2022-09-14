@@ -1,6 +1,14 @@
+import React from 'react'
+
 export const useParams = jest.fn()
-export const useHistory = jest.fn()
-export const Link = ({ children, ...props }) => <a {...props}>{children}</a>
+export const useHistory = () => ({
+  push: jest.fn(),
+})
+export const Link = React.forwardRef(({ children, ...props }, ref) => (
+  <a ref={ref} {...props}>
+    {children}
+  </a>
+))
 export const BrowserRouter = ({ children }) => <div>{children}</div>
 export const Switch = jest.fn()
 export const Route = jest.fn()

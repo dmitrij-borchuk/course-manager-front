@@ -1,8 +1,11 @@
 import { useCallback, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
+import { Helmet } from 'react-helmet'
 import { ROUTES } from '../../constants'
 import { useOrgIdNotStrict } from '../../hooks/useOrgId'
 import { useAuthState } from '../../store'
+import { TITLE_POSTFIX } from '../../config'
+import { sendToAnalytics } from '../../utils/analitics'
 
 export const LogoutPage = () => {
   const history = useHistory()
@@ -11,6 +14,10 @@ export const LogoutPage = () => {
   const onLogout = useCallback(async () => {
     await logout()
     // TODO: clear profile
+
+    sendToAnalytics({
+      user_Id: null,
+    })
 
     if (orgId) {
       history.push(`/${orgId}${ROUTES.LOGIN}`)
@@ -24,5 +31,11 @@ export const LogoutPage = () => {
     onLogout()
   }, [onLogout])
 
-  return null
+  return (
+    <>
+      <Helmet>
+        <title>Logout{TITLE_POSTFIX}</title>
+      </Helmet>
+    </>
+  )
 }

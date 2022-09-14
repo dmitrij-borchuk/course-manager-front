@@ -20,7 +20,9 @@ export const ReportByTagTab = () => {
   const [from, setFrom] = useState(subMonth(to))
   const [order, setOrder] = usePersistenceState<SortOrder>(orderStoreKey, 'asc')
   const { fetchStudents, students, fetching: studentsFetching } = useStudentsState()
-  const { attendances, fetchAllAttendances } = useAttendancesState()
+  // TODO: when attendance store has some records this will not work correctly
+  // need to filter attendances by date
+  const { attendances, fetchAttendancesByDate } = useAttendancesState()
   const [tags, setTags] = useState<string[]>([])
   const onTagsUpdate = useCallback(
     (newTags: string[]) => {
@@ -46,8 +48,8 @@ export const ReportByTagTab = () => {
   }, [fetchStudents, orgId])
 
   useEffect(() => {
-    fetchAllAttendances(orgKey, from, to)
-  }, [fetchAllAttendances, from, orgKey, to])
+    fetchAttendancesByDate(orgKey, from, to)
+  }, [fetchAttendancesByDate, from, orgKey, to])
 
   if (studentsFetching) {
     return (

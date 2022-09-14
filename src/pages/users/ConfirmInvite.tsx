@@ -1,10 +1,12 @@
 import { useCallback } from 'react'
 import { useParams } from 'react-router'
 import { useToasts } from 'react-toast-notifications'
+import { Helmet } from 'react-helmet'
 import { ConfirmInvite } from '../../components/users/ConfirmInvite'
 import { useOrgId } from '../../hooks/useOrgId'
 import { useOrganizationsState, useUsersState } from '../../store'
 import { useAuthStore } from '../../store/authStore'
+import { TITLE_POSTFIX } from '../../config'
 
 export const ConfirmInvitePage = () => {
   const { addToast } = useToasts()
@@ -28,5 +30,13 @@ export const ConfirmInvitePage = () => {
     }
   }, [addToast, confirmInvitation, currentUser?.uid, fetchAll, orgId, token])
 
-  return <ConfirmInvite onSubmit={onSubmit} loading={submitting} user={currentUser} />
+  return (
+    <>
+      <Helmet>
+        <title>Confirm Invitation{TITLE_POSTFIX}</title>
+      </Helmet>
+
+      <ConfirmInvite onSubmit={onSubmit} loading={submitting} user={currentUser} />
+    </>
+  )
 }

@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
+import { Helmet } from 'react-helmet'
 import { Header } from '../../components/kit/header/Header'
 import { Loader } from '../../components/kit/loader/Loader'
 import { Teacher } from '../../components/teachers/Teacher'
@@ -7,6 +8,7 @@ import { useAttendanceRateByGroups } from '../../hooks/useAttendanceRate'
 import { useCurrentOrg } from '../../hooks/useCurrentOrg'
 import { useOrgId } from '../../hooks/useOrgId'
 import { useAttendancesState, useGroupsState, useTeachersState } from '../../store'
+import { TITLE_POSTFIX } from '../../config'
 
 // TODO: Add loading skeleton
 export const TeacherPage = () => {
@@ -58,6 +60,10 @@ export const TeacherPage = () => {
 
   return (
     <>
+      <Helmet>
+        <title>Teacher{TITLE_POSTFIX}</title>
+      </Helmet>
+
       <Header />
       {/* TODO: skeleton loader */}
       <Loader show={fetching}>

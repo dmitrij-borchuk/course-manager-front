@@ -8,7 +8,6 @@ import { Group } from '../../types/group'
 import { Attendance } from '../../types/attendance'
 import { StudentOfGroup } from '../../types/studentOfGroup'
 import { Student } from '../../types/student'
-import { resetCache } from '../../store/studentsStore'
 import { resetAttendanceCache } from '../../store/attendancesStore'
 
 jest.mock('react-router-dom', () => {
@@ -37,7 +36,6 @@ const { useParams } = jest.requireMock('react-router-dom')
 
 describe('ReportByTagTab', () => {
   beforeEach(() => {
-    resetCache()
     resetAttendanceCache()
     useParams.mockReturnValue({
       orgId: 'orgId',

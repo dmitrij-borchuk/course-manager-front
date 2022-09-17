@@ -8,13 +8,6 @@ import { arrayToDictionary } from '../utils/common'
 import { StudentOfGroup } from '../types/studentOfGroup'
 import { fetchStudentsByOrg, migrateStudents, fetchStudent, deleteStudent } from '../api/students'
 
-type StudentsCache = {
-  students?: Student[]
-}
-// Firebase SDK has cache for offline mode
-// but we need to use cache for the students list request for optimization
-const cache: StudentsCache = {}
-
 export default function useStudentsStore() {
   const [fetching, setFetching] = useState(false)
   const [studentsById, setStudentsById] = useState<Dictionary<Student>>({})
@@ -33,12 +26,8 @@ export default function useStudentsStore() {
     fetching,
     submitting: submittingSemaphore > 0,
     fetchStudents: useCallback(async (orgId: number) => {
-      if (cache.students) {
-        return
-      }
       setFetching(true)
       const resp = await fetchStudentsByOrg(orgId)
-      cache.students = resp.data
       const studentsById = arrayToDictionary(resp.data)
       setStudentsById(studentsById)
       setFetching(false)
@@ -107,8 +96,4 @@ export default function useStudentsStore() {
       }
     }, []),
   }
-}
-
-export function resetCache() {
-  cache.students = undefined
 }

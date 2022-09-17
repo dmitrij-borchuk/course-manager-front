@@ -1,6 +1,5 @@
 import { fireEvent, render, screen, waitForElementToBeRemoved } from '@testing-library/react'
 import { ComponentProps } from 'react'
-import { resetCache } from '../../store/studentsStore'
 import { mockGetDocs, mockOrgId, TestWrapper } from '../../utils/test'
 import { AssignStudents } from './AssignStudents'
 
@@ -8,9 +7,6 @@ describe('AssignStudents', () => {
   beforeEach(() => {
     mockOrgId('orgId')
     mockDefaults()
-  })
-  afterEach(() => {
-    resetCache()
   })
 
   test('should reset dialog state after closing', async () => {

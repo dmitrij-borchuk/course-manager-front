@@ -56,7 +56,6 @@ export function collection<T extends { id: string }>(name: string, converter?: F
       const q = fsQuery(collection)
       const querySnapshot = await getDocs(q)
       const items = getItemsFromSnapshot<T>(querySnapshot)
-      console.log(`=-= getAll ${name}`, items.length)
 
       return items
     },
@@ -64,7 +63,6 @@ export function collection<T extends { id: string }>(name: string, converter?: F
       const q = fsQuery(collection, where(...args))
       const querySnapshot = await getDocs(q)
       const items = getItemsFromSnapshot<T>(querySnapshot)
-      console.log(`=-= query ${name}`, items.length)
 
       return items
     },
@@ -73,14 +71,12 @@ export function collection<T extends { id: string }>(name: string, converter?: F
       const q = fsQuery(collection, ...whereConstraints)
       const querySnapshot = await getDocs(q)
       const items = getItemsFromSnapshot<T>(querySnapshot)
-      console.log(`=-= queryMulti ${name}`, items.length)
 
       return items
     },
     getById: async (id: string) => {
       const docRef = doc(db, name, id)
       const docSnap = await getDoc(docRef)
-      console.log(`=-= getById ${name}`, id)
 
       return getItemFromDoc<T>(docSnap)
     },

@@ -168,10 +168,12 @@ describe('ReportByGroupTab', () => {
     const students: Student[] = [
       {
         id: 's1',
+        outerId: 's1',
         name: 'st 1',
       },
       {
         id: 's2',
+        outerId: 's2',
         name: 'st 1',
       },
     ]
@@ -259,10 +261,12 @@ describe('ReportByGroupTab', () => {
     const students: Student[] = [
       {
         id: 's1',
+        outerId: 's1',
         name: 'st 1',
       },
       {
         id: 's2',
+        outerId: 's2',
         name: 'st 2',
       },
     ]
@@ -379,14 +383,17 @@ function getSortingDataMocks() {
   const students: Student[] = [
     {
       id: 's1',
+      outerId: 's1',
       name: 'st 1',
     },
     {
       id: 's2',
+      outerId: 's2',
       name: 'st 2',
     },
     {
       id: 's3',
+      outerId: 's3',
       name: 'st 3',
     },
   ]

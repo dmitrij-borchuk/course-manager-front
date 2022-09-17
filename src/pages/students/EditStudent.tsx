@@ -9,13 +9,16 @@ import { ROUTES } from '../../constants'
 import { useOrgId } from '../../hooks/useOrgId'
 import { useStudentsState } from '../../store'
 import { TITLE_POSTFIX } from '../../config'
+import { useCurrentOrg } from '../../hooks/useCurrentOrg'
 
 export const EditStudentPage = () => {
   const history = useHistory()
   const orgId = useOrgId()
-  let { id } = useParams<{ id: string }>()
+  let { id: idStr } = useParams<{ id: string }>()
+  const id = parseInt(idStr)
   const { fetchStudent, editStudent, fetching, submitting, studentsById } = useStudentsState()
   const { addToast } = useToasts()
+  const organization = useCurrentOrg()
 
   const student = studentsById[id]
   const update = useCallback(
@@ -49,8 +52,10 @@ export const EditStudentPage = () => {
   )
 
   useEffect(() => {
-    fetchStudent(orgId, id)
-  }, [fetchStudent, id, orgId])
+    if (organization) {
+      fetchStudent(organization.id, id)
+    }
+  }, [fetchStudent, id, organization])
   // TODO: implement 404
 
   return (

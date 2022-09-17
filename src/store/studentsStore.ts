@@ -6,7 +6,7 @@ import { Dictionary } from '../types/dictionary'
 import { NewStudent, Student } from '../types/student'
 import { arrayToDictionary } from '../utils/common'
 import { StudentOfGroup } from '../types/studentOfGroup'
-import { fetchStudentsByOrg, migrateStudents } from '../api/students'
+import { fetchStudentsByOrg, migrateStudents, fetchStudent, deleteStudent } from '../api/students'
 
 type StudentsCache = {
   students?: Student[]
@@ -20,11 +20,10 @@ export default function useStudentsStore() {
   const [studentsById, setStudentsById] = useState<Dictionary<Student>>({})
   const students = useDictionaryToArray(studentsById)
   const [submittingSemaphore, setSubmittingSemaphore] = useState(0)
-  const fetchStudent = useCallback(async (orgId: string, id: string) => {
+  const getStudent = useCallback(async (orgId: number, id: number) => {
     setFetching(true)
-    const collection = makeOrgCollection<Student>('students', orgId)
-    const resp = await collection.getById(id)
-    setStudentsById((state) => ({ ...state, [resp.id]: resp }))
+    const resp = await fetchStudent(orgId, id)
+    setStudentsById((state) => ({ ...state, [resp.data.id]: resp.data }))
     setFetching(false)
   }, [])
 
@@ -44,14 +43,14 @@ export default function useStudentsStore() {
       setStudentsById(studentsById)
       setFetching(false)
     }, []),
-    fetchStudent,
+    fetchStudent: getStudent,
     createStudent: useCallback(async (orgId: string, data: NewStudent) => {
       setSubmittingSemaphore((v) => v + 1)
       const collection = makeOrgCollection<Student>('students', orgId)
 
       try {
         const result = await collection.save({ ...data, name: data.name.trim(), id: nanoid() })
-        setStudentsById((state) => ({ ...state, [result.id]: { ...data, id: result.id } }))
+        setStudentsById((state) => ({ ...state, [result.id]: { ...data, id: result.id, outerId: result.id } }))
         setSubmittingSemaphore((v) => v - 1)
         return result
       } catch (error) {
@@ -77,18 +76,20 @@ export default function useStudentsStore() {
         throw error
       }
     }, []),
-    deleteStudent: useCallback(async (orgId: string, id: string) => {
+    deleteStudent: useCallback(async (orgKey: string, orgId: number, id: number, outerId: string) => {
       // Remove students from group
-      const student2groupCollection = makeOrgCollection<StudentOfGroup>('studentsToGroups', orgId)
-      const resp = await student2groupCollection.query('studentId', '==', id)
+      const student2groupCollection = makeOrgCollection<StudentOfGroup>('studentsToGroups', orgKey)
+      const resp = await student2groupCollection.query('studentId', '==', outerId)
       await Promise.all(resp.map((item) => student2groupCollection.delete(item.id)))
 
-      // Remove group itself
-      const collection = makeOrgCollection<Student>('students', orgId)
-      await collection.delete(id)
+      // Remove student itself
+      await deleteStudent(orgId, id)
       setStudentsById((state) => {
         delete state[id]
-        return state
+
+        return {
+          ...state,
+        }
       })
     }, []),
     clearStudents: useCallback(() => {

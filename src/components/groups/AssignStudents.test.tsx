@@ -30,6 +30,7 @@ describe('AssignStudents', () => {
       studentsOfGroup: [
         {
           id: 'studentId1',
+          outerId: 'studentId1',
           name: 'Student 1',
         },
       ],

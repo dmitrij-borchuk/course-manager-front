@@ -73,29 +73,30 @@ function useSortingByHeader(items: Student[] = [], attendanceRates?: Dictionary<
   }, [])
 
   const sortedItems: TableContentItem[] = useMemo(() => {
-    return items
+    const sorted = items
       .map((s) => ({
         id: s.id,
         name: s.name,
-        attendanceRate: attendanceRates && attendanceRates[s.id],
+        attendanceRate: attendanceRates && attendanceRates[s.outerId],
       }))
       .sort((a, b) => {
         const aValue = a[sortId]
         const bValue = b[sortId]
-        if (aValue === bValue) {
-          return 0
-        }
+
         if (aValue === undefined) {
-          return sortOrder === 'asc' ? -1 : 1
+          return -1
         }
         if (bValue === undefined) {
-          return sortOrder === 'asc' ? 1 : -1
+          return 1
         }
-        if (sortOrder === 'asc') {
-          return aValue < bValue ? -1 : 1
-        }
-        return aValue > bValue ? -1 : 1
+
+        return compare(aValue, bValue)
       })
+    if (sortOrder === 'desc') {
+      sorted.reverse()
+    }
+
+    return sorted
   }, [attendanceRates, items, sortId, sortOrder])
 
   return {
@@ -104,4 +105,14 @@ function useSortingByHeader(items: Student[] = [], attendanceRates?: Dictionary<
     onSort,
     sortedItems,
   }
+}
+
+function compare(a: string | number, b: string | number) {
+  if (typeof a === 'string' && typeof b === 'string') {
+    return a.localeCompare(b)
+  }
+  if (typeof a === 'number' && typeof b === 'number') {
+    return a - b
+  }
+  return 0
 }

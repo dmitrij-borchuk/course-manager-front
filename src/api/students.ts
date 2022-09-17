@@ -8,3 +8,11 @@ export function migrateStudents() {
 export function fetchStudentsByOrg(id: number) {
   return request.get<Student[]>(`/students/byOrganization/${id}`)
 }
+
+export function fetchStudent(orgId: number, id: number) {
+  return request.get<Student>(`/students/${id}?orgId=${orgId}`)
+}
+
+export function deleteStudent(orgId: number, id: number) {
+  return request.delete<Student>(`/students/${id}?orgId=${orgId}`)
+}

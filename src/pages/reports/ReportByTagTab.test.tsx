@@ -184,26 +184,31 @@ function getSortingDataMocks() {
   const students: Student[] = [
     {
       id: 's3',
+      outerId: 's3',
       name: 'st 3',
       tags: ['Lviv'],
     },
     {
       id: 's2',
+      outerId: 's2',
       name: 'st 2',
       tags: ['Lviv'],
     },
     {
       id: 's1',
+      outerId: 's1',
       name: 'st 1',
       tags: ['Lviv'],
     },
     {
       id: 's4',
+      outerId: 's4',
       name: 'st 3',
       tags: ['lviv'],
     },
     {
       id: 's5',
+      outerId: 's5',
       name: 'st 3',
     },
   ]

@@ -28,25 +28,31 @@ export function useAttendanceRateByGroups(groups: Group[], attendances: Attendan
   return rateByGroup
 }
 
-export function useStudentAttendanceRateByGroups(studentId: string, groups: Group[], attendances: Attendance[]) {
+export function useStudentAttendanceRateByGroups(
+  studentId: string | undefined,
+  groups: Group[],
+  attendances: Attendance[]
+) {
   const attendancesByGroup = useMemo(() => groupBy(attendances, (a) => a.group), [attendances])
-  const rateByGroup = useMemo(
-    () =>
-      (groups || []).reduce<Dictionary<number>>((acc, g) => {
-        const attendancesOfGroup = attendancesByGroup[g.id] || []
-        const studentRate = getRateOfStudent(studentId, attendancesOfGroup)
+  const rateByGroup = useMemo(() => {
+    if (!studentId) {
+      return {}
+    }
 
-        if (isNaN(studentRate)) {
-          return acc
-        }
+    return (groups || []).reduce<Dictionary<number>>((acc, g) => {
+      const attendancesOfGroup = attendancesByGroup[g.id] || []
+      const studentRate = getRateOfStudent(studentId, attendancesOfGroup)
 
-        return {
-          ...acc,
-          [g.id]: studentRate,
-        }
-      }, {}),
-    [attendancesByGroup, groups, studentId]
-  )
+      if (isNaN(studentRate)) {
+        return acc
+      }
+
+      return {
+        ...acc,
+        [g.id]: studentRate,
+      }
+    }, {})
+  }, [attendancesByGroup, groups, studentId])
 
   return rateByGroup
 }

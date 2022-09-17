@@ -8,6 +8,7 @@ export type StudentBase = {
 
 export type Student = StudentBase & {
   id: string
+  outerId: string
 }
 
 export type StudentFull = Student & {

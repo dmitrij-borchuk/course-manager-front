@@ -27,14 +27,17 @@ describe('StudentList', () => {
     const students: Student[] = [
       {
         id: 's1',
+        outerId: 's1',
         name: 'st1',
       },
       {
         id: 's2',
+        outerId: 's2',
         name: 'st2',
       },
       {
         id: 's3',
+        outerId: 's3',
         name: 'st3',
       },
     ]
@@ -83,14 +86,17 @@ describe('StudentList', () => {
 const students: Student[] = [
   {
     id: 's1',
+    outerId: 's1',
     name: 'st1',
   },
   {
     id: 's2',
+    outerId: 's2',
     name: 'st2',
   },
   {
     id: 's3',
+    outerId: 's3',
     name: 'st3',
   },
 ]

@@ -12,13 +12,14 @@ import { useToasts } from 'react-toast-notifications'
 import { StudentBase } from '../../../types/student'
 import { Text } from '../../../components/kit/text/Text'
 import { useStudentsState } from '../../../store'
-import { useOrgId } from '../../../hooks/useOrgId'
 import { Message } from '../../../components/kit/message/Message'
 import { TITLE_POSTFIX } from '../../../config'
+import { useCurrentOrg } from '../../../hooks/useCurrentOrg'
 
 export const StudentsImport = () => {
   const intl = useIntl()
-  const orgId = useOrgId()
+  const org = useCurrentOrg()
+  const orgId = org?.id
   const { addToast } = useToasts()
   const [reading, setReading] = useState(false)
   const [previewData, setPreviewData] = useState<StudentBase[] | null>(null)
@@ -68,13 +69,16 @@ export const StudentsImport = () => {
     [addToast, fileType, intl]
   )
   const processStudent = useCallback(
-    async (orgId: string, element: StudentBase) => {
+    async (orgId: number, element: StudentBase) => {
       await createStudent(orgId, element)
       setProcessed((p) => p + 1)
     },
     [createStudent]
   )
   const onSaveList = useCallback(async () => {
+    if (!orgId) {
+      throw new Error('Organization id is not defined')
+    }
     if (!previewData) {
       return
     }

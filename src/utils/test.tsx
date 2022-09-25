@@ -5,13 +5,17 @@ import { ToastProvider } from 'react-toast-notifications'
 import * as reactRouterDom from 'react-router-dom'
 import AxiosMockAdapter from 'axios-mock-adapter'
 import messages from '../intl/messagesEn'
-import StoreProvider from '../store'
+import StoreProvider, { DefaultStore } from '../store'
 
-export const TestWrapper: React.FC = ({ children }) => {
+type WrapperProps = {
+  children: React.ReactNode
+  store?: DefaultStore
+}
+export const TestWrapper = ({ children, store }: WrapperProps) => {
   return (
     <IntlProvider messages={messages} locale="en" defaultLocale="en">
       <ToastProvider>
-        <StoreProvider>{children}</StoreProvider>
+        <StoreProvider {...store}>{children}</StoreProvider>
       </ToastProvider>
     </IntlProvider>
   )

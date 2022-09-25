@@ -16,3 +16,8 @@ export function fetchStudent(orgId: number, id: number) {
 export function deleteStudent(orgId: number, id: number) {
   return request.delete<Student>(`/students/${id}?orgId=${orgId}`)
 }
+
+type NewStudent = Omit<Student, 'id'>
+export function createStudent(orgId: number, data: NewStudent) {
+  return request.post<Student>(`/students?orgId=${orgId}`, data)
+}

@@ -6,11 +6,14 @@ import { Dictionary } from '../types/dictionary'
 import { NewStudent, Student } from '../types/student'
 import { arrayToDictionary } from '../utils/common'
 import { StudentOfGroup } from '../types/studentOfGroup'
-import { fetchStudentsByOrg, migrateStudents, fetchStudent, deleteStudent } from '../api/students'
+import { fetchStudentsByOrg, migrateStudents, fetchStudent, deleteStudent, createStudent } from '../api/students'
 
-export default function useStudentsStore() {
+export type InitialStudentsState = {
+  list?: Dictionary<Student>
+}
+export default function useStudentsStore(initial: InitialStudentsState = {}) {
   const [fetching, setFetching] = useState(false)
-  const [studentsById, setStudentsById] = useState<Dictionary<Student>>({})
+  const [studentsById, setStudentsById] = useState<Dictionary<Student>>(initial.list || {})
   const students = useDictionaryToArray(studentsById)
   const [submittingSemaphore, setSubmittingSemaphore] = useState(0)
   const getStudent = useCallback(async (orgId: number, id: number) => {
@@ -33,13 +36,16 @@ export default function useStudentsStore() {
       setFetching(false)
     }, []),
     fetchStudent: getStudent,
-    createStudent: useCallback(async (orgId: string, data: NewStudent) => {
+    createStudent: useCallback(async (orgId: number, data: NewStudent) => {
       setSubmittingSemaphore((v) => v + 1)
-      const collection = makeOrgCollection<Student>('students', orgId)
 
       try {
-        const result = await collection.save({ ...data, name: data.name.trim(), id: nanoid() })
-        setStudentsById((state) => ({ ...state, [result.id]: { ...data, id: result.id, outerId: result.id } }))
+        const response = await createStudent(orgId, {
+          ...data,
+          outerId: nanoid(),
+        })
+        const result = response.data
+        setStudentsById((state) => ({ ...state, [result.id]: { ...result } }))
         setSubmittingSemaphore((v) => v - 1)
         return result
       } catch (error) {

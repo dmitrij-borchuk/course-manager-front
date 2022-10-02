@@ -101,6 +101,9 @@ export function mockOrgId(id?: string) {
     orgId: id,
   })
 }
+export function mockUrlParams(params: Record<string, string>) {
+  useParams.mockReturnValue(params)
+}
 
 export function getAxiosMock() {
   return require('axios').mock as AxiosMockAdapter

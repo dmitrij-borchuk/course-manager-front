@@ -21,3 +21,7 @@ type NewStudent = Omit<Student, 'id'>
 export function createStudent(orgId: number, data: NewStudent) {
   return request.post<Student>(`/students?orgId=${orgId}`, data)
 }
+
+export function editStudent(orgId: number, id: number, data: Student) {
+  return request.put<Student>(`/students/${id}?orgId=${orgId}`, data)
+}

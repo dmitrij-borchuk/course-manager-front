@@ -218,8 +218,8 @@ interface StudentsSelectorProps {
   onChange?: (attendance: Dictionary<boolean>) => void
 }
 const StudentsSelector = ({ students, onChange = noop, initialSelected }: StudentsSelectorProps) => {
-  const [selected, setSelected] = useState<Record<string, boolean>>(initialSelected || {})
-  const onClick = useCallback((id: string, value: boolean) => {
+  const [selected, setSelected] = useState<Record<number, boolean>>(initialSelected || {})
+  const onClick = useCallback((id: number, value: boolean) => {
     setSelected((d) => ({ ...d, [id]: value }))
   }, [])
   const renderItem = useMemo(

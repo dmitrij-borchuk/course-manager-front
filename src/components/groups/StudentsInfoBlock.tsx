@@ -167,7 +167,7 @@ const StudentWithAttendance = ({
           }
         >
           {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-          <a href="#" className="whitespace-nowrap w-52" onClick={() => onRemoveClick(data.id)}>
+          <a href="#" className="whitespace-nowrap w-52" onClick={() => onRemoveClick(data.outerId)}>
             <FormattedMessage id="groups.studentList.removeBtn" />
           </a>
         </Dropdown>

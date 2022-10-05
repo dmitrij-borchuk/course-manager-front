@@ -11,6 +11,7 @@ import { Group } from '../../types/group'
 import { Dictionary } from '../../types/dictionary'
 import { useCurrentUser } from '../../hooks/useCurrentUser'
 import { TITLE_POSTFIX } from '../../config'
+import { useCurrentOrg } from '../../hooks/useCurrentOrg'
 
 export const AttendanceEditorPage = () => {
   const { id } = useParams<{ id: string }>()
@@ -25,7 +26,9 @@ export const AttendanceEditorPage = () => {
     fetching: studentsFetching,
   } = useStudentsOfGroupStore()
   const history = useHistory()
-  const orgId = useOrgId()
+  const orgKey = useOrgId()
+  const org = useCurrentOrg()
+  const orgId = org?.id
   const {
     saveAttendance,
     fetchAttendance,
@@ -46,9 +49,9 @@ export const AttendanceEditorPage = () => {
     setDate(date)
   }, [])
   const onDelete = useCallback(async () => {
-    await removeAttendance(orgId, id)
-    history.replace(`/${orgId}`)
-  }, [history, id, orgId, removeAttendance])
+    await removeAttendance(orgKey, id)
+    history.replace(`/${orgKey}`)
+  }, [history, id, orgKey, removeAttendance])
   const attendance = attendancesById[id]
   const { organizationUser } = useCurrentUser()
   const attendanceTeacher = attendance && usersById[attendance?.teacher]
@@ -65,21 +68,21 @@ export const AttendanceEditorPage = () => {
         }
         if (attendance?.id) {
           // Edit
-          await saveAttendance(orgId, {
+          await saveAttendance(orgKey, {
             id: attendance?.id,
             teacher: attendance.teacher,
             ...dataToSave,
           })
         } else {
           // Create
-          await saveAttendance(orgId, { ...dataToSave, teacher: organizationUser.id })
+          await saveAttendance(orgKey, { ...dataToSave, teacher: organizationUser.id })
         }
 
         addToast(<FormattedMessage id="attendance.edit.success" />, {
           appearance: 'success',
           autoDismiss: true,
         })
-        history.push(`/${orgId}`)
+        history.push(`/${orgKey}`)
       } catch (error: any) {
         addToast(error.message, {
           appearance: 'error',
@@ -87,7 +90,7 @@ export const AttendanceEditorPage = () => {
         })
       }
     },
-    [addToast, attendance, history, orgId, organizationUser, saveAttendance]
+    [addToast, attendance, history, orgKey, organizationUser, saveAttendance]
   )
 
   useEffect(() => {
@@ -99,22 +102,22 @@ export const AttendanceEditorPage = () => {
       return
     }
     const attendanceTeacher = attendance?.teacher
-    fetchGroupsOfTeacher(orgId, attendanceTeacher || organizationUser.id)
-  }, [attendance, fetchGroupsOfTeacher, id, orgId, organizationUser])
+    fetchGroupsOfTeacher(orgKey, attendanceTeacher || organizationUser.id)
+  }, [attendance, fetchGroupsOfTeacher, id, orgKey, organizationUser])
 
   useEffect(() => {
     if (!attendance) {
       return
     }
     // TODO: cleanup
-    fetchOrgUser(orgId, attendance.teacher)
-  }, [attendance, fetchOrgUser, orgId])
+    fetchOrgUser(orgKey, attendance.teacher)
+  }, [attendance, fetchOrgUser, orgKey])
 
   const fetchAttendanceById = useCallback(
     async (id: string) => {
       // TODO: cleanup
       try {
-        await fetchAttendance(orgId, id)
+        await fetchAttendance(orgKey, id)
       } catch (error: any) {
         addToast(error.message, {
           appearance: 'error',
@@ -122,7 +125,7 @@ export const AttendanceEditorPage = () => {
         })
       }
     },
-    [addToast, fetchAttendance, orgId]
+    [addToast, fetchAttendance, orgKey]
   )
   useEffect(() => {
     if (id) {
@@ -131,11 +134,11 @@ export const AttendanceEditorPage = () => {
   }, [fetchAttendanceById, id])
 
   useEffect(() => {
-    if (group?.id) {
-      fetchStudentsOfGroup(orgId, group.id, date)
+    if (group?.id && orgId) {
+      fetchStudentsOfGroup(orgId, orgKey, group.id, date)
       return () => clearStudentsOfGroup()
     }
-  }, [clearStudentsOfGroup, date, fetchStudentsOfGroup, group?.id, orgId])
+  }, [clearStudentsOfGroup, date, fetchStudentsOfGroup, group?.id, orgId, orgKey])
 
   if (groupsFetching || attendancesLoading) {
     // TODO

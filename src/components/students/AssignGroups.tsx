@@ -32,14 +32,14 @@ export const AssignGroups = ({ student, onDone = noop, trigger, initialGroups }:
         await Promise.all(
           added.map(async (gId) =>
             addGroupToStudent(orgId, {
-              studentId: student.id,
+              studentId: student.outerId,
               groupId: gId,
               startDate: new Date().getTime(),
               endDate: null,
             })
           )
         )
-        await Promise.all(removed.map(async (gId) => deleteGroupFromStudent(orgId, gId, student.id)))
+        await Promise.all(removed.map(async (gId) => deleteGroupFromStudent(orgId, gId, student.outerId)))
         toggler.off()
         onDone()
 

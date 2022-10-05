@@ -26,26 +26,42 @@ export const AssignStudents = ({ group, onDone = noop, trigger, studentsOfGroup 
   const action = query.get('action')
   const intl = useIntl()
   const orgKey = useOrgId()
+  const org = useCurrentOrg()
+  const orgId = org?.id
   const [open, toggler] = useToggle(action === 'openStudentsDialog')
-  const { students, fetching, fetchStudents } = useStudentsState()
+  const { students, studentsById, fetching, fetchStudents } = useStudentsState()
   const { addStudentToGroup, deleteStudentFromGroup } = useStudentsOfGroupState()
   const onSubmit = useCallback(
     async (data: Student[]) => {
+      if (!orgId) {
+        throw new Error('Organization is not defined')
+      }
       try {
         const initialStudentsIds = (studentsOfGroup || [])?.map((s) => s.id)
         const resultStudentsIds = data.map((s) => s.id)
         const { added, removed } = getDiff(initialStudentsIds, resultStudentsIds)
         await Promise.all(
-          added.map(async (sId) =>
-            addStudentToGroup(orgKey, {
-              studentId: sId,
+          added.map(async (sId) => {
+            if (!studentsById[sId]) {
+              throw new Error(`Student with id ${sId} not found in the store`)
+            }
+            return addStudentToGroup(orgId, orgKey, {
+              studentId: studentsById[sId].outerId,
               groupId: group.id,
               startDate: new Date().getTime(),
               endDate: null,
             })
-          )
+          })
         )
-        await Promise.all(removed.map(async (sId) => deleteStudentFromGroup(orgKey, sId, group.id)))
+        await Promise.all(
+          removed.map(async (sId) => {
+            if (!studentsById[sId]) {
+              throw new Error(`Student with id ${sId} not found in the store`)
+            }
+
+            return deleteStudentFromGroup(orgKey, studentsById[sId].outerId, group.id)
+          })
+        )
         toggler.off()
         onDone()
 
@@ -62,10 +78,19 @@ export const AssignStudents = ({ group, onDone = noop, trigger, studentsOfGroup 
         }
       }
     },
-    [addStudentToGroup, addToast, deleteStudentFromGroup, group.id, onDone, orgKey, studentsOfGroup, toggler]
+    [
+      addStudentToGroup,
+      addToast,
+      deleteStudentFromGroup,
+      group.id,
+      onDone,
+      orgId,
+      orgKey,
+      studentsById,
+      studentsOfGroup,
+      toggler,
+    ]
   )
-  const org = useCurrentOrg()
-  const orgId = org?.id
 
   useEffect(() => {
     if (orgId) {
@@ -81,6 +106,8 @@ export const AssignStudents = ({ group, onDone = noop, trigger, studentsOfGroup 
       })
     }
   }, [open, history, query])
+  console.log('=-= studentsOfGroup', studentsOfGroup)
+  console.log('=-= students', students)
 
   return (
     <>

@@ -6,7 +6,14 @@ import { Dictionary } from '../types/dictionary'
 import { NewStudent, Student } from '../types/student'
 import { arrayToDictionary } from '../utils/common'
 import { StudentOfGroup } from '../types/studentOfGroup'
-import { fetchStudentsByOrg, migrateStudents, fetchStudent, deleteStudent, createStudent } from '../api/students'
+import {
+  fetchStudentsByOrg,
+  migrateStudents,
+  fetchStudent,
+  deleteStudent,
+  createStudent,
+  editStudent,
+} from '../api/students'
 
 export type InitialStudentsState = {
   list?: Dictionary<Student>
@@ -53,11 +60,11 @@ export default function useStudentsStore(initial: InitialStudentsState = {}) {
         throw error
       }
     }, []),
-    editStudent: useCallback(async (orgId: string, data: Student) => {
+    editStudent: useCallback(async (orgId: number, data: Student) => {
       setSubmittingSemaphore((v) => v + 1)
-      const collection = makeOrgCollection<Student>('students', orgId)
       try {
-        const result = await collection.save(data)
+        const response = await editStudent(orgId, data.id, data)
+        const result = response.data
         setStudentsById((state) => ({
           ...state,
           [result.id]: {
@@ -73,6 +80,7 @@ export default function useStudentsStore(initial: InitialStudentsState = {}) {
     }, []),
     deleteStudent: useCallback(async (orgKey: string, orgId: number, id: number, outerId: string) => {
       // Remove students from group
+      //   TODO: use new api
       const student2groupCollection = makeOrgCollection<StudentOfGroup>('studentsToGroups', orgKey)
       const resp = await student2groupCollection.query('studentId', '==', outerId)
       await Promise.all(resp.map((item) => student2groupCollection.delete(item.id)))

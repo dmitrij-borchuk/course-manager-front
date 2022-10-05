@@ -24,8 +24,9 @@ export const StudentPage = () => {
     clearGroupOfStudents,
     groupsOfStudent,
     fetching: fetchingGroups,
-  } = useStudentsOfGroupState()
+  } = useStudentsOfGroupState()//?
   const student = studentsById[id]
+  console.log('=-= studentsById', studentsById)
   const orgKey = useOrgId()
   const organization = useCurrentOrg()
 
@@ -53,11 +54,11 @@ export const StudentPage = () => {
   }, [clearGroups, fetchGroups, orgKey])
 
   useEffect(() => {
-    if (student?.id) {
-      fetchGroupsOfStudent(orgKey, [student.id], new Date())
+    if (student?.outerId) {
+      fetchGroupsOfStudent(orgKey, [student.outerId], new Date())
       return () => clearGroupOfStudents()
     }
-  }, [clearGroupOfStudents, fetchGroupsOfStudent, orgKey, student?.id])
+  }, [clearGroupOfStudents, fetchGroupsOfStudent, orgKey, student?.outerId])
 
   useEffect(() => {
     if (groups.length) {

@@ -120,9 +120,6 @@ function mockGetDocs(
     if (path === 'organizations/orgId/attendances') {
       return Promise.resolve(getFirebaseSnapshotFromArray(attendances))
     }
-    if (path === 'organizations/orgId/students') {
-      return Promise.resolve(getFirebaseSnapshotFromArray(students))
-    }
     return Promise.resolve(getFirebaseSnapshotFromArray([]))
   })
 }
@@ -181,31 +178,31 @@ function getSortingDataMocks() {
   ]
   const students: Student[] = [
     {
-      id: 's3',
+      id: 3,
       outerId: 's3',
       name: 'st 3',
       tags: ['Lviv'],
     },
     {
-      id: 's2',
+      id: 2,
       outerId: 's2',
       name: 'st 2',
       tags: ['Lviv'],
     },
     {
-      id: 's1',
+      id: 1,
       outerId: 's1',
       name: 'st 1',
       tags: ['Lviv'],
     },
     {
-      id: 's4',
+      id: 4,
       outerId: 's4',
       name: 'st 3',
       tags: ['lviv'],
     },
     {
-      id: 's5',
+      id: 5,
       outerId: 's5',
       name: 'st 3',
     },

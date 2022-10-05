@@ -26,17 +26,17 @@ describe('StudentList', () => {
   test('Should render attendance rate', async () => {
     const students: Student[] = [
       {
-        id: 's1',
+        id: 1,
         outerId: 's1',
         name: 'st1',
       },
       {
-        id: 's2',
+        id: 2,
         outerId: 's2',
         name: 'st2',
       },
       {
-        id: 's3',
+        id: 3,
         outerId: 's3',
         name: 'st3',
       },
@@ -85,17 +85,17 @@ describe('StudentList', () => {
 
 const students: Student[] = [
   {
-    id: 's1',
+    id: 1,
     outerId: 's1',
     name: 'st1',
   },
   {
-    id: 's2',
+    id: 2,
     outerId: 's2',
     name: 'st2',
   },
   {
-    id: 's3',
+    id: 3,
     outerId: 's3',
     name: 'st3',
   },

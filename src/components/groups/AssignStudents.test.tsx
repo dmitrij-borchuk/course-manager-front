@@ -1,15 +1,16 @@
 import { fireEvent, render, screen, waitForElementToBeRemoved } from '@testing-library/react'
 import { ComponentProps } from 'react'
-import { mockGetDocs, mockOrgId, TestWrapper } from '../../utils/test'
+import { getAxiosMock, mockOrgId, TestWrapper } from '../../utils/test'
 import { AssignStudents } from './AssignStudents'
 
 describe('AssignStudents', () => {
   beforeEach(() => {
     mockOrgId('orgId')
-    mockDefaults()
   })
 
   test('should reset dialog state after closing', async () => {
+    const axiosMock = getAxiosMock()
+    axiosMock.onGet('/organizations').reply(200, [])
     renderComponent()
     await openDialog()
     // Check that item is not selected
@@ -22,10 +23,13 @@ describe('AssignStudents', () => {
   })
 
   test('Should not select twice the same student', async () => {
+    const axiosMock = getAxiosMock()
+    axiosMock.onGet('/organizations').reply(200, [])
+
     renderComponent({
       studentsOfGroup: [
         {
-          id: 'studentId1',
+          id: 1,
           outerId: 'studentId1',
           name: 'Student 1',
         },
@@ -41,23 +45,26 @@ describe('AssignStudents', () => {
   })
 })
 
-function mockDefaults() {
-  const { mockDataByPath } = mockGetDocs()
-  mockDataByPath('organizations/orgId/students', [
-    {
-      id: 'studentId1',
-      name: 'Student 1',
-    },
-    {
-      id: 'studentId2',
-      name: 'Student 2',
-    },
-  ])
-}
-
 function renderComponent(props: Partial<ComponentProps<typeof AssignStudents>> = {}) {
   render(
-    <TestWrapper>
+    <TestWrapper
+      store={{
+        students: {
+          list: {
+            studentId1: {
+              id: 1,
+              name: 'Student 1',
+              outerId: 'studentId1',
+            },
+            studentId2: {
+              id: 2,
+              name: 'Student 2',
+              outerId: 'studentId2',
+            },
+          },
+        },
+      }}
+    >
       <AssignStudents
         group={{
           id: '1',

@@ -7,7 +7,7 @@ export type StudentBase = {
 }
 
 export type Student = StudentBase & {
-  id: string
+  id: number
   outerId: string
 }
 

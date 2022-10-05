@@ -59,7 +59,7 @@ export const StudentList: React.FC<Props> = ({ className = '', loading = false, 
 type SortProps = 'name' | 'attendanceRate'
 
 type TableContentItem = {
-  id: string
+  id: number
   name: string
   attendanceRate?: number
 }

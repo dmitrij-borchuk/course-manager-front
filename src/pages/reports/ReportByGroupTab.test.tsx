@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react'
 import * as firestore from 'firebase/firestore'
 import * as reactPdf from '@react-pdf/renderer'
 import userEvent from '@testing-library/user-event'
-import { asMock, getFirebaseSnapshotFromArray, TestWrapper } from '../../utils/test'
+import { asMock, getAxiosMock, getFirebaseSnapshotFromArray, mockOrgId, TestWrapper } from '../../utils/test'
 import { ReportByGroupTab } from './ReportByGroupTab'
 import { Group } from '../../types/group'
 import { Attendance } from '../../types/attendance'
@@ -53,9 +53,18 @@ describe('ReportByGroupTab', () => {
     })
     localStorage.clear()
   })
-  test('should generate report with sorting', async () => {
+  test.only('should generate report with sorting', async () => {
     const { attendances, groups, students, studentsOfGroup } = getSortingDataMocks()
+    // // mockOrgId('orgId')
     mockGetDocs(groups, studentsOfGroup, attendances, students)
+    const axiosMock = getAxiosMock()
+    // axiosMock.onGet('/students').reply(200, students)
+    axiosMock.onGet('/organizations').reply(200, [
+      {
+        id: 1,
+        key: 'orgId',
+      },
+    ])
     usePDF.mockReturnValue([{ url: 'instance.url' } as any, jest.fn()])
 
     render(
@@ -167,12 +176,12 @@ describe('ReportByGroupTab', () => {
     ]
     const students: Student[] = [
       {
-        id: 's1',
+        id: 1,
         outerId: 's1',
         name: 'st 1',
       },
       {
-        id: 's2',
+        id: 2,
         outerId: 's2',
         name: 'st 1',
       },
@@ -260,12 +269,12 @@ describe('ReportByGroupTab', () => {
     ]
     const students: Student[] = [
       {
-        id: 's1',
+        id: 1,
         outerId: 's1',
         name: 'st 1',
       },
       {
-        id: 's2',
+        id: 2,
         outerId: 's2',
         name: 'st 2',
       },
@@ -319,9 +328,9 @@ function mockGetDocs(
     if (path === 'organizations/orgId/attendances') {
       return Promise.resolve(getFirebaseSnapshotFromArray(attendances))
     }
-    if (path === 'organizations/orgId/students') {
-      return Promise.resolve(getFirebaseSnapshotFromArray(students))
-    }
+    // if (path === 'organizations/orgId/students') {
+    //   return Promise.resolve(getFirebaseSnapshotFromArray(students))
+    // }
     return Promise.resolve(getFirebaseSnapshotFromArray([]))
   })
 }
@@ -382,17 +391,17 @@ function getSortingDataMocks() {
   ]
   const students: Student[] = [
     {
-      id: 's1',
+      id: 1,
       outerId: 's1',
       name: 'st 1',
     },
     {
-      id: 's2',
+      id: 2,
       outerId: 's2',
       name: 'st 2',
     },
     {
-      id: 's3',
+      id: 3,
       outerId: 's3',
       name: 'st 3',
     },

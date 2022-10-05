@@ -4,6 +4,7 @@ import { DatePicker, Preloader } from 'react-materialize'
 import { Select } from '../../components/kit/select/Select'
 import { Text } from '../../components/kit/text/Text'
 import { ReportByGroup } from '../../components/reports/ReportByGroup'
+import { useCurrentOrg } from '../../hooks/useCurrentOrg'
 import { useOrgId } from '../../hooks/useOrgId'
 import { getItem, setItem } from '../../services/localStore'
 import { useAttendancesState, useGroupsState, useStudentsOfGroupState } from '../../store'
@@ -12,7 +13,9 @@ import { SortOrder } from '../../types/sorting'
 
 export const ReportByGroupTab = () => {
   const intl = useIntl()
-  const orgId = useOrgId()
+  const org = useCurrentOrg()
+  const orgId = org?.id
+  const orgKey = useOrgId()
   const [group, setGroup] = useState<Group>()
   const [order, setOrder] = useState<SortOrder>(getItem(orderStoreKey) || 'asc')
 
@@ -29,9 +32,9 @@ export const ReportByGroupTab = () => {
   })
   const fetchAttendance = useCallback(
     async (group: Group) => {
-      await fetchAttendancesForGroups(orgId, [group.id])
+      await fetchAttendancesForGroups(orgKey, [group.id])
     },
-    [fetchAttendancesForGroups, orgId]
+    [fetchAttendancesForGroups, orgKey]
   )
 
   useEffect(() => {
@@ -39,10 +42,11 @@ export const ReportByGroupTab = () => {
   }, [order])
 
   useEffect(() => {
-    if (group) {
-      fetchStudentsOfGroup(orgId, group.id)
+    console.log('=-= fetchStudentsOfGroup', group, orgId, orgKey)
+    if (group && orgId) {
+      fetchStudentsOfGroup(orgId, orgKey, group.id)
     }
-  }, [fetchStudentsOfGroup, group, orgId])
+  }, [fetchStudentsOfGroup, group, orgId, orgKey])
 
   useEffect(() => {
     if (group) {
@@ -53,8 +57,8 @@ export const ReportByGroupTab = () => {
   }, [clearAttendances, fetchAttendance, group])
 
   useEffect(() => {
-    fetchGroups(orgId)
-  }, [fetchGroups, orgId])
+    fetchGroups(orgKey)
+  }, [fetchGroups, orgKey])
 
   useEffect(() => {
     if (groups.length) {
@@ -79,6 +83,7 @@ export const ReportByGroupTab = () => {
       </div>
     )
   }
+  console.log('=-= studentsOfGroup', studentsOfGroup)
 
   // TODO: responsive
   return (

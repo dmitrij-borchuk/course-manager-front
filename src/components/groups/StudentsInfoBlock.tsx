@@ -132,7 +132,7 @@ const StudentWithAttendance = ({
   const orgId = useOrgId()
 
   return (
-    <div className="collection-item flex justify-between items-center">
+    <div className="collection-item flex justify-between items-center" data-testid={`student-${data.id}`}>
       <div className="flex">
         {loading && <TinyPreloader />}
         <Ellipsis>

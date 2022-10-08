@@ -52,6 +52,7 @@ describe('ReportByGroupTab', () => {
       orgId: 'orgId',
     })
     localStorage.clear()
+    usePDF.mockReturnValue([{ url: 'instance.url' } as any, jest.fn()])
   })
   test('should generate report with sorting', async () => {
     const { attendances, groups, students, studentsOfGroup } = getSortingDataMocks()
@@ -296,6 +297,43 @@ describe('ReportByGroupTab', () => {
     expect(persents[2]).toBe('st 1')
     expect(persents[3]).toBe('100%')
   })
+
+  test('should show report only related to group selected', async () => {
+    const { attendances, groups, students, studentsOfGroup } = getGroupsFilteringData()
+    mockGetDocs(groups, studentsOfGroup, attendances, students)
+
+    render(
+      <TestWrapper>
+        <ReportByGroupTab />
+      </TestWrapper>
+    )
+
+    await screen.findByRole('button', { name: 'Generate report' })
+    renderPdf()
+    const percents = await getPercentsArray()
+
+    expect(percents[0]).toBe('50%')
+  })
+
+  function renderPdf() {
+    expect(usePDF).toBeCalled()
+    const lastCall = usePDF.mock.calls[usePDF.mock.calls.length - 1]
+    const document = lastCall[0].document
+    render(document)
+  }
+
+  async function getPercentsArray() {
+    const el = await screen.findAllByTestId('pdf-text')
+    return (
+      el
+        // Remove header
+        .splice(1)
+        // Filter out student names
+        .filter((e, i) => i % 2 === 1)
+        // Get text
+        .map((e) => e.textContent)
+    )
+  }
 })
 
 function mockGetDocs(
@@ -388,6 +426,78 @@ function getSortingDataMocks() {
     {
       id: 's3',
       name: 'st 3',
+    },
+  ]
+
+  return {
+    groups,
+    attendances,
+    studentsOfGroup,
+    students,
+  }
+}
+
+function getGroupsFilteringData() {
+  const groups: Group[] = [
+    {
+      id: 'g1',
+      name: 'g1',
+    },
+    {
+      id: 'g2',
+      name: 'g2',
+    },
+  ]
+  const attendances: Attendance[] = [
+    {
+      id: 'a1',
+      attended: {
+        s1: false,
+      },
+      date: new Date().getTime(),
+      group: 'g1',
+      teacher: '',
+    },
+    {
+      id: 'a2',
+      attended: {
+        s1: true,
+      },
+      date: new Date().getTime(),
+      group: 'g1',
+      teacher: '',
+    },
+    {
+      id: 'a3',
+      attended: {
+        s1: true,
+      },
+      date: new Date().getTime(),
+      group: 'g2',
+      teacher: '',
+    },
+  ]
+  const studentsOfGroup: StudentOfGroup[] = [
+    {
+      id: 'g1',
+      endDate: null,
+      groupId: 'g1',
+      startDate: new Date().getTime(),
+      studentId: 's1',
+    },
+    {
+      id: 'g21',
+      endDate: null,
+      groupId: 'g2',
+      startDate: new Date().getTime(),
+      studentId: 's1',
+    },
+  ]
+  const students: Student[] = [
+    {
+      id: 's1',
+      name: 'st 1',
+      tags: ['Lviv'],
     },
   ]
 

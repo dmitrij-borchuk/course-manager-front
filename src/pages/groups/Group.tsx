@@ -33,7 +33,10 @@ export const GroupPage = () => {
   }, [group, teacher])
   const orgId = useOrgId()
   const onDelete = useCallback(() => deleteGroup(orgId, id), [deleteGroup, id, orgId])
-  const attendanceRate = useAttendanceRateByStudent(attendances)
+  const attendancesOfGroup = useMemo(() => {
+    return attendances.filter((a) => a.group === id)
+  }, [attendances, id])
+  const attendanceRate = useAttendanceRateByStudent(attendancesOfGroup)
 
   useEffect(() => {
     fetchGroup(orgId, id)

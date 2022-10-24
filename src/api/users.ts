@@ -6,14 +6,14 @@ export function createUserRequest(data: NewUser) {
   return request.post<User>('/users', data)
 }
 
-export function getUsersRequest(orgId: string) {
+export function getUsersRequest(orgId: number) {
   return request.get<OrganizationUser[]>(`/users/${orgId}`)
 }
 
-export function getUserRequest(orgId: string, id: string) {
+export function getUserRequest(orgId: number, id: number) {
   return request.get<OrganizationUser>(`/users/${orgId}/${id}`)
 }
-export function getUserByOuterIdRequest(orgId: string, id: string) {
+export function getUserByOuterIdRequest(orgId: number, id: string) {
   return request.get<OrganizationUser>(`/users/byOuterId/${orgId}/${id}`)
 }
 
@@ -32,7 +32,7 @@ export function migrateUsers() {
 type UserInviteData = {
   email: string
   role: string
-  orgId: string
+  orgId: number
 }
 export function inviteUser(data: UserInviteData) {
   return request.post<InviteResponse>('/users/invite', data)

@@ -28,8 +28,3 @@ export async function addUserToOrganization(orgId: string, user: OrganizationUse
   const orgUsers = collection<OrganizationUser>(`organizations/${orgId}/users`)
   await orgUsers.save(user)
 }
-
-export async function getUsersList(orgId: string) {
-  const orgUsers = collection<OrganizationUser>(`organizations/${orgId}/users`)
-  return await orgUsers.getAll()
-}

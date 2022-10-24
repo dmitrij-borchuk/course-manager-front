@@ -1,21 +1,21 @@
 import { useEffect, useMemo } from 'react'
 import { useAuthState, useUsersState } from '../store'
-import { OrganizationUser } from '../types/user'
-import { useOrgIdNotStrict } from './useOrgId'
+import { useCurrentOrg } from './useCurrentOrg'
 
 export function useCurrentUser() {
-  const orgId = useOrgIdNotStrict()
+  const org = useCurrentOrg()
   const { currentUser, loading } = useAuthState()
-  const { fetchOrgUser, usersById, fetching } = useUsersState()
-  const organizationUser: OrganizationUser = usersById[currentUser?.uid || '']
+  const { fetchOrgUser, fetching, users } = useUsersState()
+  // TODO: fetch profile
+  const organizationUser = users.find((user) => user.outerId === currentUser?.uid)
   const isLoading = loading || fetching
 
   useEffect(() => {
-    if (!orgId || !currentUser) {
+    if (!org || !currentUser) {
       return
     }
-    fetchOrgUser(orgId, currentUser.uid)
-  }, [currentUser, fetchOrgUser, orgId])
+    fetchOrgUser(org.id, currentUser.uid)
+  }, [currentUser, fetchOrgUser, org])
 
   return useMemo(
     () => ({

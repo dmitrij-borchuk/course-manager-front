@@ -11,6 +11,7 @@ import { Group } from '../../types/group'
 import { Dictionary } from '../../types/dictionary'
 import { useCurrentUser } from '../../hooks/useCurrentUser'
 import { TITLE_POSTFIX } from '../../config'
+import { useCurrentOrg } from '../../hooks/useCurrentOrg'
 
 export const AttendanceEditorPage = () => {
   const { id } = useParams<{ id: string }>()
@@ -50,6 +51,7 @@ export const AttendanceEditorPage = () => {
     history.replace(`/${orgId}`)
   }, [history, id, orgId, removeAttendance])
   const attendance = attendancesById[id]
+  const org = useCurrentOrg()
   const { organizationUser } = useCurrentUser()
   const attendanceTeacher = attendance && usersById[attendance?.teacher]
   const onSubmit = useCallback(
@@ -103,12 +105,12 @@ export const AttendanceEditorPage = () => {
   }, [attendance, fetchGroupsOfTeacher, id, orgId, organizationUser])
 
   useEffect(() => {
-    if (!attendance) {
+    if (!attendance || !org) {
       return
     }
     // TODO: cleanup
-    fetchOrgUser(orgId, attendance.teacher)
-  }, [attendance, fetchOrgUser, orgId])
+    fetchOrgUser(org.id, attendance.teacher)
+  }, [attendance, fetchOrgUser, org])
 
   const fetchAttendanceById = useCallback(
     async (id: string) => {

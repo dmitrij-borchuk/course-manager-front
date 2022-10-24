@@ -1,15 +1,12 @@
 import { useCallback, useMemo, useState } from 'react'
-import { useHistory } from 'react-router'
 import { getUserByOuterIdRequest, getUserRequest, getUsersRequest } from '../api/users'
-import { ROUTES } from '../constants'
 import { useDictionaryToArray } from '../hooks/useDictionaryToArray'
-import { deleteTeacher, editTeacher } from '../services/teachers'
+import { editTeacher } from '../services/teachers'
 import { Dictionary } from '../types/dictionary'
 import { OrganizationUser } from '../types/user'
 import { arrayToDictionary } from '../utils/common'
 
 export default function useTeachersStore() {
-  const history = useHistory()
   const [teachersById, setTeachersById] = useState<Dictionary<OrganizationUser>>({})
   const teachers = useDictionaryToArray(teachersById)
   const [fetching, setFetching] = useState(false)
@@ -43,20 +40,20 @@ export default function useTeachersStore() {
         }
       })
     }, []),
-    fetchTeachers: useCallback(async (orgId: string) => {
+    fetchTeachers: useCallback(async (orgId: number) => {
       setFetching(true)
       const resp = await getUsersRequest(orgId)
       const itemsById = arrayToDictionary(resp.data)
       setTeachersById((state) => ({ ...state, ...itemsById }))
       setFetching(false)
     }, []),
-    fetchTeacher: useCallback(async (orgId: string, id: string) => {
+    fetchTeacher: useCallback(async (orgId: number, id: number) => {
       setFetching(true)
       const resp = await getUserRequest(orgId, id)
       setTeachersById((state) => ({ ...state, [id]: resp.data }))
       setFetching(false)
     }, []),
-    fetchTeacherByOuterId: useCallback(async (orgId: string, id: string) => {
+    fetchTeacherByOuterId: useCallback(async (orgId: number, id: string) => {
       setFetching(true)
       const resp = await getUserByOuterIdRequest(orgId, id)
       setTeachersById((state) => ({ ...state, [resp.data.id]: resp.data }))
@@ -71,19 +68,5 @@ export default function useTeachersStore() {
       }))
       setSubmitting(false)
     }, []),
-    // TODO: do we need it
-    deleteTeacher: useCallback(
-      async (id: string) => {
-        setSubmitting(true)
-        await deleteTeacher(id)
-        setTeachersById((state) => {
-          delete state[id]
-          return state
-        })
-        setSubmitting(false)
-        history.push(ROUTES.TEACHERS_LIST)
-      },
-      [history]
-    ),
   }
 }

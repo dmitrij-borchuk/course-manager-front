@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import * as reactRouterDom from 'react-router-dom'
-import { asMock, mockDoc, mockGetDocs, TestWrapper } from '../../utils/test'
+import { asMock, mockDoc, mockGetDocs, TestWrapper, getAxiosMock } from '../../utils/test'
 import { AttendanceEditorPage } from './AttendanceEditor'
 import * as firestore from 'firebase/firestore'
 import { Attendance } from '../../types/attendance'
@@ -25,16 +25,20 @@ const twoDaysInMs = 1000 * 60 * 60 * 24 * 2
 const oneDayInMs = 1000 * 60 * 60 * 24 * 1
 
 describe('AttendanceEditor', () => {
+  const axiosMock = getAxiosMock()
+
   beforeEach(() => {
     useParams.mockReturnValue({
       orgId: 'orgId',
       // id: 'attendanceId',
     })
-    const { mockDocByPath } = mockDoc()
-    mockDocByPath('', { id: 'orgUserId' })
+    axiosMock.onGet('/organizations').reply(200, [{ key: 'orgId', id: 1 }])
+    axiosMock.onGet('/users/byOuterId/1/userId').reply(200, { outerId: 'userId', id: 1 })
+    axiosMock.onGet('/users/byOuterId/1/teacher1').reply(200, { outerId: 'userId', id: 1 })
   })
 
   test('should not fail', async () => {
+    defaultMock()
     render(
       <TestWrapper>
         <AttendanceEditorPage />
@@ -103,7 +107,7 @@ describe('AttendanceEditor', () => {
       group: group.id,
       teacher: 'teacher1',
     }
-    mockDocByPath('organizations/orgId/attendances', attendance)
+    mockDocByPath('organizations/orgId/attendances/attendanceId', attendance)
 
     render(
       <TestWrapper>

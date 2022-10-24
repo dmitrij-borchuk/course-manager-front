@@ -22,7 +22,7 @@ export function groupBy<T>(xs: T[], selector: Selector<T>) {
 
 export function noop() {}
 
-export function arrayToDictionary<T extends { id: string }>(list?: T[]) {
+export function arrayToDictionary<T extends { id: string | number }>(list?: T[]) {
   if (!list) {
     return {}
   }

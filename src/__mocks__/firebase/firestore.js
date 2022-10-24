@@ -4,10 +4,11 @@ export const collection = (_, path) => path
 export const query = (path) => path
 export const doc = (_, path, ...segments) => {
   const additionalPath = segments ? `/${segments.join('/')}` : ''
+  const finalPath = `${path}${additionalPath}`
   return {
-    path: `${path}${additionalPath}`,
+    path: finalPath,
     withConverter: () => ({
-      path,
+      path: finalPath,
     }),
   }
 }

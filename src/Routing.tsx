@@ -28,7 +28,6 @@ import { ProfilePage } from './pages/profile/Profile'
 import { CreateOrganizationPageLoadable } from './pages/organizations'
 import { InviteUserPage } from './pages/users/InviteUser'
 import { ConfirmInvitePage } from './pages/users/ConfirmInvite'
-import { UsersListPage } from './pages/users/UsersList'
 import { StudentImportPageLoadable } from './pages/import/students'
 import { ReportsPageLoadable } from './pages/reports'
 import { AdminPageLoadable } from './pages/admin'
@@ -146,10 +145,10 @@ const OrganizationGuardedRoute = () => {
       {/* Users */}
       {/* <AuthGuardedRoute component={CreateTeacherPage} path={`/:orgId${ROUTES.TEACHERS_ADD}`} exact />
       <AuthGuardedRoute component={EditTeacherPage} path={`/:orgId${ROUTES.TEACHERS_EDIT}/:id`} exact /> */}
-      <AuthGuardedRoute component={UsersListPage} path={`/:orgId${ROUTES.USERS_LIST}`} exact />
       {/* <AuthGuardedRoute component={TeacherPage} path={`/:orgId$/{ROUTES.TEACHERS_ROOT}/:id`} exact /> */}
 
       {/* Teachers */}
+      {/* TODO: rename to `users` */}
       <AuthGuardedRoute component={TeachersListWithHeader} path={`/:orgId${ROUTES.TEACHERS_LIST}`} exact />
       <AuthGuardedRoute component={TeacherPage} path={`/:orgId${ROUTES.TEACHERS_ROOT}/:id`} exact />
 

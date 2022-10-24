@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
 import { Header } from '../../components/kit/header/Header'
@@ -12,13 +12,13 @@ import { TITLE_POSTFIX } from '../../config'
 
 // TODO: Add loading skeleton
 export const TeacherPage = () => {
-  let { id } = useParams<{ id: string }>()
-  const { fetchTeacher, teachersById, fetching, deleteTeacher } = useTeachersState()
+  let { id: idStr } = useParams<{ id: string }>()
+  const id = parseInt(idStr)
+  const { fetchTeacher, teachersById, fetching } = useTeachersState()
   const { attendances, clearAttendances, fetchAttendancesForGroups } = useAttendancesState()
   const { groups, fetchGroupsOfTeacher, clearGroups } = useGroupsState()
   const teacher = teachersById[id]
   const orgId = useOrgId()
-  const onDelete = useCallback(() => deleteTeacher(id), [deleteTeacher, id])
   const rateByGroup = useAttendanceRateByGroups(groups, attendances)
   const groupsOfTeacher = useMemo(
     () => groups.filter((g) => g.teacher === teacher?.outerId),
@@ -67,9 +67,7 @@ export const TeacherPage = () => {
       <Header />
       {/* TODO: skeleton loader */}
       <Loader show={fetching}>
-        {teacher && (
-          <Teacher data={teacher} onDelete={onDelete} attendanceRates={rateByGroup} teachersGroups={groupsOfTeacher} />
-        )}
+        {teacher && <Teacher data={teacher} attendanceRates={rateByGroup} teachersGroups={groupsOfTeacher} />}
       </Loader>
     </>
   )

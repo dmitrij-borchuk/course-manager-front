@@ -12,9 +12,10 @@ describe('TeachersList', () => {
       <Component
         items={[
           {
-            id: 'id',
+            id: 1,
             name: 'Teacher name',
             role: 'Teacher',
+            outerId: 'outerId',
           },
         ]}
       />

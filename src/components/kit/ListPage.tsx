@@ -10,7 +10,7 @@ interface Props {
   listHeader?: React.ReactNode
   fabBtnLink?: string
 }
-export function ListPage<T extends { id: string }>({
+export function ListPage<T extends { id: string | number }>({
   className = '',
   listHeader,
   fabBtnLink,

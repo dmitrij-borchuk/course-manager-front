@@ -47,7 +47,7 @@ export type ListWithLinksProps<T> = Omit<ListProps<T>, 'renderItem'> & {
   labelProp: keyof T
   renderItem?: (data: T) => JSX.Element
 }
-export function ListWithLinks<T extends { id: string }>({
+export function ListWithLinks<T extends { id: string | number }>({
   itemLinkRoot,
   labelProp,
   renderItem,
@@ -61,7 +61,7 @@ export function ListWithLinks<T extends { id: string }>({
   return <List renderItem={renderLink} {...rest} />
 }
 
-function renderLinkItem<T extends { id: string }>(
+function renderLinkItem<T extends { id: string | number }>(
   labelProp: keyof T,
   itemLinkRoot: string,
   renderItem?: (data: T) => JSX.Element

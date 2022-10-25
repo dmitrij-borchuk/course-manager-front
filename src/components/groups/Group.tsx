@@ -37,7 +37,7 @@ export const Group: React.FC<Props> = ({
   const simpleGroup = useMemo(
     () => ({
       ...data,
-      teacher: data.teacher?.id,
+      teacher: data.teacher?.outerId,
     }),
     [data]
   )

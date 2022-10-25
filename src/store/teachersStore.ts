@@ -1,7 +1,6 @@
 import { useCallback, useMemo, useState } from 'react'
 import { getUserByOuterIdRequest, getUserRequest, getUsersRequest } from '../api/users'
 import { useDictionaryToArray } from '../hooks/useDictionaryToArray'
-import { editTeacher } from '../services/teachers'
 import { Dictionary } from '../types/dictionary'
 import { OrganizationUser } from '../types/user'
 import { arrayToDictionary } from '../utils/common'
@@ -10,7 +9,6 @@ export default function useTeachersStore() {
   const [teachersById, setTeachersById] = useState<Dictionary<OrganizationUser>>({})
   const teachers = useDictionaryToArray(teachersById)
   const [fetching, setFetching] = useState(false)
-  const [submitting, setSubmitting] = useState(false)
   const teachersByOuterId = useMemo(() => {
     const result: Dictionary<OrganizationUser> = {}
     teachers.forEach((teacher) => {
@@ -26,7 +24,6 @@ export default function useTeachersStore() {
     teachersById,
     teachersByOuterId,
     fetching,
-    submitting,
     setTeacher: useCallback((id: string, data?: OrganizationUser) => {
       setTeachersById((state) => {
         if (data) {
@@ -58,15 +55,6 @@ export default function useTeachersStore() {
       const resp = await getUserByOuterIdRequest(orgId, id)
       setTeachersById((state) => ({ ...state, [resp.data.id]: resp.data }))
       setFetching(false)
-    }, []),
-    editTeacher: useCallback(async (orgId: string, data: OrganizationUser) => {
-      setSubmitting(true)
-      await editTeacher(orgId, data)
-      setTeachersById((state) => ({
-        ...state,
-        [data.id]: data,
-      }))
-      setSubmitting(false)
     }, []),
   }
 }

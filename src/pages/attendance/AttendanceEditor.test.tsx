@@ -129,6 +129,39 @@ describe('AttendanceEditor', () => {
     expect(setDoc).toBeCalled()
     expect(setDoc.mock.calls[0][1]).toHaveProperty('teacher', attendance.teacher)
   })
+
+  test('Should show groups of teacher', async () => {
+    const querySpy = jest.spyOn(firestore, 'query')
+    const {
+      data: { group },
+      mockDataByPath,
+    } = defaultMock()
+
+    const groups = [
+      {
+        id: 'group1',
+        name: 'Group 1',
+        teacher: 'teacher1',
+      },
+      {
+        id: 'group2',
+        name: 'Group 2',
+        teacher: 'teacher2',
+      },
+    ]
+    mockDataByPath('organizations/orgId/groups', groups)
+
+    render(
+      <TestWrapper>
+        <AttendanceEditorPage />
+      </TestWrapper>
+    )
+
+    await screen.findByRole('option', { name: 'Group' })
+    await selectGroup(group.id)
+
+    expect(querySpy).toBeCalledWith('organizations/orgId/groups', ['teacher', '==', 'userId'])
+  })
 })
 
 function defaultMock() {

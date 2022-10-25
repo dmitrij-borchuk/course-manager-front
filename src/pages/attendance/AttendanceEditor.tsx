@@ -74,7 +74,7 @@ export const AttendanceEditorPage = () => {
           })
         } else {
           // Create
-          await saveAttendance(orgId, { ...dataToSave, teacher: organizationUser.id })
+          await saveAttendance(orgId, { ...dataToSave, teacher: organizationUser.outerId })
         }
 
         addToast(<FormattedMessage id="attendance.edit.success" />, {
@@ -101,7 +101,7 @@ export const AttendanceEditorPage = () => {
       return
     }
     const attendanceTeacher = attendance?.teacher
-    fetchGroupsOfTeacher(orgId, attendanceTeacher || organizationUser.id)
+    fetchGroupsOfTeacher(orgId, attendanceTeacher || organizationUser.outerId || '')
   }, [attendance, fetchGroupsOfTeacher, id, orgId, organizationUser])
 
   useEffect(() => {

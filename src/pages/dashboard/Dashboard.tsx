@@ -102,7 +102,7 @@ function useAttendance() {
         if (org.role === ROLES.Administrator) {
           await fetchAttendancesByDate(orgKey, fromDate, toDate)
         } else {
-          await fetchAttendancesForTeacher(orgKey, organizationUser.id, fromDate, toDate)
+          await fetchAttendancesForTeacher(orgKey, organizationUser.outerId, fromDate, toDate)
         }
       } catch (error: any) {
         addToast(error.message, {
@@ -121,7 +121,7 @@ function useAttendance() {
       if (org.role === ROLES.Administrator) {
         await fetchGroups(orgKey)
       } else {
-        await fetchGroupsOfTeacher(orgKey, organizationUser.id)
+        await fetchGroupsOfTeacher(orgKey, organizationUser.outerId)
       }
     } catch (error: any) {
       addToast(error.message, {

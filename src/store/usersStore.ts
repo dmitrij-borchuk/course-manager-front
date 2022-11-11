@@ -1,15 +1,19 @@
 import { useCallback, useState } from 'react'
 import { useHistory } from 'react-router-dom'
-import { makeOrgCollection } from '../api/firebase/collections'
-import { confirmInvitation, getProfile, inviteUser, migrateUsers, updateUser } from '../api/users'
+import {
+  confirmInvitation,
+  getProfile,
+  getUserByOuterIdRequest,
+  inviteUser,
+  migrateUsers,
+  updateUser,
+} from '../api/users'
 import { Role } from '../config'
 import { useDictionaryToArray } from '../hooks/useDictionaryToArray'
-import { getUsersList } from '../services/users'
 import { Dictionary } from '../types/dictionary'
 import { InviteForm } from '../types/invite'
 import { OrganizationUser, User } from '../types/user'
 import { sendToAnalytics } from '../utils/analitics'
-import { arrayToDictionary } from '../utils/common'
 
 export default function useUsersStore() {
   const history = useHistory()
@@ -59,19 +63,10 @@ export default function useUsersStore() {
       },
       [history]
     ),
-    fetchUsers: useCallback(async (orgId: string) => {
+    fetchOrgUser: useCallback(async (orgId: number, id: string) => {
       setFetching(true)
-      const resp = await getUsersList(orgId)
-      const itemsById = arrayToDictionary(resp)
-      setUsersById(itemsById)
-      setFetching(false)
-    }, []),
-    // TODO: remove
-    fetchOrgUser: useCallback(async (orgId: string, id: string) => {
-      setFetching(true)
-      const collection = makeOrgCollection<OrganizationUser>('users', orgId)
-      const res = await collection.getById(id)
-      setUsersById((items) => ({ ...items, [res.id]: res }))
+      const res = await getUserByOuterIdRequest(orgId, id)
+      setUsersById((items) => ({ ...items, [res.data.id]: res.data }))
       setFetching(false)
     }, []),
     fetchProfile: useCallback(async () => {

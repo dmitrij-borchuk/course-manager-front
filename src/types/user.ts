@@ -10,6 +10,8 @@ export type User = {
   id: number
   name: string
   email: string
+  outerId: string
+  createdAt: string
 }
 
 // TODO: do we need it?
@@ -33,8 +35,8 @@ export type AppUser = {
 }
 
 export type OrganizationUser = {
-  id: string
+  id: number
   role?: string
   name?: string
-  outerId?: string
+  outerId: string
 }

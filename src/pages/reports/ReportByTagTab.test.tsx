@@ -40,11 +40,11 @@ describe('ReportByTagTab', () => {
     useParams.mockReturnValue({
       orgId: 'orgId',
     })
+    usePDF.mockReturnValue([{} as any, jest.fn()])
   })
   test('should generate report with sorting', async () => {
     const { attendances, groups, students, studentsOfGroup } = getSortingDataMocks()
     mockGetDocs(groups, studentsOfGroup, attendances, students)
-    usePDF.mockReturnValue([{} as any, jest.fn()])
 
     render(
       <TestWrapper>
@@ -55,22 +55,13 @@ describe('ReportByTagTab', () => {
     const tagsEditorInput = await screen.findByLabelText('Tags')
     userEvent.type(tagsEditorInput, 'Lviv{enter}')
 
-    const lastCall = usePDF.mock.calls[usePDF.mock.calls.length - 1]
-    const document = lastCall[0].document
-    render(document)
+    renderPdf()
 
-    const el = await screen.findAllByTestId('pdf-text')
-    const persents = el
-      // Remove header
-      .splice(1)
-      // Filter out student names
-      .filter((e, i) => i % 2 === 1)
-      // Get text
-      .map((e) => e.textContent)
+    const percents = await getPercentsArray()
 
-    expect(persents[0]).toBe('0%')
-    expect(persents[1]).toBe('100%')
-    expect(persents[2]).toBe('N/A')
+    expect(percents[0]).toBe('0%')
+    expect(percents[1]).toBe('100%')
+    expect(percents[2]).toBe('N/A')
   })
   test('should generate report for students with case insensitive tags', async () => {
     const { attendances, groups, students, studentsOfGroup } = getSortingDataMocks()
@@ -86,21 +77,31 @@ describe('ReportByTagTab', () => {
     const tagsEditorInput = await screen.findByLabelText('Tags')
     userEvent.type(tagsEditorInput, 'Lviv{enter}')
 
+    renderPdf()
+    const percents = await getPercentsArray()
+
+    expect(percents).toHaveLength(4)
+  })
+
+  function renderPdf() {
+    expect(usePDF).toBeCalled()
     const lastCall = usePDF.mock.calls[usePDF.mock.calls.length - 1]
     const document = lastCall[0].document
     render(document)
+  }
 
+  async function getPercentsArray() {
     const el = await screen.findAllByTestId('pdf-text')
-    const persents = el
-      // Remove header
-      .splice(1)
-      // Filter out student names
-      .filter((e, i) => i % 2 === 1)
-      // Get text
-      .map((e) => e.textContent)
-
-    expect(persents).toHaveLength(4)
-  })
+    return (
+      el
+        // Remove header
+        .splice(1)
+        // Filter out student names
+        .filter((e, i) => i % 2 === 1)
+        // Get text
+        .map((e) => e.textContent)
+    )
+  }
 })
 
 function mockGetDocs(

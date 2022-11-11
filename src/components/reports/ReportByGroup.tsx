@@ -1,5 +1,5 @@
 import { usePDF } from '@react-pdf/renderer'
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import { FormattedMessage, useIntl } from 'react-intl'
 import { Button } from 'react-materialize'
 import { useAttendanceRateByStudent } from '../../hooks/useAttendanceRate'
@@ -21,7 +21,10 @@ type ReportByGroupProps = {
 }
 export const ReportByGroup = ({ group, attendances, students, order, loading, from, to }: ReportByGroupProps) => {
   const intl = useIntl()
-  const attendanceRate = useAttendanceRateByStudent(attendances)
+  const attendancesOfGroup = useMemo(() => {
+    return attendances.filter((a) => a.group === group.id)
+  }, [attendances, group.id])
+  const attendanceRate = useAttendanceRateByStudent(attendancesOfGroup)
   const attendancesReport = sortAttendanceReport(
     order,
     students.map((s) => ({

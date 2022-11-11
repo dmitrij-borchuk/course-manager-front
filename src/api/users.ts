@@ -10,7 +10,7 @@ export function getUsersRequest(orgId: number) {
   return request.get<OrganizationUser[]>(`/users/${orgId}`)
 }
 
-export function getUserRequest(orgId: number, id: string) {
+export function getUserRequest(orgId: number, id: number) {
   return request.get<OrganizationUser>(`/users/${orgId}/${id}`)
 }
 export function getUserByOuterIdRequest(orgId: number, id: string) {

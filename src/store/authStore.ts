@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { User } from 'firebase/auth'
+import { User as FBUser } from 'firebase/auth'
 import { login, register, logout, resetPassword } from '../api/firebase/auth'
 import { auth } from '../api/firebase'
 import { AppUser } from '../types/user'
@@ -9,7 +9,7 @@ import { setHeader } from '../api/request'
 
 export function useAuthStore() {
   const [loading, setLoading] = useState(false)
-  const [currentUser, setCurrentUser] = useState<User | null>(null)
+  const [currentUser, setCurrentUser] = useState<FBUser | null>(null)
   const appUser: AppUser = useMemo(
     () => ({
       name: currentUser?.displayName || undefined,

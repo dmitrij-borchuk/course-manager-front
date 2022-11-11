@@ -30,7 +30,7 @@ export const AssignGroups = ({ teacher, onDone = noop, trigger, teachersGroups =
           // TODO: fix unselect groups
           await editGroup(orgId, {
             id: group.id,
-            teacher: teacher.id,
+            teacher: teacher.outerId,
           })
         }
         toggler.off()
@@ -47,7 +47,7 @@ export const AssignGroups = ({ teacher, onDone = noop, trigger, teachersGroups =
         })
       }
     },
-    [addToast, editGroup, onDone, orgId, teacher.id, toggler]
+    [addToast, editGroup, onDone, orgId, teacher.outerId, toggler]
   )
   const onTriggerClick = useCallback(async () => {
     toggler.on()

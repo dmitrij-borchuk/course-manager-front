@@ -18,11 +18,11 @@ import { AssignGroups } from './AssignGroups'
 interface Props {
   className?: string
   data: OrganizationUser
-  onDelete: () => void
+  // onDelete: () => void
   attendanceRates: Dictionary<number>
   teachersGroups?: Group[]
 }
-export const Teacher: React.FC<Props> = ({ className = '', data, onDelete, attendanceRates, teachersGroups = [] }) => {
+export const Teacher: React.FC<Props> = ({ className = '', data, attendanceRates, teachersGroups = [] }) => {
   const { name } = data
 
   return (

@@ -106,8 +106,6 @@ export const AssignStudents = ({ group, onDone = noop, trigger, studentsOfGroup 
       })
     }
   }, [open, history, query])
-  console.log('=-= studentsOfGroup', studentsOfGroup)
-  console.log('=-= students', students)
 
   return (
     <>

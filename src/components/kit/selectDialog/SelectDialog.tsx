@@ -26,9 +26,9 @@ interface PropsMulti<T> extends PropsBase<T> {
   onSubmit: (data: T[]) => void
   initial?: T[]
 }
-export function SelectDialog<T extends { id: string }>(props: PropsMulti<T>): JSX.Element
-export function SelectDialog<T extends { id: string }>(props: PropsSingle<T>): JSX.Element
-export function SelectDialog<T extends { id: string }>({
+export function SelectDialog<T extends { id: string | number }>(props: PropsMulti<T>): JSX.Element
+export function SelectDialog<T extends { id: string | number }>(props: PropsSingle<T>): JSX.Element
+export function SelectDialog<T extends { id: string | number }>({
   onSubmit,
   open,
   header,

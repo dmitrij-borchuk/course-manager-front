@@ -3,6 +3,9 @@ import * as firestore from 'firebase/firestore'
 import { asMock, mockDoc, mockOrgId, TestWrapper } from '../../utils/test'
 import CreateStudent from './CreateStudent'
 
+jest.mock('nanoid', () => ({
+  nanoid: () => 'mockId',
+}))
 const { setDoc } = asMock(firestore)
 
 describe('CreateStudent', () => {
@@ -29,7 +32,7 @@ describe('CreateStudent', () => {
       name: /submit/i,
     })
     const { mockDocByPath } = mockDoc()
-    mockDocByPath('organizations/orgId/students', {})
+    mockDocByPath('organizations/orgId/students/mockId', {})
     await fireEvent.click(submitBtn)
     await screen.findByText(/Student has been successfully created/i)
 

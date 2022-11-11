@@ -185,8 +185,8 @@ function getStudentItemRender(
     <StudentWithAttendance
       key={data.id}
       data={data}
-      attendanceRate={attendances[data.id]}
-      loading={loading[data.id]}
+      attendanceRate={attendances[data.outerId]}
+      loading={loading[data.outerId]}
       onRemoveClick={onRemoveClick}
     />
   )

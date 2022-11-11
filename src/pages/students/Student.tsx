@@ -24,9 +24,8 @@ export const StudentPage = () => {
     clearGroupOfStudents,
     groupsOfStudent,
     fetching: fetchingGroups,
-  } = useStudentsOfGroupState()//?
+  } = useStudentsOfGroupState()
   const student = studentsById[id]
-  console.log('=-= studentsById', studentsById)
   const orgKey = useOrgId()
   const organization = useCurrentOrg()
 

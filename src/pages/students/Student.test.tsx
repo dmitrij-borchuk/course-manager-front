@@ -73,11 +73,11 @@ describe('Student', () => {
 
     render(
       <TestWrapper>
-        <Student />
+        <StudentPage />
       </TestWrapper>
     )
 
-    const rateBadge = await screen.findByTestId('attendance-rate-badge')
+    await screen.findByTestId('attendance-rate-badge')
   })
 
   function makeDefaultMock() {

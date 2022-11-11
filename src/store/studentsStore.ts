@@ -49,6 +49,7 @@ export default function useStudentsStore(initial: InitialStudentsState = {}) {
       try {
         const response = await createStudent(orgId, {
           ...data,
+          name: data.name.trim(),
           outerId: nanoid(),
         })
         const result = response.data

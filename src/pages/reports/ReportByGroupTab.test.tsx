@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react'
 import * as firestore from 'firebase/firestore'
 import * as reactPdf from '@react-pdf/renderer'
 import userEvent from '@testing-library/user-event'
-import { asMock, getAxiosMock, getFirebaseSnapshotFromArray, mockOrgId, TestWrapper } from '../../utils/test'
+import { asMock, getAxiosMock, getFirebaseSnapshotFromArray, TestWrapper } from '../../utils/test'
 import { ReportByGroupTab } from './ReportByGroupTab'
 import { Group } from '../../types/group'
 import { Attendance } from '../../types/attendance'
@@ -511,7 +511,8 @@ function getGroupsFilteringData() {
   ]
   const students: Student[] = [
     {
-      id: 's1',
+      id: 1,
+      outerId: 's1',
       name: 'st 1',
       tags: ['Lviv'],
     },

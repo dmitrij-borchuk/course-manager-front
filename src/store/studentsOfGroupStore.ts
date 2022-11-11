@@ -13,7 +13,7 @@ export default function useStudentsOfGroupStore() {
   const [fetching, setFetching] = useState(false)
   const [studentsOfGroupById, setStudentsOfGroupById] = useState<Dictionary<Student>>({})
   const studentsOfGroup = useDictionaryToArray(studentsOfGroupById)
-  const [groupsOfStudentById, setGroupsOfStudentById] = useState<Dictionary<Group>>({})//?
+  const [groupsOfStudentById, setGroupsOfStudentById] = useState<Dictionary<Group>>({})
   const groupsOfStudent = useDictionaryToArray(groupsOfStudentById)
   const [submitting, setSubmitting] = useState(false)
   const unassignStudentFromGroup = useCallback(async (orgId: string, studentId: string, groupId: string) => {
@@ -134,10 +134,10 @@ export default function useStudentsOfGroupStore() {
     fetchGroupsOfStudent: useCallback(async (orgId: string, studentIds: string[], date: Date) => {
       setFetching(true)
       const collection = makeOrgCollection<StudentOfGroup>('studentsToGroups', orgId)
-      const resp = await collection.queryMulti([['startDate', '<=', date.getTime()]])//?
-      const filteredByTime = resp.filter((item) => item.endDate === null || item.endDate >= date.getTime())//?
-      const filteredByStudents = filteredByTime.filter((item) => studentIds.includes(item.studentId))//?
-      const groupIds = filteredByStudents.map((item) => item.groupId)//?
+      const resp = await collection.queryMulti([['startDate', '<=', date.getTime()]])
+      const filteredByTime = resp.filter((item) => item.endDate === null || item.endDate >= date.getTime())
+      const filteredByStudents = filteredByTime.filter((item) => studentIds.includes(item.studentId))
+      const groupIds = filteredByStudents.map((item) => item.groupId)
 
       if (!groupIds.length) {
         setFetching(false)

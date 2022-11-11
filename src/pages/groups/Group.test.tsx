@@ -29,13 +29,21 @@ describe('Group', () => {
         outerId: 'teacherId',
       },
     ])
+    axiosMock.onGet(`/students/byOrganization/1`).reply(200, [
+      {
+        id: 1,
+        name: 'studentName',
+        outerId: 'st1',
+      },
+    ])
     getDocs = mockGetDocs()
     getDoc = mockDoc()
   })
   test('should render attendance rate related to current group only', async () => {
     const student: Student = {
-      id: 'st1',
+      id: 1,
       name: 'studentName',
+      outerId: 'st1',
       tags: [],
     }
     mockDataForGroupFiltering()
@@ -88,12 +96,6 @@ describe('Group', () => {
     ])
     const from = new Date()
     from.setMonth(from.getMonth() - 1)
-    getDocs.mockDataByPath('organizations/orgId/students', [
-      {
-        id: 'st1',
-        name: 'studentName',
-      },
-    ])
     getDocs.mockDataByPath('organizations/orgId/studentsToGroups', [
       {
         groupId: 'group1',

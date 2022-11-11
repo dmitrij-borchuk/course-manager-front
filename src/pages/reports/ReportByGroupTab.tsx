@@ -42,7 +42,6 @@ export const ReportByGroupTab = () => {
   }, [order])
 
   useEffect(() => {
-    console.log('=-= fetchStudentsOfGroup', group, orgId, orgKey)
     if (group && orgId) {
       fetchStudentsOfGroup(orgId, orgKey, group.id)
     }
@@ -83,7 +82,6 @@ export const ReportByGroupTab = () => {
       </div>
     )
   }
-  console.log('=-= studentsOfGroup', studentsOfGroup)
 
   // TODO: responsive
   return (

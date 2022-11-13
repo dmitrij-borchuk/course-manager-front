@@ -28,6 +28,7 @@ export const StudentPage = () => {
   const student = studentsById[id]
   const orgKey = useOrgId()
   const organization = useCurrentOrg()
+  const orgId = organization?.id
 
   const onDelete = useCallback(async () => {
     if (organization && student) {
@@ -37,13 +38,14 @@ export const StudentPage = () => {
     }
   }, [deleteStudent, history, id, orgKey, organization, student])
 
+  // TODO: probably we need to use `groupsOfStudent` instead of `groups`
   const rateByGroups = useStudentAttendanceRateByGroups(student?.outerId, groups, attendances)
 
   useEffect(() => {
-    if (organization) {
-      fetchStudent(organization.id, id)
+    if (orgId) {
+      fetchStudent(orgId, id)
     }
-  }, [fetchStudent, id, organization])
+  }, [fetchStudent, id, orgId])
 
   useEffect(() => {
     fetchGroups(orgKey)
@@ -67,7 +69,7 @@ export const StudentPage = () => {
         groups.map((g) => g.id)
       )
     }
-  }, [clearAttendances, fetchAttendancesForGroups, groups, orgKey])
+  }, [fetchAttendancesForGroups, groups, orgKey])
   useEffect(() => {
     return () => {
       clearAttendances()
@@ -75,7 +77,11 @@ export const StudentPage = () => {
   }, [clearAttendances])
 
   if (!student) {
-    return <div>Loading</div>
+    return (
+      <div key="loader" data-testid="preloader">
+        Loading
+      </div>
+    )
   }
 
   return (

@@ -22,7 +22,7 @@ export const ReportByTagTab = () => {
   const { fetchStudents, students, fetching: studentsFetching } = useStudentsState()
   // TODO: when attendance store has some records this will not work correctly
   // need to filter attendances by date
-  const { attendances, fetchAttendancesByDate } = useAttendancesState()
+  const { attendances, fetchAttendancesByDate, loading: attendanceLoading } = useAttendancesState()
   const [tags, setTags] = useState<string[]>([])
   const onTagsUpdate = useCallback(
     (newTags: string[]) => {
@@ -51,9 +51,9 @@ export const ReportByTagTab = () => {
     fetchAttendancesByDate(orgKey, from, to)
   }, [fetchAttendancesByDate, from, orgKey, to])
 
-  if (studentsFetching) {
+  if (!orgId || studentsFetching || attendanceLoading) {
     return (
-      <div className="flex justify-center pt-4">
+      <div className="flex justify-center pt-4" data-testid="loader">
         <Preloader color="red" flashing={false} size="medium" />
       </div>
     )

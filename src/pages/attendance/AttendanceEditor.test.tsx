@@ -37,6 +37,10 @@ describe('AttendanceEditor', () => {
     axiosMock.onGet('/users/byOuterId/1/teacher1').reply(200, { outerId: 'userId', id: 1 })
   })
 
+  afterEach(() => {
+    axiosMock.reset()
+  })
+
   test('should not fail', async () => {
     defaultMock()
     render(
@@ -52,12 +56,11 @@ describe('AttendanceEditor', () => {
   // TODO: rewrite test when new API will be used
   test('while creating should show students assigned at the specific date', async () => {
     const {
-      data: {
-        group,
-        students: [student1, student2],
-      },
+      data: { group, students },
       mockDataByPath,
     } = defaultMock()
+    const [student1, student2] = students
+    axiosMock.onGet(`/students/byOrganization/1`).reply(200, students)
 
     render(
       <TestWrapper>
@@ -76,7 +79,7 @@ describe('AttendanceEditor', () => {
         id: 's2g2',
         startDate: new Date().getTime() - treeDaysInMs,
         endDate: null,
-        studentId: student2.id,
+        studentId: student2.outerId,
       },
     ]
     mockDataByPath('organizations/orgId/studentsToGroups', studentsToGroupFiltered)
@@ -96,7 +99,7 @@ describe('AttendanceEditor', () => {
       id: 'attendanceId',
     })
     const {
-      data: { group },
+      data: { group, students },
       mockDocByPath,
     } = defaultMock()
 
@@ -108,6 +111,7 @@ describe('AttendanceEditor', () => {
       teacher: 'teacher1',
     }
     mockDocByPath('organizations/orgId/attendances/attendanceId', attendance)
+    axiosMock.onGet(`/students/byOrganization/1`).reply(200, students)
 
     render(
       <TestWrapper>
@@ -133,9 +137,10 @@ describe('AttendanceEditor', () => {
   test('Should show groups of teacher', async () => {
     const querySpy = jest.spyOn(firestore, 'query')
     const {
-      data: { group },
+      data: { group, students },
       mockDataByPath,
     } = defaultMock()
+    axiosMock.onGet(`/students/byOrganization/1`).reply(200, students)
 
     const groups = [
       {
@@ -162,56 +167,57 @@ describe('AttendanceEditor', () => {
 
     expect(querySpy).toBeCalledWith('organizations/orgId/groups', ['teacher', '==', 'userId'])
   })
+
+  function defaultMock() {
+    const { mockDataByPath } = mockGetDocs()
+    const group = {
+      teacher: 'teacher1',
+      name: 'group 1',
+      id: 'g1',
+    }
+    mockDataByPath('organizations/orgId/groups', [group])
+    const student1 = {
+      id: 1,
+      outerId: 's1',
+      name: 'Student name 1',
+      groups: [group.id],
+    }
+    const student2 = {
+      id: 2,
+      outerId: 's2',
+      name: 'Student name 2',
+      groups: [group.id],
+    }
+    const studentsToGroup = [
+      {
+        id: 's2g1',
+        startDate: new Date().getTime() - oneDayInMs,
+        endDate: null,
+        studentId: student1.outerId,
+      },
+      {
+        id: 's2g2',
+        startDate: new Date().getTime() - treeDaysInMs,
+        endDate: null,
+        studentId: student2.outerId,
+      },
+    ]
+    mockDataByPath('organizations/orgId/studentsToGroups', studentsToGroup)
+
+    const { mockDocByPath } = mockDoc()
+    mockDocByPath('organizations/orgId/users', { id: 'userId' })
+
+    return {
+      mockDataByPath,
+      mockDocByPath,
+      data: {
+        group,
+        studentsToGroup,
+        students: [student1, student2],
+      },
+    }
+  }
 })
-
-function defaultMock() {
-  const { mockDataByPath } = mockGetDocs()
-  const group = {
-    teacher: 'teacher1',
-    name: 'group 1',
-    id: 'g1',
-  }
-  mockDataByPath('organizations/orgId/groups', [group])
-  const student1 = {
-    id: 's1',
-    name: 'Student name 1',
-    groups: [group.id],
-  }
-  const student2 = {
-    id: 's2',
-    name: 'Student name 2',
-    groups: [group.id],
-  }
-  mockDataByPath('organizations/orgId/students', [student1, student2])
-  const studentsToGroup = [
-    {
-      id: 's2g1',
-      startDate: new Date().getTime() - oneDayInMs,
-      endDate: null,
-      studentId: student1.id,
-    },
-    {
-      id: 's2g2',
-      startDate: new Date().getTime() - treeDaysInMs,
-      endDate: null,
-      studentId: student2.id,
-    },
-  ]
-  mockDataByPath('organizations/orgId/studentsToGroups', studentsToGroup)
-
-  const { mockDocByPath } = mockDoc()
-  mockDocByPath('organizations/orgId/users', { id: 'userId' })
-
-  return {
-    mockDataByPath,
-    mockDocByPath,
-    data: {
-      group,
-      studentsToGroup,
-      students: [student1, student2],
-    },
-  }
-}
 
 async function selectGroup(id: string) {
   const groupSelect = await screen.findByTestId('group-selector')

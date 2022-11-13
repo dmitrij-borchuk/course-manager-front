@@ -46,6 +46,8 @@ const { usePDF } = asMock(reactPdf)
 const { useParams } = jest.requireMock('react-router-dom')
 
 describe('ReportByGroupTab', () => {
+  const axiosMock = getAxiosMock()
+
   beforeEach(() => {
     resetAttendanceCache()
     useParams.mockReturnValue({
@@ -53,13 +55,22 @@ describe('ReportByGroupTab', () => {
     })
     localStorage.clear()
     usePDF.mockReturnValue([{ url: 'instance.url' } as any, jest.fn()])
+    axiosMock.onGet('/organizations').reply(200, [
+      {
+        id: 1,
+        key: 'orgId',
+      },
+    ])
   })
-  test.only('should generate report with sorting', async () => {
+
+  afterEach(() => {
+    axiosMock.reset()
+  })
+
+  test('should generate report with sorting', async () => {
     const { attendances, groups, students, studentsOfGroup } = getSortingDataMocks()
-    // // mockOrgId('orgId')
-    mockGetDocs(groups, studentsOfGroup, attendances, students)
-    const axiosMock = getAxiosMock()
-    // axiosMock.onGet('/students').reply(200, students)
+    mockGetDocs(groups, studentsOfGroup, attendances)
+    axiosMock.onGet(`/students/byOrganization/1`).reply(200, students)
     axiosMock.onGet('/organizations').reply(200, [
       {
         id: 1,
@@ -94,7 +105,8 @@ describe('ReportByGroupTab', () => {
   })
   test('should generate report with desc sorting', async () => {
     const { attendances, groups, students, studentsOfGroup } = getSortingDataMocks()
-    mockGetDocs(groups, studentsOfGroup, attendances, students)
+    mockGetDocs(groups, studentsOfGroup, attendances)
+    axiosMock.onGet(`/students/byOrganization/1`).reply(200, students)
     usePDF.mockReturnValue([{} as any, jest.fn()])
 
     render(
@@ -187,8 +199,9 @@ describe('ReportByGroupTab', () => {
         name: 'st 1',
       },
     ]
-    mockGetDocs(groups, studentsOfGroup, attendances, students)
+    mockGetDocs(groups, studentsOfGroup, attendances)
     usePDF.mockReturnValue([{ url: 'url' } as any, jest.fn()])
+    axiosMock.onGet(`/students/byOrganization/1`).reply(200, students)
 
     render(
       <TestWrapper>
@@ -280,8 +293,9 @@ describe('ReportByGroupTab', () => {
         name: 'st 2',
       },
     ]
-    mockGetDocs(groups, studentsOfGroup, attendances, students)
+    mockGetDocs(groups, studentsOfGroup, attendances)
     usePDF.mockReturnValue([{} as any, jest.fn()])
+    axiosMock.onGet(`/students/byOrganization/1`).reply(200, students)
 
     render(
       <TestWrapper>
@@ -313,7 +327,8 @@ describe('ReportByGroupTab', () => {
 
   test('should show report only related to group selected', async () => {
     const { attendances, groups, students, studentsOfGroup } = getGroupsFilteringData()
-    mockGetDocs(groups, studentsOfGroup, attendances, students)
+    mockGetDocs(groups, studentsOfGroup, attendances)
+    axiosMock.onGet(`/students/byOrganization/1`).reply(200, students)
 
     render(
       <TestWrapper>
@@ -349,12 +364,7 @@ describe('ReportByGroupTab', () => {
   }
 })
 
-function mockGetDocs(
-  groups: Group[],
-  studentsOfGroup: StudentOfGroup[],
-  attendances: Attendance[],
-  students: Student[]
-) {
+function mockGetDocs(groups: Group[], studentsOfGroup: StudentOfGroup[], attendances: Attendance[]) {
   getDocs.mockImplementation((query) => {
     const path = query as unknown as string
     if (path === 'organizations/orgId/groups') {
@@ -366,9 +376,6 @@ function mockGetDocs(
     if (path === 'organizations/orgId/attendances') {
       return Promise.resolve(getFirebaseSnapshotFromArray(attendances))
     }
-    // if (path === 'organizations/orgId/students') {
-    //   return Promise.resolve(getFirebaseSnapshotFromArray(students))
-    // }
     return Promise.resolve(getFirebaseSnapshotFromArray([]))
   })
 }

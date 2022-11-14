@@ -65,6 +65,7 @@ export const AssignTeacher = ({ group, onDone = noop, trigger }: Props) => {
         items={teachers}
         labelProp={(t) => t.name}
         onCloseStart={toggler.off}
+        data-testid="assign-teacher-dialog"
       />
     </>
   )

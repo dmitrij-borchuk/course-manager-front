@@ -33,7 +33,7 @@ import '@testing-library/cypress/add-commands'
 import './commands/organization'
 import { getOrgKey, getOrgName, getSpinner } from './commands/utils'
 import { addGroupDirectly, addStudentToGroupDirectly, removeGroupDirectly } from './commands/groups'
-import { getToken, loginAndSaveToken } from './commands/auth'
+import { getToken, getUser } from './commands/auth'
 import { addStudentDirectly, removeStudentDirectly } from './commands/students'
 
 const firebaseConfig = {
@@ -75,8 +75,8 @@ declare global {
       removeGroupDirectly: typeof removeGroupDirectly
       addStudentToGroupDirectly: typeof addStudentToGroupDirectly
 
-      loginAndSaveToken: typeof loginAndSaveToken
       getToken: typeof getToken
+      getUser: typeof getUser
 
       addStudentDirectly: typeof addStudentDirectly
       removeStudentDirectly: typeof removeStudentDirectly
@@ -93,5 +93,5 @@ Cypress.Commands.add('removeStudentDirectly', removeStudentDirectly)
 Cypress.Commands.add('getOrgKey', getOrgKey)
 Cypress.Commands.add('getOrgName', getOrgName)
 Cypress.Commands.add('getSpinner', getSpinner)
-Cypress.Commands.add('loginAndSaveToken', loginAndSaveToken)
 Cypress.Commands.add('getToken', getToken)
+Cypress.Commands.add('getUser', getUser)

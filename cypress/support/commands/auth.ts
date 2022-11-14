@@ -1,14 +1,11 @@
-const creds = {
-  token: '',
-  user: '',
+import firebase from 'firebase/compat/app'
+
+export function getToken() {
+  const tokenPromise = firebase.auth().currentUser.getIdToken()
+  return cy.wrap(tokenPromise)
 }
 
-export function loginAndSaveToken() {
-  return cy.login().then(async (user) => {
-    creds.user = user
-    creds.token = await user.getIdToken()
-  })
-}
-export function getToken() {
-  return cy.wrap(creds.token)
+export function getUser() {
+  const user = firebase.auth().currentUser
+  return cy.wrap(user)
 }

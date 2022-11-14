@@ -1,4 +1,5 @@
 import { nanoid } from 'nanoid'
+import groupPage from '../../drivers/groupPage'
 
 describe('Groups', () => {
   const orgId = nanoid()
@@ -21,6 +22,7 @@ describe('Groups', () => {
   after(() => {
     cy.log(`Removing organization with key ${orgKey} and ID ${orgDBId}`)
     cy.deleteOrganization(orgKey, orgDBId)
+    cy.logout()
   })
   it('Should be able to visit group page', () => {
     cy.visit(`/${orgKey}`)
@@ -85,12 +87,21 @@ describe('Groups', () => {
     }).should('exist')
     cy.findByText(name).should('not.exist')
   })
-  it.only('Should be able to assign teacher', () => {
+  it('Should be able to assign teacher', () => {
     addGroupAndVisitIt(orgKey)
     cy.findByText('No teacher assigned').should('exist')
     cy.findByRole('button', {
       name: /assign teacher/i,
     }).click()
+    groupPage.getDialog().within(() => {
+      cy.getUser().then((user) => {
+        cy.findByText(user.email).click()
+      })
+    })
+    groupPage.getDialog().should('not.be.visible')
+
+    cy.findByText('No teacher assigned').should('not.exist')
+    cy.findByText('Teacher has been successfully assigned')
   })
 
   it.skip('Should be able to edit group name', () => {})
@@ -103,7 +114,6 @@ function addGroupAndVisitIt(orgKey: string) {
   const name = `Group-${id}`
   cy.addGroupDirectly(orgKey, id, {
     name: name,
-    teacher: Cypress.env('TEST_UID'),
   })
   cy.visit(`/${orgKey}/groups/${id}`)
   cy.getSpinner().should('not.exist')

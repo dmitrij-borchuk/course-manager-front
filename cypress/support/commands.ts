@@ -95,3 +95,24 @@ Cypress.Commands.add('getOrgName', getOrgName)
 Cypress.Commands.add('getSpinner', getSpinner)
 Cypress.Commands.add('getToken', getToken)
 Cypress.Commands.add('getUser', getUser)
+
+// Monkey patching Cypress.log to hide firestore requests (they are too long)
+const origLog = Cypress.log
+Cypress.log = function (opts, ...other) {
+  //@ts-ignore
+  if (opts.displayName === 'fetch' && opts.url.startsWith('https://firestore.googleapis.com')) {
+    return origLog(
+      {
+        ...opts,
+        //@ts-ignore
+        renderProps() {
+          return {
+            message: `🔥base request (details hidden by customization "Cypress.log")`,
+          }
+        },
+      },
+      ...other
+    )
+  }
+  return origLog(opts, ...other)
+}

@@ -1,5 +1,6 @@
 describe('Auth', () => {
   it('Redirect to login when no auth data', () => {
+    cy.logout()
     cy.visit('/')
     cy.url().should('contain', '/login')
   })

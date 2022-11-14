@@ -5,7 +5,7 @@ describe('Auth', () => {
   })
 
   it('Show error message', () => {
-    cy.visit('/')
+    cy.visit('/login')
     cy.get('.preloader-wrapper').should('not.exist')
     cy.get('#identifier').type('wrong login')
     cy.get('#password').type('wrong password')

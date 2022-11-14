@@ -179,6 +179,7 @@ export const AttendanceEditor = (props: Props) => {
                   value={renderProps.value}
                   name={renderProps.name}
                   data-testid="group-selector"
+                  label={intl.formatMessage({ id: 'attendance.groupSelector.placeholder' })}
                 >
                   <option disabled value="">
                     {intl.formatMessage({ id: 'attendance.groupSelector.placeholder' })}

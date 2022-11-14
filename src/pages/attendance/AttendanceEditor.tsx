@@ -140,7 +140,7 @@ export const AttendanceEditorPage = () => {
     }
   }, [clearStudentsOfGroup, date, fetchStudentsOfGroup, group?.id, orgId, orgKey])
 
-  if (groupsFetching || attendancesLoading) {
+  if (groupsFetching || attendancesLoading || !organizationUser) {
     // TODO
     return <div>Loading</div>
   }

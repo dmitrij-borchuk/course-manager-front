@@ -11,7 +11,7 @@ describe('Attendance', () => {
   let createOrgRequest: Cypress.Chainable<Cypress.Response<any>>
 
   before(() => {
-    cy.loginAndSaveToken()
+    cy.login()
     createOrgRequest = cy
       .createOrganization({
         key: orgKey,

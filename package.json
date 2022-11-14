@@ -11,6 +11,7 @@
     "firebase-emulator": "firebase emulators:start --import=./local-firebase-data --export-on-exit",
     "firebase-emulator:test": "firebase emulators:start --import=./test-firebase-data",
     "cypress": "cypress open",
+    "e2e": "cypress run",
     "lint": "eslint ./src/**/*.{tsx,ts}"
   },
   "dependencies": {

@@ -1,19 +1,30 @@
 /// <reference types="cypress" />
 import firebase from 'firebase/compat/app'
+import { Organization } from '../../../src/types/organization'
 
 // Create organization
 function createOrganization(data: any) {
   const tokenPromise = firebase.auth().currentUser.getIdToken()
-  return cy.wrap(tokenPromise).then((token) => {
-    return cy.request({
-      url: `${Cypress.env('SERVER_URL')}/organizations`,
-      method: 'POST',
-      headers: {
-        authorization: token,
-      },
-      body: data,
+  return cy
+    .wrap(tokenPromise)
+    .then((token) => {
+      return cy.request({
+        url: `${Cypress.env('SERVER_URL')}/organizations`,
+        method: 'POST',
+        headers: {
+          authorization: token,
+        },
+        body: data,
+      })
     })
-  })
+    .then(({ body }) => {
+      const id = firebase.auth().currentUser.uid
+      cy.callFirestore('set', `organizations/${body.rows[0].key}/users/${id}`, {
+        id,
+      })
+
+      return cy.wrap<Organization>(body.rows[0])
+    })
 }
 Cypress.Commands.add('createOrganization', createOrganization)
 
@@ -43,6 +54,7 @@ function deleteOrganization(key: string, id: number) {
     })
   })
 
+  cy.callFirestore('delete', `organizations/${key}/studentsToGroups`)
   cy.callFirestore('delete', `organizations/${key}/groups`)
   cy.callFirestore('delete', `organizations/${key}/users`)
   cy.callFirestore('delete', `organizations/${key}`)

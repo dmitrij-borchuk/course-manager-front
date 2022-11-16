@@ -10,7 +10,7 @@ import { useUpdateInitialForm } from '../../hooks/useUpdateInitialForm'
 
 export type StudentForm = {
   name: string
-  tags?: string[]
+  tags: string[]
 }
 
 interface Props {

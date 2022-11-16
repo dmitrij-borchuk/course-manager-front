@@ -1,4 +1,6 @@
-export function addStudentDirectly(orgId: number, data: any) {
+import { NewStudent } from '../../../src/types/student'
+
+export function addStudentDirectly(orgId: number, data: NewStudent) {
   return cy.getToken().then((token) =>
     cy.request({
       url: `${Cypress.env('SERVER_URL')}/students?orgId=${orgId}`,

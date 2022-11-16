@@ -10,6 +10,7 @@ import { useQuery } from '../../hooks/useQuery'
 import { useStudentsState } from '../../store'
 import { useCurrentOrg } from '../../hooks/useCurrentOrg'
 import { useOrgId } from '../../hooks/useOrgId'
+import { nanoid } from 'nanoid'
 
 export const CreateStudent = () => {
   const query = useQuery()
@@ -29,6 +30,7 @@ export const CreateStudent = () => {
       try {
         await createStudent(orgId, {
           ...data,
+          outerId: nanoid(),
         })
         history.push(backUrl || `/${orgKey}${ROUTES.STUDENTS_LIST}`)
 

@@ -217,6 +217,7 @@ function getSortingDataMocks() {
       id: 5,
       outerId: 's5',
       name: 'st 3',
+      tags: [],
     },
   ]
 

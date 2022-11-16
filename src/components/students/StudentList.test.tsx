@@ -29,16 +29,19 @@ describe('StudentList', () => {
         id: 1,
         outerId: 's1',
         name: 'st1',
+        tags: [],
       },
       {
         id: 2,
         outerId: 's2',
         name: 'st2',
+        tags: [],
       },
       {
         id: 3,
         outerId: 's3',
         name: 'st3',
+        tags: [],
       },
     ]
     const rates = {
@@ -88,15 +91,18 @@ const students: Student[] = [
     id: 1,
     outerId: 's1',
     name: 'st1',
+    tags: [],
   },
   {
     id: 2,
     outerId: 's2',
     name: 'st2',
+    tags: [],
   },
   {
     id: 3,
     outerId: 's3',
     name: 'st3',
+    tags: [],
   },
 ]

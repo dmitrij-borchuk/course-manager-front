@@ -192,11 +192,13 @@ describe('ReportByGroupTab', () => {
         id: 1,
         outerId: 's1',
         name: 'st 1',
+        tags: [],
       },
       {
         id: 2,
         outerId: 's2',
         name: 'st 1',
+        tags: [],
       },
     ]
     mockGetDocs(groups, studentsOfGroup, attendances)
@@ -286,11 +288,13 @@ describe('ReportByGroupTab', () => {
         id: 1,
         outerId: 's1',
         name: 'st 1',
+        tags: [],
       },
       {
         id: 2,
         outerId: 's2',
         name: 'st 2',
+        tags: [],
       },
     ]
     mockGetDocs(groups, studentsOfGroup, attendances)
@@ -439,16 +443,19 @@ function getSortingDataMocks() {
       id: 1,
       outerId: 's1',
       name: 'st 1',
+      tags: [],
     },
     {
       id: 2,
       outerId: 's2',
       name: 'st 2',
+      tags: [],
     },
     {
       id: 3,
       outerId: 's3',
       name: 'st 3',
+      tags: [],
     },
   ]
 

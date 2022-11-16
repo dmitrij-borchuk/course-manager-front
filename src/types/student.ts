@@ -3,12 +3,12 @@ import { Group } from './group'
 
 export type StudentBase = {
   name: string
-  tags?: string[]
+  tags: string[]
+  outerId: string
 }
 
 export type Student = StudentBase & {
   id: number
-  outerId: string
 }
 
 export type StudentFull = Student & {

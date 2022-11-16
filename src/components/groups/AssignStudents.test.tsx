@@ -32,6 +32,7 @@ describe('AssignStudents', () => {
           id: 1,
           outerId: 'studentId1',
           name: 'Student 1',
+          tags: [],
         },
       ],
     })
@@ -55,11 +56,13 @@ function renderComponent(props: Partial<ComponentProps<typeof AssignStudents>> =
               id: 1,
               name: 'Student 1',
               outerId: 'studentId1',
+              tags: [],
             },
             studentId2: {
               id: 2,
               name: 'Student 2',
               outerId: 'studentId2',
+              tags: [],
             },
           },
         },

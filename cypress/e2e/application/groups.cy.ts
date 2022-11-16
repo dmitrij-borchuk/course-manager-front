@@ -5,25 +5,42 @@ describe('Groups', () => {
   const orgId = nanoid()
   const orgKey = `test-organization-key-${orgId}`
   const orgName = `test-organization-name-${orgId}`
-  let orgDBId = ''
+  let orgDBId = 0
+  const id = nanoid()
+  const name = `Group-${id}`
 
   before(() => {
     cy.login()
     cy.createOrganization({
       key: orgKey,
       name: orgName,
+    }).then(({ id }) => {
+      orgDBId = id
     })
-      .its('body')
-      .then((body) => {
-        orgDBId = body.rows[0].id
-      })
     cy.log(`Created organization with key ${orgKey}`)
   })
   after(() => {
     cy.log(`Removing organization with key ${orgKey} and ID ${orgDBId}`)
     cy.deleteOrganization(orgKey, orgDBId)
-    cy.logout()
   })
+  beforeEach(() => {
+    cy.addGroupDirectly(orgKey, id, {
+      name: name,
+      teacher: Cypress.env('TEST_UID'),
+    })
+    cy.addStudentDirectly(orgDBId, {
+      name: `Student 1`,
+      tags: [],
+      outerId: `Student-1`,
+    }).as(`createStudent`)
+  })
+  afterEach(() => {
+    cy.removeGroupDirectly(orgKey, id)
+    cy.get<Cypress.Response<{ id: number }>>('@createStudent').then((response) => {
+      cy.removeStudentDirectly(orgDBId, response.body.id)
+    })
+  })
+
   it('Should be able to visit group page', () => {
     cy.visit(`/${orgKey}`)
     cy.findByRole('navigation').within(() => {
@@ -53,19 +70,6 @@ describe('Groups', () => {
     }).click()
     cy.getToastContent().should('contain.text', `Group has been successfully created`)
     cy.findByText(name).should('exist')
-  })
-  it('Should be able to visit group page', () => {
-    const id = nanoid()
-    const name = `Group-${id}`
-    cy.addGroupDirectly(orgKey, id, {
-      name: name,
-      teacher: Cypress.env('TEST_UID'),
-    })
-    cy.visit(`/${orgKey}/groups/${id}`)
-    cy.getSpinner().should('not.exist')
-    cy.findByRole('heading', {
-      name,
-    }).should('exist')
   })
   it('Should be able to delete group', () => {
     const id = nanoid()
@@ -102,6 +106,17 @@ describe('Groups', () => {
 
     cy.findByText('No teacher assigned').should('not.exist')
     cy.findByText('Teacher has been successfully assigned')
+  })
+  it('Should be able to assign students', () => {
+    cy.visit(`/${orgKey}/groups/${id}`)
+
+    cy.findByRole('button', { name: /assign students/i }).click()
+    cy.findByLabelText('Enter a name').type('Student 1{enter}')
+    cy.findByRole('button', { name: /ok/i }).click()
+
+    cy.findByTestId('students-list').within(() => {
+      cy.findByText('Student 1').should('exist')
+    })
   })
 
   it.skip('Should be able to edit group name', () => {})

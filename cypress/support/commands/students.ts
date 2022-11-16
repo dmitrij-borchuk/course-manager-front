@@ -10,7 +10,7 @@ export function addStudentDirectly(orgId: number, data: any) {
     })
   )
 }
-export function removeStudentDirectly(orgId: string, id: number) {
+export function removeStudentDirectly(orgId: number, id: number) {
   cy.getToken().then((token) => {
     cy.request({
       url: `${Cypress.env('SERVER_URL')}/students/${id}?orgId=${orgId}`,

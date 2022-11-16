@@ -31,7 +31,7 @@ declare global {
 }
 
 // Delete organization by key
-function deleteOrganization(key: string, id: string) {
+function deleteOrganization(key: string, id: number) {
   const tokenPromise = firebase.auth().currentUser.getIdToken()
   cy.wrap(tokenPromise).then((token) => {
     cy.request({

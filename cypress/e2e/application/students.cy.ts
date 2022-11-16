@@ -1,40 +1,58 @@
-describe('Students', () => {
-  it('Should be on the group page when there is more that 10 students assigned', () => {
-    // cy.intercept('http://localhost:8080/**', {
-    //   statusCode: 200,
-    // })
-    // cy.intercept('https://firebase.googleapis.com/**')
-    // cy.intercept('POST', 'http://localhost:8080/**', {
-    //   statusCode: 200,
-    // })
-    cy.login('test.admin@domain.com', 'test.admin')
-    cy.makeOrganizationIfNotExists()
-    cy.makeStudentList('organization', 10)
-    // cy.visit('/')
-    // cy.testId('addIcon').click()
+import { nanoid } from 'nanoid'
+import studentEditPage from '../../drivers/studentEditPage'
+import studentPage from '../../drivers/studentPage'
+import { getOrgKey, getOrgName } from '../../support/commands/utils'
 
-    // cy.visit('/t1/students')
-    // cy.get('.preloader-wrapper').should('not.exist')
-    // cy.get('#identifier').type('wrong login')
-    // cy.get('#password').type('wrong password')
-    // cy.testId('submit').click()
-    // cy.getToastContent().should('not.be.empty')
+describe('Students', () => {
+  let createOrgRequest: Cypress.Chainable<Cypress.Response<any>>
+  const orgId = nanoid()
+  const orgKey = getOrgKey(orgId)
+  let orgDbId: number
+  let studentId: number
+
+  before(() => {
+    cy.login()
+
+    createOrgRequest = cy.createOrganization({
+      key: orgKey,
+      name: getOrgName(orgId),
+    })
+
+    createOrgRequest.its('body').then((body) => {
+      orgDbId = body.rows[0].id
+
+      cy.addStudentDirectly(orgDbId, {
+        tags: ['tag1', 'tag2'],
+        name: 'Test Student Name',
+        outerId: 'someId2',
+      })
+        .its('body.id')
+        .then((id) => {
+          studentId = id
+        })
+    })
+  })
+  after(() => {
+    cy.removeStudentDirectly(orgDbId, studentId)
+    cy.deleteOrganization(orgKey, orgDbId)
   })
 
-  // it.only('Redirect after register', () => {
-  //   cy.visit('/register')
-  //   cy.get('.preloader-wrapper').should('not.exist')
-  //   cy.get('#email').type('test.1@domain.com')
-  //   cy.get('#password').type('password')
-  //   cy.testId('submit').click()
+  it('User should be able to update student', () => {
+    cy.visit(`/${orgKey}/students`)
 
-  //   cy.url().should('', '/login')
-  // })
-  // it.only('Redirect after login', () => {
-  //   cy.get('.preloader-wrapper').should('not.exist')
-  //   cy.get('#identifier').type('wrong login')
-  //   cy.get('#password').type('wrong password')
-  //   cy.testId('submit').click()
-  //   cy.getToastContent().should('not.be.empty')
-  // })
+    cy.findByText('Test Student Name').click()
+    studentPage.waitLoading()
+    cy.findByRole('button', { name: /edit/i }).click()
+    studentEditPage.waitLoading()
+    cy.findByLabelText(/name/i).clear().type('New Student Name')
+    cy.findAllByTestId('CancelIcon').first().click()
+    cy.findByLabelText(/tags/i).type('New tag{enter}')
+
+    cy.findByRole('button', { name: /submit/i }).click()
+
+    cy.findByText('Student has been successfully updated').should('exist')
+    cy.url().should('contain', `/${orgKey}/students/${studentId}`)
+    studentPage.waitLoading()
+    cy.findByText('New Student Name').should('exist')
+  })
 })

@@ -37,6 +37,12 @@ export const StudentsInfoBlock = ({
   const orgId = org?.id
   const { deleteStudentFromGroup } = useStudentsOfGroupState()
   const [loading, setLoading] = useState<Dictionary<boolean>>({})
+  const { fetchStudentsOfGroup } = useStudentsOfGroupState()
+  const refetchStudents = useCallback(async () => {
+    if (orgId) {
+      fetchStudentsOfGroup(orgId, orgKey, group.id, new Date())
+    }
+  }, [fetchStudentsOfGroup, group.id, orgId, orgKey])
   const onStudentRemove = useCallback(
     async (id: string) => {
       setLoading((l) => {
@@ -45,7 +51,8 @@ export const StudentsInfoBlock = ({
       })
       try {
         await deleteStudentFromGroup(orgKey, id, group.id)
-        showSuccess(<FormattedMessage id="groups.assignStudents.success" />)
+        refetchStudents()
+        showSuccess(<FormattedMessage id="groups.unassignStudents.success" />)
       } catch (error) {
         if (error instanceof Error) {
           showSuccess(<FormattedMessage id="groups.unassignStudents.error" values={{ message: error.message }} />)
@@ -59,18 +66,12 @@ export const StudentsInfoBlock = ({
         })
       }
     },
-    [deleteStudentFromGroup, group.id, orgKey, showSuccess]
+    [deleteStudentFromGroup, group.id, orgKey, refetchStudents, showSuccess]
   )
   const renderItem = useMemo(
     () => getStudentItemRender(attendanceRates, loading, onStudentRemove),
     [attendanceRates, loading, onStudentRemove]
   )
-  const { fetchStudentsOfGroup } = useStudentsOfGroupState()
-  const refetchStudents = useCallback(async () => {
-    if (orgId) {
-      fetchStudentsOfGroup(orgId, orgKey, group.id, new Date())
-    }
-  }, [fetchStudentsOfGroup, group.id, orgId, orgKey])
 
   return (
     <div data-testid="students-list">

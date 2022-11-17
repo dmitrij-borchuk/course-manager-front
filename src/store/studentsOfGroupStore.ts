@@ -25,6 +25,7 @@ export default function useStudentsOfGroupStore() {
     ])
     await Promise.all(
       resp.map((item) => {
+        // TODO: should be UTC
         item.endDate = new Date().getTime()
         return student2groupCollection.save(item)
       })
@@ -113,6 +114,7 @@ export default function useStudentsOfGroupStore() {
 
         if (!studentIds.length) {
           setFetching(false)
+          setStudentsOfGroupById({})
           return []
         }
         const studentsResp = await fetchStudentsByOrg(orgId)

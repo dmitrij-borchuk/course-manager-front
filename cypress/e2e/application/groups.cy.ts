@@ -39,6 +39,7 @@ describe('Groups', () => {
     cy.get<Cypress.Response<{ id: number }>>('@createStudent').then((response) => {
       cy.removeStudentDirectly(orgDBId, response.body.id)
     })
+    cy.callFirestore('delete', `organizations/${orgKey}/studentsToGroups`)
   })
 
   it('Should be able to visit group page', () => {
@@ -110,12 +111,39 @@ describe('Groups', () => {
   it('Should be able to assign students', () => {
     cy.visit(`/${orgKey}/groups/${id}`)
 
-    cy.findByRole('button', { name: /assign students/i }).click()
-    cy.findByLabelText('Enter a name').type('Student 1{enter}')
-    cy.findByRole('button', { name: /ok/i }).click()
+    addStudentToGroup('Student 1')
 
     cy.findByTestId('students-list').within(() => {
       cy.findByText('Student 1').should('exist')
+    })
+  })
+  it('Should be able to unassign students', () => {
+    cy.visit(`/${orgKey}/groups/${id}`)
+
+    addStudentToGroup('Student 1')
+
+    cy.findByTestId('students-list').within(() => {
+      cy.findByRole('button', { name: /edit/i }).click()
+    })
+    cy.findAllByTestId('CancelIcon').click()
+    cy.findByRole('button', { name: /ok/i }).click()
+
+    cy.findByTestId('students-list').within(() => {
+      cy.findByText('No students assigned').should('exist')
+    })
+  })
+  it('Should be able to remove individual student from its context menu', () => {
+    cy.visit(`/${orgKey}/groups/${id}`)
+
+    addStudentToGroup('Student 1')
+
+    cy.findByTestId('students-list').within(() => {
+      cy.findByRole('button', { name: /more_horiz/i }).click()
+      cy.findByRole('link', { name: /Remove from group/i }).click()
+    })
+
+    cy.findByTestId('students-list').within(() => {
+      cy.findByText('No students assigned').should('exist')
     })
   })
 
@@ -132,4 +160,10 @@ function addGroupAndVisitIt(orgKey: string) {
   })
   cy.visit(`/${orgKey}/groups/${id}`)
   cy.getSpinner().should('not.exist')
+}
+
+function addStudentToGroup(name: string) {
+  cy.findByRole('button', { name: /assign students/i }).click()
+  cy.findByLabelText('Enter a name').type(`${name}{enter}`)
+  cy.findByRole('button', { name: /ok/i }).click()
 }

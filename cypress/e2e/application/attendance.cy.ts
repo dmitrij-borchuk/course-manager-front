@@ -8,24 +8,18 @@ describe('Attendance', () => {
   const orgId = nanoid()
   const orgKey = getOrgKey(orgId)
   let orgDbId
-  let createOrgRequest: Cypress.Chainable<Cypress.Response<any>>
 
   before(() => {
     cy.login()
-    createOrgRequest = cy
-      .createOrganization({
-        key: orgKey,
-        name: getOrgName(orgId),
-      })
-      .its('body')
-      .then((body) => {
-        orgDbId = body.rows[0].id
-      })
+    cy.createOrganization({
+      key: orgKey,
+      name: getOrgName(orgId),
+    }).then(({ id }) => {
+      orgDbId = id
+    })
   })
   after(() => {
-    createOrgRequest.its('body').then((body) => {
-      cy.deleteOrganization(cy.getOrgKey(orgId), body.rows[0].id)
-    })
+    cy.deleteOrganization(cy.getOrgKey(orgId), orgDbId)
   })
 
   beforeEach(() => {
@@ -120,6 +114,7 @@ function waitLoading() {
 }
 
 function chooseGroup(name: string) {
+  cy.wait(300)
   cy.findByLabelText('Group').parent().click()
   cy.get('[id*=select-options]').findByText(name).click()
 }

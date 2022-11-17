@@ -4,7 +4,6 @@ import studentPage from '../../drivers/studentPage'
 import { getOrgKey, getOrgName } from '../../support/commands/utils'
 
 describe('Students', () => {
-  let createOrgRequest: Cypress.Chainable<Cypress.Response<any>>
   const orgId = nanoid()
   const orgKey = getOrgKey(orgId)
   let orgDbId: number
@@ -13,24 +12,24 @@ describe('Students', () => {
   before(() => {
     cy.login()
 
-    createOrgRequest = cy.createOrganization({
+    cy.createOrganization({
       key: orgKey,
       name: getOrgName(orgId),
     })
+      .its('id')
+      .then((id) => {
+        orgDbId = id
 
-    createOrgRequest.its('body').then((body) => {
-      orgDbId = body.rows[0].id
-
-      cy.addStudentDirectly(orgDbId, {
-        tags: ['tag1', 'tag2'],
-        name: 'Test Student Name',
-        outerId: 'someId2',
-      })
-        .its('body.id')
-        .then((id) => {
-          studentId = id
+        cy.addStudentDirectly(orgDbId, {
+          tags: ['tag1', 'tag2'],
+          name: 'Test Student Name',
+          outerId: 'someId2',
         })
-    })
+          .its('body.id')
+          .then((id) => {
+            studentId = id
+          })
+      })
   })
   after(() => {
     cy.removeStudentDirectly(orgDbId, studentId)

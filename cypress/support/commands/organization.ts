@@ -1,14 +1,14 @@
 /// <reference types="cypress" />
 import firebase from 'firebase/compat/app'
-import { Organization } from '../../../src/types/organization'
+import { Organization, OrganizationCreate } from '../../../src/types/organization'
 
 // Create organization
-function createOrganization(data: any) {
+function createOrganization(data: OrganizationCreate) {
   const tokenPromise = firebase.auth().currentUser.getIdToken()
   return cy
     .wrap(tokenPromise)
     .then((token) => {
-      return cy.request({
+      return cy.request<{ rows: Organization[] }>({
         url: `${Cypress.env('SERVER_URL')}/organizations`,
         method: 'POST',
         headers: {

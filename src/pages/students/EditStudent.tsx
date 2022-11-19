@@ -9,28 +9,34 @@ import { ROUTES } from '../../constants'
 import { useOrgId } from '../../hooks/useOrgId'
 import { useStudentsState } from '../../store'
 import { TITLE_POSTFIX } from '../../config'
+import { useCurrentOrg } from '../../hooks/useCurrentOrg'
 
 export const EditStudentPage = () => {
   const history = useHistory()
-  const orgId = useOrgId()
-  let { id } = useParams<{ id: string }>()
+  const org = useCurrentOrg()
+  const orgId = org?.id
+  const orgKey = useOrgId()
+  let { id: idStr } = useParams<{ id: string }>()
+  const id = parseInt(idStr)
   const { fetchStudent, editStudent, fetching, submitting, studentsById } = useStudentsState()
   const { addToast } = useToasts()
+  const organization = useCurrentOrg()
 
   const student = studentsById[id]
   const update = useCallback(
     async (data: StudentForm) => {
       if (!student) {
-        return
+        throw new Error('Student is not defined')
+      }
+      if (!orgId) {
+        throw new Error('Organization is not defined')
       }
       try {
         await editStudent(orgId, {
           ...student,
-          // attendances: student.attendances?.map((a) => a.id),
-          // groups: student.groups?.map((g) => g.id),
           ...data,
         })
-        history.push(`/${orgId}${ROUTES.STUDENTS_ROOT}/${student.id}`)
+        history.push(`/${orgKey}${ROUTES.STUDENTS_ROOT}/${student.id}`)
 
         addToast(<FormattedMessage id="students.edit.success" />, {
           appearance: 'success',
@@ -45,12 +51,14 @@ export const EditStudentPage = () => {
         }
       }
     },
-    [addToast, editStudent, history, orgId, student]
+    [addToast, editStudent, history, orgId, orgKey, student]
   )
 
   useEffect(() => {
-    fetchStudent(orgId, id)
-  }, [fetchStudent, id, orgId])
+    if (organization) {
+      fetchStudent(organization.id, id)
+    }
+  }, [fetchStudent, id, organization])
   // TODO: implement 404
 
   return (

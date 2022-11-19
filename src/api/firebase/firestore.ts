@@ -55,21 +55,24 @@ export function collection<T extends { id: string }>(name: string, converter?: F
     getAll: async () => {
       const q = fsQuery(collection)
       const querySnapshot = await getDocs(q)
+      const items = getItemsFromSnapshot<T>(querySnapshot)
 
-      return getItemsFromSnapshot<T>(querySnapshot)
+      return items
     },
     query: async (...args: Parameters<typeof where>) => {
       const q = fsQuery(collection, where(...args))
       const querySnapshot = await getDocs(q)
+      const items = getItemsFromSnapshot<T>(querySnapshot)
 
-      return getItemsFromSnapshot<T>(querySnapshot)
+      return items
     },
     queryMulti: async (args: Parameters<typeof where>[]) => {
       const whereConstraints = args.map((argsItem) => where(...argsItem))
       const q = fsQuery(collection, ...whereConstraints)
       const querySnapshot = await getDocs(q)
+      const items = getItemsFromSnapshot<T>(querySnapshot)
 
-      return getItemsFromSnapshot<T>(querySnapshot)
+      return items
     },
     getById: async (id: string) => {
       const docRef = doc(db, name, id)

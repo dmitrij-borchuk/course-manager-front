@@ -15,6 +15,7 @@ export const GroupPage = () => {
   const {
     fetchStudentsOfGroup,
     clearStudentsOfGroup,
+    // TODO: should use new API
     studentsOfGroup,
     fetching: loadingGroups,
   } = useStudentsOfGroupState()
@@ -31,18 +32,19 @@ export const GroupPage = () => {
       teacher,
     }
   }, [group, teacher])
-  const orgId = useOrgId()
-  const onDelete = useCallback(() => deleteGroup(orgId, id), [deleteGroup, id, orgId])
+  const orgKey = useOrgId()
+  const onDelete = useCallback(() => deleteGroup(orgKey, id), [deleteGroup, id, orgKey])
   const attendancesOfGroup = useMemo(() => {
     return attendances.filter((a) => a.group === id)
   }, [attendances, id])
   const attendanceRate = useAttendanceRateByStudent(attendancesOfGroup)
 
   useEffect(() => {
-    fetchGroup(orgId, id)
-  }, [fetchGroup, id, orgId])
+    fetchGroup(orgKey, id)
+  }, [fetchGroup, id, orgKey])
 
   const org = useCurrentOrg()
+  const orgId = org?.id
   useEffect(() => {
     if (group?.teacher && !teacher && org?.id) {
       fetchTeacherByOuterId(org.id, group.teacher)
@@ -50,20 +52,20 @@ export const GroupPage = () => {
   }, [fetchTeacherByOuterId, group?.teacher, org?.id, teacher])
 
   useEffect(() => {
-    if (group?.id) {
-      fetchStudentsOfGroup(orgId, group.id, new Date())
+    if (group?.id && orgId) {
+      fetchStudentsOfGroup(orgId, orgKey, group.id, new Date())
       return () => clearStudentsOfGroup()
     }
-  }, [clearStudentsOfGroup, fetchStudentsOfGroup, group?.id, orgId])
+  }, [clearStudentsOfGroup, fetchStudentsOfGroup, group?.id, orgKey, orgId])
 
   useEffect(() => {
     if (group) {
-      fetchAttendancesForGroups(orgId, [group.id])
+      fetchAttendancesForGroups(orgKey, [group.id])
       return () => {
         clearAttendances()
       }
     }
-  }, [clearAttendances, fetchAttendancesForGroups, group, orgId])
+  }, [clearAttendances, fetchAttendancesForGroups, group, orgKey])
 
   if (!groupFull) {
     // Loading when edit schedule and return back

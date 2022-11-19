@@ -1,16 +1,23 @@
 import { fireEvent, render, screen, waitForElementToBeRemoved } from '@testing-library/react'
-import * as firestore from 'firebase/firestore'
-import { asMock, mockDoc, mockOrgId, TestWrapper } from '../../utils/test'
+import { getAxiosMock, mockOrgId, TestWrapper } from '../../utils/test'
 import CreateStudent from './CreateStudent'
 
-jest.mock('nanoid', () => ({
-  nanoid: () => 'mockId',
-}))
-const { setDoc } = asMock(firestore)
-
 describe('CreateStudent', () => {
+  const axiosMock = getAxiosMock()
+
   beforeEach(() => {
     mockOrgId('orgId')
+    axiosMock.onGet('/organizations').reply(200, [
+      {
+        id: 1,
+        key: 'orgId',
+        name: 'orgName',
+      },
+    ])
+    axiosMock.onPost(`/students?orgId=1`).reply(200, {
+      id: 1,
+      name: 'orgName',
+    })
   })
   test('do not fail', async () => {
     render(<Component />)
@@ -31,8 +38,6 @@ describe('CreateStudent', () => {
     const submitBtn = await screen.findByRole('button', {
       name: /submit/i,
     })
-    const { mockDocByPath } = mockDoc()
-    mockDocByPath('organizations/orgId/students/mockId', {})
     await fireEvent.click(submitBtn)
     await screen.findByText(/Student has been successfully created/i)
 
@@ -43,8 +48,8 @@ describe('CreateStudent', () => {
     await waitForElementToBeRemoved(() => screen.queryByText(/Student has been successfully created/i))
     unmount()
 
-    expect(setDoc).toHaveBeenCalled()
-    expect(setDoc.mock.calls[0][1]).toHaveProperty('name', 'student name')
+    expect(axiosMock.history.post.length).toBe(1)
+    expect(JSON.parse(axiosMock.history.post[0].data)).toHaveProperty('name', 'student name')
   })
 })
 

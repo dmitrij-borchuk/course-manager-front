@@ -1,14 +1,13 @@
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitForElementToBeRemoved } from '@testing-library/react'
 import * as firestore from 'firebase/firestore'
 import * as reactPdf from '@react-pdf/renderer'
 import userEvent from '@testing-library/user-event'
-import { asMock, getFirebaseSnapshotFromArray, TestWrapper } from '../../utils/test'
+import { asMock, getAxiosMock, getFirebaseSnapshotFromArray, TestWrapper } from '../../utils/test'
 import { ReportByTagTab } from './ReportByTagTab'
 import { Group } from '../../types/group'
 import { Attendance } from '../../types/attendance'
 import { StudentOfGroup } from '../../types/studentOfGroup'
 import { Student } from '../../types/student'
-import { resetCache } from '../../store/studentsStore'
 import { resetAttendanceCache } from '../../store/attendancesStore'
 
 jest.mock('react-router-dom', () => {
@@ -36,17 +35,30 @@ const { usePDF } = asMock(reactPdf)
 const { useParams } = jest.requireMock('react-router-dom')
 
 describe('ReportByTagTab', () => {
+  const axiosMock = getAxiosMock()
+
   beforeEach(() => {
-    resetCache()
     resetAttendanceCache()
     useParams.mockReturnValue({
       orgId: 'orgId',
     })
     usePDF.mockReturnValue([{} as any, jest.fn()])
+    axiosMock.onGet('/organizations').reply(200, [
+      {
+        id: 1,
+        key: 'orgId',
+        name: 'orgName',
+      },
+    ])
+  })
+
+  afterEach(() => {
+    axiosMock.reset()
   })
   test('should generate report with sorting', async () => {
     const { attendances, groups, students, studentsOfGroup } = getSortingDataMocks()
-    mockGetDocs(groups, studentsOfGroup, attendances, students)
+    mockGetDocs(groups, studentsOfGroup, attendances)
+    axiosMock.onGet(`/students/byOrganization/1`).reply(200, students)
 
     render(
       <TestWrapper>
@@ -54,6 +66,7 @@ describe('ReportByTagTab', () => {
       </TestWrapper>
     )
 
+    await waitForElementToBeRemoved(() => screen.queryByTestId('loader'))
     const tagsEditorInput = await screen.findByLabelText('Tags')
     userEvent.type(tagsEditorInput, 'Lviv{enter}')
 
@@ -67,7 +80,8 @@ describe('ReportByTagTab', () => {
   })
   test('should generate report for students with case insensitive tags', async () => {
     const { attendances, groups, students, studentsOfGroup } = getSortingDataMocks()
-    mockGetDocs(groups, studentsOfGroup, attendances, students)
+    mockGetDocs(groups, studentsOfGroup, attendances)
+    axiosMock.onGet(`/students/byOrganization/1`).reply(200, students)
     usePDF.mockReturnValue([{} as any, jest.fn()])
 
     render(
@@ -106,12 +120,7 @@ describe('ReportByTagTab', () => {
   }
 })
 
-function mockGetDocs(
-  groups: Group[],
-  studentsOfGroup: StudentOfGroup[],
-  attendances: Attendance[],
-  students: Student[]
-) {
+function mockGetDocs(groups: Group[], studentsOfGroup: StudentOfGroup[], attendances: Attendance[]) {
   getDocs.mockImplementation((query) => {
     const path = query as unknown as string
     if (path === 'organizations/orgId/groups') {
@@ -122,9 +131,6 @@ function mockGetDocs(
     }
     if (path === 'organizations/orgId/attendances') {
       return Promise.resolve(getFirebaseSnapshotFromArray(attendances))
-    }
-    if (path === 'organizations/orgId/students') {
-      return Promise.resolve(getFirebaseSnapshotFromArray(students))
     }
     return Promise.resolve(getFirebaseSnapshotFromArray([]))
   })
@@ -184,28 +190,34 @@ function getSortingDataMocks() {
   ]
   const students: Student[] = [
     {
-      id: 's3',
+      id: 3,
+      outerId: 's3',
       name: 'st 3',
       tags: ['Lviv'],
     },
     {
-      id: 's2',
+      id: 2,
+      outerId: 's2',
       name: 'st 2',
       tags: ['Lviv'],
     },
     {
-      id: 's1',
+      id: 1,
+      outerId: 's1',
       name: 'st 1',
       tags: ['Lviv'],
     },
     {
-      id: 's4',
+      id: 4,
+      outerId: 's4',
       name: 'st 3',
       tags: ['lviv'],
     },
     {
-      id: 's5',
+      id: 5,
+      outerId: 's5',
       name: 'st 3',
+      tags: [],
     },
   ]
 

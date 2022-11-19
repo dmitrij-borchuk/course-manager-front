@@ -30,3 +30,5 @@ ui-debug.log
 /local-firebase-data
 serviceAccount.json
 cypress.env.json
+cypress/screenshots/
+cypress/videos/

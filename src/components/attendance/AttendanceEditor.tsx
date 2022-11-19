@@ -179,6 +179,7 @@ export const AttendanceEditor = (props: Props) => {
                   value={renderProps.value}
                   name={renderProps.name}
                   data-testid="group-selector"
+                  label={intl.formatMessage({ id: 'attendance.groupSelector.placeholder' })}
                 >
                   <option disabled value="">
                     {intl.formatMessage({ id: 'attendance.groupSelector.placeholder' })}
@@ -219,26 +220,26 @@ interface StudentsSelectorProps {
 }
 const StudentsSelector = ({ students, onChange = noop, initialSelected }: StudentsSelectorProps) => {
   const [selected, setSelected] = useState<Record<string, boolean>>(initialSelected || {})
-  const onClick = useCallback((id: string, value: boolean) => {
-    setSelected((d) => ({ ...d, [id]: value }))
+  const onClick = useCallback((outerId: string, value: boolean) => {
+    setSelected((d) => ({ ...d, [outerId]: value }))
   }, [])
   const renderItem = useMemo(
     () => (s: Student) => {
       return (
         <div
-          key={s.id}
+          key={s.outerId}
           className="collection-item flex justify-between items-center cursor-pointer"
-          onClick={() => onClick(s.id, !selected[s.id])}
+          onClick={() => onClick(s.outerId, !selected[s.outerId])}
         >
           <Ellipsis className="color-secondary">{s.name}</Ellipsis>
-          {selected[s.id] && (
+          {selected[s.outerId] && (
             <div className="-my-3 -mr-5 flex color-secondary">
               <Icon center className="text-5xl">
                 check_circle
               </Icon>
             </div>
           )}
-          {!selected[s.id] && (
+          {!selected[s.outerId] && (
             <div className="-my-3 -mr-5 flex color-text-gray">
               <Icon center className="text-5xl">
                 radio_button_unchecked
@@ -255,7 +256,7 @@ const StudentsSelector = ({ students, onChange = noop, initialSelected }: Studen
     setSelected((selected) => {
       const newSelected: Record<string, boolean> = {}
       students.forEach((s) => {
-        newSelected[s.id] = !!(initialSelected && initialSelected[s.id])
+        newSelected[s.outerId] = !!(initialSelected && initialSelected[s.outerId])
       })
 
       return newSelected

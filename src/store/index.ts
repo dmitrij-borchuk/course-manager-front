@@ -2,19 +2,22 @@ import constate from 'constate'
 import { useAttendancesStore } from './attendancesStore'
 import { useAuthStore } from './authStore'
 import useGroupsStore from './groupsStore'
-import useStudentsStore from './studentsStore'
+import useStudentsStore, { InitialStudentsState } from './studentsStore'
 import useTeachersStore from './teachersStore'
 import useOrganizationsStore from './organizationsStore'
 import useUsersStore from './usersStore'
 import useStudentsOfGroupStore from './studentsOfGroupStore'
 
-function useStore() {
+export type DefaultStore = {
+  students?: InitialStudentsState
+}
+function useStore({ students }: DefaultStore) {
   return {
     teachers: useTeachersStore(),
     groups: useGroupsStore(),
     auth: useAuthStore(),
     attendances: useAttendancesStore(),
-    students: useStudentsStore(),
+    students: useStudentsStore(students),
     studentsOfGroup: useStudentsOfGroupStore(),
     organizations: useOrganizationsStore(),
     users: useUsersStore(),

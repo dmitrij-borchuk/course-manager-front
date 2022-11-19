@@ -6,25 +6,33 @@ import { Helmet } from 'react-helmet'
 import { EditStudent, StudentForm } from '../../components/students/EditStudent'
 import { TITLE_POSTFIX } from '../../config'
 import { ROUTES } from '../../constants'
-import { useOrgId } from '../../hooks/useOrgId'
 import { useQuery } from '../../hooks/useQuery'
 import { useStudentsState } from '../../store'
+import { useCurrentOrg } from '../../hooks/useCurrentOrg'
+import { useOrgId } from '../../hooks/useOrgId'
+import { nanoid } from 'nanoid'
 
 export const CreateStudent = () => {
   const query = useQuery()
   const { addToast } = useToasts()
   const history = useHistory()
-  const orgId = useOrgId()
+  const org = useCurrentOrg()
+  const orgKey = useOrgId()
+  const orgId = org?.id
   const { createStudent, submitting } = useStudentsState()
   const backUrl = query.get('backUrl')
 
   const submit = useCallback(
     async (data: StudentForm) => {
+      if (!orgId) {
+        throw new Error('Organization is not defined')
+      }
       try {
         await createStudent(orgId, {
           ...data,
+          outerId: nanoid(),
         })
-        history.push(backUrl || `/${orgId}${ROUTES.STUDENTS_LIST}`)
+        history.push(backUrl || `/${orgKey}${ROUTES.STUDENTS_LIST}`)
 
         addToast(<FormattedMessage id="students.create.success" />, {
           appearance: 'success',
@@ -39,7 +47,7 @@ export const CreateStudent = () => {
         }
       }
     },
-    [addToast, backUrl, createStudent, history, orgId]
+    [addToast, backUrl, createStudent, history, orgId, orgKey]
   )
 
   return (

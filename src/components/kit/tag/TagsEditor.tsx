@@ -11,7 +11,7 @@ interface Props {
   onUpdate?: (value: string[]) => void
   inputClassName?: string
 }
-export const TagsEditor = ({ disabled, loading, error, value = [], onUpdate, inputClassName }: Props) => {
+export const TagsEditor = ({ disabled, loading, error, value = emptyArray, onUpdate, inputClassName }: Props) => {
   const intl = useIntl()
   const [selected, setSelected] = useState<string[]>(value)
   useEffect(() => {
@@ -54,3 +54,5 @@ export const TagsEditor = ({ disabled, loading, error, value = [], onUpdate, inp
     </div>
   )
 }
+
+const emptyArray: string[] = []

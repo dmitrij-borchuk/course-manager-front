@@ -5,6 +5,7 @@ import { Select } from '../../components/kit/select/Select'
 import { TagsEditor } from '../../components/kit/tag/TagsEditor'
 import { Text } from '../../components/kit/text/Text'
 import { ReportByTag } from '../../components/reports/ReportByTag'
+import { useCurrentOrg } from '../../hooks/useCurrentOrg'
 import { useOrgId } from '../../hooks/useOrgId'
 import { usePersistenceState } from '../../hooks/usePersistenceState'
 import { useAttendancesState, useStudentsState } from '../../store'
@@ -12,14 +13,16 @@ import { SortOrder } from '../../types/sorting'
 
 export const ReportByTagTab = () => {
   const intl = useIntl()
-  const orgId = useOrgId()
+  const orgKey = useOrgId()
+  const org = useCurrentOrg()
+  const orgId = org?.id
   const [to, setTo] = useState(new Date())
   const [from, setFrom] = useState(subMonth(to))
   const [order, setOrder] = usePersistenceState<SortOrder>(orderStoreKey, 'asc')
   const { fetchStudents, students, fetching: studentsFetching } = useStudentsState()
   // TODO: when attendance store has some records this will not work correctly
   // need to filter attendances by date
-  const { attendances, fetchAttendancesByDate } = useAttendancesState()
+  const { attendances, fetchAttendancesByDate, loading: attendanceLoading } = useAttendancesState()
   const [tags, setTags] = useState<string[]>([])
   const onTagsUpdate = useCallback(
     (newTags: string[]) => {
@@ -39,16 +42,18 @@ export const ReportByTagTab = () => {
   })
 
   useEffect(() => {
-    fetchStudents(orgId)
+    if (orgId) {
+      fetchStudents(orgId)
+    }
   }, [fetchStudents, orgId])
 
   useEffect(() => {
-    fetchAttendancesByDate(orgId, from, to)
-  }, [fetchAttendancesByDate, from, orgId, to])
+    fetchAttendancesByDate(orgKey, from, to)
+  }, [fetchAttendancesByDate, from, orgKey, to])
 
-  if (studentsFetching) {
+  if (!orgId || studentsFetching || attendanceLoading) {
     return (
-      <div className="flex justify-center pt-4">
+      <div className="flex justify-center pt-4" data-testid="loader">
         <Preloader color="red" flashing={false} size="medium" />
       </div>
     )

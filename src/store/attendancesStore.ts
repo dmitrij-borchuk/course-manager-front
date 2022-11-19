@@ -6,6 +6,7 @@ import { Dictionary } from '../types/dictionary'
 import { arrayToDictionary } from '../utils/common'
 import { nanoid } from 'nanoid'
 
+// TODO: add cache layer
 export function useAttendancesStore() {
   const [loading, setLoading] = useState(false)
   const [attendancesById, setAttendancesById] = useState<Dictionary<Attendance | undefined>>({})
@@ -80,6 +81,7 @@ export function useAttendancesStore() {
       }
       setLoading(true)
       const collection = makeOrgCollection<Attendance>('attendances', orgId)
+      // TODO: optimize this
       const resp = await collection.getAll()
       const itemsById = arrayToDictionary(resp)
       setAttendancesById((att) => ({ ...att, ...itemsById }))

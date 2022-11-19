@@ -29,7 +29,7 @@ export const ReportByGroup = ({ group, attendances, students, order, loading, fr
     order,
     students.map((s) => ({
       label: s.name,
-      value: attendanceRate[s.id] && attendanceRate[s.id] * 100,
+      value: attendanceRate[s.outerId] && attendanceRate[s.outerId] * 100,
     }))
   ).map((r) => {
     const rate =

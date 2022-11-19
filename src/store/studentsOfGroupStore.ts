@@ -1,6 +1,7 @@
 import { nanoid } from 'nanoid'
 import { useCallback, useState } from 'react'
 import { makeOrgCollection } from '../api/firebase/collections'
+import { fetchStudentsByOrg } from '../api/students'
 import { useDictionaryToArray } from '../hooks/useDictionaryToArray'
 import { Dictionary } from '../types/dictionary'
 import { Group } from '../types/group'
@@ -24,6 +25,7 @@ export default function useStudentsOfGroupStore() {
     ])
     await Promise.all(
       resp.map((item) => {
+        // TODO: should be UTC
         item.endDate = new Date().getTime()
         return student2groupCollection.save(item)
       })
@@ -39,18 +41,15 @@ export default function useStudentsOfGroupStore() {
     groupsOfStudentById,
     fetching,
     submitting,
-    addStudentToGroup: useCallback(async (orgId: string, data: NewStudentOfGroup) => {
+    addStudentToGroup: useCallback(async (orgId: number, orgKey: string, data: NewStudentOfGroup) => {
       setSubmitting(true)
-      const collection = makeOrgCollection<StudentOfGroup>('studentsToGroups', orgId)
+      const collection = makeOrgCollection<StudentOfGroup>('studentsToGroups', orgKey)
 
       try {
         const result = await collection.save({
           id: nanoid(),
           ...data,
         })
-        const students = makeOrgCollection<Student>('students', orgId)
-        const studentData = await students.getById(data.studentId)
-        setStudentsOfGroupById((state) => ({ ...state, [studentData.id]: studentData }))
         setSubmitting(false)
         return result
       } catch (error) {
@@ -101,24 +100,28 @@ export default function useStudentsOfGroupStore() {
       },
       [unassignStudentFromGroup]
     ),
-    fetchStudentsOfGroup: useCallback(async (orgId: string, groupId: string, date = new Date()) => {
+    fetchStudentsOfGroup: useCallback(async (orgId: number, orgKey: string, groupId: string, date = new Date()) => {
+      // TODO: use new API
       setFetching(true)
       try {
-        const collection = makeOrgCollection<StudentOfGroup>('studentsToGroups', orgId)
-        const resp = await collection.queryMulti([
+        const collection = makeOrgCollection<StudentOfGroup>('studentsToGroups', orgKey)
+        const groups = await collection.queryMulti([
           ['groupId', '==', groupId],
           ['startDate', '<=', date.getTime()],
         ])
-        const filtered = resp.filter((item) => item.endDate === null || item.endDate >= date.getTime())
+        const filtered = groups.filter((item) => item.endDate === null || item.endDate >= date.getTime())
         const studentIds = filtered.map((item) => item.studentId)
 
         if (!studentIds.length) {
           setFetching(false)
+          setStudentsOfGroupById({})
           return []
         }
-        const students = makeOrgCollection<Student>('students', orgId)
-        const studentsList = await students.getAll()
-        const filteredByStudents = studentsList.filter((item) => studentIds.includes(item.id))
+        const studentsResp = await fetchStudentsByOrg(orgId)
+        const students = studentsResp.data
+        // const students = makeOrgCollection<Student>('students', orgId)
+        // const studentsList = await students.getAll()
+        const filteredByStudents = students.filter((item) => studentIds.includes(item.outerId))
         const studentsById = arrayToDictionary(filteredByStudents)
         setStudentsOfGroupById(studentsById)
 

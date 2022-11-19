@@ -39,6 +39,7 @@ export function SelectDialog<T extends { id: string | number }>({
   trigger,
   onCloseStart,
   initial,
+  ...rest
 }: PropsSingle<T> | PropsMulti<T>) {
   const [submitting, setSubmitting] = useState(false)
   const initialArray = useMemo(() => {
@@ -149,6 +150,7 @@ export function SelectDialog<T extends { id: string | number }>({
         onCloseStart,
         onCloseEnd: () => onCloseEnd.current(),
       }}
+      {...rest}
     >
       <List items={items} loading={loading} renderItem={renderItem} />
     </Modal>

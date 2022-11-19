@@ -8,12 +8,13 @@ import { Student } from '../../components/students/Student'
 import { useOrgId } from '../../hooks/useOrgId'
 import { useStudentAttendanceRateByGroups } from '../../hooks/useAttendanceRate'
 import { TITLE_POSTFIX } from '../../config'
+import { useCurrentOrg } from '../../hooks/useCurrentOrg'
 
-// TODO: Add loading skeleton
 // TODO: Add 404 state
 export const StudentPage = () => {
   const history = useHistory()
-  let { id } = useParams<{ id: string }>()
+  let { id: idStr } = useParams<{ id: string }>()
+  const id = parseInt(idStr)
 
   const { fetchStudent, studentsById, deleteStudent } = useStudentsState()
   const { attendances, clearAttendances, fetchAttendancesForGroups } = useAttendancesState()
@@ -25,42 +26,50 @@ export const StudentPage = () => {
     fetching: fetchingGroups,
   } = useStudentsOfGroupState()
   const student = studentsById[id]
-  const orgId = useOrgId()
+  const orgKey = useOrgId()
+  const organization = useCurrentOrg()
+  const orgId = organization?.id
 
   const onDelete = useCallback(async () => {
-    await deleteStudent(orgId, id)
-    history.push(`/${orgId}${ROUTES.STUDENTS_LIST}`)
-  }, [deleteStudent, history, id, orgId])
+    if (organization && student) {
+      await deleteStudent(orgKey, organization.id, id, student.outerId)
+      // TODO: Add notification
+      history.push(`/${orgKey}${ROUTES.STUDENTS_LIST}`)
+    }
+  }, [deleteStudent, history, id, orgKey, organization, student])
 
-  const rateByGroups = useStudentAttendanceRateByGroups(id, groups, attendances)
+  // TODO: probably we need to use `groupsOfStudent` instead of `groups`
+  const rateByGroups = useStudentAttendanceRateByGroups(student?.outerId, groups, attendances)
 
   useEffect(() => {
-    fetchStudent(orgId, id)
+    if (orgId) {
+      fetchStudent(orgId, id)
+    }
   }, [fetchStudent, id, orgId])
 
   useEffect(() => {
-    fetchGroups(orgId)
+    fetchGroups(orgKey)
     return () => {
       clearGroups()
     }
-  }, [clearGroups, fetchGroups, orgId])
+  }, [clearGroups, fetchGroups, orgKey])
 
   useEffect(() => {
-    if (student?.id) {
-      fetchGroupsOfStudent(orgId, [student.id], new Date())
+    if (student?.outerId) {
+      fetchGroupsOfStudent(orgKey, [student.outerId], new Date())
       return () => clearGroupOfStudents()
     }
-  }, [clearGroupOfStudents, fetchGroupsOfStudent, orgId, student?.id])
+  }, [clearGroupOfStudents, fetchGroupsOfStudent, orgKey, student?.outerId])
 
   useEffect(() => {
     if (groups.length) {
       // TODO: probably we need to fetch attendance only for ongoing groups
       fetchAttendancesForGroups(
-        orgId,
+        orgKey,
         groups.map((g) => g.id)
       )
     }
-  }, [clearAttendances, fetchAttendancesForGroups, groups, orgId])
+  }, [fetchAttendancesForGroups, groups, orgKey])
   useEffect(() => {
     return () => {
       clearAttendances()
@@ -68,7 +77,11 @@ export const StudentPage = () => {
   }, [clearAttendances])
 
   if (!student) {
-    return <div>Loading</div>
+    return (
+      <div key="loader" data-testid="preloader">
+        Loading
+      </div>
+    )
   }
 
   return (

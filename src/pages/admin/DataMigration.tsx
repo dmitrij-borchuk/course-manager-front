@@ -1,6 +1,7 @@
 import { Divider } from 'react-materialize'
 import { Helmet } from 'react-helmet'
 import { OrganizationMigration } from './OrganizationMigration'
+import { StudentsMigration } from './StudentsMigration'
 import { UsersMigration } from './UsersMigration'
 import { TITLE_POSTFIX } from '../../config'
 
@@ -18,6 +19,12 @@ export const DataMigration = () => {
       </div>
 
       <OrganizationMigration />
+
+      <div className="my-3">
+        <Divider />
+      </div>
+
+      <StudentsMigration />
     </div>
   )
 }

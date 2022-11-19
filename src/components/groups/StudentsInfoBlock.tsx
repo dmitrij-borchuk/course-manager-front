@@ -3,6 +3,7 @@ import { FormattedMessage } from 'react-intl'
 import { Button, Dropdown, Preloader } from 'react-materialize'
 import { Link } from 'react-router-dom'
 import { ROUTES } from '../../constants'
+import { useCurrentOrg } from '../../hooks/useCurrentOrg'
 import { useNotification } from '../../hooks/useNotification'
 import { useOrgId } from '../../hooks/useOrgId'
 import { useStudentsOfGroupState } from '../../store'
@@ -31,9 +32,17 @@ export const StudentsInfoBlock = ({
   loadingGroups = false,
 }: StudentsInfoBlockProps) => {
   const { showSuccess } = useNotification()
-  const orgId = useOrgId()
+  const orgKey = useOrgId()
+  const org = useCurrentOrg()
+  const orgId = org?.id
   const { deleteStudentFromGroup } = useStudentsOfGroupState()
   const [loading, setLoading] = useState<Dictionary<boolean>>({})
+  const { fetchStudentsOfGroup } = useStudentsOfGroupState()
+  const refetchStudents = useCallback(async () => {
+    if (orgId) {
+      fetchStudentsOfGroup(orgId, orgKey, group.id, new Date())
+    }
+  }, [fetchStudentsOfGroup, group.id, orgId, orgKey])
   const onStudentRemove = useCallback(
     async (id: string) => {
       setLoading((l) => {
@@ -41,8 +50,9 @@ export const StudentsInfoBlock = ({
         return l
       })
       try {
-        await deleteStudentFromGroup(orgId, id, group.id)
-        showSuccess(<FormattedMessage id="groups.assignStudents.success" />)
+        await deleteStudentFromGroup(orgKey, id, group.id)
+        refetchStudents()
+        showSuccess(<FormattedMessage id="groups.unassignStudents.success" />)
       } catch (error) {
         if (error instanceof Error) {
           showSuccess(<FormattedMessage id="groups.unassignStudents.error" values={{ message: error.message }} />)
@@ -56,7 +66,7 @@ export const StudentsInfoBlock = ({
         })
       }
     },
-    [deleteStudentFromGroup, group.id, orgId, showSuccess]
+    [deleteStudentFromGroup, group.id, orgKey, refetchStudents, showSuccess]
   )
   const renderItem = useMemo(
     () => getStudentItemRender(attendanceRates, loading, onStudentRemove),
@@ -64,7 +74,7 @@ export const StudentsInfoBlock = ({
   )
 
   return (
-    <>
+    <div data-testid="students-list">
       <div className="flex justify-between items-center">
         <Text type="h5" color="primary">
           <FormattedMessage id="students.list.title" />
@@ -75,6 +85,7 @@ export const StudentsInfoBlock = ({
             group={group}
             trigger={<IconButton type="square" size={40} icon="edit" />}
             studentsOfGroup={students}
+            onDone={refetchStudents}
           />
         )}
       </div>
@@ -88,7 +99,7 @@ export const StudentsInfoBlock = ({
       ) : (
         <NoStudentsInfoBlock group={group} />
       )}
-    </>
+    </div>
   )
 }
 
@@ -97,6 +108,16 @@ interface NoStudentsInfoBlockProps {
   students?: Student[]
 }
 const NoStudentsInfoBlock = ({ group, students }: NoStudentsInfoBlockProps) => {
+  const orgKey = useOrgId()
+  const org = useCurrentOrg()
+  const orgId = org?.id
+  const { fetchStudentsOfGroup } = useStudentsOfGroupState()
+  const refetchStudents = useCallback(async () => {
+    if (orgId) {
+      fetchStudentsOfGroup(orgId, orgKey, group.id, new Date())
+    }
+  }, [fetchStudentsOfGroup, group.id, orgId, orgKey])
+
   return (
     <div className="text-center">
       <Text type="h6" color="textGray" className="mb-3">
@@ -112,6 +133,7 @@ const NoStudentsInfoBlock = ({ group, students }: NoStudentsInfoBlockProps) => {
           </Button>
         }
         studentsOfGroup={students}
+        onDone={refetchStudents}
       />
     </div>
   )
@@ -167,7 +189,7 @@ const StudentWithAttendance = ({
           }
         >
           {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-          <a href="#" className="whitespace-nowrap w-52" onClick={() => onRemoveClick(data.id)}>
+          <a href="#" className="whitespace-nowrap w-52" onClick={() => onRemoveClick(data.outerId)}>
             <FormattedMessage id="groups.studentList.removeBtn" />
           </a>
         </Dropdown>
@@ -185,8 +207,8 @@ function getStudentItemRender(
     <StudentWithAttendance
       key={data.id}
       data={data}
-      attendanceRate={attendances[data.id]}
-      loading={loading[data.id]}
+      attendanceRate={attendances[data.outerId]}
+      loading={loading[data.outerId]}
       onRemoveClick={onRemoveClick}
     />
   )

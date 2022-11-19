@@ -32,7 +32,9 @@ import { attachCustomCommands } from 'cypress-firebase'
 import '@testing-library/cypress/add-commands'
 import './commands/organization'
 import { getOrgKey, getOrgName, getSpinner } from './commands/utils'
-import { addGroupDirectly } from './commands/groups'
+import { addGroupDirectly, addStudentToGroupDirectly, removeGroupDirectly } from './commands/groups'
+import { getToken, getUser } from './commands/auth'
+import { addStudentDirectly, removeStudentDirectly } from './commands/students'
 
 const firebaseConfig = {
   apiKey: Cypress.env('FIREBASE_API_KEY'),
@@ -64,13 +66,53 @@ declare global {
        */
       getOrgKey: typeof getOrgKey
       /**
-       * @example cy.addGroupDirectly('org1', {})
+       * @example cy.addGroupDirectly('org1', 'groupId', {})
        */
       addGroupDirectly: typeof addGroupDirectly
+      /**
+       * @example cy.removeGroupDirectly('org1', 'groupId')
+       */
+      removeGroupDirectly: typeof removeGroupDirectly
+      addStudentToGroupDirectly: typeof addStudentToGroupDirectly
+
+      getToken: typeof getToken
+      getUser: typeof getUser
+
+      addStudentDirectly: typeof addStudentDirectly
+      removeStudentDirectly: typeof removeStudentDirectly
     }
   }
 }
 Cypress.Commands.add('addGroupDirectly', addGroupDirectly)
+Cypress.Commands.add('removeGroupDirectly', removeGroupDirectly)
+Cypress.Commands.add('addStudentToGroupDirectly', addStudentToGroupDirectly)
+
+Cypress.Commands.add('addStudentDirectly', addStudentDirectly)
+Cypress.Commands.add('removeStudentDirectly', removeStudentDirectly)
+
 Cypress.Commands.add('getOrgKey', getOrgKey)
 Cypress.Commands.add('getOrgName', getOrgName)
 Cypress.Commands.add('getSpinner', getSpinner)
+Cypress.Commands.add('getToken', getToken)
+Cypress.Commands.add('getUser', getUser)
+
+// Monkey patching Cypress.log to hide firestore requests (they are too long)
+const origLog = Cypress.log
+Cypress.log = function (opts, ...other) {
+  //@ts-ignore
+  if (opts.displayName === 'fetch' && opts.url.startsWith('https://firestore.googleapis.com')) {
+    return origLog(
+      {
+        ...opts,
+        //@ts-ignore
+        renderProps() {
+          return {
+            message: `🔥base request (details hidden by customization "Cypress.log")`,
+          }
+        },
+      },
+      ...other
+    )
+  }
+  return origLog(opts, ...other)
+}

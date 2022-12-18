@@ -153,7 +153,6 @@ export const AttendanceEditorPage = () => {
       </Helmet>
 
       <AttendanceEditor
-        // currentGroup={group}
         activities={groups}
         onSubmit={onSubmit}
         attendance={attendance}

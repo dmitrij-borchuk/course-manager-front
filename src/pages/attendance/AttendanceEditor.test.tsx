@@ -30,11 +30,18 @@ describe('AttendanceEditor', () => {
   beforeEach(() => {
     useParams.mockReturnValue({
       orgId: 'orgId',
-      // id: 'attendanceId',
     })
     axiosMock.onGet('/organizations').reply(200, [{ key: 'orgId', id: 1 }])
     axiosMock.onGet('/users/byOuterId/1/userId').reply(200, { outerId: 'userId', id: 1 })
     axiosMock.onGet('/users/byOuterId/1/teacher1').reply(200, { outerId: 'userId', id: 1 })
+    axiosMock.onGet('/activities').reply(200, [
+      {
+        performer: 1,
+        name: 'group 1',
+        outerId: 'g1',
+        id: 1,
+      },
+    ])
   })
 
   afterEach(() => {
@@ -54,13 +61,13 @@ describe('AttendanceEditor', () => {
   })
 
   // TODO: rewrite test when new API will be used
+  // Probably this test should be moved to e2e testing
   test('while creating should show students assigned at the specific date', async () => {
     const {
       data: { group, students },
-      mockDataByPath,
     } = defaultMock()
     const [student1, student2] = students
-    axiosMock.onGet(`/students/byOrganization/1`).reply(200, students)
+    axiosMock.onGet(new RegExp('/students/byActivity/1')).reply(200, students)
 
     render(
       <TestWrapper>
@@ -74,15 +81,7 @@ describe('AttendanceEditor', () => {
     await screen.findByText(student1.name)
     await screen.findByText(student2.name)
 
-    const studentsToGroupFiltered = [
-      {
-        id: 's2g2',
-        startDate: new Date().getTime() - treeDaysInMs,
-        endDate: null,
-        studentId: student2.outerId,
-      },
-    ]
-    mockDataByPath('organizations/orgId/studentsToGroups', studentsToGroupFiltered)
+    axiosMock.onGet(new RegExp('/students/byActivity/1')).reply(200, [students[1]])
 
     const datePicker = screen.getByLabelText('Date *')
     const time = new Date().getTime() - twoDaysInMs
@@ -111,7 +110,7 @@ describe('AttendanceEditor', () => {
       teacher: 'teacher1',
     }
     mockDocByPath('organizations/orgId/attendances/attendanceId', attendance)
-    axiosMock.onGet(`/students/byOrganization/1`).reply(200, students)
+    axiosMock.onGet(new RegExp('/students/byActivity/1')).reply(200, students)
 
     render(
       <TestWrapper>
@@ -135,12 +134,11 @@ describe('AttendanceEditor', () => {
   })
 
   test('Should show groups of teacher', async () => {
-    const querySpy = jest.spyOn(firestore, 'query')
     const {
       data: { group, students },
       mockDataByPath,
     } = defaultMock()
-    axiosMock.onGet(`/students/byOrganization/1`).reply(200, students)
+    axiosMock.onGet(new RegExp('/students/byActivity/1')).reply(200, students)
 
     const groups = [
       {
@@ -165,7 +163,8 @@ describe('AttendanceEditor', () => {
     await screen.findByRole('option', { name: 'Group' })
     await selectGroup(group.id)
 
-    expect(querySpy).toBeCalledWith('organizations/orgId/groups', ['teacher', '==', 'userId'])
+    const req = axiosMock.history.get.filter((r) => r.url === '/activities' && r.params.performerId === 1)
+    expect(req.length).toBeGreaterThan(0)
   })
 
   function defaultMock() {
@@ -175,7 +174,6 @@ describe('AttendanceEditor', () => {
       name: 'group 1',
       id: 'g1',
     }
-    mockDataByPath('organizations/orgId/groups', [group])
     const student1 = {
       id: 1,
       outerId: 's1',

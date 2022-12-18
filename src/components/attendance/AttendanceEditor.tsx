@@ -3,9 +3,9 @@ import { Controller } from 'react-hook-form'
 import { FormattedMessage, useIntl } from 'react-intl'
 import { Container, DatePicker, Icon, Preloader, Select } from 'react-materialize'
 import { useFormWithError } from '../../hooks/useFormWithError'
+import { Activity } from '../../types/activity'
 import { Attendance } from '../../types/attendance'
 import { Dictionary } from '../../types/dictionary'
-import { Group } from '../../types/group'
 import { Student } from '../../types/student'
 import { OrganizationUser } from '../../types/user'
 import { noop } from '../../utils/common'
@@ -23,8 +23,7 @@ type AttendanceForm = {
 }
 interface Props {
   className?: string
-  currentGroup?: Group
-  groups: Group[]
+  activities: Activity[]
   onSubmit?: (data: AttendanceForm) => void
   onGroupChanged?: (id: string) => void
   onDateChanged?: (date: Date) => void
@@ -38,7 +37,7 @@ interface Props {
 export const AttendanceEditor = (props: Props) => {
   const {
     className,
-    groups,
+    activities: groups,
     students,
     onSubmit = noop,
     submitting = false,
@@ -185,7 +184,7 @@ export const AttendanceEditor = (props: Props) => {
                     {intl.formatMessage({ id: 'attendance.groupSelector.placeholder' })}
                   </option>
                   {groups.map((g) => (
-                    <option key={g.id} value={g.id}>
+                    <option key={g.id} value={g.outerId}>
                       {g.name}
                     </option>
                   ))}

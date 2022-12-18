@@ -12,23 +12,21 @@ import { TITLE_POSTFIX } from '../../config'
 
 export const EditGroupPage = () => {
   const history = useHistory()
-  const orgId = useOrgId()
-  let { id } = useParams<{ id: string }>()
+  const orgKey = useOrgId()
+  const params = useParams<{ id: string }>()
+  const id = parseInt(params.id, 10)
   const { addToast } = useToasts()
   const { fetchGroup, editGroup, fetching, submitting, groupsById } = useGroupsState()
 
-  const group = groupsById[id]
+  const group = groupsById.get(id)
   const update = useCallback(
     async (data: GroupForm) => {
       if (!group) {
         return
       }
       try {
-        await editGroup(orgId, {
-          id: group.id,
-          ...data,
-        })
-        history.push(`/${orgId}${ROUTES.GROUPS_ROOT}/${group.id}`)
+        await editGroup(group.id, data)
+        history.push(`/${orgKey}${ROUTES.GROUPS_ROOT}/${group.id}`)
 
         addToast(<FormattedMessage id="groups.edit.success" />, {
           appearance: 'success',
@@ -41,12 +39,12 @@ export const EditGroupPage = () => {
         })
       }
     },
-    [addToast, editGroup, group, history, orgId]
+    [addToast, editGroup, group, history, orgKey]
   )
 
   useEffect(() => {
-    fetchGroup(orgId, id)
-  }, [fetchGroup, id, orgId])
+    fetchGroup(id)
+  }, [fetchGroup, id])
   // TODO: implement 404
 
   return (

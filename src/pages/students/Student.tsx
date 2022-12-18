@@ -25,7 +25,7 @@ export const StudentPage = () => {
     groupsOfStudent,
     fetching: fetchingGroups,
   } = useStudentsOfGroupState()
-  const student = studentsById[id]
+  const student = studentsById.get(id)
   const orgKey = useOrgId()
   const organization = useCurrentOrg()
   const orgId = organization?.id
@@ -48,25 +48,25 @@ export const StudentPage = () => {
   }, [fetchStudent, id, orgId])
 
   useEffect(() => {
-    fetchGroups(orgKey)
+    fetchGroups()
     return () => {
       clearGroups()
     }
-  }, [clearGroups, fetchGroups, orgKey])
+  }, [clearGroups, fetchGroups])
 
   useEffect(() => {
-    if (student?.outerId) {
-      fetchGroupsOfStudent(orgKey, [student.outerId], new Date())
+    if (student?.id) {
+      fetchGroupsOfStudent(student.id, new Date())
       return () => clearGroupOfStudents()
     }
-  }, [clearGroupOfStudents, fetchGroupsOfStudent, orgKey, student?.outerId])
+  }, [clearGroupOfStudents, fetchGroupsOfStudent, student?.id])
 
   useEffect(() => {
     if (groups.length) {
       // TODO: probably we need to fetch attendance only for ongoing groups
       fetchAttendancesForGroups(
         orgKey,
-        groups.map((g) => g.id)
+        groups.map((g) => g.outerId)
       )
     }
   }, [fetchAttendancesForGroups, groups, orgKey])

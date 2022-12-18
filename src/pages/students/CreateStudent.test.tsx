@@ -19,6 +19,7 @@ describe('CreateStudent', () => {
       name: 'orgName',
     })
   })
+
   test('do not fail', async () => {
     render(<Component />)
 

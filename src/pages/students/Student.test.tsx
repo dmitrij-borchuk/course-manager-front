@@ -127,28 +127,50 @@ describe('Student', () => {
     ])
     const from = new Date()
     from.setMonth(from.getMonth() - 1)
-    getDocs.mockDataByPath('organizations/orgId/groups', [
-      {
-        id: 'group1',
-        name: 'group name',
-        teacher: 'teacherId',
-      },
-    ])
-    getDocs.mockDataByPath('organizations/orgId/studentsToGroups', [
-      {
-        groupId: 'group1',
-        studentId: 'st1',
-        startDate: from.getTime(),
-        endDate: null,
-      },
-      {
-        groupId: 'group2',
-        studentId: 'st1',
-        startDate: from.getTime(),
-        endDate: null,
-      },
-    ])
+    // getDocs.mockDataByPath('organizations/orgId/groups', [
+    //   {
+    //     id: 'group1',
+    //     name: 'group name',
+    //     teacher: 'teacherId',
+    //   },
+    // ])
+    // getDocs.mockDataByPath('organizations/orgId/studentsToGroups', [
+    //   {
+    //     groupId: 'group1',
+    //     studentId: 'st1',
+    //     startDate: from.getTime(),
+    //     endDate: null,
+    //   },
+    //   {
+    //     groupId: 'group2',
+    //     studentId: 'st1',
+    //     startDate: from.getTime(),
+    //     endDate: null,
+    //   },
+    // ])
 
+    axiosMock.onGet('/activities').reply(200, [
+      {
+        id: 1,
+        outerId: 'group1',
+        name: 'group name',
+        performerId: 1,
+      },
+    ])
+    axiosMock.onGet(new RegExp('/activities/byParticipant/1')).reply(200, [
+      {
+        id: 1,
+        outerId: 'group1',
+        name: 'group name',
+        performerId: 1,
+      },
+      {
+        id: 2,
+        outerId: 'group2',
+        name: 'group name 2',
+        performerId: 1,
+      },
+    ])
     axiosMock.onGet('/organizations').reply(200, [
       {
         id: 1,

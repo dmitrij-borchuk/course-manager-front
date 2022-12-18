@@ -1,5 +1,5 @@
-import { useCallback, useMemo, useState } from 'react'
-import { getUserByOuterIdRequest, getUserRequest, getUsersRequest } from '../api/users'
+import { useCallback, useState } from 'react'
+import { getUserRequest, getUsersRequest } from '../api/users'
 import { useDictionaryToArray } from '../hooks/useDictionaryToArray'
 import { Dictionary } from '../types/dictionary'
 import { OrganizationUser } from '../types/user'
@@ -9,20 +9,10 @@ export default function useTeachersStore() {
   const [teachersById, setTeachersById] = useState<Dictionary<OrganizationUser>>({})
   const teachers = useDictionaryToArray(teachersById)
   const [fetching, setFetching] = useState(false)
-  const teachersByOuterId = useMemo(() => {
-    const result: Dictionary<OrganizationUser> = {}
-    teachers.forEach((teacher) => {
-      if (teacher.outerId) {
-        result[teacher.outerId] = teacher
-      }
-    })
-    return result
-  }, [teachers])
 
   return {
     teachers,
     teachersById,
-    teachersByOuterId,
     fetching,
     setTeacher: useCallback((id: string, data?: OrganizationUser) => {
       setTeachersById((state) => {
@@ -48,12 +38,6 @@ export default function useTeachersStore() {
       setFetching(true)
       const resp = await getUserRequest(orgId, id)
       setTeachersById((state) => ({ ...state, [id]: resp.data }))
-      setFetching(false)
-    }, []),
-    fetchTeacherByOuterId: useCallback(async (orgId: number, id: string) => {
-      setFetching(true)
-      const resp = await getUserByOuterIdRequest(orgId, id)
-      setTeachersById((state) => ({ ...state, [resp.data.id]: resp.data }))
       setFetching(false)
     }, []),
   }

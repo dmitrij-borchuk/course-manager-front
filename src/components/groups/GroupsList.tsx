@@ -2,6 +2,7 @@ import React, { useCallback, useMemo, useState } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { ROUTES } from '../../constants'
 import { useOrgId } from '../../hooks/useOrgId'
+import { Activity } from '../../types/activity'
 import { Dictionary } from '../../types/dictionary'
 import { Group } from '../../types/group'
 import { AttendanceRateBadge } from '../kit/attendanceRateBadge/AttendancerateBadge'
@@ -11,13 +12,13 @@ import { ListPage } from '../kit/ListPage'
 interface Props {
   loading?: boolean
   className?: string
-  items?: Group[]
+  items?: Activity[]
   attendanceRates?: Dictionary<number>
 }
 export const GroupsList: React.FC<Props> = ({ className = '', loading = false, items = [], attendanceRates }) => {
   const orgId = useOrgId()
   const renderItem = useCallback(
-    (g: Group) => {
+    (g: TableContentItem) => {
       const attendanceRate = attendanceRates ? attendanceRates[g.id] : null
       return (
         <div className="flex justify-between">
@@ -56,11 +57,11 @@ export const GroupsList: React.FC<Props> = ({ className = '', loading = false, i
 type SortProps = 'name' | 'attendanceRate'
 
 type TableContentItem = {
-  id: string
+  id: number
   name: string
   attendanceRate?: number
 }
-function useSortingByHeader(items: Group[] = [], attendanceRates?: Dictionary<number>) {
+function useSortingByHeader(items: Activity[] = [], attendanceRates?: Dictionary<number>) {
   const [sortId, setSortId] = useState<SortProps>('name')
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc')
   const onSort = useCallback((newSortId: SortProps, order: 'asc' | 'desc') => {

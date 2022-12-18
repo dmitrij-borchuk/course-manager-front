@@ -9,6 +9,7 @@ import { Attendance } from '../../types/attendance'
 import { StudentOfGroup } from '../../types/studentOfGroup'
 import { Student } from '../../types/student'
 import { resetAttendanceCache } from '../../store/attendancesStore'
+import { Activity } from '../../types/activity'
 
 jest.mock('react-router-dom', () => {
   return {
@@ -68,15 +69,12 @@ describe('ReportByGroupTab', () => {
   })
 
   test('should generate report with sorting', async () => {
-    const { attendances, groups, students, studentsOfGroup } = getSortingDataMocks()
-    mockGetDocs(groups, studentsOfGroup, attendances)
-    axiosMock.onGet(`/students/byOrganization/1`).reply(200, students)
-    axiosMock.onGet('/organizations').reply(200, [
-      {
-        id: 1,
-        key: 'orgId',
-      },
-    ])
+    const { attendances, groups, students } = getSortingDataMocks()
+    mockGetDocs(attendances)
+    axiosMock.onGet(`/activities`).reply(200, groups)
+    groups.forEach((g) => {
+      axiosMock.onGet(new RegExp(`/students/byActivity/${g.id}`)).reply(200, students)
+    })
     usePDF.mockReturnValue([{ url: 'instance.url' } as any, jest.fn()])
 
     render(
@@ -104,9 +102,12 @@ describe('ReportByGroupTab', () => {
     expect(persents[2]).toBe('100%')
   })
   test('should generate report with desc sorting', async () => {
-    const { attendances, groups, students, studentsOfGroup } = getSortingDataMocks()
-    mockGetDocs(groups, studentsOfGroup, attendances)
-    axiosMock.onGet(`/students/byOrganization/1`).reply(200, students)
+    const { attendances, groups, students } = getSortingDataMocks()
+    mockGetDocs(attendances)
+    axiosMock.onGet(`/activities`).reply(200, groups)
+    groups.forEach((g) => {
+      axiosMock.onGet(new RegExp(`/students/byActivity/${g.id}`)).reply(200, students)
+    })
     usePDF.mockReturnValue([{} as any, jest.fn()])
 
     render(
@@ -136,10 +137,17 @@ describe('ReportByGroupTab', () => {
     expect(persents[2]).toBe('0%')
   })
   test('should render attendance rate as integer', async () => {
-    const groups: Group[] = [
+    const groups: Activity[] = [
       {
-        id: 'g1',
+        id: 1,
         name: 'g1',
+        createdAt: new Date().toISOString(),
+        organization: 1,
+        outerId: 'g1',
+        performerId: 1,
+        type: 'group',
+        updatedAt: new Date().toISOString(),
+        updatedBy: 1,
       },
     ]
     const attendances: Attendance[] = [
@@ -171,22 +179,6 @@ describe('ReportByGroupTab', () => {
         teacher: '',
       },
     ]
-    const studentsOfGroup: StudentOfGroup[] = [
-      {
-        id: 'g1',
-        endDate: null,
-        groupId: 'g1',
-        startDate: new Date().getTime(),
-        studentId: 's1',
-      },
-      {
-        id: 'g1s2',
-        endDate: null,
-        groupId: 'g1',
-        startDate: new Date().getTime(),
-        studentId: 's2',
-      },
-    ]
     const students: Student[] = [
       {
         id: 1,
@@ -201,9 +193,12 @@ describe('ReportByGroupTab', () => {
         tags: [],
       },
     ]
-    mockGetDocs(groups, studentsOfGroup, attendances)
+    mockGetDocs(attendances)
     usePDF.mockReturnValue([{ url: 'url' } as any, jest.fn()])
-    axiosMock.onGet(`/students/byOrganization/1`).reply(200, students)
+    axiosMock.onGet(`/activities`).reply(200, groups)
+    groups.forEach((g) => {
+      axiosMock.onGet(new RegExp(`/students/byActivity/${g.id}`)).reply(200, students)
+    })
 
     render(
       <TestWrapper>
@@ -229,10 +224,17 @@ describe('ReportByGroupTab', () => {
     expect(persents[1]).toBe('N/A')
   })
   test('should render attendance rate between dates', async () => {
-    const groups: Group[] = [
+    const groups: Activity[] = [
       {
-        id: 'g1',
+        id: 1,
         name: 'g1',
+        createdAt: new Date().toISOString(),
+        organization: 1,
+        outerId: 'g1',
+        performerId: 1,
+        type: 'group',
+        updatedAt: new Date().toISOString(),
+        updatedBy: 1,
       },
     ]
     const attendances: Attendance[] = [
@@ -267,22 +269,6 @@ describe('ReportByGroupTab', () => {
         teacher: '',
       },
     ]
-    const studentsOfGroup: StudentOfGroup[] = [
-      {
-        id: 'g1',
-        endDate: null,
-        groupId: 'g1',
-        startDate: new Date('Wed May 10 2022 19:00:00').getTime(),
-        studentId: 's1',
-      },
-      {
-        id: 'g1s2',
-        endDate: null,
-        groupId: 'g1',
-        startDate: new Date('Wed May 10 2022 19:00:00').getTime(),
-        studentId: 's2',
-      },
-    ]
     const students: Student[] = [
       {
         id: 1,
@@ -297,9 +283,12 @@ describe('ReportByGroupTab', () => {
         tags: [],
       },
     ]
-    mockGetDocs(groups, studentsOfGroup, attendances)
+    mockGetDocs(attendances)
     usePDF.mockReturnValue([{} as any, jest.fn()])
-    axiosMock.onGet(`/students/byOrganization/1`).reply(200, students)
+    axiosMock.onGet(`/activities`).reply(200, groups)
+    groups.forEach((g) => {
+      axiosMock.onGet(new RegExp(`/students/byActivity/${g.id}`)).reply(200, students)
+    })
 
     render(
       <TestWrapper>
@@ -330,9 +319,12 @@ describe('ReportByGroupTab', () => {
   })
 
   test('should show report only related to group selected', async () => {
-    const { attendances, groups, students, studentsOfGroup } = getGroupsFilteringData()
-    mockGetDocs(groups, studentsOfGroup, attendances)
-    axiosMock.onGet(`/students/byOrganization/1`).reply(200, students)
+    const { attendances, groups, students } = getGroupsFilteringData()
+    mockGetDocs(attendances)
+    axiosMock.onGet(`/activities`).reply(200, groups)
+    groups.forEach((g) => {
+      axiosMock.onGet(new RegExp(`/students/byActivity/${g.id}`)).reply(200, students)
+    })
 
     render(
       <TestWrapper>
@@ -368,15 +360,9 @@ describe('ReportByGroupTab', () => {
   }
 })
 
-function mockGetDocs(groups: Group[], studentsOfGroup: StudentOfGroup[], attendances: Attendance[]) {
+function mockGetDocs(attendances: Attendance[]) {
   getDocs.mockImplementation((query) => {
     const path = query as unknown as string
-    if (path === 'organizations/orgId/groups') {
-      return Promise.resolve(getFirebaseSnapshotFromArray(groups))
-    }
-    if (path === 'organizations/orgId/studentsToGroups') {
-      return Promise.resolve(getFirebaseSnapshotFromArray(studentsOfGroup))
-    }
     if (path === 'organizations/orgId/attendances') {
       return Promise.resolve(getFirebaseSnapshotFromArray(attendances))
     }
@@ -385,10 +371,17 @@ function mockGetDocs(groups: Group[], studentsOfGroup: StudentOfGroup[], attenda
 }
 
 function getSortingDataMocks() {
-  const groups: Group[] = [
+  const groups: Activity[] = [
     {
-      id: 'g1',
+      id: 1,
       name: 'g1',
+      createdAt: new Date().toISOString(),
+      organization: 1,
+      outerId: 'g1',
+      performerId: 1,
+      type: 'group',
+      updatedAt: new Date().toISOString(),
+      updatedBy: 1,
     },
   ]
   const attendances: Attendance[] = [
@@ -415,29 +408,6 @@ function getSortingDataMocks() {
       teacher: '',
     },
   ]
-  const studentsOfGroup: StudentOfGroup[] = [
-    {
-      id: 'g1',
-      endDate: null,
-      groupId: 'g1',
-      startDate: new Date().getTime(),
-      studentId: 's1',
-    },
-    {
-      id: 'g11',
-      endDate: null,
-      groupId: 'g1',
-      startDate: new Date().getTime(),
-      studentId: 's2',
-    },
-    {
-      id: 'g12',
-      endDate: null,
-      groupId: 'g1',
-      startDate: new Date().getTime(),
-      studentId: 's3',
-    },
-  ]
   const students: Student[] = [
     {
       id: 1,
@@ -462,20 +432,33 @@ function getSortingDataMocks() {
   return {
     groups,
     attendances,
-    studentsOfGroup,
     students,
   }
 }
 
 function getGroupsFilteringData() {
-  const groups: Group[] = [
+  const groups: Activity[] = [
     {
-      id: 'g1',
+      id: 1,
       name: 'g1',
+      createdAt: new Date().toISOString(),
+      organization: 1,
+      outerId: 'g1',
+      performerId: 1,
+      type: 'group',
+      updatedAt: new Date().toISOString(),
+      updatedBy: 1,
     },
     {
-      id: 'g2',
+      id: 2,
       name: 'g2',
+      createdAt: new Date().toISOString(),
+      organization: 1,
+      outerId: 'g1',
+      performerId: 1,
+      type: 'group',
+      updatedAt: new Date().toISOString(),
+      updatedBy: 1,
     },
   ]
   const attendances: Attendance[] = [
@@ -507,22 +490,6 @@ function getGroupsFilteringData() {
       teacher: '',
     },
   ]
-  const studentsOfGroup: StudentOfGroup[] = [
-    {
-      id: 'g1',
-      endDate: null,
-      groupId: 'g1',
-      startDate: new Date().getTime(),
-      studentId: 's1',
-    },
-    {
-      id: 'g21',
-      endDate: null,
-      groupId: 'g2',
-      startDate: new Date().getTime(),
-      studentId: 's1',
-    },
-  ]
   const students: Student[] = [
     {
       id: 1,
@@ -535,7 +502,6 @@ function getGroupsFilteringData() {
   return {
     groups,
     attendances,
-    studentsOfGroup,
     students,
   }
 }

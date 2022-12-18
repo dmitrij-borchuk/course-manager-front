@@ -9,30 +9,28 @@ import { useAttendancesState, useGroupsState } from '../../store'
 export const GroupsListPage = () => {
   const { fetchGroups, clearGroups, groups, fetching } = useGroupsState()
   const { attendances, clearAttendances, fetchAttendancesForGroups } = useAttendancesState()
-  const orgId = useOrgId()
+  const orgKey = useOrgId()
   const rateByGroup = useAttendanceRateByGroups(groups, attendances)
 
   useEffect(() => {
-    if (orgId) {
-      fetchGroups(orgId)
-      return () => {
-        clearGroups()
-      }
+    fetchGroups()
+    return () => {
+      clearGroups()
     }
-  }, [clearGroups, fetchGroups, orgId])
+  }, [clearGroups, fetchGroups])
 
   useEffect(() => {
     if (groups.length) {
       // TODO: probably we need to fetch attendance only for ongoing groups
       fetchAttendancesForGroups(
-        orgId,
-        groups.map((g) => g.id)
+        orgKey,
+        groups.map((g) => g.outerId)
       )
       return () => {
         clearAttendances()
       }
     }
-  }, [clearAttendances, fetchAttendancesForGroups, groups, orgId])
+  }, [clearAttendances, fetchAttendancesForGroups, groups, orgKey])
 
   return (
     <>

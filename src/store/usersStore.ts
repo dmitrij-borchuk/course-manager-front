@@ -9,17 +9,17 @@ import {
   updateUser,
 } from '../api/users'
 import { Role } from '../config'
-import { useDictionaryToArray } from '../hooks/useDictionaryToArray'
-import { Dictionary } from '../types/dictionary'
+import { useMapToArray } from '../hooks/useMapToArray'
 import { InviteForm } from '../types/invite'
 import { OrganizationUser, User } from '../types/user'
-import { sendToAnalytics } from '../utils/analitics'
+import { sendToAnalytics } from '../utils/analytics'
 
 export default function useUsersStore() {
   const history = useHistory()
   const [profile, setProfile] = useState<User>()
-  const [usersById, setUsersById] = useState<Dictionary<OrganizationUser>>({})
-  const users = useDictionaryToArray(usersById)
+  const [usersById, setUsersById] = useState<Map<number, OrganizationUser>>(new Map())
+  const [usersByOuterId, setUsersByOuterId] = useState<Map<string, OrganizationUser>>(new Map())
+  const users = useMapToArray(usersById)
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<Error>()
   const [fetching, setFetching] = useState(false)
@@ -30,6 +30,7 @@ export default function useUsersStore() {
     error,
     fetching,
     usersById,
+    usersByOuterId,
     users,
     inviteUser: useCallback(async (orgId: number, data: InviteForm) => {
       setSubmitting(true)
@@ -66,7 +67,8 @@ export default function useUsersStore() {
     fetchOrgUser: useCallback(async (orgId: number, id: string) => {
       setFetching(true)
       const res = await getUserByOuterIdRequest(orgId, id)
-      setUsersById((items) => ({ ...items, [res.data.id]: res.data }))
+      setUsersById((items) => new Map([...items.entries(), [res.data.id, res.data]]))
+      setUsersByOuterId((items) => new Map([...items.entries(), [res.data.outerId, res.data]]))
       setFetching(false)
     }, []),
     fetchProfile: useCallback(async () => {

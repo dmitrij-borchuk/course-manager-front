@@ -119,9 +119,9 @@ function useAttendance() {
     }
     try {
       if (org.role === ROLES.Administrator) {
-        await fetchGroups(orgKey)
+        await fetchGroups()
       } else {
-        await fetchGroupsOfTeacher(orgKey, organizationUser.outerId)
+        await fetchGroupsOfTeacher(organizationUser.id)
       }
     } catch (error: any) {
       addToast(error.message, {
@@ -129,7 +129,7 @@ function useAttendance() {
         autoDismiss: true,
       })
     }
-  }, [addToast, fetchGroups, fetchGroupsOfTeacher, org, orgKey, organizationUser])
+  }, [addToast, fetchGroups, fetchGroupsOfTeacher, org, organizationUser])
   const loadMore = useCallback(() => {
     if (isLoading) {
       return

@@ -3,13 +3,15 @@ import { FormattedMessage } from 'react-intl'
 // import { Button } from 'react-materialize'
 import { Link } from 'react-router-dom'
 import { ROUTES } from '../../constants'
+import { Activity } from '../../types/activity'
 import { GroupFull } from '../../types/group'
+import { OrganizationUser } from '../../types/user'
 import { IconButton } from '../kit/buttons/IconButton'
 import { Text } from '../kit/text/Text'
 // import { WeekdaySelector } from '../kit/weekdaySelector/WeekdaySelector'
 
 interface Props {
-  group: GroupFull
+  group: any
 }
 export const ScheduleInfoBlock = ({ group }: Props) => {
   const { schedules } = group

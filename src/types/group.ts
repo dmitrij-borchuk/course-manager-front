@@ -1,9 +1,12 @@
 import { OrganizationUser } from './user'
 
+// TODO: probably we need to remove this file
+
 export type GroupBase = {
   name: string
 }
 
+// TODO: remove
 export type Group = GroupBase & {
   id: string
   teacher?: string

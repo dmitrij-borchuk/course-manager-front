@@ -22,7 +22,7 @@ export const EditStudentPage = () => {
   const { addToast } = useToasts()
   const organization = useCurrentOrg()
 
-  const student = studentsById[id]
+  const student = studentsById.get(id)
   const update = useCallback(
     async (data: StudentForm) => {
       if (!student) {

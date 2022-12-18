@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo } from 'react'
-import { useParams } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
 import { useAttendancesState, useGroupsState, useStudentsOfGroupState, useTeachersState } from '../../store'
 import { Group } from '../../components/groups/Group'
@@ -7,11 +7,13 @@ import { useOrgId } from '../../hooks/useOrgId'
 import { useAttendanceRateByStudent } from '../../hooks/useAttendanceRate'
 import { useCurrentOrg } from '../../hooks/useCurrentOrg'
 import { TITLE_POSTFIX } from '../../config'
+import { ROUTES } from '../../constants'
 
 export const GroupPage = () => {
-  let { id } = useParams<{ id: string }>()
+  let params = useParams<{ id: string }>()
+  const id = parseInt(params.id, 10)
   const { fetchGroup, groupsById, deleteGroup } = useGroupsState()
-  const { fetchTeacherByOuterId, teachersByOuterId } = useTeachersState()
+  const { fetchTeacher, teachersById } = useTeachersState()
   const {
     fetchStudentsOfGroup,
     clearStudentsOfGroup,
@@ -20,10 +22,11 @@ export const GroupPage = () => {
     fetching: loadingGroups,
   } = useStudentsOfGroupState()
   const { attendances, clearAttendances, fetchAttendancesForGroups } = useAttendancesState()
-  const group = groupsById[id]
-  const teacher = teachersByOuterId[group?.teacher || '']
+  const group = groupsById.get(id)
+  const teacher = teachersById[group?.performerId || '']
+  const history = useHistory()
   const groupFull = useMemo(() => {
-    if (!group || (group?.teacher && !teacher)) {
+    if (!group || (group?.performerId && !teacher)) {
       return undefined
     }
 
@@ -33,34 +36,40 @@ export const GroupPage = () => {
     }
   }, [group, teacher])
   const orgKey = useOrgId()
-  const onDelete = useCallback(() => deleteGroup(orgKey, id), [deleteGroup, id, orgKey])
+  const onDelete = useCallback(() => {
+    deleteGroup(id)
+
+    history.push(`/${orgKey}${ROUTES.GROUPS_LIST}`)
+  }, [deleteGroup, history, id, orgKey])
   const attendancesOfGroup = useMemo(() => {
-    return attendances.filter((a) => a.group === id)
-  }, [attendances, id])
+    return attendances.filter((a) => a.group === group?.outerId)
+  }, [attendances, group?.outerId])
   const attendanceRate = useAttendanceRateByStudent(attendancesOfGroup)
-
-  useEffect(() => {
-    fetchGroup(orgKey, id)
-  }, [fetchGroup, id, orgKey])
-
   const org = useCurrentOrg()
   const orgId = org?.id
-  useEffect(() => {
-    if (group?.teacher && !teacher && org?.id) {
-      fetchTeacherByOuterId(org.id, group.teacher)
-    }
-  }, [fetchTeacherByOuterId, group?.teacher, org?.id, teacher])
 
   useEffect(() => {
-    if (group?.id && orgId) {
-      fetchStudentsOfGroup(orgId, orgKey, group.id, new Date())
+    if (orgId) {
+      fetchGroup(id)
+    }
+  }, [fetchGroup, id, orgId])
+
+  useEffect(() => {
+    if (group?.performerId && !teacher && org?.id) {
+      fetchTeacher(org.id, group.performerId)
+    }
+  }, [fetchTeacher, group?.performerId, org?.id, teacher])
+
+  useEffect(() => {
+    if (group?.id) {
+      fetchStudentsOfGroup(group.id, new Date())
       return () => clearStudentsOfGroup()
     }
-  }, [clearStudentsOfGroup, fetchStudentsOfGroup, group?.id, orgKey, orgId])
+  }, [clearStudentsOfGroup, fetchStudentsOfGroup, group?.id])
 
   useEffect(() => {
     if (group) {
-      fetchAttendancesForGroups(orgKey, [group.id])
+      fetchAttendancesForGroups(orgKey, [group.outerId])
       return () => {
         clearAttendances()
       }

@@ -3,12 +3,11 @@ import { FormattedMessage } from 'react-intl'
 import { Button, Dropdown, Preloader } from 'react-materialize'
 import { Link } from 'react-router-dom'
 import { ROUTES } from '../../constants'
-import { useCurrentOrg } from '../../hooks/useCurrentOrg'
 import { useNotification } from '../../hooks/useNotification'
 import { useOrgId } from '../../hooks/useOrgId'
 import { useStudentsOfGroupState } from '../../store'
+import { Activity } from '../../types/activity'
 import { Dictionary } from '../../types/dictionary'
-import { Group } from '../../types/group'
 import { Student } from '../../types/student'
 import { noop } from '../../utils/common'
 import { AttendanceRateBadge } from '../kit/attendanceRateBadge/AttendancerateBadge'
@@ -21,7 +20,7 @@ import { AssignStudents } from './AssignStudents'
 
 interface StudentsInfoBlockProps {
   students?: Student[]
-  group: Group
+  group: Activity
   attendanceRates: Dictionary<number>
   loadingGroups?: boolean
 }
@@ -32,25 +31,20 @@ export const StudentsInfoBlock = ({
   loadingGroups = false,
 }: StudentsInfoBlockProps) => {
   const { showSuccess } = useNotification()
-  const orgKey = useOrgId()
-  const org = useCurrentOrg()
-  const orgId = org?.id
   const { deleteStudentFromGroup } = useStudentsOfGroupState()
   const [loading, setLoading] = useState<Dictionary<boolean>>({})
   const { fetchStudentsOfGroup } = useStudentsOfGroupState()
   const refetchStudents = useCallback(async () => {
-    if (orgId) {
-      fetchStudentsOfGroup(orgId, orgKey, group.id, new Date())
-    }
-  }, [fetchStudentsOfGroup, group.id, orgId, orgKey])
+    fetchStudentsOfGroup(group.id, new Date())
+  }, [fetchStudentsOfGroup, group.id])
   const onStudentRemove = useCallback(
-    async (id: string) => {
+    async (id: number) => {
       setLoading((l) => {
         l[id] = true
         return l
       })
       try {
-        await deleteStudentFromGroup(orgKey, id, group.id)
+        await deleteStudentFromGroup(group.id, id)
         refetchStudents()
         showSuccess(<FormattedMessage id="groups.unassignStudents.success" />)
       } catch (error) {
@@ -66,7 +60,7 @@ export const StudentsInfoBlock = ({
         })
       }
     },
-    [deleteStudentFromGroup, group.id, orgKey, refetchStudents, showSuccess]
+    [deleteStudentFromGroup, group.id, refetchStudents, showSuccess]
   )
   const renderItem = useMemo(
     () => getStudentItemRender(attendanceRates, loading, onStudentRemove),
@@ -104,19 +98,14 @@ export const StudentsInfoBlock = ({
 }
 
 interface NoStudentsInfoBlockProps {
-  group: Group
+  group: Activity
   students?: Student[]
 }
 const NoStudentsInfoBlock = ({ group, students }: NoStudentsInfoBlockProps) => {
-  const orgKey = useOrgId()
-  const org = useCurrentOrg()
-  const orgId = org?.id
   const { fetchStudentsOfGroup } = useStudentsOfGroupState()
   const refetchStudents = useCallback(async () => {
-    if (orgId) {
-      fetchStudentsOfGroup(orgId, orgKey, group.id, new Date())
-    }
-  }, [fetchStudentsOfGroup, group.id, orgId, orgKey])
+    fetchStudentsOfGroup(group.id, new Date())
+  }, [fetchStudentsOfGroup, group.id])
 
   return (
     <div className="text-center">
@@ -142,7 +131,7 @@ const NoStudentsInfoBlock = ({ group, students }: NoStudentsInfoBlockProps) => {
 interface StudentWithAttendanceProps {
   data: Student
   attendanceRate?: number
-  onRemoveClick?: (id: string) => void
+  onRemoveClick?: (id: number) => void
   loading?: boolean
 }
 const StudentWithAttendance = ({
@@ -189,7 +178,7 @@ const StudentWithAttendance = ({
           }
         >
           {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-          <a href="#" className="whitespace-nowrap w-52" onClick={() => onRemoveClick(data.outerId)}>
+          <a href="#" className="whitespace-nowrap w-52" onClick={() => onRemoveClick(data.id)}>
             <FormattedMessage id="groups.studentList.removeBtn" />
           </a>
         </Dropdown>
@@ -201,7 +190,7 @@ const StudentWithAttendance = ({
 function getStudentItemRender(
   attendances: Dictionary<number>,
   loading: Dictionary<boolean> = {},
-  onRemoveClick?: (id: string) => void
+  onRemoveClick?: (id: number) => void
 ) {
   return (data: Student) => (
     <StudentWithAttendance

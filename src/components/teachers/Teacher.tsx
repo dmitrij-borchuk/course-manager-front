@@ -3,8 +3,8 @@ import { FormattedMessage } from 'react-intl'
 import { Button, Container } from 'react-materialize'
 import { ROUTES } from '../../constants'
 import { useOrgId } from '../../hooks/useOrgId'
+import { Activity } from '../../types/activity'
 import { Dictionary } from '../../types/dictionary'
-import { Group } from '../../types/group'
 import { OrganizationUser } from '../../types/user'
 import { AttendanceRateBadge } from '../kit/attendanceRateBadge/AttendancerateBadge'
 import { IconButton } from '../kit/buttons/IconButton'
@@ -20,7 +20,7 @@ interface Props {
   data: OrganizationUser
   // onDelete: () => void
   attendanceRates: Dictionary<number>
-  teachersGroups?: Group[]
+  teachersGroups?: Activity[]
 }
 export const Teacher: React.FC<Props> = ({ className = '', data, attendanceRates, teachersGroups = [] }) => {
   const { name } = data
@@ -60,7 +60,7 @@ export const Teacher: React.FC<Props> = ({ className = '', data, attendanceRates
 interface GroupsInfoBlockProps {
   teacher: OrganizationUser
   attendanceRates: Dictionary<number>
-  teachersGroups?: Group[]
+  teachersGroups?: Activity[]
 }
 const GroupsInfoBlock = ({ teacher, attendanceRates, teachersGroups = [] }: GroupsInfoBlockProps) => {
   const renderItem = useMemo(() => getGroupItemRender(attendanceRates), [attendanceRates])
@@ -115,7 +115,7 @@ const NoGroupsInfoBlock = ({ teacher }: NoGroupsInfoBlockProps) => {
 }
 
 interface GroupWithAttendanceProps {
-  group: Group
+  group: Activity
   attendanceRate?: number
 }
 const GroupWithAttendance = ({ group, attendanceRate }: GroupWithAttendanceProps) => {
@@ -133,5 +133,5 @@ const GroupWithAttendance = ({ group, attendanceRate }: GroupWithAttendanceProps
 }
 
 function getGroupItemRender(attendances: Dictionary<number>) {
-  return (data: Group) => <GroupWithAttendance key={data.id} group={data} attendanceRate={attendances[data.id]} />
+  return (data: Activity) => <GroupWithAttendance key={data.id} group={data} attendanceRate={attendances[data.id]} />
 }

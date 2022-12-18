@@ -1,26 +1,22 @@
 import { useCallback, useState } from 'react'
-import { useHistory } from 'react-router'
-import { nanoid } from 'nanoid'
-import { makeOrgCollection } from '../api/firebase/collections'
-import { ROUTES } from '../constants'
-import { useDictionaryToArray } from '../hooks/useDictionaryToArray'
-import { Dictionary } from '../types/dictionary'
-import { Group, NewGroup } from '../types/group'
-import { arrayToDictionary } from '../utils/common'
-import { StudentOfGroup } from '../types/studentOfGroup'
+import { NewGroup } from '../types/group'
+import { deleteActivity, editActivity, fetchActivities, fetchActivity } from '../api/activities'
+import { Activity } from '../types/activity'
 
+// TODO: remove?
 export default function useGroupsStore() {
-  const history = useHistory()
-  const [groupsById, setGroupsById] = useState<Dictionary<Group>>({})
-  const groups = useDictionaryToArray(groupsById)
+  const [groupsById, setGroupsById] = useState<Map<number, Activity>>(new Map())
+  const groups = Array.from(groupsById.values())
   const [fetching, setFetching] = useState(false)
   const [submitting, setSubmitting] = useState(false)
 
-  const fetchGroup = useCallback(async (orgId: string, id: string) => {
+  const fetchGroup = useCallback(async (id: number) => {
     setFetching(true)
-    const groupsCollection = makeOrgCollection<Group>('groups', orgId)
-    const resp = await groupsCollection.getById(id)
-    setGroupsById((state) => ({ ...state, [resp.id]: resp }))
+    const resp = await fetchActivity(id)
+    setGroupsById((state) => {
+      state.set(resp.data.id, resp.data)
+      return state
+    })
     setFetching(false)
   }, [])
 
@@ -30,26 +26,24 @@ export default function useGroupsStore() {
     submitting,
     fetching,
 
-    fetchGroups: useCallback(async (orgId: string) => {
+    fetchGroups: useCallback(async () => {
       try {
         setFetching(true)
-        const groupsCollection = makeOrgCollection<Group>('groups', orgId)
-        const resp = await groupsCollection.getAll()
-        const newGroupsById = arrayToDictionary(resp)
-        setGroupsById(newGroupsById)
+        const resp = await fetchActivities()
+        setGroupsById(new Map(resp.data.map((group) => [group.id, group])))
         setFetching(false)
       } catch (error) {
         setFetching(false)
         throw error
       }
     }, []),
-    fetchGroupsOfTeacher: useCallback(async (orgId: string, teacherId: string) => {
+    fetchGroupsOfTeacher: useCallback(async (teacherId: number) => {
       try {
         setFetching(true)
-        const groupsCollection = makeOrgCollection<Group>('groups', orgId)
-        const resp = await groupsCollection.query('teacher', '==', teacherId)
-        const newGroupsById = arrayToDictionary(resp)
-        setGroupsById(newGroupsById)
+        const resp = await fetchActivities({
+          performerId: teacherId,
+        })
+        setGroupsById(new Map(resp.data.map((group) => [group.id, group])))
         setFetching(false)
       } catch (error) {
         setFetching(false)
@@ -57,18 +51,14 @@ export default function useGroupsStore() {
       }
     }, []),
     fetchGroup,
-    editGroup: useCallback(async (orgId: string, data: Partial<Group>) => {
+    editGroup: useCallback(async (id: number, data: Partial<Activity>) => {
       setSubmitting(true)
-      const groupsCollection = makeOrgCollection<Group>('groups', orgId)
       try {
-        const result = await groupsCollection.save(data)
-        setGroupsById((state) => ({
-          ...state,
-          [result.id]: {
-            ...state[result.id],
-            ...data,
-          },
-        }))
+        const result = await editActivity(id, data)
+        setGroupsById((state) => {
+          state.set(result.data.id, result.data)
+          return state
+        })
         setSubmitting(false)
       } catch (error) {
         setSubmitting(false)
@@ -77,41 +67,33 @@ export default function useGroupsStore() {
     }, []),
     createGroup: useCallback(async (orgId: string, data: NewGroup) => {
       setSubmitting(true)
-      const groupsCollection = makeOrgCollection<Group>('groups', orgId)
-      try {
-        const result = await groupsCollection.save({ ...data, id: nanoid() })
-        setGroupsById((state) => ({ ...state, [result.id]: { ...data, id: result.id } }))
-        setSubmitting(false)
-        return result
-      } catch (error) {
-        setSubmitting(false)
-        throw error
-      }
+      // TODO: implement
+
+      // const groupsCollection = makeOrgCollection<Group>('groups', orgId)
+      // try {
+      // const result = await groupsCollection.save({ ...data, id: nanoid() })
+      // setGroupsById((state) => ({ ...state, [result.id]: { ...data, id: result.id } }))
+      // setSubmitting(false)
+      // return result
+      // } catch (error) {
+      //   setSubmitting(false)
+      //   throw error
+      // }
     }, []),
     clearGroups: useCallback(() => {
-      setGroupsById({})
+      setGroupsById(new Map())
       setFetching(false)
     }, []),
-    deleteGroup: useCallback(
-      async (orgId: string, id: string) => {
-        setSubmitting(true)
+    deleteGroup: useCallback(async (id: number) => {
+      setSubmitting(true)
 
-        // Remove students from group
-        const student2groupCollection = makeOrgCollection<StudentOfGroup>('studentsToGroups', orgId)
-        const resp = await student2groupCollection.query('groupId', '==', id)
-        await Promise.all(resp.map((item) => student2groupCollection.delete(item.id)))
-
-        // Remove group itself
-        const groupsCollection = makeOrgCollection<Group>('groups', orgId)
-        await groupsCollection.delete(id)
-        setGroupsById((state) => {
-          delete state[id]
-          return state
-        })
-        setSubmitting(false)
-        history.push(`/${orgId}${ROUTES.GROUPS_LIST}`)
-      },
-      [history]
-    ),
+      // const groupsCollection = makeOrgCollection<Group>('groups', orgId)
+      await deleteActivity(id)
+      setGroupsById((state) => {
+        state.delete(id)
+        return state
+      })
+      setSubmitting(false)
+    }, []),
   }
 }

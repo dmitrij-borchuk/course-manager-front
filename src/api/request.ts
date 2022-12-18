@@ -1,6 +1,6 @@
 import axios, { AxiosError } from 'axios'
 
-const headers: Record<string, string> = {}
+const headers: Record<string, string | undefined> = {}
 const request = axios.create({
   baseURL: process.env.REACT_APP_API_GATEWAY,
   headers: headers,
@@ -29,7 +29,7 @@ request.interceptors.response.use(
   }
 )
 
-export function setHeader(key: string, value: string) {
+export function setHeader(key: string, value?: string) {
   headers[key] = value
 }
 

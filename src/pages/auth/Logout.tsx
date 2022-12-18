@@ -5,7 +5,7 @@ import { ROUTES } from '../../constants'
 import { useOrgIdNotStrict } from '../../hooks/useOrgId'
 import { useAuthState } from '../../store'
 import { TITLE_POSTFIX } from '../../config'
-import { sendToAnalytics } from '../../utils/analitics'
+import { sendToAnalytics } from '../../utils/analytics'
 
 export const LogoutPage = () => {
   const history = useHistory()

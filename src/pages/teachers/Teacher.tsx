@@ -18,13 +18,10 @@ export const TeacherPage = () => {
   const { attendances, clearAttendances, fetchAttendancesForGroups } = useAttendancesState()
   const { groups, fetchGroupsOfTeacher, clearGroups } = useGroupsState()
   const teacher = teachersById[id]
-  const orgId = useOrgId()
-  const rateByGroup = useAttendanceRateByGroups(groups, attendances)
-  const groupsOfTeacher = useMemo(
-    () => groups.filter((g) => g.teacher === teacher?.outerId),
-    [groups, teacher?.outerId]
-  )
+  const orgKey = useOrgId()
   const org = useCurrentOrg()
+  const rateByGroup = useAttendanceRateByGroups(groups, attendances)
+  const groupsOfTeacher = useMemo(() => groups.filter((g) => g.performerId === teacher?.id), [groups, teacher?.id])
 
   useEffect(() => {
     if (org) {
@@ -37,24 +34,24 @@ export const TeacherPage = () => {
     if (!teacher) {
       return
     }
-    fetchGroupsOfTeacher(orgId, teacher.outerId || '')
+    fetchGroupsOfTeacher(teacher.id)
     return () => {
       clearGroups()
     }
-  }, [clearGroups, fetchGroupsOfTeacher, teacher, orgId])
+  }, [clearGroups, fetchGroupsOfTeacher, teacher])
 
   useEffect(() => {
     if (groupsOfTeacher.length) {
       // TODO: probably we need to fetch attendance only for ongoing groups
       fetchAttendancesForGroups(
-        orgId,
-        groupsOfTeacher.map((g) => g.id)
+        orgKey,
+        groupsOfTeacher.map((g) => g.outerId)
       )
       return () => {
         clearAttendances()
       }
     }
-  }, [clearAttendances, fetchAttendancesForGroups, groupsOfTeacher, orgId])
+  }, [clearAttendances, fetchAttendancesForGroups, groupsOfTeacher, orgKey])
 
   // TODO: 404
 

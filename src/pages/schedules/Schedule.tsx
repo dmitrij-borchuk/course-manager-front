@@ -1,27 +1,23 @@
 import React, { useCallback, useEffect } from 'react'
-// import { useHistory } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
 import { useQuery } from '../../hooks/useQuery'
 import { useGroupsState } from '../../store'
-// import { createSchedule, editSchedule } from '../../services/schedule'
 import { EditSchedule, ScheduleFormData } from '../../components/Schedule/EditSchedule'
-// import { ROUTES } from '../../constants'
 import { Message } from '../../components/kit/message/Message'
-import { useOrgId } from '../../hooks/useOrgId'
 import { TITLE_POSTFIX } from '../../config'
 
 export const SchedulePage = () => {
   const query = useQuery()
-  const orgId = useOrgId()
-  const groupId = query.get('group')
+  const groupIdQuery = query.get('group')
+  const groupId = groupIdQuery ? parseInt(groupIdQuery) : null
   const { fetchGroup, groupsById } = useGroupsState()
-  const group = groupId ? groupsById[groupId] : null
+  const group = groupId ? groupsById.get(groupId) : null
 
   useEffect(() => {
     if (groupId) {
-      fetchGroup(orgId, groupId)
+      fetchGroup(groupId)
     }
-  }, [fetchGroup, groupId, orgId])
+  }, [fetchGroup, groupId])
 
   // We use only one schedule
   // const schedule = group?.schedules && group?.schedules[0]

@@ -3,8 +3,8 @@ import { FormattedMessage } from 'react-intl'
 import { Button, Preloader } from 'react-materialize'
 import { ROUTES } from '../../constants'
 import { useOrgId } from '../../hooks/useOrgId'
+import { Activity } from '../../types/activity'
 import { Dictionary } from '../../types/dictionary'
-import { Group } from '../../types/group'
 import { Student } from '../../types/student'
 import { AttendanceRateBadge } from '../kit/attendanceRateBadge/AttendancerateBadge'
 import { IconButton } from '../kit/buttons/IconButton'
@@ -15,7 +15,7 @@ import { Text } from '../kit/text/Text'
 import { AssignGroups } from './AssignGroups'
 
 interface Props {
-  groups?: Group[]
+  groups?: Activity[]
   student: Student
   attendanceRates: Dictionary<number>
   loadingGroups?: boolean
@@ -78,7 +78,7 @@ const NoGroupsInfoBlock = ({ student }: NoGroupsInfoBlockProps) => {
 }
 
 interface GroupWithAttendanceProps {
-  group: Group
+  group: Activity
   attendanceRate?: number
 }
 const GroupWithAttendance = ({ group, attendanceRate }: GroupWithAttendanceProps) => {
@@ -95,5 +95,5 @@ const GroupWithAttendance = ({ group, attendanceRate }: GroupWithAttendanceProps
 }
 
 function getGroupItemRender(attendances: Dictionary<number>) {
-  return (data: Group) => <GroupWithAttendance key={data.id} group={data} attendanceRate={attendances[data.id]} />
+  return (data: Activity) => <GroupWithAttendance key={data.id} group={data} attendanceRate={attendances[data.id]} />
 }

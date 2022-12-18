@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { useToasts } from 'react-toast-notifications'
 import { FormattedMessage } from 'react-intl'
@@ -7,17 +7,17 @@ import { useAttendancesState, useGroupsState, useUsersState } from '../../store'
 import AttendanceEditor from '../../components/attendance/AttendanceEditor'
 import { useOrgId } from '../../hooks/useOrgId'
 import useStudentsOfGroupStore from '../../store/studentsOfGroupStore'
-import { Group } from '../../types/group'
 import { Dictionary } from '../../types/dictionary'
 import { useCurrentUser } from '../../hooks/useCurrentUser'
 import { TITLE_POSTFIX } from '../../config'
 import { useCurrentOrg } from '../../hooks/useCurrentOrg'
+import { Activity } from '../../types/activity'
 
 export const AttendanceEditorPage = () => {
   const { id } = useParams<{ id: string }>()
   const { addToast } = useToasts()
-  const { fetchGroupsOfTeacher, groupsById, groups, fetching: groupsFetching } = useGroupsState()
-  const { fetchOrgUser, usersById } = useUsersState()
+  const { fetchGroupsOfTeacher, groups, fetching: groupsFetching } = useGroupsState()
+  const { fetchOrgUser, usersByOuterId } = useUsersState()
   const {
     // TODO: optimize
     fetchStudentsOfGroup,
@@ -28,7 +28,6 @@ export const AttendanceEditorPage = () => {
   const history = useHistory()
   const orgKey = useOrgId()
   const org = useCurrentOrg()
-  const orgId = org?.id
   const {
     saveAttendance,
     fetchAttendance,
@@ -37,12 +36,15 @@ export const AttendanceEditorPage = () => {
     removeAttendance,
   } = useAttendancesState()
   // TODO: add 404
-  const [group, setGroup] = useState<Group>()
+  const [group, setGroup] = useState<Activity>()
+  const activitiesByOuterId = useMemo(() => {
+    return new Map(groups.map((group) => [group.outerId, group]))
+  }, [groups])
   const onGroupChanged = useCallback(
-    (id: string) => {
-      setGroup(groupsById[id])
+    (outerId: string) => {
+      setGroup(activitiesByOuterId.get(outerId))
     },
-    [groupsById]
+    [activitiesByOuterId]
   )
   const [date, setDate] = useState<Date>()
   const onDateChanged = useCallback((date: Date) => {
@@ -54,7 +56,7 @@ export const AttendanceEditorPage = () => {
   }, [history, id, orgKey, removeAttendance])
   const attendance = attendancesById[id]
   const { organizationUser } = useCurrentUser()
-  const attendanceTeacher = attendance && usersById[attendance?.teacher]
+  const attendanceTeacher = attendance && usersByOuterId.get(attendance.teacher)
   const onSubmit = useCallback(
     async (data: { date: Date; group: string; selected: Dictionary<boolean> }) => {
       if (!organizationUser) {
@@ -101,9 +103,8 @@ export const AttendanceEditorPage = () => {
     if (!organizationUser) {
       return
     }
-    const attendanceTeacher = attendance?.teacher
-    fetchGroupsOfTeacher(orgKey, attendanceTeacher || organizationUser.outerId || '')
-  }, [attendance, fetchGroupsOfTeacher, id, orgKey, organizationUser])
+    fetchGroupsOfTeacher(attendanceTeacher?.id || organizationUser.id)
+  }, [attendance, attendanceTeacher?.id, fetchGroupsOfTeacher, id, organizationUser])
 
   useEffect(() => {
     if (!attendance || !org) {
@@ -134,11 +135,11 @@ export const AttendanceEditorPage = () => {
   }, [fetchAttendanceById, id])
 
   useEffect(() => {
-    if (group?.id && orgId) {
-      fetchStudentsOfGroup(orgId, orgKey, group.id, date)
+    if (group?.id) {
+      fetchStudentsOfGroup(group.id, date)
       return () => clearStudentsOfGroup()
     }
-  }, [clearStudentsOfGroup, date, fetchStudentsOfGroup, group?.id, orgId, orgKey])
+  }, [clearStudentsOfGroup, date, fetchStudentsOfGroup, group?.id])
 
   if (groupsFetching || attendancesLoading || !organizationUser) {
     // TODO
@@ -152,8 +153,8 @@ export const AttendanceEditorPage = () => {
       </Helmet>
 
       <AttendanceEditor
-        currentGroup={group}
-        groups={groups}
+        // currentGroup={group}
+        activities={groups}
         onSubmit={onSubmit}
         attendance={attendance}
         students={studentsOfGroup}

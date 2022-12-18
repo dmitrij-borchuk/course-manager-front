@@ -2,10 +2,10 @@ import React, { useCallback } from 'react'
 import { FormattedMessage, useIntl } from 'react-intl'
 import { ModalProps } from 'react-materialize'
 import { useToasts } from 'react-toast-notifications'
-import { useOrgId } from '../../hooks/useOrgId'
+import { useCurrentOrg } from '../../hooks/useCurrentOrg'
 import { useToggle } from '../../hooks/useToggle'
 import { useGroupsState } from '../../store'
-import { Group } from '../../types/group'
+import { Activity } from '../../types/activity'
 import { OrganizationUser } from '../../types/user'
 import { noop } from '../../utils/common'
 import { SelectDialog } from '../kit/selectDialog/SelectDialog'
@@ -14,23 +14,24 @@ interface Props {
   teacher: OrganizationUser
   onDone?: () => void
   trigger?: ModalProps['trigger']
-  teachersGroups?: Group[]
+  teachersGroups?: Activity[]
 }
 export const AssignGroups = ({ teacher, onDone = noop, trigger, teachersGroups = [] }: Props) => {
   const intl = useIntl()
-  const orgId = useOrgId()
+  const org = useCurrentOrg()
+  const orgId = org?.id
   const [open, toggler] = useToggle(false)
   const { addToast } = useToasts()
   const { groups, fetchGroups, fetching, editGroup } = useGroupsState()
   const onSubmit = useCallback(
-    async (data: Group[]) => {
+    async (data: Activity[]) => {
       try {
         for (let index = 0; index < data.length; index++) {
           const group = data[index]
           // TODO: fix unselect groups
-          await editGroup(orgId, {
+          await editGroup(group.id, {
             id: group.id,
-            teacher: teacher.outerId,
+            performerId: teacher.id,
           })
         }
         toggler.off()
@@ -47,12 +48,12 @@ export const AssignGroups = ({ teacher, onDone = noop, trigger, teachersGroups =
         })
       }
     },
-    [addToast, editGroup, onDone, orgId, teacher.outerId, toggler]
+    [addToast, editGroup, onDone, teacher.id, toggler]
   )
   const onTriggerClick = useCallback(async () => {
     toggler.on()
-    fetchGroups(orgId)
-  }, [fetchGroups, orgId, toggler])
+    fetchGroups()
+  }, [fetchGroups, toggler])
 
   return (
     <>

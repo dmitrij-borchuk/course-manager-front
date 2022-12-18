@@ -3,33 +3,35 @@ import { FormattedMessage, useIntl } from 'react-intl'
 import { ModalProps } from 'react-materialize'
 import { useToasts } from 'react-toast-notifications'
 import { useCurrentOrg } from '../../hooks/useCurrentOrg'
-import { useOrgId } from '../../hooks/useOrgId'
 import { useToggle } from '../../hooks/useToggle'
 import { useGroupsState, useTeachersState } from '../../store'
-import { GroupFull } from '../../types/group'
+import { Activity } from '../../types/activity'
 import { OrganizationUser } from '../../types/user'
 import { noop } from '../../utils/common'
 import { SelectDialog } from '../kit/selectDialog/SelectDialog'
 
 interface Props {
-  group: GroupFull
+  group: Activity
   onDone?: () => void
   trigger?: ModalProps['trigger']
 }
 export const AssignTeacher = ({ group, onDone = noop, trigger }: Props) => {
   const intl = useIntl()
   const org = useCurrentOrg()
-  const orgId = useOrgId()
+  const orgId = org?.id
   const [open, toggler] = useToggle(false)
   const { editGroup } = useGroupsState()
   const { addToast } = useToasts()
   const { teachers, fetchTeachers, fetching } = useTeachersState()
   const onSubmit = useCallback(
     async (data: OrganizationUser) => {
+      if (!orgId) {
+        return
+      }
       try {
         await editGroup(orgId, {
           id: group.id,
-          teacher: data.outerId,
+          performerId: data.id,
         })
         toggler.off()
         onDone()
@@ -45,7 +47,7 @@ export const AssignTeacher = ({ group, onDone = noop, trigger }: Props) => {
         })
       }
     },
-    [addToast, editGroup, group, onDone, orgId, toggler]
+    [addToast, editGroup, group.id, onDone, orgId, toggler]
   )
 
   useEffect(() => {

@@ -3,8 +3,8 @@ import { FormattedMessage, useIntl } from 'react-intl'
 import { Container } from 'react-materialize'
 import { ROUTES } from '../../constants'
 import { useOrgId } from '../../hooks/useOrgId'
+import { Activity } from '../../types/activity'
 import { Dictionary } from '../../types/dictionary'
-import { Group } from '../../types/group'
 import { Student as StudentType } from '../../types/student'
 import { HeadingWithControls } from '../kit/headingWithControls/HeadingWithControls'
 import { Tag } from '../kit/tag/Tag'
@@ -16,7 +16,7 @@ interface Props {
   data: StudentType
   onDelete: () => void
   attendanceRates: Dictionary<number>
-  groups?: Group[]
+  groups?: Activity[]
   loadingGroups?: boolean
 }
 export const Student: React.FC<Props> = ({

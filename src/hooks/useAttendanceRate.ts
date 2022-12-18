@@ -1,15 +1,15 @@
 import { useMemo } from 'react'
+import { Activity } from '../types/activity'
 import { Attendance } from '../types/attendance'
 import { Dictionary } from '../types/dictionary'
-import { Group } from '../types/group'
 import { groupBy } from '../utils/common'
 
-export function useAttendanceRateByGroups(groups: Group[], attendances: Attendance[]) {
+export function useAttendanceRateByGroups(groups: Activity[], attendances: Attendance[]) {
   const attendancesByGroup = useMemo(() => groupBy(attendances, (a) => a.group), [attendances])
   const rateByGroup = useMemo(
     () =>
       (groups || []).reduce<Dictionary<number>>((acc, g) => {
-        const attendancesOfGroup = attendancesByGroup[g.id] || []
+        const attendancesOfGroup = attendancesByGroup[g.outerId] || []
         const classesRates = attendancesOfGroup.map((a) => getRateOfClass(a))
         const rate = getAverage(classesRates)
 
@@ -30,7 +30,7 @@ export function useAttendanceRateByGroups(groups: Group[], attendances: Attendan
 
 export function useStudentAttendanceRateByGroups(
   studentId: string | undefined,
-  groups: Group[],
+  groups: Activity[],
   attendances: Attendance[]
 ) {
   const attendancesByGroup = useMemo(() => groupBy(attendances, (a) => a.group), [attendances])
@@ -40,7 +40,7 @@ export function useStudentAttendanceRateByGroups(
     }
 
     return (groups || []).reduce<Dictionary<number>>((acc, g) => {
-      const attendancesOfGroup = attendancesByGroup[g.id] || []
+      const attendancesOfGroup = attendancesByGroup[g.outerId] || []
       const studentRate = getRateOfStudent(studentId, attendancesOfGroup)
 
       if (isNaN(studentRate)) {

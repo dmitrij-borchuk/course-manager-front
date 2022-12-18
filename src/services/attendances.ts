@@ -1,10 +1,10 @@
 import { useMemo } from 'react'
+import { Activity } from '../types/activity'
 import { Attendance } from '../types/attendance'
-import { Group } from '../types/group'
-import { arrayToDictionary, groupBy } from '../utils/common'
+import { groupBy } from '../utils/common'
 import { datesInRange } from '../utils/date'
 
-export function useAttendanceGrouping(from: Date, to: Date, attendances?: Attendance[], groups?: Group[]) {
+export function useAttendanceGrouping(from: Date, to: Date, attendances?: Attendance[], groups?: Activity[]) {
   return useMemo(() => {
     if (!attendances || !groups) {
       return []
@@ -17,7 +17,7 @@ export function useAttendanceGrouping(from: Date, to: Date, attendances?: Attend
 function getAttendanceDateKey(date: Date) {
   return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}}`
 }
-function getTimelineData(from: Date, to: Date, attendances: Attendance[], groups: Group[]) {
+function getTimelineData(from: Date, to: Date, attendances: Attendance[], groups: Activity[]) {
   const attByDate = groupBy(attendances, (att) => {
     const date = new Date(att.date)
     return getAttendanceDateKey(date)
@@ -29,8 +29,12 @@ function getTimelineData(from: Date, to: Date, attendances: Attendance[], groups
   })
 }
 
-function getBlockData(date: Date, attendances: Attendance[], groups: Group[]) {
-  const groupsById = arrayToDictionary(groups)
+function getBlockData(date: Date, attendances: Attendance[], groups: Activity[]) {
+  const groupsById = groups.reduce<Record<string, Activity>>((acc, group) => {
+    acc[group.outerId] = group
+    return acc
+  }, {})
+
   const items = attendances.map((a) => {
     if (!groupsById[a.group]) {
       return null
@@ -47,11 +51,11 @@ function getBlockData(date: Date, attendances: Attendance[], groups: Group[]) {
   }
 }
 
-function getMeterData(attendance: Attendance, group: Group) {
-  return { id: attendance.id, text: group.name, progress: getMeterProgress(attendance, group) }
+function getMeterData(attendance: Attendance, group: Activity) {
+  return { id: attendance.id, text: group.name, progress: getMeterProgress(attendance) }
 }
 
-function getMeterProgress(attendance: Attendance, group: Group) {
+function getMeterProgress(attendance: Attendance) {
   const groupMembers = Object.keys(attendance.attended).length
   const groupAtt = Object.values(attendance.attended).filter(Boolean).length
 

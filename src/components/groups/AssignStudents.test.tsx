@@ -51,27 +51,40 @@ function renderComponent(props: Partial<ComponentProps<typeof AssignStudents>> =
     <TestWrapper
       store={{
         students: {
-          list: {
-            studentId1: {
-              id: 1,
-              name: 'Student 1',
-              outerId: 'studentId1',
-              tags: [],
-            },
-            studentId2: {
-              id: 2,
-              name: 'Student 2',
-              outerId: 'studentId2',
-              tags: [],
-            },
-          },
+          list: new Map([
+            [
+              1,
+              {
+                id: 1,
+                name: 'Student 1',
+                outerId: 'studentId1',
+                tags: [],
+              },
+            ],
+            [
+              2,
+              {
+                id: 2,
+                name: 'Student 2',
+                outerId: 'studentId2',
+                tags: [],
+              },
+            ],
+          ]),
         },
       }}
     >
       <AssignStudents
         group={{
-          id: '1',
+          id: 1,
           name: 'Group 1',
+          createdAt: new Date().toISOString(),
+          organization: 1,
+          outerId: 'groupId1',
+          performerId: null,
+          type: 'group',
+          updatedAt: new Date().toISOString(),
+          updatedBy: 1,
         }}
         trigger="Open dialog"
         {...props}

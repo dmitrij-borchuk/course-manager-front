@@ -3,15 +3,15 @@ import { useEffect, useMemo } from 'react'
 import { FormattedMessage, useIntl } from 'react-intl'
 import { Button } from 'react-materialize'
 import { useAttendanceRateByStudent } from '../../hooks/useAttendanceRate'
+import { Activity } from '../../types/activity'
 import { Attendance } from '../../types/attendance'
-import { Group } from '../../types/group'
 import { SortOrder } from '../../types/sorting'
 import { Student } from '../../types/student'
 import { AttendanceReportTemplate } from '../pdf/AttendanceReportTemplate'
 import { sortAttendanceReport } from './utils'
 
 type ReportByGroupProps = {
-  group: Group
+  group: Activity
   attendances: Attendance[]
   students: Student[]
   order: SortOrder
@@ -22,8 +22,8 @@ type ReportByGroupProps = {
 export const ReportByGroup = ({ group, attendances, students, order, loading, from, to }: ReportByGroupProps) => {
   const intl = useIntl()
   const attendancesOfGroup = useMemo(() => {
-    return attendances.filter((a) => a.group === group.id)
-  }, [attendances, group.id])
+    return attendances.filter((a) => a.group === group.outerId)
+  }, [attendances, group.outerId])
   const attendanceRate = useAttendanceRateByStudent(attendancesOfGroup)
   const attendancesReport = sortAttendanceReport(
     order,

@@ -4,7 +4,7 @@ import { Metric } from 'web-vitals'
 import './index.css'
 import App from './App'
 import reportWebVitals from './reportWebVitals'
-import { sendToAnalytics } from './utils/analitics'
+import { sendToAnalytics } from './utils/analytics'
 
 ReactDOM.render(
   <React.StrictMode>

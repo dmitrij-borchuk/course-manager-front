@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { Switch, Route, Link } from 'react-router-dom'
+import { Switch, Route, Link, useLocation } from 'react-router-dom'
 import { ROUTES } from './constants'
 import { withHeader } from './hocs/withHeader'
 import { AuthGuardedRoute } from './components/guardedRoute/GuardedRoute'
@@ -36,6 +36,7 @@ import { useCurrentOrg } from './hooks/useCurrentOrg'
 import { Loader } from './components/kit/loader/Loader'
 import { FormattedMessage } from 'react-intl'
 import { Text } from './components/kit/text/Text'
+import { setHeader } from './api/request'
 
 const GroupsListPage = withHeader(GroupsListPageLoadable)
 const CreateGroupPage = withHeader(CreateGroupPageLoadable)
@@ -87,22 +88,7 @@ export const Routing = React.memo(function () {
       {/* Admin */}
       <AuthGuardedRoute component={AdminPage} path="/admin" exact />
 
-      {/* Organization auth flow */}
-      <Route path={`/:orgId${ROUTES.LOGIN}`}>
-        {/* TODO: add lazy loading */}
-        <LoginPageLoadable />
-      </Route>
-      <Route path={`/:orgId${ROUTES.LOGOUT}`}>
-        <LogoutPage />
-      </Route>
-      <Route path={`/:orgId${ROUTES.RESET}`}>
-        {/* TODO: add lazy loading */}
-        <ResetPasswordPage />
-      </Route>
-
       <AuthGuardedRoute component={ProfilePage} path="/" exact />
-
-      <Route component={ConfirmInvitePage} path="/:orgId/invite/confirm/:token" exact />
 
       <Route path={`/:orgId`}>
         <OrganizationGuardedRoute />
@@ -120,6 +106,16 @@ export const Routing = React.memo(function () {
 const OrganizationGuardedRoute = () => {
   const organization = useCurrentOrg()
   const { loading } = useOrganizationsState()
+  const location = useLocation()
+
+  useEffect(() => {
+    const parts = location.pathname.split('/')
+    setHeader('X-Organization', parts[1])
+
+    return () => {
+      setHeader('X-Organization', undefined)
+    }
+  }, [location])
 
   if (loading) {
     return <Loader show data-testid="org-preloader" />
@@ -138,6 +134,21 @@ const OrganizationGuardedRoute = () => {
 
   return (
     <Switch>
+      {/* Organization auth flow */}
+      <Route path={`/:orgId${ROUTES.LOGIN}`}>
+        {/* TODO: add lazy loading */}
+        <LoginPageLoadable />
+      </Route>
+      <Route path={`/:orgId${ROUTES.LOGOUT}`}>
+        <LogoutPage />
+      </Route>
+      <Route path={`/:orgId${ROUTES.RESET}`}>
+        {/* TODO: add lazy loading */}
+        <ResetPasswordPage />
+      </Route>
+
+      <Route component={ConfirmInvitePage} path="/:orgId/invite/confirm/:token" exact />
+
       <AuthGuardedRoute component={DashboardPage} path="/:orgId/" exact />
 
       <AuthGuardedRoute component={InviteUserPage} path="/:orgId/invite" exact />

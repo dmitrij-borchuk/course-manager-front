@@ -4,17 +4,16 @@ import { ModalProps } from 'react-materialize'
 import { useHistory } from 'react-router-dom'
 import { useToasts } from 'react-toast-notifications'
 import { useCurrentOrg } from '../../hooks/useCurrentOrg'
-import { useOrgId } from '../../hooks/useOrgId'
 import { useQuery } from '../../hooks/useQuery'
 import { useToggle } from '../../hooks/useToggle'
 import { useStudentsOfGroupState, useStudentsState } from '../../store'
-import { Group } from '../../types/group'
+import { Activity } from '../../types/activity'
 import { Student } from '../../types/student'
 import { getDiff, noop } from '../../utils/common'
 import { SelectStudentsDialog } from './SelectStudentsDialog'
 
 interface Props {
-  group: Group
+  group: Activity
   studentsOfGroup?: Student[]
   onDone?: () => void
   trigger?: ModalProps['trigger']
@@ -25,7 +24,6 @@ export const AssignStudents = ({ group, onDone = noop, trigger, studentsOfGroup 
   const history = useHistory()
   const action = query.get('action')
   const intl = useIntl()
-  const orgKey = useOrgId()
   const org = useCurrentOrg()
   const orgId = org?.id
   const [open, toggler] = useToggle(action === 'openStudentsDialog')
@@ -33,33 +31,27 @@ export const AssignStudents = ({ group, onDone = noop, trigger, studentsOfGroup 
   const { addStudentToGroup, deleteStudentFromGroup } = useStudentsOfGroupState()
   const onSubmit = useCallback(
     async (data: Student[]) => {
-      if (!orgId) {
-        throw new Error('Organization is not defined')
-      }
       try {
         const initialStudentsIds = (studentsOfGroup || [])?.map((s) => s.id)
         const resultStudentsIds = data.map((s) => s.id)
         const { added, removed } = getDiff(initialStudentsIds, resultStudentsIds)
         await Promise.all(
           added.map(async (sId) => {
-            if (!studentsById[sId]) {
+            const student = studentsById.get(sId)
+            if (!student) {
               throw new Error(`Student with id ${sId} not found in the store`)
             }
-            return addStudentToGroup(orgId, orgKey, {
-              studentId: studentsById[sId].outerId,
-              groupId: group.id,
-              startDate: new Date().getTime(),
-              endDate: null,
-            })
+            return addStudentToGroup(group.id, student.id)
           })
         )
         await Promise.all(
           removed.map(async (sId) => {
-            if (!studentsById[sId]) {
+            const student = studentsById.get(sId)
+            if (!student) {
               throw new Error(`Student with id ${sId} not found in the store`)
             }
 
-            return deleteStudentFromGroup(orgKey, studentsById[sId].outerId, group.id)
+            return deleteStudentFromGroup(group.id, student.id)
           })
         )
         toggler.off()
@@ -78,18 +70,7 @@ export const AssignStudents = ({ group, onDone = noop, trigger, studentsOfGroup 
         }
       }
     },
-    [
-      addStudentToGroup,
-      addToast,
-      deleteStudentFromGroup,
-      group.id,
-      onDone,
-      orgId,
-      orgKey,
-      studentsById,
-      studentsOfGroup,
-      toggler,
-    ]
+    [addStudentToGroup, addToast, deleteStudentFromGroup, group.id, onDone, studentsById, studentsOfGroup, toggler]
   )
 
   useEffect(() => {

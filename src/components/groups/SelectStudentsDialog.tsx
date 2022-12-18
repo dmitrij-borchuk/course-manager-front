@@ -21,7 +21,7 @@ import './styles.css'
 
 interface Props {
   items: Student[]
-  groupId: string
+  groupId: number
   header?: string
   open?: boolean
   loading?: boolean
@@ -126,7 +126,7 @@ export function SelectStudentsDialog(props: Props) {
   )
 }
 
-function AddNewItemBtn({ group }: { group: string }) {
+function AddNewItemBtn({ group }: { group: number }) {
   const intl = useIntl()
   const orgId = useOrgId()
 

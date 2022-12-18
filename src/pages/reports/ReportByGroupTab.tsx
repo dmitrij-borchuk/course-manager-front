@@ -4,19 +4,16 @@ import { DatePicker, Preloader } from 'react-materialize'
 import { Select } from '../../components/kit/select/Select'
 import { Text } from '../../components/kit/text/Text'
 import { ReportByGroup } from '../../components/reports/ReportByGroup'
-import { useCurrentOrg } from '../../hooks/useCurrentOrg'
 import { useOrgId } from '../../hooks/useOrgId'
 import { getItem, setItem } from '../../services/localStore'
 import { useAttendancesState, useGroupsState, useStudentsOfGroupState } from '../../store'
-import { Group } from '../../types/group'
+import { Activity } from '../../types/activity'
 import { SortOrder } from '../../types/sorting'
 
 export const ReportByGroupTab = () => {
   const intl = useIntl()
-  const org = useCurrentOrg()
-  const orgId = org?.id
   const orgKey = useOrgId()
-  const [group, setGroup] = useState<Group>()
+  const [group, setGroup] = useState<Activity>()
   const [order, setOrder] = useState<SortOrder>(getItem(orderStoreKey) || 'asc')
 
   // Range
@@ -31,8 +28,8 @@ export const ReportByGroupTab = () => {
     return date >= from.getTime() && date <= to.getTime()
   })
   const fetchAttendance = useCallback(
-    async (group: Group) => {
-      await fetchAttendancesForGroups(orgKey, [group.id])
+    async (group: Activity) => {
+      await fetchAttendancesForGroups(orgKey, [group.outerId])
     },
     [fetchAttendancesForGroups, orgKey]
   )
@@ -42,10 +39,10 @@ export const ReportByGroupTab = () => {
   }, [order])
 
   useEffect(() => {
-    if (group && orgId) {
-      fetchStudentsOfGroup(orgId, orgKey, group.id)
+    if (group) {
+      fetchStudentsOfGroup(group.id)
     }
-  }, [fetchStudentsOfGroup, group, orgId, orgKey])
+  }, [fetchStudentsOfGroup, group])
 
   useEffect(() => {
     if (group) {
@@ -56,8 +53,8 @@ export const ReportByGroupTab = () => {
   }, [clearAttendances, fetchAttendance, group])
 
   useEffect(() => {
-    fetchGroups(orgKey)
-  }, [fetchGroups, orgKey])
+    fetchGroups()
+  }, [fetchGroups])
 
   useEffect(() => {
     if (groups.length) {
@@ -122,7 +119,7 @@ export const ReportByGroupTab = () => {
         </div>
       </div>
       <div className="pt-4 grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Select onChange={(e) => setGroup(groupsById[e.target.value])}>
+        <Select onChange={(e) => setGroup(groupsById.get(parseInt(e.target.value, 10)))}>
           {groups.map((g) => (
             <option key={g.id} value={g.id}>
               {g.name}
@@ -155,7 +152,7 @@ export const ReportByGroupTab = () => {
 
 const orderStoreKey = 'reports.attendance.order'
 const ReportBody = (
-  props: Omit<ComponentProps<typeof ReportByGroup>, 'group'> & { group?: Group; loading: boolean }
+  props: Omit<ComponentProps<typeof ReportByGroup>, 'group'> & { group?: Activity; loading: boolean }
 ) => {
   const { group, loading } = props
   if (!group) {

@@ -3,8 +3,8 @@ import { FormattedMessage, useIntl } from 'react-intl'
 import { Button, Container } from 'react-materialize'
 import { ROUTES } from '../../constants'
 import { useOrgId } from '../../hooks/useOrgId'
+import { Activity } from '../../types/activity'
 import { Dictionary } from '../../types/dictionary'
-import { GroupFull } from '../../types/group'
 import { Student } from '../../types/student'
 import { OrganizationUser } from '../../types/user'
 import { IconButton } from '../kit/buttons/IconButton'
@@ -17,7 +17,7 @@ import { StudentsInfoBlock } from './StudentsInfoBlock'
 
 interface Props {
   className?: string
-  data: GroupFull
+  data: Activity & { teacher: OrganizationUser }
   onDelete: () => void
   attendanceRates: Dictionary<number>
   studentsOfGroup: Student[]
@@ -76,7 +76,7 @@ export const Group: React.FC<Props> = ({
 
 interface TeacherInfoBlockProps {
   teacher?: OrganizationUser
-  group: GroupFull
+  group: Activity & { teacher: OrganizationUser }
 }
 const TeacherInfoBlock = ({ teacher, group }: TeacherInfoBlockProps) => {
   return (
@@ -99,7 +99,7 @@ const TeacherInfoBlock = ({ teacher, group }: TeacherInfoBlockProps) => {
 }
 
 interface NoTeacherInfoBlockProps {
-  group: GroupFull
+  group: Activity
 }
 const NoTeacherInfoBlock = ({ group }: NoTeacherInfoBlockProps) => {
   return (

@@ -165,6 +165,12 @@ describe('AttendanceEditor', () => {
 
     const req = axiosMock.history.get.filter((r) => r.url === '/activities' && r.params.performerId === 1)
     expect(req.length).toBeGreaterThan(0)
+
+    const groupSelect = await screen.findByTestId('group-selector')
+    // eslint-disable-next-line testing-library/no-node-access
+    const options = groupSelect.querySelectorAll('option')
+    const optArray = Array.from(options)
+    expect(optArray.map((o) => o.textContent)).toContain('group 1')
   })
 
   function defaultMock() {

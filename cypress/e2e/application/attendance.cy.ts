@@ -1,13 +1,13 @@
 import { nanoid } from 'nanoid'
+import { Activity } from '../../../src/types/activity'
+import { Student } from '../../../src/types/student'
 import studentPage from '../../drivers/studentPage'
 import { getOrgKey, getOrgName } from '../../support/commands/utils'
-
-const studentOuterId = `test-student-${nanoid()}`
 
 describe('Attendance', () => {
   const orgId = nanoid()
   const orgKey = getOrgKey(orgId)
-  let orgDbId
+  let orgDbId: number
 
   before(() => {
     cy.login()
@@ -23,34 +23,36 @@ describe('Attendance', () => {
   })
 
   beforeEach(() => {
-    const groupId = `test-group-${nanoid()}`
-    cy.wrap(groupId).as('groupId')
-    cy.addGroupDirectly(orgKey, groupId, {
-      name: 'Test group',
-      teacher: Cypress.env('TEST_UID'),
+    const studentOuterId = `test-student-${nanoid()}`
+    cy.getUser().then((user) => {
+      cy.addActivityDirectly(orgKey, {
+        name: 'Test group',
+        type: 'group',
+        performerId: user.body.id,
+      })
+        .its('body')
+        .as('activity')
     })
-    cy.addStudentDirectly(orgDbId, {
+    cy.addStudentDirectly(orgKey, {
       tags: [],
       name: 'Test Student Name',
       outerId: studentOuterId,
-    }).as('addStudentResponse')
-    cy.addStudentToGroupDirectly(orgKey, {
-      endDate: null,
-      groupId,
-      id: nanoid(),
-      startDate: Date.now() - 1000 * 60 * 60,
-      studentId: studentOuterId,
+    })
+      .its('body')
+      .as('participant')
+    cy.get<Activity>('@activity').then((activity) => {
+      cy.get<Student>('@participant').then((participant) => {
+        cy.addStudentToGroupDirectly(orgKey, activity.id, participant.id)
+      })
     })
   })
   afterEach(() => {
-    cy.get<string>('@groupId').then((groupId) => {
-      cy.removeGroupDirectly(orgKey, groupId)
+    cy.get<Activity>('@activity').then((activity) => {
+      cy.removeActivityDirectly(orgKey, activity.id)
     })
-    cy.get('@addStudentResponse')
-      .its('body')
-      .then((body) => {
-        cy.removeStudentDirectly(orgDbId, body.id)
-      })
+    cy.get<Student>('@participant').then((participant) => {
+      cy.removeStudentDirectly(orgKey, participant.id)
+    })
   })
 
   it.skip('Should be on the teachers list', () => {
@@ -97,11 +99,9 @@ describe('Attendance', () => {
     submit()
     waitLoading()
 
-    cy.get('@addStudentResponse')
-      .its('body')
-      .then((body) => {
-        cy.visit(`/${orgKey}/students/${body.id}`)
-      })
+    cy.get<Student>('@participant').then((participant) => {
+      cy.visit(`/${orgKey}/students/${participant.id}`)
+    })
 
     studentPage.waitLoading()
     studentPage.getAttendance().should('have.text', '100%')

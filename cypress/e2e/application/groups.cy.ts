@@ -99,7 +99,7 @@ describe('Groups', () => {
       name: /assign teacher/i,
     }).click()
     groupPage.getDialog().within(() => {
-      cy.getUser().then((user) => {
+      cy.getFirebaseUser().then((user) => {
         cy.findByText(user.email).click()
       })
     })

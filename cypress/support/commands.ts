@@ -32,9 +32,10 @@ import { attachCustomCommands } from 'cypress-firebase'
 import '@testing-library/cypress/add-commands'
 import './commands/organization'
 import { getOrgKey, getOrgName, getSpinner } from './commands/utils'
-import { addGroupDirectly, addStudentToGroupDirectly, removeGroupDirectly } from './commands/groups'
-import { getToken, getUser } from './commands/auth'
+import { addGroupDirectly, removeGroupDirectly } from './commands/groups'
+import { getToken, getFirebaseUser, getUser } from './commands/auth'
 import { addStudentDirectly, removeStudentDirectly } from './commands/students'
+import { addActivityDirectly, addStudentToGroupDirectly, removeActivityDirectly } from './commands/activities'
 
 const firebaseConfig = {
   apiKey: Cypress.env('FIREBASE_API_KEY'),
@@ -76,10 +77,14 @@ declare global {
       addStudentToGroupDirectly: typeof addStudentToGroupDirectly
 
       getToken: typeof getToken
+      getFirebaseUser: typeof getFirebaseUser
       getUser: typeof getUser
 
       addStudentDirectly: typeof addStudentDirectly
       removeStudentDirectly: typeof removeStudentDirectly
+
+      addActivityDirectly: typeof addActivityDirectly
+      removeActivityDirectly: typeof removeActivityDirectly
     }
   }
 }
@@ -90,10 +95,14 @@ Cypress.Commands.add('addStudentToGroupDirectly', addStudentToGroupDirectly)
 Cypress.Commands.add('addStudentDirectly', addStudentDirectly)
 Cypress.Commands.add('removeStudentDirectly', removeStudentDirectly)
 
+Cypress.Commands.add('addActivityDirectly', addActivityDirectly)
+Cypress.Commands.add('removeActivityDirectly', removeActivityDirectly)
+
 Cypress.Commands.add('getOrgKey', getOrgKey)
 Cypress.Commands.add('getOrgName', getOrgName)
 Cypress.Commands.add('getSpinner', getSpinner)
 Cypress.Commands.add('getToken', getToken)
+Cypress.Commands.add('getFirebaseUser', getFirebaseUser)
 Cypress.Commands.add('getUser', getUser)
 
 // Monkey patching Cypress.log to hide firestore requests (they are too long)

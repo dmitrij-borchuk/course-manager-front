@@ -1,24 +1,26 @@
-import { NewStudent } from '../../../src/types/student'
+import { NewStudent, Student } from '../../../src/types/student'
 
-export function addStudentDirectly(orgId: number, data: NewStudent) {
+export function addStudentDirectly(orgKey: string, data: NewStudent) {
   return cy.getToken().then((token) =>
-    cy.request({
-      url: `${Cypress.env('SERVER_URL')}/students?orgId=${orgId}`,
+    cy.request<Student>({
+      url: `${Cypress.env('SERVER_URL')}/students`,
       method: 'post',
       headers: {
         authorization: token,
+        'x-organization': orgKey,
       },
       body: data,
     })
   )
 }
-export function removeStudentDirectly(orgId: number, id: number) {
+export function removeStudentDirectly(orgKey: string, id: number) {
   cy.getToken().then((token) => {
-    cy.request({
-      url: `${Cypress.env('SERVER_URL')}/students/${id}?orgId=${orgId}`,
+    cy.request<void>({
+      url: `${Cypress.env('SERVER_URL')}/students/${id}`,
       method: 'delete',
       headers: {
         authorization: token,
+        'x-organization': orgKey,
       },
     })
   })

@@ -12,6 +12,7 @@ export type User = {
   email: string
   outerId: string
   createdAt: string
+  systemRole: string | null
 }
 
 // TODO: do we need it?

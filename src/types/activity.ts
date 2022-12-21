@@ -17,3 +17,5 @@ export type Activity = ActivityBase & {
   createdAt: string
   updatedAt: string
 }
+
+export type NewActivity = Pick<Activity, 'name' | 'type' | 'performerId'>

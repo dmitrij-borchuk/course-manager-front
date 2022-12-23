@@ -1,4 +1,4 @@
-import { Activity } from '../types/activity'
+import { Activity, NewActivity } from '../types/activity'
 import request from './request'
 
 export function migrateActivities() {
@@ -28,11 +28,8 @@ export function deleteActivity(id: number) {
   return request.delete<Activity>(`/activities/${id}`)
 }
 
-type NewActivity = Omit<Activity, 'id'>
-export function createActivity(orgId: number, data: NewActivity) {
-  // TODO: implement
-  throw new Error('TBD')
-  // return request.post<Activity>(`/activities?orgId=${orgId}`, data)
+export function createActivity(data: NewActivity) {
+  return request.post<Activity>(`/activities`, data)
 }
 
 export function editActivity(id: number, data: Partial<Activity>) {

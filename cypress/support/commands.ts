@@ -32,7 +32,6 @@ import { attachCustomCommands } from 'cypress-firebase'
 import '@testing-library/cypress/add-commands'
 import './commands/organization'
 import { getOrgKey, getOrgName, getSpinner } from './commands/utils'
-import { addGroupDirectly, removeGroupDirectly } from './commands/groups'
 import { getToken, getFirebaseUser, getUser } from './commands/auth'
 import { addStudentDirectly, removeStudentDirectly } from './commands/students'
 import { addActivityDirectly, addStudentToGroupDirectly, removeActivityDirectly } from './commands/activities'
@@ -66,14 +65,6 @@ declare global {
        * @example cy.getOrgKey('id')
        */
       getOrgKey: typeof getOrgKey
-      /**
-       * @example cy.addGroupDirectly('org1', 'groupId', {})
-       */
-      addGroupDirectly: typeof addGroupDirectly
-      /**
-       * @example cy.removeGroupDirectly('org1', 'groupId')
-       */
-      removeGroupDirectly: typeof removeGroupDirectly
       addStudentToGroupDirectly: typeof addStudentToGroupDirectly
 
       getToken: typeof getToken
@@ -88,8 +79,6 @@ declare global {
     }
   }
 }
-Cypress.Commands.add('addGroupDirectly', addGroupDirectly)
-Cypress.Commands.add('removeGroupDirectly', removeGroupDirectly)
 Cypress.Commands.add('addStudentToGroupDirectly', addStudentToGroupDirectly)
 
 Cypress.Commands.add('addStudentDirectly', addStudentDirectly)

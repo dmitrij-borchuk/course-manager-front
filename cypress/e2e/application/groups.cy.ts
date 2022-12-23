@@ -1,4 +1,5 @@
 import { nanoid } from 'nanoid'
+import { Activity } from '../../../src/types/activity'
 import groupPage from '../../drivers/groupPage'
 
 describe('Groups', () => {
@@ -24,20 +25,27 @@ describe('Groups', () => {
     cy.deleteOrganization(orgKey, orgDBId)
   })
   beforeEach(() => {
-    cy.addGroupDirectly(orgKey, id, {
-      name: name,
-      teacher: Cypress.env('TEST_UID'),
+    cy.getUser().then((user) => {
+      cy.addActivityDirectly(orgKey, {
+        name: name,
+        performerId: user.body.id,
+        type: 'group',
+      })
+        .its('body')
+        .as('activity')
     })
-    cy.addStudentDirectly(orgDBId, {
+    cy.addStudentDirectly(orgKey, {
       name: `Student 1`,
       tags: [],
-      outerId: `Student-1`,
+      outerId: `Student-1-${nanoid()}`,
     }).as(`createStudent`)
   })
   afterEach(() => {
-    cy.removeGroupDirectly(orgKey, id)
+    cy.get<Activity>('@activity').then((activity) => {
+      cy.removeActivityDirectly(orgKey, activity.id)
+    })
     cy.get<Cypress.Response<{ id: number }>>('@createStudent').then((response) => {
-      cy.removeStudentDirectly(orgDBId, response.body.id)
+      cy.removeStudentDirectly(orgKey, response.body.id)
     })
     cy.callFirestore('delete', `organizations/${orgKey}/studentsToGroups`)
   })
@@ -59,7 +67,6 @@ describe('Groups', () => {
     const id = nanoid()
     const name = `Group-${id}`
     cy.visit(`/${orgKey}/groups`)
-    // cy.testId('addIcon').click()
     cy.findByRole('button', {
       name: 'Floating menu',
     }).click()
@@ -75,11 +82,17 @@ describe('Groups', () => {
   it('Should be able to delete group', () => {
     const id = nanoid()
     const name = `Group-${id}`
-    cy.addGroupDirectly(orgKey, id, {
-      name: name,
-      teacher: Cypress.env('TEST_UID'),
+    cy.getUser().then((user) => {
+      cy.addActivityDirectly(orgKey, {
+        name: name,
+        performerId: user.body.id,
+        type: 'group',
+      })
+        .its('body')
+        .then((activity) => {
+          cy.visit(`/${orgKey}/groups/${activity.id}`)
+        })
     })
-    cy.visit(`/${orgKey}/groups/${id}`)
     cy.getSpinner().should('not.exist')
     cy.findByRole('button', {
       name: /delete/i,
@@ -109,7 +122,9 @@ describe('Groups', () => {
     cy.findByText('Teacher has been successfully assigned')
   })
   it('Should be able to assign students', () => {
-    cy.visit(`/${orgKey}/groups/${id}`)
+    cy.get<Activity>('@activity').then((activity) => {
+      cy.visit(`/${orgKey}/groups/${activity.id}`)
+    })
 
     addStudentToGroup('Student 1')
 
@@ -118,8 +133,9 @@ describe('Groups', () => {
     })
   })
   it('Should be able to unassign students', () => {
-    cy.visit(`/${orgKey}/groups/${id}`)
-
+    cy.get<Activity>('@activity').then((activity) => {
+      cy.visit(`/${orgKey}/groups/${activity.id}`)
+    })
     addStudentToGroup('Student 1')
 
     cy.findByTestId('students-list').within(() => {
@@ -133,7 +149,9 @@ describe('Groups', () => {
     })
   })
   it('Should be able to remove individual student from its context menu', () => {
-    cy.visit(`/${orgKey}/groups/${id}`)
+    cy.get<Activity>('@activity').then((activity) => {
+      cy.visit(`/${orgKey}/groups/${activity.id}`)
+    })
 
     addStudentToGroup('Student 1')
 
@@ -155,10 +173,15 @@ describe('Groups', () => {
 function addGroupAndVisitIt(orgKey: string) {
   const id = nanoid()
   const name = `Group-${id}`
-  cy.addGroupDirectly(orgKey, id, {
+  cy.addActivityDirectly(orgKey, {
     name: name,
+    performerId: null,
+    type: 'group',
   })
-  cy.visit(`/${orgKey}/groups/${id}`)
+    .its('body')
+    .then((activity) => {
+      cy.visit(`/${orgKey}/groups/${activity.id}`)
+    })
   cy.getSpinner().should('not.exist')
 }
 

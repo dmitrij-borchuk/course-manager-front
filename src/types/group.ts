@@ -19,5 +19,3 @@ export type GroupFull = Omit<Group, 'teacher'> & {
   // students?: Student[]
   // schedules: Schedule[]
 }
-
-export type NewGroup = GroupBase

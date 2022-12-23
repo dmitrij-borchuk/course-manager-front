@@ -4,30 +4,31 @@ import { useHistory } from 'react-router-dom'
 import { useToasts } from 'react-toast-notifications'
 import { Helmet } from 'react-helmet'
 import { EditGroup, GroupForm } from '../../components/groups/EditGroup'
-import { Loader } from '../../components/kit/loader/Loader'
 import { TITLE_POSTFIX } from '../../config'
 import { ROUTES } from '../../constants'
 import { useOrgId } from '../../hooks/useOrgId'
-import { useGroupsState } from '../../store'
+import { useActivitiesState } from '../../store'
 
 export const CreateGroupPage = () => {
-  const { createGroup, fetching, submitting } = useGroupsState()
+  const { submitting, createActivity } = useActivitiesState()
   const history = useHistory()
   const { addToast } = useToasts()
-  const orgId = useOrgId()
+  const orgKey = useOrgId()
   const submit = useCallback(
     async (data: GroupForm) => {
-      if (orgId) {
+      if (orgKey) {
         try {
-          await createGroup(orgId, {
+          await createActivity({
             ...data,
+            type: 'group',
+            performerId: null,
           })
 
           addToast(<FormattedMessage id="groups.create.success" />, {
             appearance: 'success',
             autoDismiss: true,
           })
-          history.push(`/${orgId}${ROUTES.GROUPS_LIST}`)
+          history.push(`/${orgKey}${ROUTES.GROUPS_LIST}`)
         } catch (error: any) {
           addToast(error.message, {
             appearance: 'error',
@@ -36,7 +37,7 @@ export const CreateGroupPage = () => {
         }
       }
     },
-    [addToast, createGroup, history, orgId]
+    [addToast, createActivity, history, orgKey]
   )
 
   return (
@@ -48,9 +49,7 @@ export const CreateGroupPage = () => {
         </title>
       </Helmet>
 
-      <Loader show={fetching}>
-        <EditGroup onSubmit={submit} loading={submitting} />
-      </Loader>
+      <EditGroup onSubmit={submit} loading={submitting} />
     </>
   )
 }

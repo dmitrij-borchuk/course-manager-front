@@ -1,5 +1,4 @@
 import { useCallback, useState } from 'react'
-import { NewGroup } from '../types/group'
 import { deleteActivity, editActivity, fetchActivities, fetchActivity } from '../api/activities'
 import { Activity } from '../types/activity'
 
@@ -64,21 +63,6 @@ export default function useGroupsStore() {
         setSubmitting(false)
         throw error
       }
-    }, []),
-    createGroup: useCallback(async (orgId: string, data: NewGroup) => {
-      setSubmitting(true)
-      // TODO: implement
-
-      // const groupsCollection = makeOrgCollection<Group>('groups', orgId)
-      // try {
-      // const result = await groupsCollection.save({ ...data, id: nanoid() })
-      // setGroupsById((state) => ({ ...state, [result.id]: { ...data, id: result.id } }))
-      // setSubmitting(false)
-      // return result
-      // } catch (error) {
-      //   setSubmitting(false)
-      //   throw error
-      // }
     }, []),
     clearGroups: useCallback(() => {
       setGroupsById(new Map())

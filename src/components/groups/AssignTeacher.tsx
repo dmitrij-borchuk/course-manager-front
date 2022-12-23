@@ -18,19 +18,15 @@ interface Props {
 export const AssignTeacher = ({ group, onDone = noop, trigger }: Props) => {
   const intl = useIntl()
   const org = useCurrentOrg()
-  const orgId = org?.id
   const [open, toggler] = useToggle(false)
   const { editGroup } = useGroupsState()
   const { addToast } = useToasts()
   const { teachers, fetchTeachers, fetching } = useTeachersState()
   const onSubmit = useCallback(
     async (data: OrganizationUser) => {
-      if (!orgId) {
-        return
-      }
       try {
-        await editGroup(orgId, {
-          id: group.id,
+        await editGroup(group.id, {
+          name: group.name,
           performerId: data.id,
         })
         toggler.off()
@@ -47,7 +43,7 @@ export const AssignTeacher = ({ group, onDone = noop, trigger }: Props) => {
         })
       }
     },
-    [addToast, editGroup, group.id, onDone, orgId, toggler]
+    [addToast, editGroup, group.id, group.name, onDone, toggler]
   )
 
   useEffect(() => {

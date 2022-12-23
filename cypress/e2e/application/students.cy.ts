@@ -20,7 +20,7 @@ describe('Students', () => {
       .then((id) => {
         orgDbId = id
 
-        cy.addStudentDirectly(orgDbId, {
+        cy.addStudentDirectly(orgKey, {
           tags: ['tag1', 'tag2'],
           name: 'Test Student Name',
           outerId: 'someId2',
@@ -32,7 +32,7 @@ describe('Students', () => {
       })
   })
   after(() => {
-    cy.removeStudentDirectly(orgDbId, studentId)
+    cy.removeStudentDirectly(orgKey, studentId)
     cy.deleteOrganization(orgKey, orgDbId)
   })
 

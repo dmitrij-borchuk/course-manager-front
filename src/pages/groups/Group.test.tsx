@@ -5,7 +5,6 @@ import Group from './Group'
 
 describe('Group', () => {
   let getDocs!: ReturnType<typeof mockGetDocs>
-  let am: any
   beforeEach(() => {
     const axiosMock = getAxiosMock()
     axiosMock.onGet('/organizations').reply(200, [
@@ -44,7 +43,6 @@ describe('Group', () => {
       },
     ])
     getDocs = mockGetDocs()
-    am = axiosMock
   })
 
   test('should render attendance rate related to current group only', async () => {

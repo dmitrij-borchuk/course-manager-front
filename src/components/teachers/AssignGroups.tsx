@@ -2,7 +2,6 @@ import React, { useCallback } from 'react'
 import { FormattedMessage, useIntl } from 'react-intl'
 import { ModalProps } from 'react-materialize'
 import { useToasts } from 'react-toast-notifications'
-import { useCurrentOrg } from '../../hooks/useCurrentOrg'
 import { useToggle } from '../../hooks/useToggle'
 import { useGroupsState } from '../../store'
 import { Activity } from '../../types/activity'
@@ -18,8 +17,6 @@ interface Props {
 }
 export const AssignGroups = ({ teacher, onDone = noop, trigger, teachersGroups = [] }: Props) => {
   const intl = useIntl()
-  const org = useCurrentOrg()
-  const orgId = org?.id
   const [open, toggler] = useToggle(false)
   const { addToast } = useToasts()
   const { groups, fetchGroups, fetching, editGroup } = useGroupsState()

@@ -1,6 +1,6 @@
 import { nanoid } from 'nanoid'
 
-describe('Organizations', () => {
+describe.skip('Organizations', () => {
   before(() => {
     cy.login()
   })

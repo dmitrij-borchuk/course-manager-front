@@ -42,15 +42,14 @@ export const ReportByTagTab = () => {
   })
 
   useEffect(() => {
-    if (orgId) {
-      fetchStudents(orgId)
-    }
-  }, [fetchStudents, orgId])
+    fetchStudents()
+  }, [fetchStudents])
 
   useEffect(() => {
     fetchAttendancesByDate(orgKey, from, to)
   }, [fetchAttendancesByDate, from, orgKey, to])
 
+  // TODO: do we need to wait for `orgId`?
   if (!orgId || studentsFetching || attendanceLoading) {
     return (
       <div className="flex justify-center pt-4" data-testid="loader">

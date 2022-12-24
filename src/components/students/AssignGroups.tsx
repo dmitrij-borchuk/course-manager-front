@@ -65,6 +65,7 @@ export const AssignGroups = ({ student, onDone = noop, trigger, initialGroups }:
         onCloseStart={toggler.off}
         initial={initialGroups}
         multiSelect
+        data-testid="assign-group-dialog"
       />
     </>
   )

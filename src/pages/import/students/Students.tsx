@@ -14,12 +14,9 @@ import { Text } from '../../../components/kit/text/Text'
 import { useStudentsState } from '../../../store'
 import { Message } from '../../../components/kit/message/Message'
 import { TITLE_POSTFIX } from '../../../config'
-import { useCurrentOrg } from '../../../hooks/useCurrentOrg'
 
 export const StudentsImport = () => {
   const intl = useIntl()
-  const org = useCurrentOrg()
-  const orgId = org?.id
   const { addToast } = useToasts()
   const [reading, setReading] = useState(false)
   const [previewData, setPreviewData] = useState<StudentBase[] | null>(null)
@@ -69,16 +66,13 @@ export const StudentsImport = () => {
     [addToast, fileType, intl]
   )
   const processStudent = useCallback(
-    async (orgId: number, element: StudentBase) => {
-      await createStudent(orgId, element)
+    async (element: StudentBase) => {
+      await createStudent(element)
       setProcessed((p) => p + 1)
     },
     [createStudent]
   )
   const onSaveList = useCallback(async () => {
-    if (!orgId) {
-      throw new Error('Organization id is not defined')
-    }
     if (!previewData) {
       return
     }
@@ -86,7 +80,7 @@ export const StudentsImport = () => {
       for (let index = 0; index < previewData.length; index++) {
         const element = previewData[index]
 
-        processStudent(orgId, element)
+        processStudent(element)
       }
     } catch (error: any) {
       addToast(error.message, {
@@ -94,7 +88,7 @@ export const StudentsImport = () => {
         autoDismiss: true,
       })
     }
-  }, [addToast, orgId, previewData, processStudent])
+  }, [addToast, previewData, processStudent])
   const processedEl = processed ? (
     <>
       {processed}/{previewData?.length}

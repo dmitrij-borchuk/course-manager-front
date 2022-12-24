@@ -2,10 +2,10 @@ import { useCallback, useState } from 'react'
 import { nanoid } from 'nanoid'
 import { NewStudent, Student } from '../types/student'
 import {
-  fetchStudentsByOrg,
+  fetchStudents,
   migrateStudents,
   fetchStudent,
-  // deleteStudent,
+  deleteStudent,
   createStudent,
   editStudent,
 } from '../api/students'
@@ -33,19 +33,24 @@ export default function useStudentsStore(initial: InitialStudentsState = {}) {
     studentsById,
     fetching,
     submitting: submittingSemaphore > 0,
-    fetchStudents: useCallback(async (orgId: number) => {
-      setFetching(true)
-      const resp = await fetchStudentsByOrg(orgId)
-      const studentsById = new Map(resp.data.map((item) => [item.id, item]))
-      setStudentsById(studentsById)
-      setFetching(false)
+    fetchStudents: useCallback(async () => {
+      try {
+        setFetching(true)
+        const resp = await fetchStudents()
+        const studentsById = new Map(resp.data.map((item) => [item.id, item]))
+        setStudentsById(studentsById)
+        setFetching(false)
+      } catch (error) {
+        setFetching(false)
+        throw error
+      }
     }, []),
     fetchStudent: getStudent,
-    createStudent: useCallback(async (orgId: number, data: NewStudent) => {
+    createStudent: useCallback(async (data: NewStudent) => {
       setSubmittingSemaphore((v) => v + 1)
 
       try {
-        const response = await createStudent(orgId, {
+        const response = await createStudent({
           ...data,
           name: data.name.trim(),
           outerId: nanoid(),
@@ -71,21 +76,13 @@ export default function useStudentsStore(initial: InitialStudentsState = {}) {
         throw error
       }
     }, []),
-    //   TODO: use new api (soft delete?)
     deleteStudent: useCallback(async (orgKey: string, orgId: number, id: number, outerId: string) => {
-      throw new Error('Not implemented')
-      // Remove students from group
-      // const student2groupCollection = makeOrgCollection<StudentOfGroup>('studentsToGroups', orgKey)
-      // const resp = await student2groupCollection.query('studentId', '==', outerId)
-      // await Promise.all(resp.map((item) => student2groupCollection.delete(item.id)))
+      await deleteStudent(id)
+      setStudentsById((state) => {
+        state.delete(id)
 
-      // // Remove student itself
-      // await deleteStudent(orgId, id)
-      // setStudentsById((state) => {
-      //   state.delete(id)
-
-      //   return new Map(state)
-      // })
+        return new Map(state)
+      })
     }, []),
     clearStudents: useCallback(() => {
       setStudentsById(new Map())

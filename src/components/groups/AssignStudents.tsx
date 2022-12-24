@@ -3,7 +3,6 @@ import { FormattedMessage, useIntl } from 'react-intl'
 import { ModalProps } from 'react-materialize'
 import { useHistory } from 'react-router-dom'
 import { useToasts } from 'react-toast-notifications'
-import { useCurrentOrg } from '../../hooks/useCurrentOrg'
 import { useQuery } from '../../hooks/useQuery'
 import { useToggle } from '../../hooks/useToggle'
 import { useStudentsOfGroupState, useStudentsState } from '../../store'
@@ -24,8 +23,6 @@ export const AssignStudents = ({ group, onDone = noop, trigger, studentsOfGroup 
   const history = useHistory()
   const action = query.get('action')
   const intl = useIntl()
-  const org = useCurrentOrg()
-  const orgId = org?.id
   const [open, toggler] = useToggle(action === 'openStudentsDialog')
   const { students, studentsById, fetching, fetchStudents } = useStudentsState()
   const { addStudentToGroup, deleteStudentFromGroup } = useStudentsOfGroupState()
@@ -74,10 +71,8 @@ export const AssignStudents = ({ group, onDone = noop, trigger, studentsOfGroup 
   )
 
   useEffect(() => {
-    if (orgId) {
-      fetchStudents(orgId)
-    }
-  }, [fetchStudents, orgId])
+    fetchStudents()
+  }, [fetchStudents])
 
   useEffect(() => {
     if (query.get('action') && !open) {

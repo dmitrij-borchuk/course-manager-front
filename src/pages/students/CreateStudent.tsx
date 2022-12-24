@@ -8,7 +8,6 @@ import { TITLE_POSTFIX } from '../../config'
 import { ROUTES } from '../../constants'
 import { useQuery } from '../../hooks/useQuery'
 import { useStudentsState } from '../../store'
-import { useCurrentOrg } from '../../hooks/useCurrentOrg'
 import { useOrgId } from '../../hooks/useOrgId'
 import { nanoid } from 'nanoid'
 
@@ -16,19 +15,14 @@ export const CreateStudent = () => {
   const query = useQuery()
   const { addToast } = useToasts()
   const history = useHistory()
-  const org = useCurrentOrg()
   const orgKey = useOrgId()
-  const orgId = org?.id
   const { createStudent, submitting } = useStudentsState()
   const backUrl = query.get('backUrl')
 
   const submit = useCallback(
     async (data: StudentForm) => {
-      if (!orgId) {
-        throw new Error('Organization is not defined')
-      }
       try {
-        await createStudent(orgId, {
+        await createStudent({
           ...data,
           outerId: nanoid(),
         })
@@ -47,7 +41,7 @@ export const CreateStudent = () => {
         }
       }
     },
-    [addToast, backUrl, createStudent, history, orgId, orgKey]
+    [addToast, backUrl, createStudent, history, orgKey]
   )
 
   return (

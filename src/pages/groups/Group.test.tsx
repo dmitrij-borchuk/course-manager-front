@@ -29,7 +29,7 @@ describe('Group', () => {
         outerId: 'teacherId',
       },
     ])
-    axiosMock.onGet(`/students/byOrganization/1`).reply(200, [
+    axiosMock.onGet(`/students`).reply(200, [
       {
         id: 1,
         name: 'studentName',

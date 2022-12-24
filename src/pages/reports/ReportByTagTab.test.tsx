@@ -58,7 +58,7 @@ describe('ReportByTagTab', () => {
   test('should generate report with sorting', async () => {
     const { attendances, groups, students, studentsOfGroup } = getSortingDataMocks()
     mockGetDocs(groups, studentsOfGroup, attendances)
-    axiosMock.onGet(`/students/byOrganization/1`).reply(200, students)
+    axiosMock.onGet(`/students`).reply(200, students)
 
     render(
       <TestWrapper>
@@ -81,7 +81,7 @@ describe('ReportByTagTab', () => {
   test('should generate report for students with case insensitive tags', async () => {
     const { attendances, groups, students, studentsOfGroup } = getSortingDataMocks()
     mockGetDocs(groups, studentsOfGroup, attendances)
-    axiosMock.onGet(`/students/byOrganization/1`).reply(200, students)
+    axiosMock.onGet(`/students`).reply(200, students)
     usePDF.mockReturnValue([{} as any, jest.fn()])
 
     render(

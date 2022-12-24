@@ -14,7 +14,7 @@ describe('CreateStudent', () => {
         name: 'orgName',
       },
     ])
-    axiosMock.onPost(`/students?orgId=1`).reply(200, {
+    axiosMock.onPost(`/students`).reply(200, {
       id: 1,
       name: 'orgName',
     })

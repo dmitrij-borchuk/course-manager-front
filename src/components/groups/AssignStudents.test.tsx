@@ -3,13 +3,28 @@ import { ComponentProps } from 'react'
 import { getAxiosMock, mockOrgId, TestWrapper } from '../../utils/test'
 import { AssignStudents } from './AssignStudents'
 
+const axiosMock = getAxiosMock()
+
 describe('AssignStudents', () => {
   beforeEach(() => {
     mockOrgId('orgId')
+    axiosMock.onGet('/students').reply(200, [
+      {
+        id: 1,
+        name: 'Student 1',
+        outerId: 'studentId1',
+        tags: [],
+      },
+      {
+        id: 2,
+        name: 'Student 2',
+        outerId: 'studentId2',
+        tags: [],
+      },
+    ])
   })
 
   test('should reset dialog state after closing', async () => {
-    const axiosMock = getAxiosMock()
     axiosMock.onGet('/organizations').reply(200, [])
     renderComponent()
     await openDialog()
@@ -51,26 +66,7 @@ function renderComponent(props: Partial<ComponentProps<typeof AssignStudents>> =
     <TestWrapper
       store={{
         students: {
-          list: new Map([
-            [
-              1,
-              {
-                id: 1,
-                name: 'Student 1',
-                outerId: 'studentId1',
-                tags: [],
-              },
-            ],
-            [
-              2,
-              {
-                id: 2,
-                name: 'Student 2',
-                outerId: 'studentId2',
-                tags: [],
-              },
-            ],
-          ]),
+          list: new Map(),
         },
       }}
     >

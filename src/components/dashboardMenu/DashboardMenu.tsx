@@ -27,7 +27,7 @@ export const DashboardMenu = () => {
 
   return (
     <span className="fab-container z-50 relative">
-      <Fab icon={<i className="material-icons">add</i>} alwaysShowTitle={true}>
+      <Fab icon={<i className="material-icons">add</i>}>
         {/* TODO: use translations */}
         <Action text="Report class" onClick={onReportClick}>
           <i className="material-icons">school</i>

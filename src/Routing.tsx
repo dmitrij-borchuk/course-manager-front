@@ -90,6 +90,8 @@ export const Routing = React.memo(function () {
 
       <AuthGuardedRoute component={ProfilePage} path="/" exact />
 
+      <Route component={ConfirmInvitePage} path="/:orgId/invite/confirm/:token" exact />
+
       <Route path={`/:orgId`}>
         <OrganizationGuardedRoute />
       </Route>
@@ -146,8 +148,6 @@ const OrganizationGuardedRoute = () => {
         {/* TODO: add lazy loading */}
         <ResetPasswordPage />
       </Route>
-
-      <Route component={ConfirmInvitePage} path="/:orgId/invite/confirm/:token" exact />
 
       <AuthGuardedRoute component={DashboardPage} path="/:orgId/" exact />
 

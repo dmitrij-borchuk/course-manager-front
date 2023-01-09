@@ -1,8 +1,8 @@
 import { useCallback, useState } from 'react'
-import { createOrganizations, getUserOrganizations, migrateOrganizations } from '../api/organizations'
+import { createOrganizations, getInviteInfo, getUserOrganizations, migrateOrganizations } from '../api/organizations'
 import { useDictionaryToArray } from '../hooks/useDictionaryToArray'
 import { Dictionary } from '../types/dictionary'
-import { Organization, OrganizationCreate } from '../types/organization'
+import { InviteInfo, Organization, OrganizationCreate } from '../types/organization'
 import { arrayToDictionary } from '../utils/common'
 
 export default function useOrganizationsBaseStore() {
@@ -10,8 +10,11 @@ export default function useOrganizationsBaseStore() {
   const [submitting, setSubmitting] = useState(false)
   const [byId, setById] = useState<Dictionary<Organization>>()
   const allItems = useDictionaryToArray(byId || empty)
+  const [[inviteInfo, setInviteInfo], [inviteInfoError, setInviteInfoError]] = useQueryData<InviteInfo>()
 
   return {
+    inviteInfo,
+    inviteInfoError,
     allItems,
     byId,
     loading,
@@ -51,7 +54,37 @@ export default function useOrganizationsBaseStore() {
         throw error
       }
     }, []),
+    getInviteInfo: useCallback(
+      async (token: string) => {
+        setLoading(true)
+        try {
+          const response = await getInviteInfo(token)
+          setInviteInfo(response.data)
+        } catch (error) {
+          if (error instanceof Error) {
+            setInviteInfoError(error)
+          } else {
+            throw error
+          }
+        } finally {
+          setLoading(false)
+        }
+      },
+      [setInviteInfo, setInviteInfoError]
+    ),
   }
 }
 
 const empty: Dictionary<Organization> = {}
+
+function useQueryData<T>() {
+  const [data, setData] = useState<T>()
+  const [error, setError] = useState<Error>()
+  const [loading, setLoading] = useState(false)
+
+  return [
+    [data, setData],
+    [error, setError],
+    [loading, setLoading],
+  ] as const
+}

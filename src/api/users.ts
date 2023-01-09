@@ -44,3 +44,7 @@ export function confirmInvitation(token: string) {
 export function updateUser(id: number, name: string) {
   return request.put<User>(`/users/${id}`, { name })
 }
+
+export function registerUser(credentials: { email: string; name: string; password: string }) {
+  return request.post<User>(`/auth/register`, credentials)
+}

@@ -2,9 +2,9 @@ import React from 'react'
 import { Button, Container } from 'react-materialize'
 import { User } from 'firebase/auth'
 import { FormattedMessage } from 'react-intl'
+import { InviteInfo } from 'types/organization'
 import { Header } from '../kit/header/Header'
 import { SubmitButton } from '../kit/buttons/SubmitButton'
-import { useOrgId } from '../../hooks/useOrgId'
 import { SectionHeader } from '../kit/sectionHeader/SectionHeader'
 import { Text } from '../kit/text/Text'
 import { ROUTES } from '../../constants'
@@ -15,18 +15,29 @@ interface Props {
   className?: string
   disabled?: boolean
   user: User | null
+  inviteInfo: InviteInfo
 }
-export const ConfirmInvite: React.FC<Props> = ({ className = '', disabled, onSubmit, loading = false, user }) => {
-  const orgId = useOrgId()
-
+export const ConfirmInvite: React.FC<Props> = ({
+  className = '',
+  disabled,
+  onSubmit,
+  loading = false,
+  user,
+  inviteInfo,
+}) => {
   return (
     <div className={className}>
       <Header />
       <Container className="px-4">
-        {/* TODO: use org name */}
-        {/* TODO: use translations */}
-        {/* TODO: check valid invite */}
-        <SectionHeader>You have been invited to organization {orgId}.</SectionHeader>
+        <SectionHeader>
+          <FormattedMessage
+            id="users.invite.message"
+            values={{
+              organizationName: inviteInfo.organization.name,
+              userName: inviteInfo.invite.updatedBy.name,
+            }}
+          />
+        </SectionHeader>
         {!user ? (
           <div className="text-center">
             <Text>

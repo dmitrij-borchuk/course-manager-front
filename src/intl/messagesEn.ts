@@ -30,6 +30,7 @@ export const messages = {
   'auth.registerLink.separator': 'or',
   'auth.registerLink.label': 'Create account',
   'auth.register.title': 'Register',
+  'auth.register.success': 'You have been successfully registered a fresh account',
   'auth.resetLink.label': 'Forgot password?',
   'auth.reset.success': 'Reset password email has been sent.',
   'auth.login.wrongLoginPassword': 'Login or password is incorrect',
@@ -114,6 +115,7 @@ export const messages = {
   'users.invite.title': 'Invite user',
   'users.invite.confirmation.needLogin': 'You need to be signed in to proceed',
   'users.invite.confirmation.loginLink': 'Go to the login',
+  'users.invite.message': 'You have been invited to organization "{organizationName}" by {userName}.',
   'users.list.title': 'Users',
   'users.list.empty': 'There is no users yet',
 

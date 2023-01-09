@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { User as FBUser } from 'firebase/auth'
-import { login, register, logout, resetPassword } from '../api/firebase/auth'
+import { login, logout, resetPassword } from '../api/firebase/auth'
 import { auth } from '../api/firebase'
 import { AppUser } from '../types/user'
-import { users } from '../api/firebase/collections'
 import { setUser } from '../utils/rollbar'
 import { setHeader } from '../api/request'
+import { registerUser } from 'api/users'
 
 export function useAuthStore() {
   const [loading, setLoading] = useState(false)
@@ -50,18 +50,13 @@ export function useAuthStore() {
     register: useCallback(async (name: string, email: string, password: string) => {
       setLoading(true)
       try {
-        const response = await register(email, password)
+        const response = await registerUser({ email, password, name })
 
-        if (!response.user) {
+        if (!response.data) {
           throw new Error('Error while registration, please contact your administrator.')
         }
-        const result = await users.save({
-          id: response.user.uid,
-          email: response.user.email || undefined,
-          name: name,
-        })
 
-        return result
+        return response.data
       } catch (error) {
         throw error
       } finally {

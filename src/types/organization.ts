@@ -1,3 +1,5 @@
+import { User } from './user'
+
 export type OrganizationFirebase = {
   id: string
   name: string
@@ -17,3 +19,13 @@ export type Organization = {
 export type OrganizationEdit = Pick<Organization, 'id' | 'key' | 'name'>
 
 export type OrganizationCreate = Pick<Organization, 'key' | 'name'>
+
+export type InviteInfo = {
+  organization: {
+    name: string
+  }
+  invite: {
+    role: string
+    updatedBy: User
+  }
+}

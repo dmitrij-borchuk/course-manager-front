@@ -92,12 +92,12 @@ export const Routing = React.memo(function () {
 
       <Route component={ConfirmInvitePage} path="/:orgId/invite/confirm/:token" exact />
 
+      {/* Organizations */}
+      <AuthGuardedRoute component={CreateOrganizationPage} path={`${ROUTES.ORGANIZATIONS_ADD}`} exact />
+
       <Route path={`/:orgId`}>
         <OrganizationGuardedRoute />
       </Route>
-
-      {/* Organizations */}
-      <AuthGuardedRoute component={CreateOrganizationPage} path={`${ROUTES.ORGANIZATIONS_ADD}`} exact />
 
       {/* 404 */}
       <Route path={`/*`}>404</Route>

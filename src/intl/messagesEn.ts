@@ -22,6 +22,7 @@ export const messages = {
   'common.to': 'To',
   'common.name.label': 'Name',
   'common.unknownError': 'Unknown error',
+  'common.edit': 'Edit',
 
   'Auth.form.error.invalid': 'Identifier or password invalid.',
   'Auth.form.error.500': 'Something went wrong',
@@ -71,6 +72,8 @@ export const messages = {
   'groups.students.empty': 'No students assigned',
   'groups.delete.header': 'Remove group',
   'groups.delete.text': 'Are you sure you want to delete this group?',
+  'groups.closeConfirmation.header': 'Close group?',
+  'groups.closeConfirmation.text': 'Are you sure you want to close this group? All information will be saved.',
   'groups.create.success': 'Group has been successfully created',
   'groups.edit.success': 'Group has been successfully updated',
   'groups.assignTeacher.success': 'Teacher has been successfully assigned',
@@ -80,6 +83,10 @@ export const messages = {
   'groups.assignStudents.namePlaceholder': 'Enter a name',
   'groups.assignStudents.moreNamePlaceholder': '+ name',
   'groups.studentList.removeBtn': 'Remove from group',
+  'groups.closeBtn.label': 'Close group',
+  'groups.deleteBtn.label': 'Delete',
+  'groups.closed.message': 'This group is closed',
+  'groups.moreMenu.title': 'more',
 
   'students.add.title': 'Add student',
   'students.add': 'Add student',

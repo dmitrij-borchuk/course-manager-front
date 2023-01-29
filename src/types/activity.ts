@@ -12,6 +12,7 @@ export type Activity = ActivityBase & {
   organization: number
   // Used by the attendances for the backwards compatibility (groups were migrated from firebase)
   outerId: string
+  archived: boolean
 
   updatedBy: number
   createdAt: string

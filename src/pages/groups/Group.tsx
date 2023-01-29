@@ -12,7 +12,7 @@ import { ROUTES } from '../../constants'
 export const GroupPage = () => {
   let params = useParams<{ id: string }>()
   const id = parseInt(params.id, 10)
-  const { fetchGroup, groupsById, deleteGroup } = useGroupsState()
+  const { fetchGroup, groupsById, deleteGroup, closeGroup } = useGroupsState()
   const { fetchTeacher, teachersById } = useTeachersState()
   const {
     fetchStudentsOfGroup,
@@ -41,6 +41,9 @@ export const GroupPage = () => {
 
     history.push(`/${orgKey}${ROUTES.GROUPS_LIST}`)
   }, [deleteGroup, history, id, orgKey])
+  const onClose = useCallback(async () => {
+    await closeGroup(id)
+  }, [closeGroup, id])
   const attendancesOfGroup = useMemo(() => {
     return attendances.filter((a) => a.group === group?.outerId)
   }, [attendances, group?.outerId])
@@ -89,6 +92,7 @@ export const GroupPage = () => {
       <Group
         data={groupFull}
         onDelete={onDelete}
+        onClose={onClose}
         attendanceRates={attendanceRate}
         studentsOfGroup={studentsOfGroup}
         loadingGroups={loadingGroups}

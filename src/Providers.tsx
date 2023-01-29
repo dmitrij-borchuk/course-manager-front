@@ -4,12 +4,12 @@ import { ToastProvider } from 'react-toast-notifications'
 import { IntlProvider } from 'react-intl'
 import messages from './intl/messagesEn'
 import StoreProvider from './store'
-import { ThemeProvider, createTheme } from '@mui/material/styles'
+import { MuiThemeProvider } from './MuiThemeProvider'
 
 interface Props {}
 export const Providers: React.FC<Props> = ({ children }) => {
   return (
-    <ThemeProvider theme={theme}>
+    <MuiThemeProvider>
       <Router>
         <StoreProvider>
           <IntlProvider messages={messages} locale="en" defaultLocale="en">
@@ -17,8 +17,6 @@ export const Providers: React.FC<Props> = ({ children }) => {
           </IntlProvider>
         </StoreProvider>
       </Router>
-    </ThemeProvider>
+    </MuiThemeProvider>
   )
 }
-
-const theme = createTheme({})

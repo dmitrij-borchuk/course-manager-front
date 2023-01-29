@@ -79,5 +79,17 @@ export default function useGroupsStore() {
       })
       setSubmitting(false)
     }, []),
+    closeGroup: useCallback(async (id: number) => {
+      setSubmitting(true)
+
+      const result = await editActivity(id, {
+        archived: true,
+      })
+      setGroupsById((state) => {
+        state.set(result.data.id, result.data)
+        return state
+      })
+      setSubmitting(false)
+    }, []),
   }
 }

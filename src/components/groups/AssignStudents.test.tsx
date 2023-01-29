@@ -81,6 +81,7 @@ function renderComponent(props: Partial<ComponentProps<typeof AssignStudents>> =
           type: 'group',
           updatedAt: new Date().toISOString(),
           updatedBy: 1,
+          archived: false,
         }}
         trigger="Open dialog"
         {...props}

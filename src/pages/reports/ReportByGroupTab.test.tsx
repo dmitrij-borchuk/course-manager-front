@@ -146,6 +146,7 @@ describe('ReportByGroupTab', () => {
         type: 'group',
         updatedAt: new Date().toISOString(),
         updatedBy: 1,
+        archived: false,
       },
     ]
     const attendances: Attendance[] = [
@@ -233,6 +234,7 @@ describe('ReportByGroupTab', () => {
         type: 'group',
         updatedAt: new Date().toISOString(),
         updatedBy: 1,
+        archived: false,
       },
     ]
     const attendances: Attendance[] = [
@@ -380,6 +382,7 @@ function getSortingDataMocks() {
       type: 'group',
       updatedAt: new Date().toISOString(),
       updatedBy: 1,
+      archived: false,
     },
   ]
   const attendances: Attendance[] = [
@@ -446,6 +449,7 @@ function getGroupsFilteringData() {
       type: 'group',
       updatedAt: new Date().toISOString(),
       updatedBy: 1,
+      archived: false,
     },
     {
       id: 2,
@@ -457,6 +461,7 @@ function getGroupsFilteringData() {
       type: 'group',
       updatedAt: new Date().toISOString(),
       updatedBy: 1,
+      archived: false,
     },
   ]
   const attendances: Attendance[] = [

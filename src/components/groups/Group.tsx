@@ -194,7 +194,7 @@ function Heading({ data, onDelete, onCloseGroup }: HeadingProps) {
         <div className="flex gap-3">
           <EditButton onClick={onEdit} />
           <CloseButton onClick={() => setCancelConfirmation(true)} />
-          <DeleteButton onClick={() => setCancelConfirmation(true)} />
+          <DeleteButton onClick={() => setDeleteConfirmation(true)} />
         </div>
       )}
       {!upMd && (

@@ -1,4 +1,5 @@
 import { useCallback, useState } from 'react'
+import { useQuery } from 'react-query'
 import { deleteActivity, editActivity, fetchActivities, fetchActivity } from '../api/activities'
 import { Activity } from '../types/activity'
 
@@ -25,10 +26,10 @@ export default function useGroupsStore() {
     submitting,
     fetching,
 
-    fetchGroups: useCallback(async () => {
+    fetchGroups: useCallback(async (params?: Parameters<typeof fetchActivities>[0]) => {
       try {
         setFetching(true)
-        const resp = await fetchActivities()
+        const resp = await fetchActivities(params)
         setGroupsById(new Map(resp.data.map((group) => [group.id, group])))
         setFetching(false)
       } catch (error) {
@@ -92,4 +93,8 @@ export default function useGroupsStore() {
       setSubmitting(false)
     }, []),
   }
+}
+
+export function useGroups(params: Parameters<typeof fetchActivities>[0] = {}) {
+  return useQuery(['groups', params], () => fetchActivities(params))
 }

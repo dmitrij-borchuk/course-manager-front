@@ -1,7 +1,9 @@
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
-import { useGroupsState, useStudentsOfGroupState, useStudentsState } from '../../store'
+import { Activity } from 'types/activity'
+import { useGroups } from 'store/groupsStore'
+import { useStudentsState } from '../../store'
 import { useAttendancesState } from '../../store'
 import { ROUTES } from '../../constants'
 import { Student } from '../../components/students/Student'
@@ -18,13 +20,14 @@ export const StudentPage = () => {
 
   const { fetchStudent, studentsById, deleteStudent } = useStudentsState()
   const { attendances, clearAttendances, fetchAttendancesForGroups } = useAttendancesState()
-  const { groups, fetchGroups, clearGroups } = useGroupsState()
-  const {
-    fetchGroupsOfStudent,
-    clearGroupOfStudents,
-    groupsOfStudent,
-    fetching: fetchingGroups,
-  } = useStudentsOfGroupState()
+  const date = useMemo(() => new Date(), [])
+  const query = useGroups({
+    archived: 'all',
+    participantId: id,
+    date,
+  })
+  const groups = query.data?.data || emptyGroups
+  const fetchingGroups = query.isLoading
   const student = studentsById.get(id)
   const orgKey = useOrgId()
   const organization = useCurrentOrg()
@@ -38,7 +41,6 @@ export const StudentPage = () => {
     }
   }, [deleteStudent, history, id, orgKey, organization, student])
 
-  // TODO: probably we need to use `groupsOfStudent` instead of `groups`
   const rateByGroups = useStudentAttendanceRateByGroups(student?.outerId, groups, attendances)
 
   useEffect(() => {
@@ -46,20 +48,6 @@ export const StudentPage = () => {
       fetchStudent(orgId, id)
     }
   }, [fetchStudent, id, orgId])
-
-  useEffect(() => {
-    fetchGroups()
-    return () => {
-      clearGroups()
-    }
-  }, [clearGroups, fetchGroups])
-
-  useEffect(() => {
-    if (student?.id) {
-      fetchGroupsOfStudent(student.id, new Date())
-      return () => clearGroupOfStudents()
-    }
-  }, [clearGroupOfStudents, fetchGroupsOfStudent, student?.id])
 
   useEffect(() => {
     if (groups.length) {
@@ -93,7 +81,7 @@ export const StudentPage = () => {
       <Student
         data={student}
         onDelete={onDelete}
-        groups={groupsOfStudent}
+        groups={groups}
         loadingGroups={fetchingGroups}
         attendanceRates={rateByGroups}
       />
@@ -102,3 +90,5 @@ export const StudentPage = () => {
 }
 
 export default StudentPage
+
+const emptyGroups: Activity[] = []

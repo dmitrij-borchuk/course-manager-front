@@ -3,9 +3,12 @@ import * as firestore from 'firebase/firestore'
 import { IntlProvider } from 'react-intl'
 import { ToastProvider } from 'react-toast-notifications'
 import * as reactRouterDom from 'react-router-dom'
+import { QueryClient, QueryClientProvider } from 'react-query'
 import AxiosMockAdapter from 'axios-mock-adapter'
 import messages from '../intl/messagesEn'
 import StoreProvider, { DefaultStore } from '../store'
+
+const queryClient = new QueryClient()
 
 type WrapperProps = {
   children: React.ReactNode
@@ -13,11 +16,13 @@ type WrapperProps = {
 }
 export const TestWrapper = ({ children, store }: WrapperProps) => {
   return (
-    <IntlProvider messages={messages} locale="en" defaultLocale="en">
-      <ToastProvider>
-        <StoreProvider {...store}>{children}</StoreProvider>
-      </ToastProvider>
-    </IntlProvider>
+    <QueryClientProvider client={queryClient}>
+      <IntlProvider messages={messages} locale="en" defaultLocale="en">
+        <ToastProvider>
+          <StoreProvider {...store}>{children}</StoreProvider>
+        </ToastProvider>
+      </IntlProvider>
+    </QueryClientProvider>
   )
 }
 

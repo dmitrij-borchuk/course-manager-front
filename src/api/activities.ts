@@ -7,16 +7,14 @@ export function migrateActivities() {
 
 type FetchActivitiesParams = {
   performerId?: number
+  archived?: 'true' | 'false' | 'all'
+  deleted?: 'true' | 'false' | 'all'
+  participantId?: number
+  date?: Date
 }
 export function fetchActivities(params?: FetchActivitiesParams) {
   return request.get<Activity[]>(`/activities`, {
     params,
-  })
-}
-
-export function fetchActivitiesByParticipant(id: number, date?: Date) {
-  return request.get<Activity[]>(`/activities/byParticipant/${id}`, {
-    params: { date },
   })
 }
 

@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'react'
-import { assignParticipant, fetchActivitiesByParticipant, fetchActivity, unassignParticipant } from '../api/activities'
+import { useQueryClient } from 'react-query'
+import { assignParticipant, fetchActivity, unassignParticipant } from '../api/activities'
 import { fetchParticipantsByActivity } from '../api/participants'
 import { useDictionaryToArray } from '../hooks/useDictionaryToArray'
 import { Activity } from '../types/activity'
@@ -11,18 +12,15 @@ export default function useStudentsOfGroupStore() {
   const [fetching, setFetching] = useState(false)
   const [studentsOfGroupById, setStudentsOfGroupById] = useState<Dictionary<Student>>({})
   const studentsOfGroup = useDictionaryToArray(studentsOfGroupById)
-  const [groupsOfStudentById, setGroupsOfStudentById] = useState<Dictionary<Activity>>({})
-  const groupsOfStudent = useDictionaryToArray(groupsOfStudentById)
   const [submitting, setSubmitting] = useState(false)
   const unassignStudentFromGroup = useCallback(async (studentId: number, groupId: number) => {
     return await unassignParticipant(groupId, studentId)
   }, [])
+  const queryClient = useQueryClient()
 
   return {
     studentsOfGroup,
     studentsOfGroupById,
-    groupsOfStudent,
-    groupsOfStudentById,
     fetching,
     submitting,
     addStudentToGroup: useCallback(async (activityId: number, participantId: number) => {
@@ -37,21 +35,24 @@ export default function useStudentsOfGroupStore() {
         throw error
       }
     }, []),
-    addGroupToStudent: useCallback(async (groupId: number, participantId: number) => {
-      setSubmitting(true)
+    addGroupToStudent: useCallback(
+      async (groupId: number, participantId: number) => {
+        setSubmitting(true)
 
-      try {
-        const result = await assignParticipant(groupId, participantId)
-        const groupResponse = await fetchActivity(groupId)
-        const group = groupResponse.data
-        setGroupsOfStudentById((state) => ({ ...state, [group.id]: group }))
-        setSubmitting(false)
-        return result.data
-      } catch (error) {
-        setSubmitting(false)
-        throw error
-      }
-    }, []),
+        try {
+          const result = await assignParticipant(groupId, participantId)
+          const groupResponse = await fetchActivity(groupId)
+          const group = groupResponse.data
+          queryClient.setQueryData<Activity[]>('groups', (old) => (old ? [...old, group] : [group]))
+          setSubmitting(false)
+          return result.data
+        } catch (error) {
+          setSubmitting(false)
+          throw error
+        }
+      },
+      [queryClient]
+    ),
     deleteStudentFromGroup: useCallback(async (groupId: number, studentId: number) => {
       setSubmitting(true)
       await unassignParticipant(groupId, studentId)
@@ -66,9 +67,8 @@ export default function useStudentsOfGroupStore() {
         setSubmitting(true)
         try {
           await unassignStudentFromGroup(studentId, groupId)
-          setGroupsOfStudentById((state) => {
-            delete state[groupId]
-            return { ...state }
+          queryClient.setQueryData<Activity[]>('groups', (old) => {
+            return old?.filter((group) => group.id !== groupId) ?? []
           })
           setSubmitting(false)
         } catch (error) {
@@ -76,7 +76,7 @@ export default function useStudentsOfGroupStore() {
           throw error
         }
       },
-      [unassignStudentFromGroup]
+      [queryClient, unassignStudentFromGroup]
     ),
     fetchStudentsOfGroup: useCallback(async (groupId: number, date = new Date()) => {
       setFetching(true)
@@ -94,25 +94,8 @@ export default function useStudentsOfGroupStore() {
         throw error
       }
     }, []),
-    fetchGroupsOfStudent: useCallback(async (studentId: number, date: Date) => {
-      setFetching(true)
-      try {
-        const activities = await fetchActivitiesByParticipant(studentId, date)
-        const groupsById = arrayToDictionary(activities.data)
-        setGroupsOfStudentById(groupsById)
-        setFetching(false)
-
-        return activities.data
-      } catch (error) {
-        setFetching(false)
-        throw error
-      }
-    }, []),
     clearStudentsOfGroup: useCallback(() => {
       setStudentsOfGroupById({})
-    }, []),
-    clearGroupOfStudents: useCallback(() => {
-      setGroupsOfStudentById({})
     }, []),
   }
 }

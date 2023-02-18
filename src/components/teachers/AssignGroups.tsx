@@ -51,7 +51,7 @@ export const AssignGroups = ({ teacher, onDone = noop, trigger, teachersGroups =
         })
       }
     },
-    [addToast, editGroup, onDone, teacher.id, toggler]
+    [addToast, editGroup, onDone, teacher.id, teachersGroups, toggler]
   )
   const onTriggerClick = useCallback(async () => {
     toggler.on()

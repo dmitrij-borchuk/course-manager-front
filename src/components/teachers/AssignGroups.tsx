@@ -6,7 +6,7 @@ import { useToggle } from '../../hooks/useToggle'
 import { useGroupsState } from '../../store'
 import { Activity } from '../../types/activity'
 import { OrganizationUser } from '../../types/user'
-import { noop } from '../../utils/common'
+import { getDiff, noop } from '../../utils/common'
 import { SelectDialog } from '../kit/selectDialog/SelectDialog'
 
 interface Props {
@@ -23,11 +23,17 @@ export const AssignGroups = ({ teacher, onDone = noop, trigger, teachersGroups =
   const onSubmit = useCallback(
     async (data: Activity[]) => {
       try {
-        for (let index = 0; index < data.length; index++) {
-          const group = data[index]
-          // TODO: fix unselect groups
-          await editGroup(group.id, {
-            id: group.id,
+        const { added, removed } = getDiff(
+          teachersGroups.map((g) => g.id),
+          data.map((g) => g.id)
+        )
+        for (let index = 0; index < removed.length; index++) {
+          await editGroup(removed[index], {
+            performerId: null,
+          })
+        }
+        for (let index = 0; index < added.length; index++) {
+          await editGroup(added[index], {
             performerId: teacher.id,
           })
         }
@@ -65,6 +71,7 @@ export const AssignGroups = ({ teacher, onDone = noop, trigger, teachersGroups =
         onCloseStart={toggler.off}
         initial={teachersGroups}
         multiSelect
+        data-testid="assign-activity-dialog"
       />
     </>
   )

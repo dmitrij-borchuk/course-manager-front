@@ -28,19 +28,6 @@ function createOrganization(data: OrganizationCreate) {
 }
 Cypress.Commands.add('createOrganization', createOrganization)
 
-declare global {
-  namespace Cypress {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    interface Chainable {
-      /**
-       * Custom command to login to the the application.
-       * @example cy.createOrganization('key', {})
-       */
-      createOrganization: typeof createOrganization
-    }
-  }
-}
-
 // Delete organization by key
 function deleteOrganization(key: string, id: number) {
   const tokenPromise = firebase.auth().currentUser.getIdToken()
@@ -61,6 +48,26 @@ function deleteOrganization(key: string, id: number) {
 }
 Cypress.Commands.add('deleteOrganization', deleteOrganization)
 
+function getOrganizationByKey(key: string) {
+  return cy.getFirebaseToken().then((token) => {
+    return cy
+      .request<Organization[]>({
+        url: `${Cypress.env('SERVER_URL')}/organizations`,
+        method: 'get',
+        headers: {
+          authorization: token,
+        },
+      })
+      .then((resp) => {
+        if (resp.body.length === 0) {
+          throw new Error('No organizations found')
+        }
+        return resp.body.find((org) => org.key === key)
+      })
+  })
+}
+Cypress.Commands.add('getOrganizationByKey', getOrganizationByKey)
+
 declare global {
   namespace Cypress {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -70,6 +77,13 @@ declare global {
        * @example cy.deleteOrganization('2cXFbfvwkUZNYBdcj7TyOXyel5k1', 'organization-key')
        */
       deleteOrganization: typeof deleteOrganization
+      /**
+       * Custom command to login to the the application.
+       * @example cy.createOrganization('key', {})
+       */
+      createOrganization: typeof createOrganization
+
+      getOrganizationByKey: typeof getOrganizationByKey
     }
   }
 }

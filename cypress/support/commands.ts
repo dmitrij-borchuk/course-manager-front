@@ -32,9 +32,10 @@ import { attachCustomCommands } from 'cypress-firebase'
 import '@testing-library/cypress/add-commands'
 import './commands/organization'
 import { getOrgKey, getOrgName, getSpinner } from './commands/utils'
-import { getToken, getFirebaseUser, getUser } from './commands/auth'
+import { getToken, getFirebaseUser, getUser, deleteUser } from './commands/auth'
 import { addStudentDirectly, removeStudentDirectly } from './commands/students'
 import { addActivityDirectly, addStudentToGroupDirectly, removeActivityDirectly } from './commands/activities'
+import { createUserDirectly } from './commands/users'
 
 const firebaseConfig = {
   apiKey: Cypress.env('FIREBASE_API_KEY'),
@@ -67,9 +68,11 @@ declare global {
       getOrgKey: typeof getOrgKey
       addStudentToGroupDirectly: typeof addStudentToGroupDirectly
 
+      deleteUser: typeof deleteUser
       getToken: typeof getToken
       getFirebaseUser: typeof getFirebaseUser
       getUser: typeof getUser
+      createUserDirectly: typeof createUserDirectly
 
       addStudentDirectly: typeof addStudentDirectly
       removeStudentDirectly: typeof removeStudentDirectly
@@ -90,9 +93,11 @@ Cypress.Commands.add('removeActivityDirectly', removeActivityDirectly)
 Cypress.Commands.add('getOrgKey', getOrgKey)
 Cypress.Commands.add('getOrgName', getOrgName)
 Cypress.Commands.add('getSpinner', getSpinner)
+Cypress.Commands.add('deleteUser', deleteUser)
 Cypress.Commands.add('getToken', getToken)
 Cypress.Commands.add('getFirebaseUser', getFirebaseUser)
 Cypress.Commands.add('getUser', getUser)
+Cypress.Commands.add('createUserDirectly', createUserDirectly)
 
 // Monkey patching Cypress.log to hide firestore requests (they are too long)
 const origLog = Cypress.log

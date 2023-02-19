@@ -119,7 +119,10 @@ export const ReportByGroupTab = () => {
         </div>
       </div>
       <div className="pt-4 grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Select onChange={(e) => setGroup(groupsById.get(parseInt(e.target.value, 10)))}>
+        <Select
+          onChange={(e) => setGroup(groupsById.get(parseInt(e.target.value, 10)))}
+          label={intl.formatMessage({ id: 'reports.groupSelector.label' })}
+        >
           {groups.map((g) => (
             <option key={g.id} value={g.id}>
               {g.name}

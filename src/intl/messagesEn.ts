@@ -160,6 +160,7 @@ export const messages = {
   'reports.sortOrder': 'Sort order',
   'reports.noTagsSelected': 'Please select at least one tag to be able to generate report',
   'reports.noReports': 'N/A',
+  'reports.groupSelector.label': 'Group',
 }
 
 export default messages

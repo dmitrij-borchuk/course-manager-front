@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 import { deleteActivity, editActivity, fetchActivities, fetchActivity } from '../api/activities'
 import { Activity } from '../types/activity'
@@ -6,7 +6,7 @@ import { Activity } from '../types/activity'
 // TODO: remove?
 export default function useGroupsStore() {
   const [groupsById, setGroupsById] = useState<Map<number, Activity>>(new Map())
-  const groups = Array.from(groupsById.values())
+  const groups = useMemo(() => Array.from(groupsById.values()), [groupsById])
   const [fetching, setFetching] = useState(false)
   const [submitting, setSubmitting] = useState(false)
 

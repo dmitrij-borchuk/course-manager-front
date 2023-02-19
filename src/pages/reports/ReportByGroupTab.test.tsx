@@ -339,6 +339,30 @@ describe('ReportByGroupTab', () => {
     expect(percents[0]).toBe('50%')
   })
 
+  test('should show report for any group', async () => {
+    const { attendances, groups, students } = getGroupsFilteringData()
+    mockGetDocs(attendances)
+    axiosMock.onGet(`/activities`).reply(200, groups)
+    groups.forEach((g) => {
+      axiosMock.onGet(new RegExp(`/students/byActivity/${g.id}`)).reply(200, students)
+    })
+
+    render(
+      <TestWrapper>
+        <ReportByGroupTab />
+      </TestWrapper>
+    )
+
+    const groupSelector = await screen.findByLabelText('Group')
+    userEvent.selectOptions(groupSelector, groups[1].id.toString())
+
+    await screen.findByRole('button', { name: 'Generate report' })
+    renderPdf()
+    const title = await getReportTitle()
+
+    expect(title.textContent).toBe(groups[1].name)
+  })
+
   function renderPdf() {
     expect(usePDF).toBeCalled()
     const lastCall = usePDF.mock.calls[usePDF.mock.calls.length - 1]
@@ -507,4 +531,9 @@ function getGroupsFilteringData() {
     attendances,
     students,
   }
+}
+
+async function getReportTitle() {
+  const el = await screen.findAllByTestId('pdf-text')
+  return el[0]
 }

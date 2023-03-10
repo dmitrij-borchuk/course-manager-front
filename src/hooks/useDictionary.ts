@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { Dictionary } from '../types/dictionary'
 
-export function useDictionary<T extends { id: string }>(list?: T[]) {
+export function useDictionary<T extends { id: string | number }>(list?: T[]) {
   return useMemo(() => {
     if (!list) {
       return {}

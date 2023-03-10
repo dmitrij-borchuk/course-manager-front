@@ -27,6 +27,8 @@ export const ROUTES = {
   STUDENTS_LIST: '/students',
   STUDENTS_ADD: '/students/add',
   STUDENTS_EDIT: '/students/edit',
+  STUDENTS_BY_ACTIVITY: '/students/:participantId/activity/:activityId',
+  makeStudentsByActivity: (participant: number, activity: number) => `/students/${participant}/activity/${activity}`,
 
   // Schedules
   SCHEDULES_ROOT: '/schedule',

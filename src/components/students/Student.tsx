@@ -1,6 +1,6 @@
+import { Container } from '@mui/material'
 import React from 'react'
 import { FormattedMessage, useIntl } from 'react-intl'
-import { Container } from 'react-materialize'
 import { ROUTES } from '../../constants'
 import { useOrgId } from '../../hooks/useOrgId'
 import { Activity } from '../../types/activity'

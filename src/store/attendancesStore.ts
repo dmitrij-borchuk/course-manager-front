@@ -1,16 +1,18 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { Attendance, AttendanceNew } from '../types/attendance'
 import { makeOrgCollection } from '../api/firebase/collections'
 import { useDictionaryToArray } from '../hooks/useDictionaryToArray'
 import { Dictionary } from '../types/dictionary'
 import { arrayToDictionary } from '../utils/common'
 import { nanoid } from 'nanoid'
+import { fetchAttendances, fetchAttendancesForGroups } from 'modules/attendance/api'
 
 // TODO: add cache layer
 export function useAttendancesStore() {
   const [loading, setLoading] = useState(false)
   const [attendancesById, setAttendancesById] = useState<Dictionary<Attendance | undefined>>({})
-  const attendances = useDictionaryToArray<Attendance>(attendancesById as Dictionary<Attendance>)
+  const attendancesRaw = useDictionaryToArray<Attendance>(attendancesById as Dictionary<Attendance>)
+  const attendances = useMemo(() => sortAttendances(attendancesRaw, true), [attendancesRaw])
 
   return {
     loading,
@@ -74,15 +76,27 @@ export function useAttendancesStore() {
       setAttendancesById((state) => ({ ...state, [resp.id]: resp }))
       setLoading(false)
     }, []),
-    fetchAttendancesForGroups: useCallback(async (orgId: string, groupsIds: string[]) => {
-      // TODO: optimize this
+    fetchAttendances: useCallback(
+      async (orgId: string, params: { teacherId?: string; activity?: string; from?: Date; to?: Date }) => {
+        try {
+          setLoading(true)
+          const resp = await fetchAttendances(orgId, params)
+          const itemsById = arrayToDictionary(resp)
+          setAttendancesById((att) => ({ ...att, ...itemsById }))
+          setLoading(false)
+        } catch (error) {
+          setLoading(false)
+          throw error
+        }
+      },
+      []
+    ),
+    fetchAttendancesForGroups: useCallback(async (orgId: string, groupsOuterIds: string[]) => {
       if (isFetched) {
         return
       }
       setLoading(true)
-      const collection = makeOrgCollection<Attendance>('attendances', orgId)
-      // TODO: optimize this
-      const resp = await collection.getAll()
+      const resp = await fetchAttendancesForGroups(orgId, groupsOuterIds)
       const itemsById = arrayToDictionary(resp)
       setAttendancesById((att) => ({ ...att, ...itemsById }))
       isFetched = true
@@ -129,4 +143,16 @@ let isFetched = false
 
 export function resetAttendanceCache() {
   isFetched = false
+}
+
+function sortAttendances(attendances: Attendance[], reverse = false) {
+  return attendances.sort((a, b) => {
+    if (a.date > b.date) {
+      return reverse ? -1 : 1
+    } else if (a.date < b.date) {
+      return reverse ? 1 : -1
+    } else {
+      return 0
+    }
+  })
 }

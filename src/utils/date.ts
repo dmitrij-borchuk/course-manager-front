@@ -18,3 +18,7 @@ export function datesAreOnSameDay(first: Date, second: Date) {
     first.getDate() === second.getDate()
   )
 }
+
+export function isWeekend(date: Date) {
+  return date.getDay() === 0 || date.getDay() === 6
+}

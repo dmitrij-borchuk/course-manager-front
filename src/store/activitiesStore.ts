@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react'
 import { Activity, NewActivity } from '../types/activity'
-import { createActivity, migrateActivities } from '../api/activities'
+import { createActivity, migrateActivities } from '../modules/activities/api'
 
 export type InitialActivitiesState = {
   list?: Map<number, Activity>

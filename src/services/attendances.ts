@@ -55,9 +55,29 @@ function getMeterData(attendance: Attendance, group: Activity) {
   return { id: attendance.id, text: group.name, progress: getMeterProgress(attendance) }
 }
 
-function getMeterProgress(attendance: Attendance) {
+export function getMeterProgress(attendance: Attendance) {
   const groupMembers = Object.keys(attendance.attended).length
   const groupAtt = Object.values(attendance.attended).filter(Boolean).length
 
   return groupMembers === 0 ? 0 : groupAtt / groupMembers
+}
+
+export function getAttendanceRate(attendance: Attendance) {
+  const groupMembers = Object.keys(attendance.attended).length
+  const groupAtt = Object.values(attendance.attended).filter(Boolean).length
+
+  return groupMembers === 0 ? 0 : groupAtt / groupMembers
+}
+
+export function getAttendanceStatisticOfParticipant(participantOuterId: string, attendances: Attendance[]) {
+  const relevantAttendances = attendances.filter((a) => a.attended[participantOuterId] !== undefined)
+  const attended = relevantAttendances.reduce((acc, att) => {
+    return acc + (att.attended[participantOuterId] ? 1 : 0)
+  }, 0)
+
+  return {
+    all: relevantAttendances.length,
+    attended,
+    rate: relevantAttendances.length === 0 ? null : attended / relevantAttendances.length,
+  }
 }

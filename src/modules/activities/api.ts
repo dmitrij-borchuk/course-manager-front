@@ -1,5 +1,5 @@
-import { Activity, NewActivity } from '../types/activity'
-import request from './request'
+import { Activity, NewActivity } from '../../types/activity'
+import request from '../../api/request'
 
 export function migrateActivities() {
   return request.post<string>('/activities/migrate')
@@ -16,6 +16,26 @@ export function fetchActivities(params?: FetchActivitiesParams) {
   return request.get<Activity[]>(`/activities`, {
     params,
   })
+}
+
+type FetchParticipationParamsParams = {
+  performerId?: number
+  archived?: 'true' | 'false' | 'all'
+  deleted?: 'true' | 'false' | 'all'
+  participantId?: number
+  date?: Date
+}
+export function fetchParticipation(params?: FetchParticipationParamsParams) {
+  return request.get<ParticipationRecord[]>(`/activities/participation`, {
+    params,
+  })
+}
+export type ParticipationRecord = {
+  id: number
+  activity: Activity
+  startDate: string
+  endDate: string
+  participantId: number
 }
 
 export function fetchActivity(id: number) {

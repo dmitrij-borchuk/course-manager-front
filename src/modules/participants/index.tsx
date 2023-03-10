@@ -1,0 +1,1 @@
+export { DetailsByActivityAndParticipant } from './DetailsByActivityAndParticipant'

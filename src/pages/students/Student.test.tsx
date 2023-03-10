@@ -22,6 +22,7 @@ describe('Student', () => {
       </TestWrapper>
     )
 
+    await screen.findByText('studentName')
     const rate = await screen.findByTestId('attendance-rate-badge')
     expect(rate).toHaveTextContent('50%')
   })
@@ -157,6 +158,23 @@ describe('Student', () => {
         outerId: 'teacherId',
       },
     ])
-    axiosMock.onGet(`/students/1?orgId=1`).reply(200, { id: 1, name: 'studentName', outerId: 'st1' })
+    axiosMock.onGet(`/students/1`).reply(200, { id: 1, name: 'studentName', outerId: 'st1' })
+    axiosMock.onGet(`/activities/participation`).reply(200, [
+      {
+        id: 1,
+        activity: {
+          id: 1,
+          name: 'group name',
+          performerId: 1,
+          type: 'group',
+          outerId: 'group1',
+          deleted: false,
+          archived: false,
+        },
+        startDate: '2022-07-24T13:45:32.482Z',
+        endDate: null,
+        participantId: 1,
+      },
+    ])
   }
 })

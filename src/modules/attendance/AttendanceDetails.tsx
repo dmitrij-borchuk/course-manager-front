@@ -87,7 +87,7 @@ export function AttendanceDetails({ participant }: Props) {
         renderWeekDay={renderWeekDay}
         onViewChanged={viewChangeHandler}
         renderCell={renderCell}
-        breakPoint={590}
+        breakPoint={0}
       />
       <Backdrop
         sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
@@ -115,8 +115,18 @@ function CalendarCell({ date, isMobile, attendancesByDate, participantOuterId }:
 
   return (
     <Box>
-      <Stack direction="row" alignItems="center" height="100px">
-        <div className="flex flex-col items-center mr-3">
+      <Stack
+        direction={{
+          xs: 'column',
+          sm: 'row',
+        }}
+        alignItems="center"
+        height={{
+          xs: '75px',
+          sm: '100px',
+        }}
+      >
+        <div className="flex flex-col items-center w-12">
           <Typography variant="subtitle2">
             {isMobile && !isCurrentYear && <FormattedDate value={date} year="numeric" />}
           </Typography>
@@ -134,7 +144,7 @@ function CalendarCell({ date, isMobile, attendancesByDate, participantOuterId }:
             </Text>
           )}
         </div>
-        {/* <Typography variant="body1">{date.getDate()}</Typography> */}
+
         {hasClasses && <AttendanceIndicator attended={attended} />}
       </Stack>
       <Divider light />

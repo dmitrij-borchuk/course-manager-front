@@ -1,14 +1,8 @@
 import { useCallback, useState } from 'react'
 import { nanoid } from 'nanoid'
 import { NewStudent, Student } from '../types/student'
-import {
-  fetchStudents,
-  migrateStudents,
-  fetchStudent,
-  deleteStudent,
-  createStudent,
-  editStudent,
-} from '../api/students'
+import { fetchStudents, migrateStudents, deleteStudent, createStudent, editStudent } from '../api/students'
+import { fetchParticipant } from 'api/participants'
 
 export type InitialStudentsState = {
   list?: Map<number, Student>
@@ -18,9 +12,9 @@ export default function useStudentsStore(initial: InitialStudentsState = {}) {
   const [studentsById, setStudentsById] = useState<Map<number, Student>>(new Map(initial.list))
   const students = Array.from(studentsById.values())
   const [submittingSemaphore, setSubmittingSemaphore] = useState(0)
-  const getStudent = useCallback(async (orgId: number, id: number) => {
+  const getStudent = useCallback(async (id: number) => {
     setFetching(true)
-    const resp = await fetchStudent(orgId, id)
+    const resp = await fetchParticipant(id)
     setStudentsById((state) => {
       state.set(resp.data.id, resp.data)
       return new Map(state)

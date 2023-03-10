@@ -1,6 +1,12 @@
 import { useCallback, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
-import { deleteActivity, editActivity, fetchActivities, fetchActivity } from '../api/activities'
+import {
+  deleteActivity,
+  editActivity,
+  fetchActivities,
+  fetchActivity,
+  fetchParticipation,
+} from '../modules/activities/api'
 import { Activity } from '../types/activity'
 
 // TODO: remove?
@@ -97,4 +103,9 @@ export default function useGroupsStore() {
 
 export function useGroups(params: Parameters<typeof fetchActivities>[0] = {}) {
   return useQuery(['groups', params], () => fetchActivities(params))
+}
+export function useParticipation(params: Parameters<typeof fetchParticipation>[0] = {}) {
+  return useQuery(['participation', params], () => fetchParticipation(params), {
+    refetchOnWindowFocus: false,
+  })
 }

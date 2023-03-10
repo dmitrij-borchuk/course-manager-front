@@ -20,7 +20,6 @@ export const EditStudentPage = () => {
   const id = parseInt(idStr)
   const { fetchStudent, editStudent, fetching, submitting, studentsById } = useStudentsState()
   const { addToast } = useToasts()
-  const organization = useCurrentOrg()
 
   const student = studentsById.get(id)
   const update = useCallback(
@@ -55,10 +54,8 @@ export const EditStudentPage = () => {
   )
 
   useEffect(() => {
-    if (organization) {
-      fetchStudent(organization.id, id)
-    }
-  }, [fetchStudent, id, organization])
+    fetchStudent(id)
+  }, [fetchStudent, id])
   // TODO: implement 404
 
   return (

@@ -9,10 +9,6 @@ export function fetchStudents() {
   return request.get<Student[]>(`/students`)
 }
 
-export function fetchStudent(orgId: number, id: number) {
-  return request.get<Student>(`/students/${id}?orgId=${orgId}`)
-}
-
 export function deleteStudent(id: number) {
   return request.delete<Student>(`/students/${id}`)
 }

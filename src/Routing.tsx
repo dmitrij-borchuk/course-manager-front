@@ -20,6 +20,7 @@ import {
   StudentPageLoadable,
   CreateStudentPageLoadable,
   EditStudentPageLoadable,
+  StudentInGroupPageLoadable,
 } from './pages/students'
 import { LogoutPage } from './pages/auth/Logout'
 import { SchedulePageLoadable } from './pages/schedules'
@@ -44,6 +45,7 @@ const EditGroupPage = withHeader(EditGroupPageLoadable)
 const GroupPage = withHeader(GroupPageLoadable)
 const CreateStudentPage = withHeader(CreateStudentPageLoadable)
 const EditStudentPage = withHeader(EditStudentPageLoadable)
+const StudentInGroupPage = withHeader(StudentInGroupPageLoadable)
 const StudentsListPage = withHeader(StudentsListPageLoadable)
 const StudentPage = withHeader(StudentPageLoadable)
 const SchedulePage = withHeader(SchedulePageLoadable)
@@ -174,6 +176,7 @@ const OrganizationGuardedRoute = () => {
       <AuthGuardedRoute component={EditStudentPage} path={`/:orgId${ROUTES.STUDENTS_EDIT}/:id`} exact />
       <AuthGuardedRoute component={StudentsListPage} path={`/:orgId${ROUTES.STUDENTS_LIST}`} exact />
       <AuthGuardedRoute component={StudentPage} path={`/:orgId${ROUTES.STUDENTS_ROOT}/:id`} exact />
+      <AuthGuardedRoute component={StudentInGroupPage} path={`/:orgId${ROUTES.STUDENTS_BY_ACTIVITY}`} exact />
 
       {/* Schedule */}
       <AuthGuardedRoute component={SchedulePage} path={`/:orgId${ROUTES.SCHEDULES_ROOT}`} exact />

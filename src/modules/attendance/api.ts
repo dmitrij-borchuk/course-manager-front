@@ -1,0 +1,40 @@
+import { Attendance } from 'types/attendance'
+import { makeOrgCollection } from '../../api/firebase/collections'
+
+export async function fetchAttendance(orgId: string, id: string) {
+  const collection = makeOrgCollection<Attendance>('attendances', orgId)
+  return await collection.getById(id)
+}
+
+export async function fetchAttendancesForGroups(orgId: string, groupsOuterIds: string[]) {
+  const collection = makeOrgCollection<Attendance>('attendances', orgId)
+  const result = await Promise.all(
+    groupsOuterIds.map((id) => {
+      return collection.query('group', '==', id)
+    })
+  )
+
+  return result.flat()
+}
+
+export async function fetchAttendances(
+  orgId: string,
+  params: { teacherId?: string; activity?: string; from?: Date; to?: Date }
+) {
+  const collection = makeOrgCollection<Attendance>('attendances', orgId)
+  const config = []
+  if (params.from) {
+    config.push(['date', '>=', params.from.getTime()] as const)
+  }
+  if (params.to) {
+    config.push(['date', '<=', params.to.getTime()] as const)
+  }
+  if (params.teacherId) {
+    config.push(['teacher', '==', params.teacherId])
+  }
+  if (params.activity) {
+    config.push(['group', '==', params.activity])
+  }
+
+  return collection.queryMulti(config as any)
+}

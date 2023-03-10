@@ -101,6 +101,9 @@ export const messages = {
   'students.edit.success': 'Student has been successfully updated',
   'students.assignGroups.success': 'Groups have been successfully assigned',
   'students.tags.empty': 'No tags have been assigned',
+  'students.attendance.details.label': 'Attendance details',
+  'students.attendance.attended': 'Attended',
+  'students.attendance.missed': 'Missed',
 
   'schedule.list.title': 'Schedule',
   'schedule.form.title': 'Schedule',
@@ -161,6 +164,9 @@ export const messages = {
   'reports.noTagsSelected': 'Please select at least one tag to be able to generate report',
   'reports.noReports': 'N/A',
   'reports.groupSelector.label': 'Group',
+
+  'calendar.previousBtn.label': 'Previous',
+  'calendar.nextBtn.label': 'Next',
 }
 
 export default messages

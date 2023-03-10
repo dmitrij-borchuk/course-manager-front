@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react'
 import { useQueryClient } from 'react-query'
-import { assignParticipant, fetchActivity, unassignParticipant } from '../api/activities'
+import { assignParticipant, fetchActivity, unassignParticipant } from '../modules/activities/api'
 import { fetchParticipantsByActivity } from '../api/participants'
 import { useDictionaryToArray } from '../hooks/useDictionaryToArray'
 import { Activity } from '../types/activity'

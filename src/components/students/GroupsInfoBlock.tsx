@@ -21,7 +21,7 @@ interface Props {
   loadingGroups?: boolean
 }
 export const GroupsInfoBlock = ({ groups, student, attendanceRates, loadingGroups }: Props) => {
-  const renderItem = useMemo(() => getGroupItemRender(attendanceRates), [attendanceRates])
+  const renderItem = useMemo(() => getGroupItemRender(attendanceRates, student), [attendanceRates, student])
 
   return (
     <>
@@ -79,13 +79,14 @@ const NoGroupsInfoBlock = ({ student }: NoGroupsInfoBlockProps) => {
 
 interface GroupWithAttendanceProps {
   group: Activity
+  participant: Student
   attendanceRate?: number
 }
-const GroupWithAttendance = ({ group, attendanceRate }: GroupWithAttendanceProps) => {
+const GroupWithAttendance = ({ group, attendanceRate, participant }: GroupWithAttendanceProps) => {
   const orgId = useOrgId()
 
   return (
-    <CollectionItemLink to={`/${orgId}${ROUTES.GROUPS_ROOT}/${group.id}`}>
+    <CollectionItemLink to={`/${orgId}${ROUTES.makeStudentsByActivity(participant.id, group.id)}`}>
       <div className="flex justify-between">
         <Ellipsis>{group.name}</Ellipsis>
         {attendanceRate !== undefined && <AttendanceRateBadge value={attendanceRate} />}
@@ -94,6 +95,8 @@ const GroupWithAttendance = ({ group, attendanceRate }: GroupWithAttendanceProps
   )
 }
 
-function getGroupItemRender(attendances: Dictionary<number>) {
-  return (data: Activity) => <GroupWithAttendance key={data.id} group={data} attendanceRate={attendances[data.id]} />
+function getGroupItemRender(attendances: Dictionary<number>, participant: Student) {
+  return (data: Activity) => (
+    <GroupWithAttendance key={data.id} group={data} attendanceRate={attendances[data.id]} participant={participant} />
+  )
 }

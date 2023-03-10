@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
 import { Activity } from 'types/activity'
-import { useGroups } from 'store/groupsStore'
+import { useGroups, useParticipation } from 'store/groupsStore'
 import { useStudentsState } from '../../store'
 import { useAttendancesState } from '../../store'
 import { ROUTES } from '../../constants'
@@ -19,19 +19,35 @@ export const StudentPage = () => {
   const id = parseInt(idStr)
 
   const { fetchStudent, studentsById, deleteStudent } = useStudentsState()
-  const { attendances, clearAttendances, fetchAttendancesForGroups } = useAttendancesState()
+  const { attendances, clearAttendances, fetchAttendances } = useAttendancesState()
   const date = useMemo(() => new Date(), [])
   const query = useGroups({
     archived: 'all',
     participantId: id,
     date,
   })
+  const allActivitiesQuery = useGroups({
+    archived: 'all',
+    participantId: id,
+    deleted: 'all',
+  })
+  const participationQuery = useParticipation({
+    participantId: id,
+  })
   const groups = query.data?.data || emptyGroups
   const fetchingGroups = query.isLoading
   const student = studentsById.get(id)
   const orgKey = useOrgId()
+  useEffect(() => {
+    participationQuery.data?.data.forEach((p) => {
+      fetchAttendances(orgKey, {
+        activity: p.activity.outerId,
+        from: new Date(p.startDate),
+        to: p.endDate ? new Date(p.endDate) : undefined,
+      })
+    })
+  }, [fetchAttendances, orgKey, participationQuery.data?.data])
   const organization = useCurrentOrg()
-  const orgId = organization?.id
 
   const onDelete = useCallback(async () => {
     if (organization && student) {
@@ -44,27 +60,16 @@ export const StudentPage = () => {
   const rateByGroups = useStudentAttendanceRateByGroups(student?.outerId, groups, attendances)
 
   useEffect(() => {
-    if (orgId) {
-      fetchStudent(orgId, id)
-    }
-  }, [fetchStudent, id, orgId])
+    fetchStudent(id)
+  }, [fetchStudent, id])
 
-  useEffect(() => {
-    if (groups.length) {
-      // TODO: probably we need to fetch attendance only for ongoing groups
-      fetchAttendancesForGroups(
-        orgKey,
-        groups.map((g) => g.outerId)
-      )
-    }
-  }, [fetchAttendancesForGroups, groups, orgKey])
   useEffect(() => {
     return () => {
       clearAttendances()
     }
   }, [clearAttendances])
 
-  if (!student) {
+  if (!student || allActivitiesQuery.isLoading) {
     return (
       <div key="loader" data-testid="preloader">
         Loading

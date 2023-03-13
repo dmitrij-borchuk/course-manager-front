@@ -1,5 +1,6 @@
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { FormattedMessage } from 'react-intl'
+import { useSortingByHeader } from 'utils/sorting'
 import { ROUTES } from '../../constants'
 import { useOrgId } from '../../hooks/useOrgId'
 import { Dictionary } from '../../types/dictionary'
@@ -31,7 +32,19 @@ export const StudentList: React.FC<Props> = ({ className = '', loading = false, 
       </div>
     )
   }, [])
-  const { onSort, sortId, sortOrder, sortedItems } = useSortingByHeader(items, attendanceRates)
+  const preparedData: TableContentItem[] = useMemo(() => {
+    return items.map((s) => ({
+      id: s.id,
+      name: s.name,
+      outerId: s.outerId,
+      attendanceRate: attendanceRates && attendanceRates[s.outerId],
+    }))
+  }, [items, attendanceRates])
+  const getData = useCallback((d: TableContentItem, prop: keyof TableContentItem) => d[prop], [])
+  const { onSort, sortId, sortOrder, sortedItems } = useSortingByHeader(preparedData, {
+    defaultSortId: 'name',
+    getData,
+  })
 
   return (
     <ListPage
@@ -56,63 +69,8 @@ export const StudentList: React.FC<Props> = ({ className = '', loading = false, 
   )
 }
 
-type SortProps = 'name' | 'attendanceRate'
-
 type TableContentItem = {
   id: number
   name: string
   attendanceRate?: number
-}
-
-function useSortingByHeader(items: Student[] = [], attendanceRates?: Dictionary<number>) {
-  const [sortId, setSortId] = useState<SortProps>('name')
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc')
-  const onSort = useCallback((newSortId: SortProps, order: 'asc' | 'desc') => {
-    setSortId(newSortId)
-    setSortOrder(order)
-  }, [])
-
-  const sortedItems: TableContentItem[] = useMemo(() => {
-    const sorted = items
-      .map((s) => ({
-        id: s.id,
-        name: s.name,
-        attendanceRate: attendanceRates && attendanceRates[s.outerId],
-      }))
-      .sort((a, b) => {
-        const aValue = a[sortId]
-        const bValue = b[sortId]
-
-        if (aValue === undefined) {
-          return -1
-        }
-        if (bValue === undefined) {
-          return 1
-        }
-
-        return compare(aValue, bValue)
-      })
-    if (sortOrder === 'desc') {
-      sorted.reverse()
-    }
-
-    return sorted
-  }, [attendanceRates, items, sortId, sortOrder])
-
-  return {
-    sortId,
-    sortOrder,
-    onSort,
-    sortedItems,
-  }
-}
-
-function compare(a: string | number, b: string | number) {
-  if (typeof a === 'string' && typeof b === 'string') {
-    return a.localeCompare(b)
-  }
-  if (typeof a === 'number' && typeof b === 'number') {
-    return a - b
-  }
-  return 0
 }

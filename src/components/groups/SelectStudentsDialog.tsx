@@ -91,6 +91,13 @@ export function SelectStudentsDialog(props: Props) {
             options={items}
             getOptionLabel={(option) => option.name}
             value={selected}
+            // Workaround to be able to use items with same label
+            // filtering doesn't work properly otherwise
+            renderOption={(props, option) => (
+              <li {...props} key={option.id}>
+                {option.name}
+              </li>
+            )}
             onChange={(event, value) => setSelected(value)}
             isOptionEqualToValue={(option, value) => option.id === value.id}
             sx={{

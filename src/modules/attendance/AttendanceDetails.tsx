@@ -21,8 +21,9 @@ import { ArrowBackIosNew, ArrowForwardIos } from '@mui/icons-material'
 
 type Props = {
   participant: Student
+  activityId?: number
 }
-export function AttendanceDetails({ participant }: Props) {
+export function AttendanceDetails({ participant, activityId }: Props) {
   const [date, setDate] = useState(new Date())
   const participantOuterId = participant.outerId
   const incrementFn = useRef(getIncrementFunction(ViewType.DESKTOP))
@@ -35,6 +36,7 @@ export function AttendanceDetails({ participant }: Props) {
   const orgKey = useOrgId()
   const participationQuery = useParticipation({
     participantId: participant.id,
+    activityId,
   })
   const { data: participationResp } = participationQuery
   const attendanceQuery = useAttendanceQuery(orgKey, participationResp?.data)

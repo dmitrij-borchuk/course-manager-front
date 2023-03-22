@@ -19,7 +19,7 @@ export function fetchActivities(params?: FetchActivitiesParams) {
 }
 
 type FetchParticipationParamsParams = {
-  performerId?: number
+  activityId?: number
   archived?: 'true' | 'false' | 'all'
   deleted?: 'true' | 'false' | 'all'
   participantId?: number

@@ -40,7 +40,7 @@ export function DetailsByActivityAndParticipant({ activityId, participantId }: P
           <Ellipsis>{activityName}</Ellipsis>
         </Typography>
         <Box mt={3}>
-          <AttendanceDetails participant={participantResp.data} />
+          <AttendanceDetails participant={participantResp.data} activityId={activityId} />
         </Box>
       </Container>
     </>

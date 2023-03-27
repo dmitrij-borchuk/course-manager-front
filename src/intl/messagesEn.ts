@@ -10,6 +10,7 @@ export const messages = {
   'common.form.tags.label': 'Tags',
   'common.form.newTag.label': 'New tag',
   'common.dialog.btn.yes': 'Yes',
+  'common.dialog.btn.save': 'Save',
   'common.dialog.btn.no': 'No',
   'common.dialog.btn.ok': 'Ok',
   'common.dialog.btn.cancel': 'Cancel',
@@ -23,6 +24,7 @@ export const messages = {
   'common.name.label': 'Name',
   'common.unknownError': 'Unknown error',
   'common.edit': 'Edit',
+  'common.filter': 'Filter',
 
   'Auth.form.error.invalid': 'Identifier or password invalid.',
   'Auth.form.error.500': 'Something went wrong',
@@ -87,6 +89,7 @@ export const messages = {
   'groups.deleteBtn.label': 'Delete',
   'groups.closed.message': 'This group is closed',
   'groups.moreMenu.title': 'more',
+  'groups.filtering.showArchived.inputLabel': 'Show archived',
 
   'students.add.title': 'Add student',
   'students.add': 'Add student',

@@ -8,19 +8,31 @@ import { Activity } from '../../types/activity'
 import { Dictionary } from '../../types/dictionary'
 import { Heading } from './groupList/ListHeader'
 import { ActivitiesList } from './groupList/ActivitiesList'
-import { FilteringDialog } from './groupList/FilteringDialog'
+import { FilteringDialog, FilteringFormValues } from './groupList/FilteringDialog'
+
 interface Props {
   loading?: boolean
-  className?: string
   items?: Activity[]
   attendanceRates?: Dictionary<number>
+  onFiltersChange?: (data: FilteringFormValues) => void
+  filter?: FilteringFormValues
 }
-export const GroupsList: React.FC<Props> = ({ className = '', loading = false, items = [], attendanceRates }) => {
+export const GroupsList: React.FC<Props> = ({
+  loading = false,
+  items = [],
+  attendanceRates,
+  onFiltersChange,
+  filter,
+}) => {
   const [openFilterDialog, setOpenFilterDialog] = useState(false)
   const orgId = useOrgId()
-  const onFiltersApply = useCallback((data) => {
-    setOpenFilterDialog(false)
-  }, [])
+  const onFiltersApply = useCallback(
+    (data) => {
+      onFiltersChange?.(data)
+      setOpenFilterDialog(false)
+    },
+    [onFiltersChange]
+  )
 
   return (
     <>
@@ -34,8 +46,12 @@ export const GroupsList: React.FC<Props> = ({ className = '', loading = false, i
         <FabBtn />
       </Link>
 
-      {/* TODO: Should persist */}
-      <FilteringDialog open={openFilterDialog} onClose={() => setOpenFilterDialog(false)} onSave={onFiltersApply} />
+      <FilteringDialog
+        open={openFilterDialog}
+        onClose={() => setOpenFilterDialog(false)}
+        onSave={onFiltersApply}
+        filter={filter}
+      />
     </>
   )
 }

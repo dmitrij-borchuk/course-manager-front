@@ -1,22 +1,76 @@
 import { Controller, useForm } from 'react-hook-form'
 import { FormattedMessage, useIntl } from 'react-intl'
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControlLabel, Switch } from '@mui/material'
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControlLabel, Switch } from '@mui/material'
 import { noop } from 'utils/common'
 
 type FilteringDialogProps = {
   open: boolean
   onClose?: () => void
-  onSave?: (data: FormValues) => void
+  onSave?: (data: FilteringFormValues) => void
+  filter?: FilteringFormValues
 }
-export function FilteringDialog({ open, onClose, onSave = noop }: FilteringDialogProps) {
+export function FilteringDialog({ open, onClose, onSave = noop, filter }: FilteringDialogProps) {
   return (
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>
         <FormattedMessage id="common.filter" />
       </DialogTitle>
 
+      <Box maxWidth="100%" width="100vw">
+        <FilteringForm onSubmit={onSave} onClose={onClose} initialValues={filter} />
+      </Box>
+    </Dialog>
+  )
+}
+export type FilteringFormValues = {
+  showArchived: boolean
+}
+
+type FilteringFormProps = {
+  onSubmit?: (data: FilteringFormValues) => void
+  onClose?: () => void
+  initialValues?: FilteringFormValues
+}
+function FilteringForm({ onSubmit = noop, onClose, initialValues }: FilteringFormProps) {
+  const intl = useIntl()
+  const form = useForm<FilteringFormValues>({
+    defaultValues: initialValues,
+  })
+
+  return (
+    <form onSubmit={form.handleSubmit(onSubmit)}>
       <DialogContent>
-        <FilteringForm onSubmit={onSave} />
+        <Box width="100%" display="flex">
+          <Controller
+            control={form.control}
+            name="showArchived"
+            label={`${intl.formatMessage({ id: 'common.date' })} *`}
+            render={({ value, ...renderProps }) => {
+              return (
+                <FormControlLabel
+                  sx={{
+                    width: '100%',
+                    justifyContent: 'space-between',
+                  }}
+                  control={
+                    <Switch
+                      checked={value}
+                      color="primary"
+                      // To remove MaterializeCSS styles
+                      classes={{ thumb: 'lever' }}
+                      {...renderProps}
+                      onChange={(v) => {
+                        renderProps.onChange(v.target.checked)
+                      }}
+                    />
+                  }
+                  labelPlacement="start"
+                  label={<FormattedMessage id="groups.filtering.showArchived.inputLabel" />}
+                />
+              )
+            }}
+          />
+        </Box>
       </DialogContent>
 
       <DialogActions>
@@ -27,53 +81,6 @@ export function FilteringDialog({ open, onClose, onSave = noop }: FilteringDialo
           <FormattedMessage id="common.dialog.btn.save" />
         </Button>
       </DialogActions>
-    </Dialog>
-  )
-}
-type FormValues = {
-  showArchived: boolean
-}
-
-type FilteringFormProps = {
-  onSubmit?: (data: FormValues) => void
-}
-function FilteringForm({ onSubmit = noop }: FilteringFormProps) {
-  const intl = useIntl()
-  const form = useForm<FormValues>({
-    defaultValues: {
-      showArchived: false,
-    },
-  })
-
-  return (
-    <form onSubmit={form.handleSubmit(onSubmit)}>
-      <Controller
-        control={form.control}
-        name="showArchived"
-        label={`${intl.formatMessage({ id: 'common.date' })} *`}
-        render={({ value, ...renderProps }) => {
-          return (
-            <FormControlLabel
-              sx={{
-                display: 'block',
-              }}
-              control={
-                <Switch
-                  checked={value}
-                  color="primary"
-                  // To remove MaterializeCSS styles
-                  classes={{ thumb: 'lever' }}
-                  {...renderProps}
-                  onChange={(v) => {
-                    renderProps.onChange(v.target.checked)
-                  }}
-                />
-              }
-              label={<FormattedMessage id="groups.filtering.showArchived.inputLabel" />}
-            />
-          )
-        }}
-      />
     </form>
   )
 }

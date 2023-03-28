@@ -18,8 +18,10 @@ export function ActivitiesList({ items, attendanceRates, loading }: Props) {
   const orgKey = useOrgId()
   const renderItem = useCallback((g: TableContentItem) => {
     return (
-      <div className="flex justify-between">
-        <Ellipsis>{g.name}</Ellipsis>
+      <div className={`flex justify-between transition-opacity ${g.archived ? 'opacity-40 hover:opacity-100' : ''}`}>
+        <Ellipsis>
+          {g.archived ? <FormattedMessage id="groups.archived.name" values={{ name: g.name }} /> : g.name}
+        </Ellipsis>
         {g.attendanceRate && <AttendanceRateBadge value={g.attendanceRate} />}
       </div>
     )
@@ -53,6 +55,7 @@ type TableContentItem = {
   id: number
   name: string
   attendanceRate?: number
+  archived: boolean
 }
 function useSortingByHeader(items: Activity[] = [], attendanceRates?: Dictionary<number>) {
   const [sortId, setSortId] = useState<SortProps>('name')
@@ -68,6 +71,7 @@ function useSortingByHeader(items: Activity[] = [], attendanceRates?: Dictionary
         id: s.id,
         name: s.name,
         attendanceRate: attendanceRates && attendanceRates[s.id],
+        archived: s.archived,
       }))
       .sort((a, b) => {
         const aValue = a[sortId]

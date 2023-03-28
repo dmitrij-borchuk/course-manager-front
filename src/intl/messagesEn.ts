@@ -90,6 +90,7 @@ export const messages = {
   'groups.closed.message': 'This group is closed',
   'groups.moreMenu.title': 'more',
   'groups.filtering.showArchived.inputLabel': 'Show archived',
+  'groups.archived.name': '{name} (Archived)',
 
   'students.add.title': 'Add student',
   'students.add': 'Add student',

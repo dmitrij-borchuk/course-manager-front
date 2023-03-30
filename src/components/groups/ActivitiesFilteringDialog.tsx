@@ -3,13 +3,13 @@ import { FormattedMessage, useIntl } from 'react-intl'
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControlLabel, Switch } from '@mui/material'
 import { noop } from 'utils/common'
 
-type FilteringDialogProps = {
+type Props = {
   open: boolean
   onClose?: () => void
-  onSave?: (data: FilteringFormValues) => void
-  filter?: FilteringFormValues
+  onSave?: (data: ActivitiesFilteringFormValues) => void
+  filter?: ActivitiesFilteringFormValues
 }
-export function FilteringDialog({ open, onClose, onSave = noop, filter }: FilteringDialogProps) {
+export function ActivitiesFilteringDialog({ open, onClose, onSave = noop, filter }: Props) {
   return (
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>
@@ -22,18 +22,18 @@ export function FilteringDialog({ open, onClose, onSave = noop, filter }: Filter
     </Dialog>
   )
 }
-export type FilteringFormValues = {
+export type ActivitiesFilteringFormValues = {
   showArchived: boolean
 }
 
 type FilteringFormProps = {
-  onSubmit?: (data: FilteringFormValues) => void
+  onSubmit?: (data: ActivitiesFilteringFormValues) => void
   onClose?: () => void
-  initialValues?: FilteringFormValues
+  initialValues?: ActivitiesFilteringFormValues
 }
 function FilteringForm({ onSubmit = noop, onClose, initialValues }: FilteringFormProps) {
   const intl = useIntl()
-  const form = useForm<FilteringFormValues>({
+  const form = useForm<ActivitiesFilteringFormValues>({
     defaultValues: initialValues,
   })
 

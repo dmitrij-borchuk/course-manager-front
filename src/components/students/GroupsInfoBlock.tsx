@@ -1,6 +1,14 @@
-import React, { useMemo } from 'react'
-import { FormattedMessage } from 'react-intl'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Button, Preloader } from 'react-materialize'
+import { FormattedMessage } from 'react-intl'
+import { useParams } from 'react-router-dom'
+import ArchiveIcon from '@mui/icons-material/Archive'
+import { Box } from '@mui/material'
+import { useGroups, useParticipation } from 'store/groupsStore'
+import { useAttendancesState } from 'store'
+import { ActivitiesFilteringDialog, ActivitiesFilteringFormValues } from 'components/groups/ActivitiesFilteringDialog'
+import { ResponsiveButtons } from 'components/kit/responsiveButtons/ResponsiveButtons'
+import { useStudentAttendanceRateByGroups } from 'hooks/useAttendanceRate'
 import { ROUTES } from '../../constants'
 import { useOrgId } from '../../hooks/useOrgId'
 import { Activity } from '../../types/activity'
@@ -15,12 +23,11 @@ import { Text } from '../kit/text/Text'
 import { AssignGroups } from './AssignGroups'
 
 interface Props {
-  groups?: Activity[]
   student: Student
-  attendanceRates: Dictionary<number>
-  loadingGroups?: boolean
 }
-export const GroupsInfoBlock = ({ groups, student, attendanceRates, loadingGroups }: Props) => {
+export const GroupsInfoBlock = ({ student }: Props) => {
+  const { groups, openFilterDialog, setOpenFilterDialog, loadingGroups, onFiltersApply, attendanceRates, filter } =
+    useData(student?.outerId)
   const renderItem = useMemo(() => getGroupItemRender(attendanceRates, student), [attendanceRates, student])
 
   return (
@@ -30,14 +37,27 @@ export const GroupsInfoBlock = ({ groups, student, attendanceRates, loadingGroup
           <FormattedMessage id="groups.list.title" />
         </Text>
 
-        {/* Assign groups dialog */}
-        {!!groups?.length && (
-          <AssignGroups
-            student={student}
-            initialGroups={groups}
-            trigger={<IconButton type="square" size={40} icon="edit" />}
+        <Box display="flex">
+          <ResponsiveButtons
+            items={[
+              {
+                id: 'edit',
+                label: <FormattedMessage id="common.filter" />,
+                icon: <ArchiveIcon />,
+                onClick: () => setOpenFilterDialog(true),
+              },
+            ]}
           />
-        )}
+
+          {/* Assign groups dialog */}
+          {!!groups?.length && (
+            <AssignGroups
+              student={student}
+              initialGroups={groups}
+              trigger={<IconButton type="square" size={40} icon="edit" />}
+            />
+          )}
+        </Box>
       </div>
 
       {loadingGroups ? (
@@ -49,6 +69,13 @@ export const GroupsInfoBlock = ({ groups, student, attendanceRates, loadingGroup
       ) : (
         <NoGroupsInfoBlock student={student} />
       )}
+
+      <ActivitiesFilteringDialog
+        open={openFilterDialog}
+        onClose={() => setOpenFilterDialog(false)}
+        onSave={onFiltersApply}
+        filter={filter}
+      />
     </>
   )
 }
@@ -87,8 +114,12 @@ const GroupWithAttendance = ({ group, attendanceRate, participant }: GroupWithAt
 
   return (
     <CollectionItemLink to={`/${orgId}${ROUTES.makeStudentsByActivity(participant.id, group.id)}`}>
-      <div className="flex justify-between">
-        <Ellipsis>{group.name}</Ellipsis>
+      <div
+        className={`flex justify-between transition-opacity ${group.archived ? 'opacity-40 hover:opacity-100' : ''}`}
+      >
+        <Ellipsis>
+          {group.archived ? <FormattedMessage id="groups.archived.name" values={{ name: group.name }} /> : group.name}
+        </Ellipsis>
         {attendanceRate !== undefined && <AttendanceRateBadge value={attendanceRate} />}
       </div>
     </CollectionItemLink>
@@ -99,4 +130,59 @@ function getGroupItemRender(attendances: Dictionary<number>, participant: Studen
   return (data: Activity) => (
     <GroupWithAttendance key={data.id} group={data} attendanceRate={attendances[data.id]} participant={participant} />
   )
+}
+
+const emptyGroups: Activity[] = []
+
+function useData(studentOuterId?: string) {
+  const orgKey = useOrgId()
+  const date = useMemo(() => new Date(), [])
+  let { id: idStr } = useParams<{ id: string }>()
+  const id = parseInt(idStr)
+  const [filter, setFilter] = useState<ActivitiesFilteringFormValues>(
+    JSON.parse(localStorage.getItem('groupsFilter') || '{"showArchived": false}')
+  )
+  const onFiltersApply = useCallback((data) => {
+    setFilter(data)
+    setOpenFilterDialog(false)
+    localStorage.setItem('groupsFilter', JSON.stringify(data))
+  }, [])
+  const query = useGroups({
+    archived: filter.showArchived ? 'all' : 'false',
+    participantId: id,
+    date,
+  })
+  const loadingGroups = query.isLoading
+  const participationQuery = useParticipation({
+    participantId: id,
+  })
+  const groups = query.data?.data || emptyGroups
+  const { attendances, clearAttendances, fetchAttendances } = useAttendancesState()
+  const attendanceRates = useStudentAttendanceRateByGroups(studentOuterId, groups, attendances)
+  const [openFilterDialog, setOpenFilterDialog] = useState(false)
+
+  useEffect(() => {
+    participationQuery.data?.data.forEach((p) => {
+      fetchAttendances(orgKey, {
+        activity: p.activity.outerId,
+        from: new Date(p.startDate),
+        to: p.endDate ? new Date(p.endDate) : undefined,
+      })
+    })
+  }, [fetchAttendances, orgKey, participationQuery.data?.data])
+  useEffect(() => {
+    return () => {
+      clearAttendances()
+    }
+  }, [clearAttendances])
+
+  return {
+    groups,
+    openFilterDialog,
+    setOpenFilterDialog,
+    loadingGroups,
+    onFiltersApply,
+    attendanceRates,
+    filter,
+  }
 }

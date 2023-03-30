@@ -8,14 +8,14 @@ import { Activity } from '../../types/activity'
 import { Dictionary } from '../../types/dictionary'
 import { Heading } from './groupList/ListHeader'
 import { ActivitiesList } from './groupList/ActivitiesList'
-import { FilteringDialog, FilteringFormValues } from './groupList/FilteringDialog'
+import { ActivitiesFilteringDialog, ActivitiesFilteringFormValues } from './ActivitiesFilteringDialog'
 
 interface Props {
   loading?: boolean
   items?: Activity[]
   attendanceRates?: Dictionary<number>
-  onFiltersChange?: (data: FilteringFormValues) => void
-  filter?: FilteringFormValues
+  onFiltersChange?: (data: ActivitiesFilteringFormValues) => void
+  filter?: ActivitiesFilteringFormValues
 }
 export const GroupsList: React.FC<Props> = ({
   loading = false,
@@ -46,7 +46,7 @@ export const GroupsList: React.FC<Props> = ({
         <FabBtn />
       </Link>
 
-      <FilteringDialog
+      <ActivitiesFilteringDialog
         open={openFilterDialog}
         onClose={() => setOpenFilterDialog(false)}
         onSave={onFiltersApply}

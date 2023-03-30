@@ -44,7 +44,9 @@ export const Student: React.FC<Props> = ({ className = '', data, onDelete }) => 
           </Tag>
         ))}
 
-        <GroupsInfoBlock student={data} />
+        <div className="mt-6">
+          <GroupsInfoBlock student={data} />
+        </div>
       </Container>
     </div>
   )

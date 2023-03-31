@@ -1,27 +1,52 @@
-import { useEffect } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet'
+import { useGroups } from 'store/groupsStore'
 import { GroupsList } from '../../components/groups/GroupsList'
 import { TITLE_POSTFIX } from '../../config'
 import { useAttendanceRateByGroups } from '../../hooks/useAttendanceRate'
 import { useOrgId } from '../../hooks/useOrgId'
-import { useAttendancesState, useGroupsState } from '../../store'
+import { useAttendancesState } from '../../store'
 
 export const GroupsListPage = () => {
-  const { fetchGroups, clearGroups, groups, fetching } = useGroupsState()
+  const { fetching, groups, rateByGroup, filter, updateFilter } = useActivitiesData()
+
+  return (
+    <>
+      <Helmet>
+        <title>Groups{TITLE_POSTFIX}</title>
+      </Helmet>
+      <GroupsList
+        items={groups}
+        loading={fetching}
+        attendanceRates={rateByGroup}
+        onFiltersChange={updateFilter}
+        filter={filter}
+      />
+    </>
+  )
+}
+
+export default GroupsListPage
+
+function useActivitiesData() {
+  const [filter, setFilter] = useState<Filter>(
+    JSON.parse(localStorage.getItem('groupsFilter') || '{"showArchived": false}')
+  )
+  const updateFilter = useCallback((filter) => {
+    setFilter(filter)
+    localStorage.setItem('groupsFilter', JSON.stringify(filter))
+  }, [])
+
+  const groupsQuery = useGroups({
+    archived: filter.showArchived ? 'all' : 'false',
+  })
+  const groups = groupsQuery.data?.data
   const { attendances, clearAttendances, fetchAttendancesForGroups } = useAttendancesState()
   const orgKey = useOrgId()
-  const rateByGroup = useAttendanceRateByGroups(groups, attendances)
+  const rateByGroup = useAttendanceRateByGroups(groups || [], attendances)
 
   useEffect(() => {
-    fetchGroups()
-    return () => {
-      clearGroups()
-    }
-  }, [clearGroups, fetchGroups])
-
-  useEffect(() => {
-    if (groups.length) {
-      // TODO: probably we need to fetch attendance only for ongoing groups
+    if (groups?.length) {
       fetchAttendancesForGroups(
         orgKey,
         groups.map((g) => g.outerId)
@@ -32,14 +57,16 @@ export const GroupsListPage = () => {
     }
   }, [clearAttendances, fetchAttendancesForGroups, groups, orgKey])
 
-  return (
-    <>
-      <Helmet>
-        <title>Groups{TITLE_POSTFIX}</title>
-      </Helmet>
-      <GroupsList items={groups} loading={fetching} attendanceRates={rateByGroup} />
-    </>
-  )
+  return {
+    filter,
+    updateFilter,
+    groups,
+    fetching: groupsQuery.isLoading,
+    attendances,
+    rateByGroup,
+  }
 }
 
-export default GroupsListPage
+type Filter = {
+  showArchived: boolean
+}

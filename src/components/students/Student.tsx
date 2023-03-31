@@ -1,10 +1,8 @@
-import { Container } from '@mui/material'
 import React from 'react'
 import { FormattedMessage, useIntl } from 'react-intl'
+import { Container } from '@mui/material'
 import { ROUTES } from '../../constants'
 import { useOrgId } from '../../hooks/useOrgId'
-import { Activity } from '../../types/activity'
-import { Dictionary } from '../../types/dictionary'
 import { Student as StudentType } from '../../types/student'
 import { HeadingWithControls } from '../kit/headingWithControls/HeadingWithControls'
 import { Tag } from '../kit/tag/Tag'
@@ -15,18 +13,8 @@ interface Props {
   className?: string
   data: StudentType
   onDelete: () => void
-  attendanceRates: Dictionary<number>
-  groups?: Activity[]
-  loadingGroups?: boolean
 }
-export const Student: React.FC<Props> = ({
-  className = '',
-  data,
-  groups,
-  onDelete,
-  attendanceRates,
-  loadingGroups = false,
-}) => {
+export const Student: React.FC<Props> = ({ className = '', data, onDelete }) => {
   const intl = useIntl()
   const orgId = useOrgId()
   const { name, id, tags } = data
@@ -56,12 +44,9 @@ export const Student: React.FC<Props> = ({
           </Tag>
         ))}
 
-        <GroupsInfoBlock
-          student={data}
-          groups={groups}
-          attendanceRates={attendanceRates}
-          loadingGroups={loadingGroups}
-        />
+        <div className="mt-6">
+          <GroupsInfoBlock student={data} />
+        </div>
       </Container>
     </div>
   )

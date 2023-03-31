@@ -20,7 +20,7 @@ describe('GroupsInfoBlock', () => {
     result.current.onFiltersApply({ showArchived: true })
     expect(result.current.filter.showArchived).toBe(true)
 
-    const view = renderHook(() => useData(), { wrapper: TestWrapper })
-    expect(view.result.current.filter.showArchived).toBe(true)
+    const { result: newRenderResult } = renderHook(() => useData(), { wrapper: TestWrapper })
+    expect(newRenderResult.current.filter.showArchived).toBe(true)
   })
 })

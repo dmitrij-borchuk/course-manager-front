@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Button, Preloader } from 'react-materialize'
 import { FormattedMessage } from 'react-intl'
 import { useParams } from 'react-router-dom'
-import ArchiveIcon from '@mui/icons-material/Archive'
+import FilterAltIcon from '@mui/icons-material/FilterAlt'
 import { Box } from '@mui/material'
 import { useGroups, useParticipation } from 'store/groupsStore'
 import { useAttendancesState } from 'store'
@@ -41,9 +41,9 @@ export const GroupsInfoBlock = ({ student }: Props) => {
           <ResponsiveButtons
             items={[
               {
-                id: 'edit',
+                id: 'filter',
                 label: <FormattedMessage id="common.filter" />,
-                icon: <ArchiveIcon />,
+                icon: <FilterAltIcon />,
                 onClick: () => setOpenFilterDialog(true),
               },
             ]}
@@ -134,7 +134,7 @@ function getGroupItemRender(attendances: Dictionary<number>, participant: Studen
 
 const emptyGroups: Activity[] = []
 
-function useData(studentOuterId?: string) {
+export function useData(studentOuterId?: string) {
   const orgKey = useOrgId()
   const date = useMemo(() => new Date(), [])
   let { id: idStr } = useParams<{ id: string }>()

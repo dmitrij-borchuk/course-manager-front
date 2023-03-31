@@ -1,5 +1,5 @@
 import { FormattedMessage } from 'react-intl'
-import ArchiveIcon from '@mui/icons-material/Archive'
+import FilterAltIcon from '@mui/icons-material/FilterAlt'
 import { ResponsiveButtons } from 'components/kit/responsiveButtons/ResponsiveButtons'
 import { SectionHeader } from 'components/kit/sectionHeader/SectionHeader'
 
@@ -16,9 +16,9 @@ export function Heading({ onFilterClick }: Props) {
       <ResponsiveButtons
         items={[
           {
-            id: 'edit',
+            id: 'filter',
             label: <FormattedMessage id="common.filter" />,
-            icon: <ArchiveIcon />,
+            icon: <FilterAltIcon />,
             onClick: onFilterClick,
           },
         ]}

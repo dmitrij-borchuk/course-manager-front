@@ -3,6 +3,7 @@ import * as firestore from 'firebase/firestore'
 import * as reactPdf from '@react-pdf/renderer'
 import userEvent from '@testing-library/user-event'
 import { asMock, getAxiosMock, getFirebaseSnapshotFromArray, TestWrapper } from '../../utils/test'
+import { clearAttendanceByGroupCache } from 'modules/attendance/api'
 import { ReportByGroupTab } from './ReportByGroupTab'
 import { Attendance } from '../../types/attendance'
 import { Student } from '../../types/student'
@@ -48,6 +49,7 @@ describe('ReportByGroupTab', () => {
   const axiosMock = getAxiosMock()
 
   beforeEach(() => {
+    clearAttendanceByGroupCache()
     resetAttendanceCache()
     useParams.mockReturnValue({
       orgId: 'orgId',

@@ -23,6 +23,9 @@ function getAttendanceByGroup(orgId: string, groupId: string) {
 
 // Need to use cacheMemo to avoid multiple requests for the same information
 const getAttendanceByGroupWithCache = cacheMemo(getAttendanceByGroup)
+export function clearAttendanceByGroupCache() {
+  getAttendanceByGroupWithCache.clear()
+}
 
 export async function fetchAttendances(
   orgId: string,

@@ -1,4 +1,5 @@
 import { Attendance } from 'types/attendance'
+import { cacheMemo } from 'utils/cacheMemo'
 import { makeOrgCollection } from '../../api/firebase/collections'
 
 export async function fetchAttendance(orgId: string, id: string) {
@@ -6,16 +7,22 @@ export async function fetchAttendance(orgId: string, id: string) {
   return await collection.getById(id)
 }
 
-export async function fetchAttendancesForGroups(orgId: string, groupsOuterIds: string[]) {
-  const collection = makeOrgCollection<Attendance>('attendances', orgId)
+export async function fetchAttendancesForGroups(orgKey: string, groupsOuterIds: string[]) {
   const result = await Promise.all(
     groupsOuterIds.map((id) => {
-      return collection.query('group', '==', id)
+      return getAttendanceByGroupWithCache(orgKey, id)
     })
   )
 
   return result.flat()
 }
+function getAttendanceByGroup(orgId: string, groupId: string) {
+  const collection = makeOrgCollection<Attendance>('attendances', orgId)
+  return collection.query('group', '==', groupId)
+}
+
+// Need to use cacheMemo to avoid multiple requests for the same information
+const getAttendanceByGroupWithCache = cacheMemo(getAttendanceByGroup)
 
 export async function fetchAttendances(
   orgId: string,

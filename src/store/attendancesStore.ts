@@ -1,4 +1,5 @@
 import { useCallback, useMemo, useState } from 'react'
+import { useQuery } from 'react-query'
 import { Attendance, AttendanceNew } from '../types/attendance'
 import { makeOrgCollection } from '../api/firebase/collections'
 import { useDictionaryToArray } from '../hooks/useDictionaryToArray'
@@ -154,5 +155,11 @@ function sortAttendances(attendances: Attendance[], reverse = false) {
     } else {
       return 0
     }
+  })
+}
+
+export function useAttendancesForGroups(orgId: string, groupsOuterIds: string[]) {
+  return useQuery(['attendances', orgId, ...groupsOuterIds], () => fetchAttendancesForGroups(orgId, groupsOuterIds), {
+    refetchOnWindowFocus: false,
   })
 }

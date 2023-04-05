@@ -1,21 +1,27 @@
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import { useToasts } from 'react-toast-notifications'
 import { Helmet } from 'react-helmet'
+import { useGroups } from 'store/groupsStore'
+import { useAttendancesForGroups } from 'store/attendancesStore'
 import { useOrgId } from '../../hooks/useOrgId'
 import { TeachersList } from '../../components/teachers/TeachersList'
-import { useAttendancesState, useTeachersState } from '../../store'
+import { useTeachersState } from '../../store'
 import { useAttendanceRateByTeacher } from '../../hooks/useAttendanceRate'
 import { useCurrentOrg } from '../../hooks/useCurrentOrg'
 import { TITLE_POSTFIX } from '../../config'
 
 export const TeachersListPage = () => {
   const { teachers, fetchTeachers, fetching } = useTeachersState()
-  const orgId = useOrgId()
+  const orgKey = useOrgId()
   const { addToast } = useToasts()
-  const { attendances, clearAttendances, fetchAllAttendances } = useAttendancesState()
-  // TODO: should we calculate rate for a period of time (semester, year) or for the all attendance reports?
-  // Probably we need to use `fetchAttendancesForGroups`
-  // so we will calculate attendance rate only for ongoing groups
+
+  const groupsQuery = useGroups({
+    archived: 'false',
+  })
+  const groups = groupsQuery.data?.data
+  const groupsIds = useMemo(() => groups?.map((g) => g.outerId) || [], [groups])
+  const attendanceQuery = useAttendancesForGroups(orgKey, groupsIds)
+  const attendances = attendanceQuery.data || []
   const rateByTeacher = useAttendanceRateByTeacher(attendances)
   const org = useCurrentOrg()
   const fetchList = useCallback(async () => {
@@ -37,14 +43,6 @@ export const TeachersListPage = () => {
       fetchList()
     }
   }, [fetchList, org])
-
-  useEffect(() => {
-    // TODO: optimize this
-    fetchAllAttendances(orgId)
-    return () => {
-      clearAttendances()
-    }
-  }, [clearAttendances, fetchAllAttendances, orgId])
 
   return (
     <>

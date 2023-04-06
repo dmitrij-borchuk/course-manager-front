@@ -36,6 +36,7 @@ import { getToken, getFirebaseUser, getUser, deleteUser } from './commands/auth'
 import { addStudentDirectly, removeStudentDirectly } from './commands/students'
 import { addActivityDirectly, addStudentToGroupDirectly, removeActivityDirectly } from './commands/activities'
 import { createUserDirectly } from './commands/users'
+import './commands/attendance'
 
 const firebaseConfig = {
   apiKey: Cypress.env('FIREBASE_API_KEY'),

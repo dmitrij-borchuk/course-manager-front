@@ -1,11 +1,12 @@
-import { nanoid } from 'nanoid'
+import { v4 } from 'uuid'
 import { Activity } from '../../../src/types/activity'
 import { Student } from '../../../src/types/student'
 import studentPage from '../../drivers/studentPage'
+import usersListPage from '../../drivers/usersListPage'
 import { getOrgKey, getOrgName } from '../../support/commands/utils'
 
 describe('Attendance', () => {
-  const orgId = nanoid()
+  const orgId = v4()
   const orgKey = getOrgKey(orgId)
   let orgDbId: number
 
@@ -23,7 +24,7 @@ describe('Attendance', () => {
   })
 
   beforeEach(() => {
-    const studentOuterId = `test-student-${nanoid()}`
+    const studentOuterId = `test-student-${v4()}`
     cy.getUser().then((user) => {
       cy.addActivityDirectly(orgKey, {
         name: 'Test group',
@@ -53,6 +54,7 @@ describe('Attendance', () => {
     cy.get<Student>('@participant').then((participant) => {
       cy.removeStudentDirectly(orgKey, participant.id)
     })
+    cy.removeAllAttendances(orgKey)
   })
 
   it.skip('Should be on the teachers list', () => {
@@ -106,6 +108,33 @@ describe('Attendance', () => {
     studentPage.waitLoading()
     studentPage.getAttendance().should('have.text', '100%')
   })
+
+  it('user attendance should should include only active groups', () => {
+    cy.get<Activity>('@activity').then((activity) => {
+      createAttendance(orgKey, {
+        attended: {
+          'test-student-1': true,
+        },
+        group: activity.outerId,
+      })
+    })
+
+    createActivity(orgKey, {
+      name: 'Test group to be closed',
+      archived: true,
+    }).then((group) => {
+      createAttendance(orgKey, {
+        attended: {
+          'test-student-1': false,
+        },
+        group: group.outerId,
+      })
+    })
+
+    cy.visit(`/${orgKey}/teachers`)
+    usersListPage.waitLoading()
+    usersListPage.getAttendance().should('have.text', '100%')
+  })
 })
 
 function waitLoading() {
@@ -125,4 +154,28 @@ function chooseStudent(name: string) {
 
 function submit() {
   cy.findByRole('button', { name: /Submit/i }).click()
+}
+
+function createAttendance(orgKey: string, data: Partial<Parameters<typeof cy.createAttendance>[1]>) {
+  cy.getUser().then((user) => {
+    cy.createAttendance(orgKey, {
+      attended: {},
+      date: Date.now(),
+      group: 'test-group-1',
+      teacher: user.body.outerId,
+      ...data,
+    })
+  })
+}
+function createActivity(orgKey: string, data: Partial<Parameters<typeof cy.addActivityDirectly>[1]>) {
+  return cy.getUser().then((user) => {
+    return cy
+      .addActivityDirectly(orgKey, {
+        name: 'Test group',
+        type: 'group',
+        performerId: user.body.id,
+        ...data,
+      })
+      .its('body')
+  })
 }

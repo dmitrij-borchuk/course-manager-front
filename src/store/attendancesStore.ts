@@ -19,23 +19,6 @@ export function useAttendancesStore() {
     loading,
     attendancesById,
     attendances,
-    fetchAllAttendances: useCallback(async (orgId: string) => {
-      if (isFetched) {
-        return
-      }
-      try {
-        setLoading(true)
-        const collection = makeOrgCollection<Attendance>('attendances', orgId)
-        const resp = await collection.getAll()
-        const itemsById = arrayToDictionary(resp)
-        setAttendancesById((att) => ({ ...att, ...itemsById }))
-        isFetched = true
-        setLoading(false)
-      } catch (error) {
-        setLoading(false)
-        throw error
-      }
-    }, []),
     fetchAttendancesByDate: useCallback(async (orgId: string, from: Date, to: Date) => {
       try {
         setLoading(true)

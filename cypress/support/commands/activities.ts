@@ -1,6 +1,6 @@
 import { NewActivity, Activity } from '../../../src/types/activity'
 
-export function addActivityDirectly(orgKey: string, data: NewActivity) {
+export function addActivityDirectly(orgKey: string, data: NewActivity & { archived?: boolean }) {
   return cy.getToken().then((token) =>
     cy.request<Activity>({
       url: `${Cypress.env('SERVER_URL')}/activities`,

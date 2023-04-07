@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
 import { Header } from '../../components/kit/header/Header'
@@ -7,21 +7,31 @@ import { Teacher } from '../../components/teachers/Teacher'
 import { useAttendanceRateByGroups } from '../../hooks/useAttendanceRate'
 import { useCurrentOrg } from '../../hooks/useCurrentOrg'
 import { useOrgId } from '../../hooks/useOrgId'
-import { useAttendancesState, useGroupsState, useTeachersState } from '../../store'
+import { useTeachersState } from '../../store'
 import { TITLE_POSTFIX } from '../../config'
+import { useActivitiesFiltering } from 'modules/activities/activitiesFilteringContext'
+import { useAttendancesForGroups } from 'store/attendancesStore'
+import { useGroups } from 'store/groupsStore'
 
 // TODO: Add loading skeleton
 export const TeacherPage = () => {
+  const { filter } = useActivitiesFiltering()
   let { id: idStr } = useParams<{ id: string }>()
   const id = parseInt(idStr)
   const { fetchTeacher, teachersById, fetching } = useTeachersState()
-  const { attendances, clearAttendances, fetchAttendancesForGroups } = useAttendancesState()
-  const { groups, fetchGroupsOfTeacher, clearGroups } = useGroupsState()
-  const teacher = teachersById[id]
   const orgKey = useOrgId()
+
+  const groupsQuery = useGroups({
+    archived: filter.showArchived ? 'all' : 'false',
+    performerId: id,
+  })
+  const groups = groupsQuery.data?.data
+  const groupsIds = useMemo(() => groups?.map((g) => g.outerId) || [], [groups])
+  const attendanceQuery = useAttendancesForGroups(orgKey, groupsIds)
+  const attendances = attendanceQuery.data || []
+  const teacher = teachersById[id]
   const org = useCurrentOrg()
-  const rateByGroup = useAttendanceRateByGroups(groups, attendances)
-  const groupsOfTeacher = useMemo(() => groups.filter((g) => g.performerId === teacher?.id), [groups, teacher?.id])
+  const rateByGroup = useAttendanceRateByGroups(groups || [], attendances)
 
   useEffect(() => {
     if (org) {
@@ -29,29 +39,6 @@ export const TeacherPage = () => {
       // TODO: clear
     }
   }, [fetchTeacher, id, org])
-
-  useEffect(() => {
-    if (!teacher) {
-      return
-    }
-    fetchGroupsOfTeacher(teacher.id)
-    return () => {
-      clearGroups()
-    }
-  }, [clearGroups, fetchGroupsOfTeacher, teacher])
-
-  useEffect(() => {
-    if (groupsOfTeacher.length) {
-      // TODO: probably we need to fetch attendance only for ongoing groups
-      fetchAttendancesForGroups(
-        orgKey,
-        groupsOfTeacher.map((g) => g.outerId)
-      )
-      return () => {
-        clearAttendances()
-      }
-    }
-  }, [clearAttendances, fetchAttendancesForGroups, groupsOfTeacher, orgKey])
 
   // TODO: 404
 
@@ -64,7 +51,7 @@ export const TeacherPage = () => {
       <Header />
       {/* TODO: skeleton loader */}
       <Loader show={fetching}>
-        {teacher && <Teacher data={teacher} attendanceRates={rateByGroup} teachersGroups={groupsOfTeacher} />}
+        {teacher && <Teacher data={teacher} attendanceRates={rateByGroup} teachersGroups={groups} />}
       </Loader>
     </>
   )

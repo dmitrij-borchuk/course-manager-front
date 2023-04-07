@@ -1,5 +1,6 @@
-import React, { useCallback, useState } from 'react'
+import React from 'react'
 import { Link } from 'react-router-dom'
+import { useActivitiesFiltering } from 'modules/activities/activitiesFilteringContext'
 import { FabBtn } from 'components/kit/FabBtn/FabBtn'
 import { PageLayout } from 'components/kit/layout/Page'
 import { ROUTES } from '../../constants'
@@ -8,31 +9,15 @@ import { Activity } from '../../types/activity'
 import { Dictionary } from '../../types/dictionary'
 import { Heading } from './groupList/ListHeader'
 import { ActivitiesList } from './groupList/ActivitiesList'
-import { ActivitiesFilteringDialog, ActivitiesFilteringFormValues } from './ActivitiesFilteringDialog'
 
 interface Props {
   loading?: boolean
   items?: Activity[]
   attendanceRates?: Dictionary<number>
-  onFiltersChange?: (data: ActivitiesFilteringFormValues) => void
-  filter?: ActivitiesFilteringFormValues
 }
-export const GroupsList: React.FC<Props> = ({
-  loading = false,
-  items = [],
-  attendanceRates,
-  onFiltersChange,
-  filter,
-}) => {
-  const [openFilterDialog, setOpenFilterDialog] = useState(false)
+export const GroupsList: React.FC<Props> = ({ loading = false, items = [], attendanceRates }) => {
   const orgId = useOrgId()
-  const onFiltersApply = useCallback(
-    (data) => {
-      onFiltersChange?.(data)
-      setOpenFilterDialog(false)
-    },
-    [onFiltersChange]
-  )
+  const { setOpenFilterDialog } = useActivitiesFiltering()
 
   return (
     <>
@@ -45,13 +30,6 @@ export const GroupsList: React.FC<Props> = ({
       <Link to={`/${orgId}${ROUTES.GROUPS_ADD}`} data-testid="fab-btn">
         <FabBtn />
       </Link>
-
-      <ActivitiesFilteringDialog
-        open={openFilterDialog}
-        onClose={() => setOpenFilterDialog(false)}
-        onSave={onFiltersApply}
-        filter={filter}
-      />
     </>
   )
 }

@@ -1,6 +1,10 @@
 import React, { useMemo } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { Button, Container } from 'react-materialize'
+import { Box } from '@mui/material'
+import FilterAltIcon from '@mui/icons-material/FilterAlt'
+import { useActivitiesFiltering } from 'modules/activities/activitiesFilteringContext'
+import { ResponsiveButtons } from 'components/kit/responsiveButtons/ResponsiveButtons'
 import { ROUTES } from '../../constants'
 import { useOrgId } from '../../hooks/useOrgId'
 import { Activity } from '../../types/activity'
@@ -64,6 +68,7 @@ interface GroupsInfoBlockProps {
 }
 const GroupsInfoBlock = ({ teacher, attendanceRates, teachersGroups = [] }: GroupsInfoBlockProps) => {
   const renderItem = useMemo(() => getGroupItemRender(attendanceRates), [attendanceRates])
+  const { setOpenFilterDialog } = useActivitiesFiltering()
 
   // TODO: loading
   return (
@@ -72,14 +77,28 @@ const GroupsInfoBlock = ({ teacher, attendanceRates, teachersGroups = [] }: Grou
         <Text type="h5" color="primary">
           <FormattedMessage id="groups.list.title" />
         </Text>
-        {/* Assign groups dialog */}
-        {!!teachersGroups?.length && (
-          <AssignGroups
-            teacher={teacher}
-            trigger={<IconButton type="square" size={40} icon="edit" />}
-            teachersGroups={teachersGroups}
+
+        <Box display="flex">
+          <ResponsiveButtons
+            items={[
+              {
+                id: 'filter',
+                label: <FormattedMessage id="common.filter" />,
+                icon: <FilterAltIcon />,
+                onClick: () => setOpenFilterDialog(true),
+              },
+            ]}
           />
-        )}
+
+          {/* Assign groups dialog */}
+          {!!teachersGroups?.length && (
+            <AssignGroups
+              teacher={teacher}
+              trigger={<IconButton type="square" size={40} icon="edit" />}
+              teachersGroups={teachersGroups}
+            />
+          )}
+        </Box>
       </div>
 
       {!!teachersGroups?.length ? (
@@ -123,8 +142,12 @@ const GroupWithAttendance = ({ group, attendanceRate }: GroupWithAttendanceProps
 
   return (
     <CollectionItemLink to={`/${orgId}${ROUTES.GROUPS_ROOT}/${group.id}`}>
-      <div className="flex justify-between">
-        <Ellipsis>{group.name}</Ellipsis>
+      <div
+        className={`flex justify-between transition-opacity ${group.archived ? 'opacity-40 hover:opacity-100' : ''}`}
+      >
+        <Ellipsis>
+          {group.archived ? <FormattedMessage id="groups.archived.name" values={{ name: group.name }} /> : group.name}
+        </Ellipsis>
         {/* TODO: add loading */}
         {attendanceRate !== undefined && <AttendanceRateBadge value={attendanceRate} />}
       </div>

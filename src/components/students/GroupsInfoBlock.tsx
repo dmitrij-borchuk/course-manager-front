@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo } from 'react'
 import { Button, Preloader } from 'react-materialize'
 import { FormattedMessage } from 'react-intl'
 import { useParams } from 'react-router-dom'
@@ -6,7 +6,7 @@ import FilterAltIcon from '@mui/icons-material/FilterAlt'
 import { Box } from '@mui/material'
 import { useGroups, useParticipation } from 'store/groupsStore'
 import { useAttendancesState } from 'store'
-import { ActivitiesFilteringDialog, ActivitiesFilteringFormValues } from 'components/groups/ActivitiesFilteringDialog'
+import { useActivitiesFiltering } from 'modules/activities/activitiesFilteringContext'
 import { ResponsiveButtons } from 'components/kit/responsiveButtons/ResponsiveButtons'
 import { useStudentAttendanceRateByGroups } from 'hooks/useAttendanceRate'
 import { ROUTES } from '../../constants'
@@ -26,8 +26,8 @@ interface Props {
   student: Student
 }
 export const GroupsInfoBlock = ({ student }: Props) => {
-  const { groups, openFilterDialog, setOpenFilterDialog, loadingGroups, onFiltersApply, attendanceRates, filter } =
-    useData(student?.outerId)
+  const { setOpenFilterDialog } = useActivitiesFiltering()
+  const { groups, loadingGroups, attendanceRates } = useData(student?.outerId)
   const renderItem = useMemo(() => getGroupItemRender(attendanceRates, student), [attendanceRates, student])
 
   return (
@@ -69,13 +69,6 @@ export const GroupsInfoBlock = ({ student }: Props) => {
       ) : (
         <NoGroupsInfoBlock student={student} />
       )}
-
-      <ActivitiesFilteringDialog
-        open={openFilterDialog}
-        onClose={() => setOpenFilterDialog(false)}
-        onSave={onFiltersApply}
-        filter={filter}
-      />
     </>
   )
 }
@@ -139,14 +132,7 @@ export function useData(studentOuterId?: string) {
   const date = useMemo(() => new Date(), [])
   let { id: idStr } = useParams<{ id: string }>()
   const id = parseInt(idStr)
-  const [filter, setFilter] = useState<ActivitiesFilteringFormValues>(
-    JSON.parse(localStorage.getItem('groupsFilter') || '{"showArchived": false}')
-  )
-  const onFiltersApply = useCallback((data) => {
-    setFilter(data)
-    setOpenFilterDialog(false)
-    localStorage.setItem('groupsFilter', JSON.stringify(data))
-  }, [])
+  const { filter } = useActivitiesFiltering()
   const query = useGroups({
     archived: filter.showArchived ? 'all' : 'false',
     participantId: id,
@@ -159,7 +145,6 @@ export function useData(studentOuterId?: string) {
   const groups = query.data?.data || emptyGroups
   const { attendances, clearAttendances, fetchAttendances } = useAttendancesState()
   const attendanceRates = useStudentAttendanceRateByGroups(studentOuterId, groups, attendances)
-  const [openFilterDialog, setOpenFilterDialog] = useState(false)
 
   useEffect(() => {
     participationQuery.data?.data.forEach((p) => {
@@ -178,11 +163,7 @@ export function useData(studentOuterId?: string) {
 
   return {
     groups,
-    openFilterDialog,
-    setOpenFilterDialog,
     loadingGroups,
-    onFiltersApply,
     attendanceRates,
-    filter,
   }
 }

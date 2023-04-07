@@ -1,4 +1,5 @@
 import { renderHook } from '@testing-library/react-hooks'
+import * as filteringContext from 'modules/activities/activitiesFilteringContext'
 import { useActivitiesData } from './GroupsList'
 import { asMock, TestWrapper } from 'utils/test'
 import * as attendanceApi from '../../modules/attendance/api'
@@ -7,6 +8,7 @@ import * as activitiesApi from '../../modules/activities/api'
 jest.mock('../../hooks/useOrgId')
 jest.mock('../../modules/attendance/api')
 jest.mock('../../modules/activities/api')
+jest.mock('modules/activities/activitiesFilteringContext')
 jest.mock('react-router-dom', () => ({
   useParams: jest.fn(),
   useHistory: jest.fn(),
@@ -14,21 +16,11 @@ jest.mock('react-router-dom', () => ({
 
 const { fetchAttendancesForGroups } = asMock(attendanceApi)
 const { fetchActivities } = asMock(activitiesApi)
+const { useActivitiesFiltering } = asMock(filteringContext)
 
 describe('useActivitiesData', () => {
   beforeEach(() => {
     localStorage.clear()
-  })
-  it('filter state should persist', async () => {
-    const { result, waitForNextUpdate } = renderHook(() => useActivitiesData(), { wrapper: TestWrapper })
-    expect(result.current.filter.showArchived).toBe(false)
-    await waitForNextUpdate()
-
-    result.current.updateFilter({ showArchived: true })
-    expect(result.current.filter.showArchived).toBe(true)
-
-    const { result: newRenderResult } = renderHook(() => useActivitiesData(), { wrapper: TestWrapper })
-    expect(newRenderResult.current.filter.showArchived).toBe(true)
   })
 
   it('should refetch attendance after groups are changed', async () => {
@@ -48,8 +40,12 @@ describe('useActivitiesData', () => {
         },
       ],
     } as any)
-    const { result, waitForNextUpdate } = renderHook(() => useActivitiesData(), { wrapper: TestWrapper })
-    expect(result.current.filter.showArchived).toBe(false)
+    useActivitiesFiltering.mockReturnValue({
+      filter: { showArchived: false },
+      updateFilter: jest.fn(),
+      setOpenFilterDialog: jest.fn(),
+    })
+    const { waitForNextUpdate, rerender } = renderHook(() => useActivitiesData(), { wrapper: TestWrapper })
     await waitForNextUpdate()
     expect(fetchAttendancesForGroups).toBeCalledWith('orgId', ['1'])
 
@@ -81,12 +77,14 @@ describe('useActivitiesData', () => {
         },
       ],
     } as any)
-    result.current.updateFilter({ showArchived: true })
-    expect(result.current.filter.showArchived).toBe(true)
 
+    useActivitiesFiltering.mockReturnValue({
+      filter: { showArchived: true },
+      updateFilter: jest.fn(),
+      setOpenFilterDialog: jest.fn(),
+    })
+    rerender()
     await waitForNextUpdate()
     expect(fetchAttendancesForGroups).toBeCalledWith('orgId', ['1', '2'])
-    const { result: newRenderResult } = renderHook(() => useActivitiesData(), { wrapper: TestWrapper })
-    expect(newRenderResult.current.filter.showArchived).toBe(true)
   })
 })

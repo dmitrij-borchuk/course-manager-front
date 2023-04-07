@@ -1,12 +1,13 @@
 import React from 'react'
+import { QueryClient, QueryClientProvider } from 'react-query'
 import { BrowserRouter as Router } from 'react-router-dom'
+import { ReactQueryDevtools } from 'react-query/devtools'
 import { ToastProvider } from 'react-toast-notifications'
 import { IntlProvider } from 'react-intl'
+import { ActivitiesFilteringProvider } from 'modules/activities/activitiesFilteringContext'
 import messages from './intl/messagesEn'
 import StoreProvider from './store'
 import { MuiThemeProvider } from './MuiThemeProvider'
-import { QueryClient, QueryClientProvider } from 'react-query'
-import { ReactQueryDevtools } from 'react-query/devtools'
 
 const queryClient = new QueryClient()
 
@@ -18,7 +19,9 @@ export const Providers: React.FC<Props> = ({ children }) => {
         <Router>
           <StoreProvider>
             <IntlProvider messages={messages} locale="en" defaultLocale="en">
-              <ToastProvider>{children}</ToastProvider>
+              <ToastProvider>
+                <ActivitiesFilteringProvider>{children}</ActivitiesFilteringProvider>
+              </ToastProvider>
             </IntlProvider>
           </StoreProvider>
         </Router>

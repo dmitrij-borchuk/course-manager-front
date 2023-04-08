@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useMemo } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
-import { useAttendancesState, useGroupsState, useStudentsOfGroupState, useTeachersState } from '../../store'
+import { useAttendancesForGroups } from 'store/attendancesStore'
+import { useGroupsState, useStudentsOfGroupState, useTeachersState } from '../../store'
 import { Group } from '../../components/groups/Group'
 import { useOrgId } from '../../hooks/useOrgId'
 import { useAttendanceRateByStudent } from '../../hooks/useAttendanceRate'
@@ -21,8 +22,10 @@ export const GroupPage = () => {
     studentsOfGroup,
     fetching: loadingGroups,
   } = useStudentsOfGroupState()
-  const { attendances, clearAttendances, fetchAttendancesForGroups } = useAttendancesState()
   const group = groupsById.get(id)
+  const orgKey = useOrgId()
+  const attendanceQuery = useAttendancesForGroups(orgKey, group ? [group.outerId] : [])
+  const attendances = attendanceQuery.data
   const teacher = teachersById[group?.performerId || '']
   const history = useHistory()
   const groupFull = useMemo(() => {
@@ -35,7 +38,6 @@ export const GroupPage = () => {
       teacher,
     }
   }, [group, teacher])
-  const orgKey = useOrgId()
   const onDelete = useCallback(() => {
     deleteGroup(id)
 
@@ -44,10 +46,7 @@ export const GroupPage = () => {
   const onClose = useCallback(async () => {
     await closeGroup(id)
   }, [closeGroup, id])
-  const attendancesOfGroup = useMemo(() => {
-    return attendances.filter((a) => a.group === group?.outerId)
-  }, [attendances, group?.outerId])
-  const attendanceRate = useAttendanceRateByStudent(attendancesOfGroup)
+  const attendanceRate = useAttendanceRateByStudent(attendances || [])
   const org = useCurrentOrg()
   const orgId = org?.id
 
@@ -69,15 +68,6 @@ export const GroupPage = () => {
       return () => clearStudentsOfGroup()
     }
   }, [clearStudentsOfGroup, fetchStudentsOfGroup, group?.id])
-
-  useEffect(() => {
-    if (group) {
-      fetchAttendancesForGroups(orgKey, [group.outerId])
-      return () => {
-        clearAttendances()
-      }
-    }
-  }, [clearAttendances, fetchAttendancesForGroups, group, orgKey])
 
   if (!groupFull) {
     // Loading when edit schedule and return back

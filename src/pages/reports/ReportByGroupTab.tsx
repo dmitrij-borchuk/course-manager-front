@@ -1,12 +1,13 @@
-import { ComponentProps, useCallback, useEffect, useState } from 'react'
+import { ComponentProps, useEffect, useMemo, useState } from 'react'
 import { FormattedMessage, useIntl } from 'react-intl'
 import { DatePicker, Preloader } from 'react-materialize'
+import { useAttendancesForGroups } from 'store/attendancesStore'
 import { Select } from '../../components/kit/select/Select'
 import { Text } from '../../components/kit/text/Text'
 import { ReportByGroup } from '../../components/reports/ReportByGroup'
 import { useOrgId } from '../../hooks/useOrgId'
 import { getItem, setItem } from '../../services/localStore'
-import { useAttendancesState, useGroupsState, useStudentsOfGroupState } from '../../store'
+import { useGroupsState, useStudentsOfGroupState } from '../../store'
 import { Activity } from '../../types/activity'
 import { SortOrder } from '../../types/sorting'
 
@@ -22,17 +23,19 @@ export const ReportByGroupTab = () => {
 
   const { fetchStudentsOfGroup, studentsOfGroup, fetching: studentsFetching } = useStudentsOfGroupState()
   const { fetchGroups, groups, groupsById, fetching: groupsFetching } = useGroupsState()
-  const { attendances, clearAttendances, fetchAttendancesForGroups } = useAttendancesState()
-  const attendancesForReport = attendances.filter((a) => {
-    const date = a.date
-    return date >= from.getTime() && date <= to.getTime()
-  })
-  const fetchAttendance = useCallback(
-    async (group: Activity) => {
-      await fetchAttendancesForGroups(orgKey, [group.outerId])
-    },
-    [fetchAttendancesForGroups, orgKey]
-  )
+
+  const attendanceQuery = useAttendancesForGroups(orgKey, group ? [group.outerId] : [])
+  const attendances = attendanceQuery.data
+  const attendancesForReport = useMemo(() => {
+    if (!attendances) {
+      return []
+    }
+
+    return attendances.filter((a) => {
+      const date = a.date
+      return date >= from.getTime() && date <= to.getTime()
+    })
+  }, [attendances, from, to])
 
   useEffect(() => {
     setItem(orderStoreKey, order)
@@ -43,14 +46,6 @@ export const ReportByGroupTab = () => {
       fetchStudentsOfGroup(group.id)
     }
   }, [fetchStudentsOfGroup, group])
-
-  useEffect(() => {
-    if (group) {
-      fetchAttendance(group)
-    }
-
-    return () => clearAttendances()
-  }, [clearAttendances, fetchAttendance, group])
 
   useEffect(() => {
     fetchGroups()

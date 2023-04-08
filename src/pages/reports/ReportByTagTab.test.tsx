@@ -8,7 +8,6 @@ import { Group } from '../../types/group'
 import { Attendance } from '../../types/attendance'
 import { StudentOfGroup } from '../../types/studentOfGroup'
 import { Student } from '../../types/student'
-import { resetAttendanceCache } from '../../store/attendancesStore'
 
 jest.mock('react-router-dom', () => {
   return {
@@ -38,7 +37,6 @@ describe('ReportByTagTab', () => {
   const axiosMock = getAxiosMock()
 
   beforeEach(() => {
-    resetAttendanceCache()
     useParams.mockReturnValue({
       orgId: 'orgId',
     })

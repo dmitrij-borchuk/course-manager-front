@@ -75,17 +75,6 @@ export function useAttendancesStore() {
       },
       []
     ),
-    fetchAttendancesForGroups: useCallback(async (orgId: string, groupsOuterIds: string[]) => {
-      if (isFetched) {
-        return
-      }
-      setLoading(true)
-      const resp = await fetchAttendancesForGroups(orgId, groupsOuterIds)
-      const itemsById = arrayToDictionary(resp)
-      setAttendancesById((att) => ({ ...att, ...itemsById }))
-      isFetched = true
-      setLoading(false)
-    }, []),
     saveAttendance: useCallback(async (orgId: string, attendance: AttendanceNew | Attendance) => {
       setLoading(true)
       const collection = makeOrgCollection<Attendance>('attendances', orgId)
@@ -119,14 +108,6 @@ export function useAttendancesStore() {
       // setAttendancesById({})
     }, []),
   }
-}
-
-// We use a lot of attendance data,
-// to optimize reading from Firebase, we going to fetch it only once
-let isFetched = false
-
-export function resetAttendanceCache() {
-  isFetched = false
 }
 
 function sortAttendances(attendances: Attendance[], reverse = false) {

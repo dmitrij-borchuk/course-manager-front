@@ -7,7 +7,6 @@ import { clearAttendanceByGroupCache } from 'modules/attendance/api'
 import { ReportByGroupTab } from './ReportByGroupTab'
 import { Attendance } from '../../types/attendance'
 import { Student } from '../../types/student'
-import { resetAttendanceCache } from '../../store/attendancesStore'
 import { Activity } from '../../types/activity'
 
 jest.mock('react-router-dom', () => {
@@ -50,7 +49,6 @@ describe('ReportByGroupTab', () => {
 
   beforeEach(() => {
     clearAttendanceByGroupCache()
-    resetAttendanceCache()
     useParams.mockReturnValue({
       orgId: 'orgId',
     })

@@ -63,6 +63,7 @@ export const EditStudent: React.FC<Props> = ({
           controls={<SubmitButton loading={loading} disabled={disabled} />}
           onSubmit={handleSubmit(onSubmit)}
         >
+          {/* TODO: add autofocus */}
           <Input
             id="name"
             control={control}

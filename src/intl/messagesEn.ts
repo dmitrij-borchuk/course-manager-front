@@ -108,6 +108,9 @@ export const messages = {
   'students.attendance.details.label': 'Attendance details',
   'students.attendance.attended': 'Attended',
   'students.attendance.missed': 'Missed',
+  'students.creation.existingConfirmation.title': 'Create anyway?',
+  'students.creation.existingConfirmation.body':
+    'Looks like the student with such name ({name}) already exists. Do you want to create one more?',
 
   'schedule.list.title': 'Schedule',
   'schedule.form.title': 'Schedule',

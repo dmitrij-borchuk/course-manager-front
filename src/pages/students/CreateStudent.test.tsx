@@ -27,6 +27,7 @@ describe('CreateStudent', () => {
     expect(nameInput).toBeDefined()
   })
   test('should trim spaces at the end and start of the line', async () => {
+    axiosMock.onGet('/students/search/student name').reply(200, null)
     const { unmount } = render(<Component />)
 
     const nameInput = await screen.findByLabelText('Name *')

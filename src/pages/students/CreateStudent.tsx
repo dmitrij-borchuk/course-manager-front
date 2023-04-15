@@ -51,7 +51,7 @@ export const CreateStudent = () => {
 
   const submit = useCallback(
     async (data: StudentForm) => {
-      const existingStudent = await checkStudentExistence(data.name)
+      const existingStudent = await checkStudentExistence(data.name.trim())
 
       if (existingStudent.data) {
         setData(data)

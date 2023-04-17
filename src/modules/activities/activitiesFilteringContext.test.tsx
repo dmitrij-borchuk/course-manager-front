@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react-hooks'
+import { act, renderHook } from '@testing-library/react-hooks'
 import { ActivitiesFilteringProvider, useActivitiesFiltering } from './activitiesFilteringContext'
 
 describe('useActivitiesFiltering', () => {
@@ -11,7 +11,7 @@ describe('useActivitiesFiltering', () => {
     })
     expect(result.current.filter.showArchived).toBe(false)
 
-    result.current.updateFilter({ showArchived: true })
+    act(() => result.current.updateFilter({ showArchived: true }))
     expect(result.current.filter.showArchived).toBe(true)
 
     const { result: newRenderResult } = renderHook(() => useActivitiesFiltering(), {

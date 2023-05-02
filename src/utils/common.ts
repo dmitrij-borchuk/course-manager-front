@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { Dictionary } from '../types/dictionary'
 
 type Selector<T> = keyof T | ((o: T) => string | number | null | undefined)
@@ -57,4 +58,32 @@ export function getDiff<T extends string | number>(initial: T[], result: T[]) {
 const emptyObject = {}
 export function getEmptyDictionary<T>() {
   return emptyObject as Dictionary<T>
+}
+
+export function useDebounce<T>(value: T, delay: number) {
+  const [debouncedValue, setDebouncedValue] = useState(value)
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value)
+    }, delay)
+    return () => clearTimeout(handler)
+  }, [value, delay])
+  return debouncedValue
+}
+
+export function useDebounceFn<T extends (...args: any[]) => any>(fn: T, delay: number) {
+  const [debouncedFn, setDebouncedFn] = useState(() => debounce(fn, delay))
+  useEffect(() => {
+    setDebouncedFn(() => debounce(fn, delay))
+  }, [fn, delay])
+
+  return debouncedFn
+}
+
+function debounce<T extends (...args: any[]) => any>(fn: T, delay: number) {
+  let timeout: NodeJS.Timeout
+  return (...args: Parameters<T>) => {
+    clearTimeout(timeout)
+    timeout = setTimeout(() => fn(...args), delay)
+  }
 }

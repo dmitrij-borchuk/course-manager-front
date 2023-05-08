@@ -11,14 +11,14 @@ type PDFTemplateProps = {
 export const AttendanceReportTemplate = ({ title, heading, attendances }: PDFTemplateProps) => (
   // TODO: move `creator` and `producer` to the config
   <Document creator="Checkinizer" producer="Checkinizer" title={title}>
-    <Page size="A4" style={[styles.page, styles.column]}>
-      <View style={[styles.header, styles.flex]} fixed>
+    <Page size="A4" style={[styles.page]}>
+      <View style={[styles.header]} fixed>
         <Text>{heading}</Text>
       </View>
       <View style={[styles.flex, styles.content]}>
         {attendances.map((a, i) => (
-          <View key={i} style={[styles.listItem, i % 2 === 1 ? styles.highlighted : styles.empty]}>
-            <Text>{a.label}</Text>
+          <View key={i} style={[styles.listItem, i % 2 === 1 ? styles.highlighted : styles.empty]} wrap={false}>
+            <Text style={[styles.listLabel]}>{a.label}</Text>
             <Text>{a.value}</Text>
           </View>
         ))}
@@ -30,15 +30,18 @@ export const AttendanceReportTemplate = ({ title, heading, attendances }: PDFTem
 // Create styles
 const styles = StyleSheet.create({
   page: {
-    flexDirection: 'row',
-    backgroundColor: '#E4E4E4',
     padding: '24px',
+    paddingTop: '72px',
   },
   header: {
     fontSize: '36pt',
+    position: 'absolute',
+    width: '100%',
+    top: '24px',
+    left: '24px',
   },
   content: {
-    marginTop: '24px',
+    width: '100%',
   },
   flex: {
     display: 'flex',
@@ -57,4 +60,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#eee',
   },
   empty: {},
+  listLabel: {
+    paddingRight: '50px',
+  },
 })

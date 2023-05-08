@@ -37,16 +37,7 @@ export function ListPage<T extends { id: string | number }>({
       <Container className="px-4">
         {listHeader && <SectionHeader>{listHeader}</SectionHeader>}
 
-        <Box
-          width={{
-            xs: '100%',
-            sm: '50%',
-            md: '30%',
-          }}
-          ml="auto"
-        >
-          <FilterField onDebouncedChange={onFilter} />
-        </Box>
+        {filter && <Filter onFilter={onFilter} />}
 
         <ListWithLinks<T> items={filteredItems} {...rest} />
       </Container>
@@ -57,5 +48,23 @@ export function ListPage<T extends { id: string | number }>({
         </Link>
       )}
     </div>
+  )
+}
+
+type FilterProps = {
+  onFilter: (value: string) => void
+}
+function Filter({ onFilter }: FilterProps) {
+  return (
+    <Box
+      width={{
+        xs: '100%',
+        sm: '50%',
+        md: '30%',
+      }}
+      ml="auto"
+    >
+      <FilterField onDebouncedChange={onFilter} />
+    </Box>
   )
 }

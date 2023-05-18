@@ -27,6 +27,7 @@ export function useActivitiesData() {
   const orgKey = useOrgId()
   const { filter } = useActivitiesFiltering()
 
+  // TODO: need to add pagination and filtering
   const groupsQuery = useGroups({
     archived: filter.showArchived ? 'all' : 'false',
   })

@@ -12,6 +12,8 @@ import { useStudentsState } from '../../store'
 export const StudentListPage = () => {
   const { fetchStudents, students, fetching } = useStudentsState()
   const orgKey = useOrgId()
+  // TODO: need to add pagination and filtering,
+  // but it's not implemented on the backend yet
   const groupsQuery = useGroups({
     archived: 'false',
   })

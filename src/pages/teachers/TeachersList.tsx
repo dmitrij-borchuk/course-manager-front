@@ -15,6 +15,8 @@ export const TeachersListPage = () => {
   const orgKey = useOrgId()
   const { addToast } = useToasts()
 
+  // TODO: need to add pagination and filtering,
+  // but it's not implemented on the backend yet
   const groupsQuery = useGroups({
     archived: 'false',
   })

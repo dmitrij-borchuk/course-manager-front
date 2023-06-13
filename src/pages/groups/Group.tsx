@@ -24,7 +24,7 @@ export const GroupPage = () => {
   } = useStudentsOfGroupState()
   const group = groupsById.get(id)
   const orgKey = useOrgId()
-  const attendanceQuery = useAttendancesForGroups(orgKey, group ? [group.outerId] : [])
+  const attendanceQuery = useAttendancesForGroups(group ? [group.outerId] : [])
   const attendances = attendanceQuery.data
   const teacher = teachersById[group?.performerId || '']
   const history = useHistory()

@@ -37,27 +37,11 @@ export const Profile = (props: Props) => {
     <div className={className}>
       <Header />
       <Container className="px-4 pb-6">
-        <TitleWithEdit
-          value={user.name}
-          placeholder={
-            <Text type="h3" color="textGray" className="truncate">
-              <FormattedMessage id="profile.user.noName" />
-            </Text>
-          }
-          // Height should be static to prevent jumping when editing
-          className="h-24"
-          onSubmit={(value) =>
-            onEdit({
-              ...user,
-              name: value,
-            })
-          }
-        />
-        <Text type="h6" color="textGray" className="-mt-2 truncate">
-          {user.email}
+        <Text type="h3" color="primary" className="mt-2 truncate">
+          <FormattedMessage id="organizations.header.line1" />
         </Text>
-        <Text type="h5" color="primary">
-          <FormattedMessage id="profile.organizations.header" />
+        <Text type="h6" color="textGray" className="mt-2 truncate">
+          <FormattedMessage id="organizations.header.line2" />
         </Text>
         <OrganizationList items={organizations} loading={organizationsLoading} />
 
@@ -97,92 +81,4 @@ const OrganizationList = (props: OrganizationListProps) => {
   }
 
   return <List items={items} loading={loading} renderItem={renderItem} />
-}
-
-type TitleWithEditProps = {
-  value?: string
-  placeholder: ReactNode
-  className?: string
-  onSubmit?: (value: string) => void
-}
-const TitleWithEdit = ({ value, placeholder, className, onSubmit = noop }: TitleWithEditProps) => {
-  const [isEditing, setIsEditing] = useState(false)
-  const [newValue, setNewValue] = useState(value || '')
-  const [submitting, setSubmitting] = useState(false)
-  const { showError, showSuccess } = useNotification()
-  const title = value ? (
-    <Text type="h3" className="truncate leading-normal mt-0">
-      {value}
-    </Text>
-  ) : (
-    placeholder
-  )
-  const editor = (
-    <TextField
-      autoFocus
-      value={newValue}
-      disabled={submitting}
-      variant="standard"
-      InputProps={{
-        inputProps: {
-          className: 'browser-default !text-4xl !py-0',
-        },
-      }}
-      onChange={(e) => setNewValue(e.target.value)}
-      onKeyPress={(e) => {
-        if (e.key === 'Enter') {
-          onSubmitClick()
-        }
-      }}
-    />
-  )
-  const onSubmitClick = useCallback(async () => {
-    setSubmitting(true)
-    try {
-      await onSubmit(newValue)
-      setIsEditing(false)
-      setSubmitting(false)
-      showSuccess(<FormattedMessage id="profile.user.nameChanged" />)
-    } catch (error) {
-      if (error instanceof Error) {
-        showError(error.message)
-      }
-      setSubmitting(false)
-      throw error
-    }
-  }, [newValue, onSubmit, showError, showSuccess])
-  const onDocumentKeydown = useCallback(
-    (e) => {
-      if (e.key === 'Escape') {
-        setIsEditing(false)
-        setNewValue(value || '')
-      }
-    },
-    [value]
-  )
-
-  useEffect(() => {
-    document.addEventListener('keydown', onDocumentKeydown, false)
-
-    return () => {
-      document.removeEventListener('keydown', onDocumentKeydown, false)
-    }
-  }, [onDocumentKeydown])
-
-  return (
-    <div className={`flex w-full justify-between items-center ${className}`}>
-      <div className="min-w-0">{isEditing ? editor : title}</div>
-      <div className="mt-3">
-        {isEditing ? (
-          <IconButton key="done" size="large" aria-label="save" onClick={onSubmitClick} disabled={submitting}>
-            {submitting ? <CircularProgress size={21} /> : <DoneIcon />}
-          </IconButton>
-        ) : (
-          <IconButton key="edit" size="large" aria-label="edit" onClick={() => setIsEditing(true)}>
-            <EditIcon />
-          </IconButton>
-        )}
-      </div>
-    </div>
-  )
 }

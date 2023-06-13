@@ -7,6 +7,7 @@ import { Dictionary } from '../types/dictionary'
 import { arrayToDictionary } from '../utils/common'
 import { nanoid } from 'nanoid'
 import { fetchAttendances, fetchAttendancesForGroups } from 'modules/attendance/api'
+import { useOrgId } from 'hooks/useOrgId'
 
 // TODO: add cache layer
 export function useAttendancesStore() {
@@ -122,8 +123,9 @@ function sortAttendances(attendances: Attendance[], reverse = false) {
   })
 }
 
-export function useAttendancesForGroups(orgId: string, groupsOuterIds: string[]) {
-  return useQuery(['attendances', orgId, ...groupsOuterIds], () => fetchAttendancesForGroups(orgId, groupsOuterIds), {
+export function useAttendancesForGroups(groupsOuterIds: string[]) {
+  const orgKey = useOrgId()
+  return useQuery(['attendances', orgKey, ...groupsOuterIds], () => fetchAttendancesForGroups(orgKey, groupsOuterIds), {
     refetchOnWindowFocus: false,
   })
 }

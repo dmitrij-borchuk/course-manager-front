@@ -5,7 +5,6 @@ import { useAttendancesForGroups } from 'store/attendancesStore'
 import { Select } from '../../components/kit/select/Select'
 import { Text } from '../../components/kit/text/Text'
 import { ReportByGroup } from '../../components/reports/ReportByGroup'
-import { useOrgId } from '../../hooks/useOrgId'
 import { getItem, setItem } from '../../services/localStore'
 import { useGroupsState, useStudentsOfGroupState } from '../../store'
 import { Activity } from '../../types/activity'
@@ -13,7 +12,6 @@ import { SortOrder } from '../../types/sorting'
 
 export const ReportByGroupTab = () => {
   const intl = useIntl()
-  const orgKey = useOrgId()
   const [group, setGroup] = useState<Activity>()
   const [order, setOrder] = useState<SortOrder>(getItem(orderStoreKey) || 'asc')
 
@@ -24,7 +22,7 @@ export const ReportByGroupTab = () => {
   const { fetchStudentsOfGroup, studentsOfGroup, fetching: studentsFetching } = useStudentsOfGroupState()
   const { fetchGroups, groups, groupsById, fetching: groupsFetching } = useGroupsState()
 
-  const attendanceQuery = useAttendancesForGroups(orgKey, group ? [group.outerId] : [])
+  const attendanceQuery = useAttendancesForGroups(group ? [group.outerId] : [])
   const attendances = attendanceQuery.data
   const attendancesForReport = useMemo(() => {
     if (!attendances) {

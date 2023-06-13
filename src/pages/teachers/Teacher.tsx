@@ -6,7 +6,6 @@ import { Loader } from '../../components/kit/loader/Loader'
 import { Teacher } from '../../components/teachers/Teacher'
 import { useAttendanceRateByGroups } from '../../hooks/useAttendanceRate'
 import { useCurrentOrg } from '../../hooks/useCurrentOrg'
-import { useOrgId } from '../../hooks/useOrgId'
 import { useTeachersState } from '../../store'
 import { TITLE_POSTFIX } from '../../config'
 import { useActivitiesFiltering } from 'modules/activities/activitiesFilteringContext'
@@ -19,7 +18,6 @@ export const TeacherPage = () => {
   let { id: idStr } = useParams<{ id: string }>()
   const id = parseInt(idStr)
   const { fetchTeacher, teachersById, fetching } = useTeachersState()
-  const orgKey = useOrgId()
 
   const groupsQuery = useGroups({
     archived: filter.showArchived ? 'all' : 'false',
@@ -27,7 +25,7 @@ export const TeacherPage = () => {
   })
   const groups = groupsQuery.data?.data
   const groupsIds = useMemo(() => groups?.map((g) => g.outerId) || [], [groups])
-  const attendanceQuery = useAttendancesForGroups(orgKey, groupsIds)
+  const attendanceQuery = useAttendancesForGroups(groupsIds)
   const attendances = attendanceQuery.data || []
   const teacher = teachersById[id]
   const org = useCurrentOrg()

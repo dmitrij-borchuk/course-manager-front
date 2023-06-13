@@ -6,7 +6,6 @@ import { useActivitiesFiltering } from 'modules/activities/activitiesFilteringCo
 import { GroupsList } from '../../components/groups/GroupsList'
 import { TITLE_POSTFIX } from '../../config'
 import { useAttendanceRateByGroups } from '../../hooks/useAttendanceRate'
-import { useOrgId } from '../../hooks/useOrgId'
 
 export const GroupsListPage = () => {
   const { fetching, groups, rateByGroup } = useActivitiesData()
@@ -24,7 +23,6 @@ export const GroupsListPage = () => {
 export default GroupsListPage
 
 export function useActivitiesData() {
-  const orgKey = useOrgId()
   const { filter } = useActivitiesFiltering()
 
   // TODO: need to add pagination and filtering
@@ -33,7 +31,7 @@ export function useActivitiesData() {
   })
   const groups = groupsQuery.data?.data
   const groupsIds = useMemo(() => groups?.map((g) => g.outerId) || [], [groups])
-  const attendanceQuery = useAttendancesForGroups(orgKey, groupsIds)
+  const attendanceQuery = useAttendancesForGroups(groupsIds)
   const attendances = attendanceQuery.data || []
   const rateByGroup = useAttendanceRateByGroups(groups || [], attendances)
 

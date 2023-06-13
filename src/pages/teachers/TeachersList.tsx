@@ -3,17 +3,21 @@ import { useToasts } from 'react-toast-notifications'
 import { Helmet } from 'react-helmet'
 import { useGroups } from 'store/groupsStore'
 import { useAttendancesForGroups } from 'store/attendancesStore'
-import { useOrgId } from '../../hooks/useOrgId'
+import useProfilesStore from 'store/profilesStore'
 import { TeachersList } from '../../components/teachers/TeachersList'
-import { useTeachersState } from '../../store'
 import { useAttendanceRateByTeacher } from '../../hooks/useAttendanceRate'
-import { useCurrentOrg } from '../../hooks/useCurrentOrg'
 import { TITLE_POSTFIX } from '../../config'
 
+// TODO: rename to ProfilesListPage
 export const TeachersListPage = () => {
-  const { teachers, fetchTeachers, fetching } = useTeachersState()
-  const orgKey = useOrgId()
+  const { fetchProfiles, profiles, fetching } = useProfilesStore()
   const { addToast } = useToasts()
+  const processed = useMemo(() => {
+    return profiles.map((p) => ({
+      ...p,
+      outerId: p.user.outerId,
+    }))
+  }, [profiles])
 
   // TODO: need to add pagination and filtering,
   // but it's not implemented on the backend yet
@@ -22,29 +26,23 @@ export const TeachersListPage = () => {
   })
   const groups = groupsQuery.data?.data
   const groupsIds = useMemo(() => groups?.map((g) => g.outerId) || [], [groups])
-  const attendanceQuery = useAttendancesForGroups(orgKey, groupsIds)
+  const attendanceQuery = useAttendancesForGroups(groupsIds)
   const attendances = attendanceQuery.data || []
   const rateByTeacher = useAttendanceRateByTeacher(attendances)
-  const org = useCurrentOrg()
   const fetchList = useCallback(async () => {
-    if (!org?.id) {
-      return
-    }
     try {
-      await fetchTeachers(org.id)
+      await fetchProfiles()
     } catch (error: any) {
       addToast(error.message, {
         appearance: 'error',
         autoDismiss: true,
       })
     }
-  }, [addToast, fetchTeachers, org?.id])
+  }, [addToast, fetchProfiles])
 
   useEffect(() => {
-    if (org?.id) {
-      fetchList()
-    }
-  }, [fetchList, org])
+    fetchList()
+  }, [fetchList])
 
   return (
     <>
@@ -52,7 +50,7 @@ export const TeachersListPage = () => {
         <title>Teachers{TITLE_POSTFIX}</title>
       </Helmet>
 
-      <TeachersList items={teachers} loading={fetching} attendanceRates={rateByTeacher} />
+      <TeachersList items={processed} loading={fetching} attendanceRates={rateByTeacher} />
     </>
   )
 }

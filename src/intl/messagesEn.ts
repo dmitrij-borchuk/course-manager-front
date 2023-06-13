@@ -118,10 +118,11 @@ export const messages = {
   'schedule.form.end': 'End date',
   'schedule.form.cron.required': 'Please select at least one day',
 
-  'profile.organizations.header': 'Your organizations',
   'profile.user.noName': 'No name',
   'profile.user.nameChanged': 'Name has been changed successfully',
 
+  'organizations.header.line1': 'Welcome back!',
+  'organizations.header.line2': 'Choose an organization below to get back to working with your team.',
   'organizations.notFound': 'Organization not found',
   'organizations.notFound.backHome': 'back to home',
   'organizations.add.title': 'Add organization',

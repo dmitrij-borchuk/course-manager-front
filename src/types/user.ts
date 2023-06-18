@@ -8,6 +8,9 @@ type UserBase = {
 
 export type User = {
   id: number
+  /**
+   * @deprecated use `Profile` instead
+   */
   name: string
   email: string
   outerId: string
@@ -35,6 +38,9 @@ export type AppUser = {
   avatar?: string
 }
 
+/**
+ * @deprecated use `Profile` instead
+ */
 export type OrganizationUser = {
   id: number
   role?: string

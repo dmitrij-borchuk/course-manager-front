@@ -5,17 +5,16 @@ import { useToasts } from 'react-toast-notifications'
 import { useToggle } from '../../hooks/useToggle'
 import { useGroupsState } from '../../store'
 import { Activity } from '../../types/activity'
-import { OrganizationUser } from '../../types/user'
 import { getDiff, noop } from '../../utils/common'
 import { SelectDialog } from '../kit/selectDialog/SelectDialog'
 
 interface Props {
-  teacher: OrganizationUser
+  teacherId: number
   onDone?: () => void
   trigger?: ModalProps['trigger']
   teachersGroups?: Activity[]
 }
-export const AssignGroups = ({ teacher, onDone = noop, trigger, teachersGroups = [] }: Props) => {
+export const AssignGroups = ({ teacherId, onDone = noop, trigger, teachersGroups = [] }: Props) => {
   const intl = useIntl()
   const [open, toggler] = useToggle(false)
   const { addToast } = useToasts()
@@ -34,7 +33,7 @@ export const AssignGroups = ({ teacher, onDone = noop, trigger, teachersGroups =
         }
         for (let index = 0; index < added.length; index++) {
           await editGroup(added[index], {
-            performerId: teacher.id,
+            performerId: teacherId,
           })
         }
         toggler.off()
@@ -51,7 +50,7 @@ export const AssignGroups = ({ teacher, onDone = noop, trigger, teachersGroups =
         })
       }
     },
-    [addToast, editGroup, onDone, teacher.id, teachersGroups, toggler]
+    [addToast, editGroup, onDone, teacherId, teachersGroups, toggler]
   )
   const onTriggerClick = useCallback(async () => {
     toggler.on()

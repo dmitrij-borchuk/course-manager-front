@@ -5,42 +5,37 @@ import { Box } from '@mui/material'
 import FilterAltIcon from '@mui/icons-material/FilterAlt'
 import { useActivitiesFiltering } from 'modules/activities/activitiesFilteringContext'
 import { ResponsiveButtons } from 'components/kit/responsiveButtons/ResponsiveButtons'
+import { TitleWithEdit } from 'components/kit/titleWithEdit/TitleWithEdit'
+import { Profile } from 'types/profile'
 import { ROUTES } from '../../constants'
 import { useOrgId } from '../../hooks/useOrgId'
 import { Activity } from '../../types/activity'
 import { Dictionary } from '../../types/dictionary'
-import { OrganizationUser } from '../../types/user'
 import { AttendanceRateBadge } from '../kit/attendanceRateBadge/AttendancerateBadge'
 import { IconButton } from '../kit/buttons/IconButton'
 import { CollectionItemLink } from '../kit/collectionItemLink/CollectionItemLink'
 import { Ellipsis } from '../kit/ellipsis/Ellipsis'
 import { List } from '../kit/list/List'
-import { SectionHeader } from '../kit/sectionHeader/SectionHeader'
 import { Text } from '../kit/text/Text'
 import { AssignGroups } from './AssignGroups'
 
 interface Props {
   className?: string
-  data: OrganizationUser
+  data: Profile
   // onDelete: () => void
   attendanceRates: Dictionary<number>
   teachersGroups?: Activity[]
+  onEdit?: (name: string) => void
 }
-export const Teacher: React.FC<Props> = ({ className = '', data, attendanceRates, teachersGroups = [] }) => {
+export const Teacher: React.FC<Props> = ({ className = '', data, attendanceRates, teachersGroups = [], onEdit }) => {
   const { name } = data
 
   return (
     <div className={className}>
       <Container className="px-4">
         <div className="flex justify-between">
-          <SectionHeader className="min-w-0">
-            <Ellipsis>{name}</Ellipsis>
-          </SectionHeader>
+          <TitleWithEdit placeholder={<FormattedMessage id="profile.user.noName" />} value={name} onSubmit={onEdit} />
           <div className="flex items-center space-x-2 pt-4">
-            {/* TODO */}
-            {/* <Link to={`/${orgId}${ROUTES.TEACHERS_EDIT}/${id}`}>
-              <IconButton type="square" size={40} icon="edit" />
-            </Link> */}
             {/* TODO */}
             {/* <DeleteIconWithDialog
               header={intl.formatMessage({ id: 'teachers.delete.header' })}
@@ -50,23 +45,19 @@ export const Teacher: React.FC<Props> = ({ className = '', data, attendanceRates
           </div>
         </div>
 
-        {/* Description */}
-        {/* TODO: should we use description at all, maybe something like `notes` that is private to viewer */}
-        {/* <div className="break-words">{description}</div> */}
-
         {/* Groups */}
-        <GroupsInfoBlock teacher={data} teachersGroups={teachersGroups} attendanceRates={attendanceRates} />
+        <GroupsInfoBlock teacherId={data.user.id} teachersGroups={teachersGroups} attendanceRates={attendanceRates} />
       </Container>
     </div>
   )
 }
 
 interface GroupsInfoBlockProps {
-  teacher: OrganizationUser
+  teacherId: number
   attendanceRates: Dictionary<number>
   teachersGroups?: Activity[]
 }
-const GroupsInfoBlock = ({ teacher, attendanceRates, teachersGroups = [] }: GroupsInfoBlockProps) => {
+const GroupsInfoBlock = ({ teacherId, attendanceRates, teachersGroups = [] }: GroupsInfoBlockProps) => {
   const renderItem = useMemo(() => getGroupItemRender(attendanceRates), [attendanceRates])
   const { setOpenFilterDialog } = useActivitiesFiltering()
 
@@ -93,7 +84,7 @@ const GroupsInfoBlock = ({ teacher, attendanceRates, teachersGroups = [] }: Grou
           {/* Assign groups dialog */}
           {!!teachersGroups?.length && (
             <AssignGroups
-              teacher={teacher}
+              teacherId={teacherId}
               trigger={<IconButton type="square" size={40} icon="edit" />}
               teachersGroups={teachersGroups}
             />
@@ -104,16 +95,16 @@ const GroupsInfoBlock = ({ teacher, attendanceRates, teachersGroups = [] }: Grou
       {!!teachersGroups?.length ? (
         <List items={teachersGroups} renderItem={renderItem} />
       ) : (
-        <NoGroupsInfoBlock teacher={teacher} />
+        <NoGroupsInfoBlock teacherId={teacherId} />
       )}
     </>
   )
 }
 
 interface NoGroupsInfoBlockProps {
-  teacher: OrganizationUser
+  teacherId: number
 }
-const NoGroupsInfoBlock = ({ teacher }: NoGroupsInfoBlockProps) => {
+const NoGroupsInfoBlock = ({ teacherId }: NoGroupsInfoBlockProps) => {
   return (
     <div className="text-center">
       <Text type="h6" color="textGray" className="mb-3">
@@ -122,7 +113,7 @@ const NoGroupsInfoBlock = ({ teacher }: NoGroupsInfoBlockProps) => {
 
       {/* Assign teacher dialog */}
       <AssignGroups
-        teacher={teacher}
+        teacherId={teacherId}
         trigger={
           <Button waves="light">
             <FormattedMessage id="teachers.groups.assignBtn.label" />

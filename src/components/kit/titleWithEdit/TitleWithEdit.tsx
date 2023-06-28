@@ -9,9 +9,16 @@ type TitleWithEditProps = {
   value?: string
   placeholder: ReactNode
   className?: string
+  canEdit?: boolean
   onSubmit?: (value: string) => void
 }
-export const TitleWithEdit = ({ value, placeholder, className, onSubmit = noop }: TitleWithEditProps) => {
+export const TitleWithEdit = ({
+  value,
+  placeholder,
+  className,
+  onSubmit = noop,
+  canEdit = false,
+}: TitleWithEditProps) => {
   const [isEditing, setIsEditing] = useState(false)
   const [newValue, setNewValue] = useState(value || '')
   const [submitting, setSubmitting] = useState(false)
@@ -76,22 +83,24 @@ export const TitleWithEdit = ({ value, placeholder, className, onSubmit = noop }
   return (
     <div className={`flex w-full justify-between items-center ${className}`}>
       <div className="min-w-0">{isEditing ? editor : title}</div>
-      <div className="mt-3">
-        {isEditing ? (
-          <>
-            <IconButton key="cancel" size="large" aria-label="cancel" onClick={onCancelClick} disabled={submitting}>
-              <CancelIcon />
+      {canEdit && (
+        <div className="mt-3">
+          {isEditing ? (
+            <>
+              <IconButton key="cancel" size="large" aria-label="cancel" onClick={onCancelClick} disabled={submitting}>
+                <CancelIcon />
+              </IconButton>
+              <IconButton key="done" size="large" aria-label="save" onClick={onSubmitClick} disabled={submitting}>
+                {submitting ? <CircularProgress size={21} /> : <DoneIcon />}
+              </IconButton>
+            </>
+          ) : (
+            <IconButton key="edit" size="large" aria-label="edit" onClick={() => setIsEditing(true)}>
+              <EditIcon />
             </IconButton>
-            <IconButton key="done" size="large" aria-label="save" onClick={onSubmitClick} disabled={submitting}>
-              {submitting ? <CircularProgress size={21} /> : <DoneIcon />}
-            </IconButton>
-          </>
-        ) : (
-          <IconButton key="edit" size="large" aria-label="edit" onClick={() => setIsEditing(true)}>
-            <EditIcon />
-          </IconButton>
-        )}
-      </div>
+          )}
+        </div>
+      )}
     </div>
   )
 }

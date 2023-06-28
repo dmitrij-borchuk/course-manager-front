@@ -7,6 +7,8 @@ import { useActivitiesFiltering } from 'modules/activities/activitiesFilteringCo
 import { ResponsiveButtons } from 'components/kit/responsiveButtons/ResponsiveButtons'
 import { TitleWithEdit } from 'components/kit/titleWithEdit/TitleWithEdit'
 import { Profile } from 'types/profile'
+import { useCurrentUser } from 'hooks/useCurrentUser'
+import { useAccessManager } from 'hooks/useAccessManager'
 import { ROUTES } from '../../constants'
 import { useOrgId } from '../../hooks/useOrgId'
 import { Activity } from '../../types/activity'
@@ -29,12 +31,20 @@ interface Props {
 }
 export const Teacher: React.FC<Props> = ({ className = '', data, attendanceRates, teachersGroups = [], onEdit }) => {
   const { name } = data
+  const { hasAccess } = useAccessManager()
+  const { organizationUser } = useCurrentUser()
+  const canEditName = hasAccess('MANAGE_TEACHERS') || organizationUser?.id === data.user.id
 
   return (
     <div className={className}>
       <Container className="px-4">
         <div className="flex justify-between">
-          <TitleWithEdit placeholder={<FormattedMessage id="profile.user.noName" />} value={name} onSubmit={onEdit} />
+          <TitleWithEdit
+            placeholder={<FormattedMessage id="profile.user.noName" />}
+            value={name}
+            onSubmit={onEdit}
+            canEdit={canEditName}
+          />
           <div className="flex items-center space-x-2 pt-4">
             {/* TODO */}
             {/* <DeleteIconWithDialog

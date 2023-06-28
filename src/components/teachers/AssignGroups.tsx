@@ -3,10 +3,12 @@ import { FormattedMessage, useIntl } from 'react-intl'
 import { ModalProps } from 'react-materialize'
 import { useToasts } from 'react-toast-notifications'
 import { useToggle } from '../../hooks/useToggle'
-import { useGroupsState } from '../../store'
 import { Activity } from '../../types/activity'
 import { getDiff, noop } from '../../utils/common'
 import { SelectDialog } from '../kit/selectDialog/SelectDialog'
+import { useMutation } from 'react-query'
+import { editActivity } from 'modules/activities/api'
+import { useGroups } from 'store/groupsStore'
 
 interface Props {
   teacherId: number
@@ -18,7 +20,12 @@ export const AssignGroups = ({ teacherId, onDone = noop, trigger, teachersGroups
   const intl = useIntl()
   const [open, toggler] = useToggle(false)
   const { addToast } = useToasts()
-  const { groups, fetchGroups, fetching, editGroup } = useGroupsState()
+  const query = useGroups()
+  const groups = query.data?.data ?? []
+  const fetching = query.isLoading
+  const mutation = useMutation((params: { id: number; data: Partial<Activity> }) =>
+    editActivity(params.id, params.data)
+  )
   const onSubmit = useCallback(
     async (data: Activity[]) => {
       try {
@@ -27,13 +34,19 @@ export const AssignGroups = ({ teacherId, onDone = noop, trigger, teachersGroups
           data.map((g) => g.id)
         )
         for (let index = 0; index < removed.length; index++) {
-          await editGroup(removed[index], {
-            performerId: null,
+          await mutation.mutateAsync({
+            id: removed[index],
+            data: {
+              performerId: null,
+            },
           })
         }
         for (let index = 0; index < added.length; index++) {
-          await editGroup(added[index], {
-            performerId: teacherId,
+          await mutation.mutateAsync({
+            id: added[index],
+            data: {
+              performerId: teacherId,
+            },
           })
         }
         toggler.off()
@@ -50,12 +63,11 @@ export const AssignGroups = ({ teacherId, onDone = noop, trigger, teachersGroups
         })
       }
     },
-    [addToast, editGroup, onDone, teacherId, teachersGroups, toggler]
+    [addToast, mutation, onDone, teacherId, teachersGroups, toggler]
   )
   const onTriggerClick = useCallback(async () => {
     toggler.on()
-    fetchGroups()
-  }, [fetchGroups, toggler])
+  }, [toggler])
 
   return (
     <>

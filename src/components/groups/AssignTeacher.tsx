@@ -15,6 +15,7 @@ interface Props {
   onDone?: () => void
   trigger?: ModalProps['trigger']
 }
+// TODO: use profiles
 export const AssignTeacher = ({ group, onDone = noop, trigger }: Props) => {
   const intl = useIntl()
   const org = useCurrentOrg()

@@ -1,16 +1,18 @@
 import React from 'react'
-import { Button, Container } from 'react-materialize'
+import { Button } from 'react-materialize'
 import { User } from 'firebase/auth'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, useIntl } from 'react-intl'
 import { InviteInfo } from 'types/organization'
 import { Header } from '../kit/header/Header'
 import { SubmitButton } from '../kit/buttons/SubmitButton'
 import { SectionHeader } from '../kit/sectionHeader/SectionHeader'
 import { Text } from '../kit/text/Text'
 import { ROUTES } from '../../constants'
+import { Container, TextField } from '@mui/material'
+import { Controller, useForm } from 'react-hook-form'
 
 interface Props {
-  onSubmit: () => void
+  onSubmit: (data: { name: string }) => void
   loading?: boolean
   className?: string
   disabled?: boolean
@@ -25,6 +27,12 @@ export const ConfirmInvite: React.FC<Props> = ({
   user,
   inviteInfo,
 }) => {
+  const intl = useIntl()
+  const { handleSubmit, control, errors } = useForm<{ name: string }>({
+    defaultValues: {
+      name: '',
+    },
+  })
   return (
     <div className={className}>
       <Header />
@@ -52,11 +60,40 @@ export const ConfirmInvite: React.FC<Props> = ({
             </Button>
           </div>
         ) : (
-          <div className="flex justify-center mt-10">
-            <SubmitButton loading={loading} disabled={disabled} onSubmit={onSubmit}>
-              Confirm
-            </SubmitButton>
-          </div>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div className="flex items-center flex-col">
+              <div className="flex justify-center mt-10 w-80">
+                <Controller
+                  control={control}
+                  name="name"
+                  rules={{
+                    required: {
+                      value: true,
+                      message: intl.formatMessage({ id: 'common.form.required' }),
+                    },
+                  }}
+                  render={(renderProps, state) => (
+                    <TextField
+                      label={<FormattedMessage id="common.name.label" />}
+                      inputProps={{
+                        className: `browser-default`,
+                      }}
+                      fullWidth
+                      autoFocus
+                      error={state.invalid}
+                      helperText={errors.name?.message}
+                      {...renderProps}
+                    />
+                  )}
+                />
+              </div>
+              <div className="flex justify-end mt-2 w-80">
+                <SubmitButton loading={loading} disabled={disabled}>
+                  Confirm
+                </SubmitButton>
+              </div>
+            </div>
+          </form>
         )}
       </Container>
     </div>

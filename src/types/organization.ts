@@ -14,6 +14,8 @@ export type Organization = {
   updatedBy: number
   createdAt: string
   updatedAt: string
+  userId: number
+  organizationId: number
 }
 
 export type OrganizationEdit = Pick<Organization, 'id' | 'key' | 'name'>

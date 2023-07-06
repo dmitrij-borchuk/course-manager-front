@@ -18,20 +18,22 @@ export const ConfirmInvitePage = () => {
   const { currentUser } = useAuthStore()
   const { token } = useParams<{ token: string }>()
   const orgId = useOrgId()
-  const onSubmit = useCallback(async () => {
-    if (orgId && currentUser?.uid) {
-      // TODO: error handling
-      try {
-        await confirmInvitation(orgId, currentUser.uid, token, 'Teacher')
-        await fetchAll()
-      } catch (error: any) {
-        addToast(error?.response?.data || error.message, {
-          appearance: 'error',
-          autoDismiss: true,
-        })
+  const onSubmit = useCallback(
+    async (data: { name: string }) => {
+      if (orgId && currentUser?.uid) {
+        try {
+          await confirmInvitation(orgId, currentUser.uid, token, 'Teacher', data.name)
+          await fetchAll()
+        } catch (error: any) {
+          addToast(error?.response?.data?.message || error?.response?.data || error.message, {
+            appearance: 'error',
+            autoDismiss: true,
+          })
+        }
       }
-    }
-  }, [addToast, confirmInvitation, currentUser?.uid, fetchAll, orgId, token])
+    },
+    [addToast, confirmInvitation, currentUser?.uid, fetchAll, orgId, token]
+  )
 
   useEffect(() => {
     getInviteInfo(token)

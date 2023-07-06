@@ -1,7 +1,5 @@
-import React, { ReactNode, useCallback, useEffect, useState } from 'react'
-import { CircularProgress, IconButton, TextField } from '@mui/material'
-import EditIcon from '@mui/icons-material/EditSharp'
-import DoneIcon from '@mui/icons-material/DoneSharp'
+import React, { useCallback } from 'react'
+
 import { FormattedMessage } from 'react-intl'
 import { Container, Preloader } from 'react-materialize'
 import { Link } from 'react-router-dom'
@@ -16,7 +14,6 @@ import { List } from '../kit/list/List'
 import { Loader } from '../kit/loader/Loader'
 import { Text } from '../kit/text/Text'
 import { noop } from '../../utils/common'
-import { useNotification } from '../../hooks/useNotification'
 
 // TODO: add loading
 

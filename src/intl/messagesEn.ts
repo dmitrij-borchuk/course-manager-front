@@ -9,6 +9,7 @@ export const messages = {
   'common.form.tag.label': 'Tag',
   'common.form.tags.label': 'Tags',
   'common.form.newTag.label': 'New tag',
+  'common.form.required': 'This field is required',
   'common.dialog.btn.yes': 'Yes',
   'common.dialog.btn.save': 'Save',
   'common.dialog.btn.no': 'No',

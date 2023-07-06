@@ -38,8 +38,8 @@ type UserInviteData = {
 export function inviteUser(data: UserInviteData) {
   return request.post<InviteResponse>('/users/invite', data)
 }
-export function confirmInvitation(token: string) {
-  return request.post('/users/confirmInvitation', { token })
+export function confirmInvitation(token: string, name: string) {
+  return request.post('/users/confirmInvitation', { token, name })
 }
 
 export function updateUser(id: number, name: string) {

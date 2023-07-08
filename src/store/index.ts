@@ -4,7 +4,6 @@ import { useAuthStore } from './authStore'
 import useGroupsStore from './groupsStore'
 import useStudentsStore, { InitialStudentsState } from './studentsStore'
 import useActivitiesStore, { InitialActivitiesState } from './activitiesStore'
-import useTeachersStore from './teachersStore'
 import useOrganizationsStore from './organizationsStore'
 import useUsersStore from './usersStore'
 import useStudentsOfGroupStore from './studentsOfGroupStore'
@@ -15,7 +14,6 @@ export type DefaultStore = {
 }
 function useStore({ students, activities }: DefaultStore) {
   return {
-    teachers: useTeachersStore(),
     groups: useGroupsStore(),
     auth: useAuthStore(),
     attendances: useAttendancesStore(),
@@ -27,33 +25,21 @@ function useStore({ students, activities }: DefaultStore) {
   }
 }
 
-const [
-  StoreProvider,
-  teachers,
-  groups,
-  auth,
-  attendances,
-  students,
-  activities,
-  studentsOfGroup,
-  organizations,
-  users,
-] = constate(
-  useStore,
-  (value) => value.teachers,
-  (value) => value.groups,
-  (value) => value.auth,
-  (value) => value.attendances,
-  (value) => value.students,
-  (value) => value.activities,
-  (value) => value.studentsOfGroup,
-  (value) => value.organizations,
-  (value) => value.users
-)
+const [StoreProvider, groups, auth, attendances, students, activities, studentsOfGroup, organizations, users] =
+  constate(
+    useStore,
+    (value) => value.groups,
+    (value) => value.auth,
+    (value) => value.attendances,
+    (value) => value.students,
+    (value) => value.activities,
+    (value) => value.studentsOfGroup,
+    (value) => value.organizations,
+    (value) => value.users
+  )
 
 export default StoreProvider
 
-export const useTeachersState = teachers
 export const useGroupsState = groups
 export const useAuthState = auth
 export const useAttendancesState = attendances

@@ -1,8 +1,9 @@
 import request from 'api/request'
 import { Profile } from 'types/profile'
 
-export function getProfilesRequest() {
-  return request.get<Profile[]>(`/profiles`)
+export function getProfilesRequest(deleted = false) {
+  const query = typeof deleted === 'boolean' ? `?deleted=${deleted}` : ''
+  return request.get<Profile[]>(`/profiles${query}`)
 }
 
 export function getProfileRequest(id: number) {

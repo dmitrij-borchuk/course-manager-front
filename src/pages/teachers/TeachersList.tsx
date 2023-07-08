@@ -11,7 +11,7 @@ import { getProfilesRequest } from 'modules/profiles/api'
 
 // TODO: rename to ProfilesListPage
 export const TeachersListPage = () => {
-  const query = useQuery('profiles', getProfilesRequest, {
+  const query = useQuery('profiles', () => getProfilesRequest(), {
     onError: (error: Error) => {
       addToast(error.message, {
         appearance: 'error',

@@ -1,12 +1,12 @@
-import React, { useCallback, useEffect } from 'react'
+import { useCallback } from 'react'
 import { FormattedMessage, useIntl } from 'react-intl'
 import { ModalProps } from 'react-materialize'
 import { useToasts } from 'react-toast-notifications'
-import { useCurrentOrg } from '../../hooks/useCurrentOrg'
+import { Profile } from 'types/profile'
+import { useProfiles } from 'modules/profiles/hooks'
 import { useToggle } from '../../hooks/useToggle'
-import { useGroupsState, useTeachersState } from '../../store'
+import { useGroupsState } from '../../store'
 import { Activity } from '../../types/activity'
-import { OrganizationUser } from '../../types/user'
 import { noop } from '../../utils/common'
 import { SelectDialog } from '../kit/selectDialog/SelectDialog'
 
@@ -15,20 +15,18 @@ interface Props {
   onDone?: () => void
   trigger?: ModalProps['trigger']
 }
-// TODO: use profiles
 export const AssignTeacher = ({ group, onDone = noop, trigger }: Props) => {
   const intl = useIntl()
-  const org = useCurrentOrg()
   const [open, toggler] = useToggle(false)
   const { editGroup } = useGroupsState()
   const { addToast } = useToasts()
-  const { teachers, fetchTeachers, fetching } = useTeachersState()
+  const profilesQuery = useProfiles(false)
   const onSubmit = useCallback(
-    async (data: OrganizationUser) => {
+    async (data: Profile) => {
       try {
         await editGroup(group.id, {
           name: group.name,
-          performerId: data.id,
+          performerId: data.user.id,
         })
         toggler.off()
         onDone()
@@ -47,21 +45,15 @@ export const AssignTeacher = ({ group, onDone = noop, trigger }: Props) => {
     [addToast, editGroup, group.id, group.name, onDone, toggler]
   )
 
-  useEffect(() => {
-    if (org?.id) {
-      fetchTeachers(org.id)
-    }
-  }, [fetchTeachers, org?.id])
-
   return (
     <>
       <span onClick={toggler.on}>{trigger}</span>
       <SelectDialog
-        loading={fetching}
+        loading={profilesQuery.isFetching}
         open={open}
         header={intl.formatMessage({ id: 'groups.teacher.assignDialog.header' })}
         onSubmit={onSubmit}
-        items={teachers}
+        items={profilesQuery.data || []}
         labelProp={(t) => t.name}
         onCloseStart={toggler.off}
         data-testid="assign-teacher-dialog"

@@ -20,12 +20,12 @@ import EditIcon from '@mui/icons-material/Edit'
 import { Edit, MoreHoriz } from '@mui/icons-material'
 import { useHistory } from 'react-router-dom'
 import { ConfirmationDialogBase } from 'components/kit/ConfirmationDialog/ConfirmationDialog'
+import { Profile } from 'types/profile'
 import { ROUTES } from '../../constants'
 import { useOrgId } from '../../hooks/useOrgId'
 import { Activity } from '../../types/activity'
 import { Dictionary } from '../../types/dictionary'
 import { Student } from '../../types/student'
-import { OrganizationUser } from '../../types/user'
 import { IconButton } from '../kit/buttons/IconButton'
 import { HeadingWithControls } from '../kit/headingWithControls/HeadingWithControls'
 import { Text } from '../kit/text/Text'
@@ -35,7 +35,8 @@ import { StudentsInfoBlock } from './StudentsInfoBlock'
 
 interface Props {
   className?: string
-  data: Activity & { teacher: OrganizationUser }
+  data: Activity
+  performer?: Profile
   onDelete: () => void
   onClose: () => void
   attendanceRates: Dictionary<number>
@@ -50,15 +51,9 @@ export const Group: React.FC<Props> = ({
   onClose,
   attendanceRates,
   loadingGroups,
+  performer,
 }) => {
-  const { teacher, archived } = data
-  const simpleGroup = useMemo(
-    () => ({
-      ...data,
-      teacher: data.teacher?.outerId,
-    }),
-    [data]
-  )
+  const { archived } = data
 
   return (
     <div className={className}>
@@ -76,12 +71,12 @@ export const Group: React.FC<Props> = ({
         {/* <ScheduleInfoBlock group={data} /> */}
 
         {/* Teacher */}
-        <TeacherInfoBlock teacher={teacher} group={data} />
+        <TeacherInfoBlock teacher={performer} group={data} />
 
         {/* Students */}
         {/* TODO: add loader */}
         <StudentsInfoBlock
-          group={simpleGroup}
+          group={data}
           students={studentsOfGroup}
           attendanceRates={attendanceRates}
           loadingGroups={loadingGroups}
@@ -92,8 +87,8 @@ export const Group: React.FC<Props> = ({
 }
 
 interface TeacherInfoBlockProps {
-  teacher?: OrganizationUser
-  group: Activity & { teacher: OrganizationUser }
+  teacher?: Profile
+  group: Activity
 }
 const TeacherInfoBlock = ({ teacher, group }: TeacherInfoBlockProps) => {
   return (

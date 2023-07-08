@@ -1,3 +1,4 @@
+import { Profile } from 'types/profile'
 import { Activity, NewActivity } from '../../types/activity'
 import request from '../../api/request'
 
@@ -39,7 +40,11 @@ export type ParticipationRecord = {
 }
 
 export function fetchActivity(id: number) {
-  return request.get<Activity>(`/activities/${id}`)
+  return request.get<
+    Activity & {
+      performer: Profile
+    }
+  >(`/activities/${id}`)
 }
 
 export function deleteActivity(id: number) {

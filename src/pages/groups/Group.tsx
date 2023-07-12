@@ -37,6 +37,9 @@ export const GroupPage = () => {
     await closeGroup(id)
   }, [closeGroup, id])
   const attendanceRate = useAttendanceRateByStudent(attendances || [])
+  const onUpdateTeacher = useCallback(() => {
+    activityQuery.refetch()
+  }, [activityQuery])
 
   useEffect(() => {
     if (activity?.id) {
@@ -63,6 +66,7 @@ export const GroupPage = () => {
         attendanceRates={attendanceRate}
         studentsOfGroup={studentsOfGroup}
         loadingGroups={loadingGroups}
+        onUpdateTeacher={onUpdateTeacher}
       />
     </>
   )

@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { FormattedMessage, useIntl } from 'react-intl'
 import { Button, Container } from 'react-materialize'
 import {
@@ -42,6 +42,7 @@ interface Props {
   attendanceRates: Dictionary<number>
   studentsOfGroup: Student[]
   loadingGroups?: boolean
+  onUpdateTeacher: () => void
 }
 export const Group: React.FC<Props> = ({
   className = '',
@@ -52,6 +53,7 @@ export const Group: React.FC<Props> = ({
   attendanceRates,
   loadingGroups,
   performer,
+  onUpdateTeacher,
 }) => {
   const { archived } = data
 
@@ -71,7 +73,7 @@ export const Group: React.FC<Props> = ({
         {/* <ScheduleInfoBlock group={data} /> */}
 
         {/* Teacher */}
-        <TeacherInfoBlock teacher={performer} group={data} />
+        <TeacherInfoBlock teacher={performer} group={data} onUpdateTeacher={onUpdateTeacher} />
 
         {/* Students */}
         {/* TODO: add loader */}
@@ -89,8 +91,9 @@ export const Group: React.FC<Props> = ({
 interface TeacherInfoBlockProps {
   teacher?: Profile
   group: Activity
+  onUpdateTeacher: () => void
 }
-const TeacherInfoBlock = ({ teacher, group }: TeacherInfoBlockProps) => {
+const TeacherInfoBlock = ({ teacher, group, onUpdateTeacher }: TeacherInfoBlockProps) => {
   return (
     <>
       <Text type="h5" color="primary">
@@ -101,10 +104,14 @@ const TeacherInfoBlock = ({ teacher, group }: TeacherInfoBlockProps) => {
         <div className="flex justify-between">
           <UserPreview data={teacher} />
           {/* Assign teacher dialog */}
-          <AssignTeacher group={group} trigger={<IconButton type="square" size={40} icon="edit" />} />
+          <AssignTeacher
+            onDone={onUpdateTeacher}
+            group={group}
+            trigger={<IconButton type="square" size={40} icon="edit" />}
+          />
         </div>
       ) : (
-        <NoTeacherInfoBlock group={group} />
+        <NoTeacherInfoBlock group={group} onUpdateTeacher={onUpdateTeacher} />
       )}
     </>
   )
@@ -112,8 +119,9 @@ const TeacherInfoBlock = ({ teacher, group }: TeacherInfoBlockProps) => {
 
 interface NoTeacherInfoBlockProps {
   group: Activity
+  onUpdateTeacher: () => void
 }
-const NoTeacherInfoBlock = ({ group }: NoTeacherInfoBlockProps) => {
+const NoTeacherInfoBlock = ({ group, onUpdateTeacher }: NoTeacherInfoBlockProps) => {
   return (
     <div className="text-center">
       <Text type="h6" color="textGray" className="mb-3">
@@ -122,6 +130,7 @@ const NoTeacherInfoBlock = ({ group }: NoTeacherInfoBlockProps) => {
 
       {/* Assign teacher dialog */}
       <AssignTeacher
+        onDone={onUpdateTeacher}
         group={group}
         trigger={
           <Button waves="light">

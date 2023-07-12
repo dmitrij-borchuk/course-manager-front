@@ -8,7 +8,7 @@ function createOrganization(data: OrganizationCreate) {
   return cy
     .wrap(tokenPromise)
     .then((token) => {
-      return cy.request<{ rows: Organization[] }>({
+      return cy.request<Organization>({
         url: `${Cypress.env('SERVER_URL')}/organizations`,
         method: 'POST',
         headers: {
@@ -19,11 +19,11 @@ function createOrganization(data: OrganizationCreate) {
     })
     .then(({ body }) => {
       const id = firebase.auth().currentUser.uid
-      cy.callFirestore('set', `organizations/${body.rows[0].key}/users/${id}`, {
+      cy.callFirestore('set', `organizations/${body.key}/users/${id}`, {
         id,
       })
 
-      return cy.wrap<Organization>(body.rows[0])
+      return cy.wrap<Organization>(body)
     })
 }
 Cypress.Commands.add('createOrganization', createOrganization)

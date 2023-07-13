@@ -1,5 +1,4 @@
-import React, { useCallback } from 'react'
-
+import { useCallback } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { Container, Preloader } from 'react-materialize'
 import { Link } from 'react-router-dom'
@@ -13,7 +12,6 @@ import { Header } from '../kit/header/Header'
 import { List } from '../kit/list/List'
 import { Loader } from '../kit/loader/Loader'
 import { Text } from '../kit/text/Text'
-import { noop } from '../../utils/common'
 
 // TODO: add loading
 
@@ -22,10 +20,9 @@ interface Props {
   organizations?: Organization[]
   user?: User
   organizationsLoading?: boolean
-  onEdit?: (user: User) => void
 }
 export const Profile = (props: Props) => {
-  const { className, organizations = [], user, organizationsLoading = false, onEdit = noop } = props
+  const { className, organizations = [], user, organizationsLoading = false } = props
 
   if (!user) {
     return <Loader />

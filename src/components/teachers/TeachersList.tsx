@@ -1,11 +1,11 @@
 import React, { useCallback, useMemo } from 'react'
-import { Box } from '@mui/material'
+import { Box, styled } from '@mui/material'
 import { FormattedMessage } from 'react-intl'
 import { useSortingByHeader } from 'utils/sorting'
 import { ROUTES } from '../../constants'
 import { useOrgId } from '../../hooks/useOrgId'
 import { Dictionary } from '../../types/dictionary'
-import { OrganizationUser } from '../../types/user'
+import { Profile } from 'types/profile'
 import { AttendanceRateBadge } from '../kit/attendanceRateBadge/AttendancerateBadge'
 import { Ellipsis } from '../kit/ellipsis/Ellipsis'
 import { ListPage } from '../kit/ListPage'
@@ -14,7 +14,7 @@ import { Text } from '../kit/text/Text'
 interface Props {
   loading?: boolean
   className?: string
-  items?: OrganizationUser[]
+  items?: Profile[]
   attendanceRates?: Dictionary<number>
 }
 export const TeachersList: React.FC<Props> = ({ className = '', loading = false, items = [], attendanceRates }) => {
@@ -23,9 +23,9 @@ export const TeachersList: React.FC<Props> = ({ className = '', loading = false,
     return items.map((s) => ({
       id: s.id,
       name: s.name,
-      outerId: s.outerId,
+      outerId: s.user.outerId,
       role: s.role,
-      attendanceRate: attendanceRates ? attendanceRates[s.outerId] : null,
+      attendanceRate: attendanceRates ? attendanceRates[s.user.outerId] : null,
     }))
   }, [items, attendanceRates])
   const renderItem = useCallback((d: TableContentItem) => {
@@ -39,9 +39,9 @@ export const TeachersList: React.FC<Props> = ({ className = '', loading = false,
           )}
         </Ellipsis>
         <Box display="flex" gap={2}>
-          <Text type="body" color="textGray" className="m-0">
+          <CapitalizedText type="body" color="textGray" className="m-0">
             {d.role}
-          </Text>
+          </CapitalizedText>
           {d.attendanceRate && <AttendanceRateBadge value={d.attendanceRate} />}
         </Box>
       </div>
@@ -91,3 +91,7 @@ type TableContentItem = {
   outerId: string
   role: string | undefined
 }
+
+const CapitalizedText = styled(Text)`
+  text-transform: capitalize;
+`

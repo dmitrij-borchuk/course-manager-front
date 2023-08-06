@@ -21,13 +21,13 @@ interface Props {
   className?: string
   items?: UserItem[]
 }
+// TODO: probably needs to be deleted
 export const UsersList: React.FC<Props> = ({ className = '', loading = false, items = [] }) => {
   const orgId = useOrgId()
 
   return (
     <div className={className}>
       <Header />
-
       <Container className="px-4">
         <SectionHeader>
           <FormattedMessage id="users.list.title" />
@@ -35,7 +35,6 @@ export const UsersList: React.FC<Props> = ({ className = '', loading = false, it
 
         <List loading={loading} items={items} />
       </Container>
-
       <Link to={`${orgId}/invite`}>
         <FabBtn />
       </Link>

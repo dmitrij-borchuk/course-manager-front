@@ -15,7 +15,17 @@ describe('TeachersList', () => {
             id: 1,
             name: 'Teacher name',
             role: 'Teacher',
-            outerId: 'outerId',
+            user: {
+              id: 1,
+              email: 'email',
+              outerId: 'outerId',
+            },
+            createdAt: '2021-10-10',
+            deleted: false,
+            updatedAt: '2021-10-10',
+            organizationId: 1,
+            userId: 1,
+            updatedBy: 1,
           },
         ]}
       />

@@ -7,6 +7,7 @@ import { Student as StudentType } from '../../types/student'
 import { HeadingWithControls } from '../kit/headingWithControls/HeadingWithControls'
 import { Tag } from '../kit/tag/Tag'
 import { GroupsInfoBlock } from './GroupsInfoBlock'
+import { ParticipationTimeline } from 'modules/participants/ParticipantTimeline'
 
 // TODO: add edit
 interface Props {
@@ -47,6 +48,8 @@ export const Student: React.FC<Props> = ({ className = '', data, onDelete }) => 
         <div className="mt-6">
           <GroupsInfoBlock student={data} />
         </div>
+
+        <ParticipationTimeline outerId={data.outerId} participantId={data.id} />
       </Container>
     </div>
   )

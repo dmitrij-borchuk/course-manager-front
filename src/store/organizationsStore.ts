@@ -21,10 +21,15 @@ export default function useOrganizationsBaseStore() {
     submitting,
     fetchAll: useCallback(async () => {
       setLoading(true)
-      const organizations = await getUserOrganizations()
-      const groupsById = arrayToDictionary(organizations.data)
-      setById(groupsById)
-      setLoading(false)
+      try {
+        const organizations = await getUserOrganizations()
+        const groupsById = arrayToDictionary(organizations.data)
+        setById(groupsById)
+        setLoading(false)
+      } catch (error) {
+        setLoading(false)
+        throw error
+      }
     }, []),
     // TODO: rename to `add`
     save: useCallback(async (data: OrganizationCreate) => {

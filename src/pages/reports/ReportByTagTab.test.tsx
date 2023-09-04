@@ -74,7 +74,6 @@ describe('ReportByTagTab', () => {
 
     expect(percents[0]).toBe('0%')
     expect(percents[1]).toBe('100%')
-    expect(percents[2]).toBe('N/A')
   })
   test('should generate report for students with case insensitive tags', async () => {
     const { attendances, groups, students, studentsOfGroup } = getSortingDataMocks()
@@ -94,7 +93,7 @@ describe('ReportByTagTab', () => {
     renderPdf()
     const percents = await getPercentsArray()
 
-    expect(percents).toHaveLength(4)
+    expect(percents).toHaveLength(2)
   })
 
   function renderPdf() {

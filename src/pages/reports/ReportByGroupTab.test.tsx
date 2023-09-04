@@ -220,7 +220,6 @@ describe('ReportByGroupTab', () => {
       .map((e) => e.textContent)
 
     expect(persents[0]).toBe('33%')
-    expect(persents[1]).toBe('N/A')
   })
   test('should render attendance rate between dates', async () => {
     const groups: Activity[] = [

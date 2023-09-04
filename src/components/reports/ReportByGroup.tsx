@@ -1,6 +1,6 @@
 import { usePDF } from '@react-pdf/renderer'
 import { useEffect, useMemo } from 'react'
-import { FormattedMessage, useIntl } from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 import { Button } from 'react-materialize'
 import { useAttendanceRateByStudent } from '../../hooks/useAttendanceRate'
 import { Activity } from '../../types/activity'
@@ -8,7 +8,7 @@ import { Attendance } from '../../types/attendance'
 import { SortOrder } from '../../types/sorting'
 import { Student } from '../../types/student'
 import { AttendanceReportTemplate } from '../pdf/AttendanceReportTemplate'
-import { sortAttendanceReport } from './utils'
+import { hasRate, sortAttendanceReport } from './utils'
 
 type ReportByGroupProps = {
   group: Activity
@@ -20,7 +20,6 @@ type ReportByGroupProps = {
   to: Date
 }
 export const ReportByGroup = ({ group, attendances, students, order, loading, from, to }: ReportByGroupProps) => {
-  const intl = useIntl()
   const attendancesOfGroup = useMemo(() => {
     return attendances.filter((a) => a.group === group.outerId)
   }, [attendances, group.outerId])
@@ -31,15 +30,16 @@ export const ReportByGroup = ({ group, attendances, students, order, loading, fr
       label: s.name,
       value: attendanceRate[s.outerId] && attendanceRate[s.outerId] * 100,
     }))
-  ).map((r) => {
-    const rate =
-      typeof r.value === 'number' ? `${Math.round(r.value)}%` : intl.formatMessage({ id: 'reports.noReports' })
+  )
+    .filter(hasRate)
+    .map((r) => {
+      const rate = `${Math.round(r.value)}%`
 
-    return {
-      label: r.label,
-      value: rate,
-    }
-  })
+      return {
+        label: r.label,
+        value: rate,
+      }
+    })
   const [instance, updateInstance] = usePDF({
     document: <AttendanceReportTemplate title={group.name} heading={group.name} attendances={attendancesReport} />,
   })

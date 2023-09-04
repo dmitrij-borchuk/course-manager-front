@@ -14,3 +14,7 @@ type ReportItem = {
   label: string
   value?: number
 }
+
+export function hasRate(item: ReportItem): item is ReportItem & { value: number } {
+  return typeof item.value === 'number'
+}

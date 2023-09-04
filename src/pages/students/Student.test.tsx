@@ -23,7 +23,8 @@ describe('Student', () => {
     )
 
     await screen.findByText('studentName')
-    const rate = await screen.findByTestId('attendance-rate-badge')
+    const rates = await screen.findAllByTestId('attendance-rate-badge')
+    const rate = rates[0]
     expect(rate).toHaveTextContent('50%')
   })
 

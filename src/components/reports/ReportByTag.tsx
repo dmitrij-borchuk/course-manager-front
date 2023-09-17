@@ -1,42 +1,48 @@
-import { usePDF } from '@react-pdf/renderer'
+import { BlobProvider, usePDF } from '@react-pdf/renderer'
 import { useEffect } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { Button } from 'react-materialize'
-import { useAttendanceRateByStudent } from '../../hooks/useAttendanceRate'
-import { Attendance } from '../../types/attendance'
-import { SortOrder } from '../../types/sorting'
-import { Student } from '../../types/student'
-import { AttendanceReportTemplate } from '../pdf/AttendanceReportTemplate'
-import { hasRate, sortAttendanceReport } from './utils'
+import { TableDataTemplate } from 'components/pdf/TableDataTemplate'
 
-type ReportByGroupProps = {
+type Props = {
   tags: string[]
-  attendances: Attendance[]
-  students: Student[]
-  order: SortOrder
+  reportRecords: ReportRecord[]
 }
-export const ReportByTag = ({ tags, attendances, students, order }: ReportByGroupProps) => {
-  const attendanceRate = useAttendanceRateByStudent(attendances)
-  const attendancesReport = sortAttendanceReport(
-    order,
-    students.map((s) => ({
-      label: s.name,
-      value: attendanceRate[s.outerId] && attendanceRate[s.outerId] * 100,
-    }))
-  )
-    .filter(hasRate)
-    .map((r) => {
-      const rate = `${Math.round(r.value)}%`
+export const ReportByTag = ({ tags, reportRecords }: Props) => {
+  const attendancesReport = reportRecords.map((r) => {
+    const rate = `${Math.round(r.rate * 100)}%`
 
-      return {
-        label: r.label,
-        value: rate,
-      }
-    })
+    return {
+      name: r.name,
+      rate: rate,
+      activity: r.activity,
+    }
+  })
   const tagsStr = tags.join(', ')
+  const document = (
+    <TableDataTemplate
+      title={tagsStr}
+      heading={tagsStr}
+      rows={attendancesReport}
+      columns={[
+        {
+          key: 'name',
+          width: '50%',
+        },
+        {
+          key: 'activity',
+          width: '50%',
+        },
+        {
+          key: 'rate',
+          width: 70,
+          align: 'right',
+        },
+      ]}
+    />
+  )
   const [instance, updateInstance] = usePDF({
-    // TODO: Show message if no records
-    document: <AttendanceReportTemplate title={tagsStr} heading={tagsStr} attendances={attendancesReport} />,
+    document,
   })
   const date = new Date().toLocaleDateString()
 
@@ -46,19 +52,37 @@ export const ReportByTag = ({ tags, attendances, students, order }: ReportByGrou
     updateInstance()
   }, [attendancesReport, tagsStr, updateInstance])
 
+  const name = `attendance-report-${tags.join('-')}-${date}.pdf`
+
   return (
     <>
-      {instance.url && (
-        <Button
-          // @ts-ignore
-          href={instance.url}
-          node="a"
-          waves="light"
-          download={`attendance-report-${tags.join('-')}-${date}.pdf`}
-        >
-          <FormattedMessage id="reports.submitButton" />
-        </Button>
-      )}
+      <div className="flex gap-3 align-middle">
+        {instance.url && (
+          <Button
+            // @ts-ignore
+            href={instance.url}
+            node="a"
+            waves="light"
+            download={name}
+          >
+            <FormattedMessage id="reports.submitButton" />
+          </Button>
+        )}
+        <BlobProvider document={document}>
+          {({ url }) => (
+            // @ts-ignore
+            <a href={url} target="_blank" rel="noreferrer" className="self-center">
+              <FormattedMessage id="reports.open" />
+            </a>
+          )}
+        </BlobProvider>
+      </div>
     </>
   )
+}
+
+type ReportRecord = {
+  name: string
+  rate: number
+  activity: string
 }

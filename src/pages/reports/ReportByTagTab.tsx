@@ -1,28 +1,20 @@
-import { ComponentProps, useCallback, useEffect, useState } from 'react'
+import { ComponentProps, useCallback, useState } from 'react'
 import { FormattedMessage, useIntl } from 'react-intl'
-import { DatePicker, Preloader } from 'react-materialize'
+import { DatePicker } from 'react-materialize'
+import { useQuery } from 'react-query'
+import { getReportByTagRequest } from 'modules/reports/api'
 import { Select } from '../../components/kit/select/Select'
 import { TagsEditor } from '../../components/kit/tag/TagsEditor'
 import { Text } from '../../components/kit/text/Text'
 import { ReportByTag } from '../../components/reports/ReportByTag'
-import { useCurrentOrg } from '../../hooks/useCurrentOrg'
-import { useOrgId } from '../../hooks/useOrgId'
 import { usePersistenceState } from '../../hooks/usePersistenceState'
-import { useAttendancesState, useStudentsState } from '../../store'
 import { SortOrder } from '../../types/sorting'
 
 export const ReportByTagTab = () => {
   const intl = useIntl()
-  const orgKey = useOrgId()
-  const org = useCurrentOrg()
-  const orgId = org?.id
   const [to, setTo] = useState(new Date())
   const [from, setFrom] = useState(subMonth(to))
   const [order, setOrder] = usePersistenceState<SortOrder>(orderStoreKey, 'asc')
-  const { fetchStudents, students, fetching: studentsFetching } = useStudentsState()
-  // TODO: when attendance store has some records this will not work correctly
-  // need to filter attendances by date
-  const { attendances, fetchAttendancesByDate, loading: attendanceLoading } = useAttendancesState()
   const [tags, setTags] = useState<string[]>([])
   const onTagsUpdate = useCallback(
     (newTags: string[]) => {
@@ -30,33 +22,8 @@ export const ReportByTagTab = () => {
     },
     [setTags]
   )
-  const tagsLower = tags.map((t) => t.toLowerCase())
-  // TODO: optimize
-  const studentsWithTags = students.filter((s) => {
-    if (!s.tags) {
-      return false
-    }
 
-    // TODO: At least one or all of
-    return s.tags.filter((sTag) => tagsLower.includes(sTag.toLowerCase())).length > 0
-  })
-
-  useEffect(() => {
-    fetchStudents()
-  }, [fetchStudents])
-
-  useEffect(() => {
-    fetchAttendancesByDate(orgKey, from, to)
-  }, [fetchAttendancesByDate, from, orgKey, to])
-
-  // TODO: do we need to wait for `orgId`?
-  if (!orgId || studentsFetching || attendanceLoading) {
-    return (
-      <div className="flex justify-center pt-4" data-testid="loader">
-        <Preloader color="red" flashing={false} size="medium" />
-      </div>
-    )
-  }
+  const data = useReportRecords(from, to, tags, order)
 
   return (
     <div>
@@ -111,7 +78,7 @@ export const ReportByTagTab = () => {
           </Select>
         </div>
       </div>
-      <ReportBody attendances={attendances} tags={tags} students={studentsWithTags} order={order} />
+      <ReportBody tags={tags} reportRecords={data} />
     </div>
   )
 }
@@ -136,4 +103,27 @@ function subMonth(date: Date) {
   const newDate = new Date(date)
   newDate.setMonth(newDate.getMonth() - 1)
   return newDate
+}
+
+function useReportRecords(from: Date, to: Date, tags: string[], order: SortOrder) {
+  const { data } = useQuery(
+    ['report', from, to, tags, order],
+    () => {
+      if (!tags.length) {
+        return
+      }
+      return getReportByTagRequest(from, to, tags, order)
+    },
+    {
+      refetchOnWindowFocus: false,
+    }
+  )
+  const parsedData =
+    data?.data.map((r) => ({
+      name: r.participantName,
+      rate: r.rate,
+      activity: r.activityName,
+    })) || []
+
+  return parsedData
 }

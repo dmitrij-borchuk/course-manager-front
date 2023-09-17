@@ -1,4 +1,4 @@
-export function sortAttendanceReport(order: 'asc' | 'desc', list: ReportItem[]) {
+export function sortAttendanceReport<T extends ReportItem>(order: 'asc' | 'desc', list: T[]) {
   return list.sort((a, b) => {
     if (a.value === undefined) {
       return 1
@@ -11,7 +11,6 @@ export function sortAttendanceReport(order: 'asc' | 'desc', list: ReportItem[]) 
   })
 }
 type ReportItem = {
-  label: string
   value?: number
 }
 

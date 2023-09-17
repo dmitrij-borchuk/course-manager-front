@@ -164,7 +164,8 @@ export const messages = {
   'import.fileType.csv': 'CSV',
 
   'reports.header': 'Reports',
-  'reports.submitButton': 'Generate report',
+  'reports.submitButton': 'Download',
+  'reports.open': 'Open in new tab',
   'reports.tabs.byGroup': 'By group',
   'reports.tabs.byTag': 'By tag',
   'reports.noGroups': 'Please create some group to be able to generate report',

@@ -81,7 +81,7 @@ describe('ReportByGroupTab', () => {
       </TestWrapper>
     )
 
-    await screen.findByRole('button', { name: 'Generate report' })
+    await screen.findByRole('button', { name: 'Download' })
     const lastCall = usePDF.mock.calls[usePDF.mock.calls.length - 1]
     const document = lastCall[0].document
     render(document)
@@ -205,7 +205,7 @@ describe('ReportByGroupTab', () => {
       </TestWrapper>
     )
 
-    await screen.findByRole('button', { name: 'Generate report' })
+    await screen.findByRole('button', { name: 'Download' })
     const lastCall = usePDF.mock.calls[usePDF.mock.calls.length - 1]
     const document = lastCall[0].document
     render(document)
@@ -331,7 +331,7 @@ describe('ReportByGroupTab', () => {
       </TestWrapper>
     )
 
-    await screen.findByRole('button', { name: 'Generate report' })
+    await screen.findByRole('button', { name: 'Download' })
     renderPdf()
     const percents = await getPercentsArray()
 
@@ -355,7 +355,7 @@ describe('ReportByGroupTab', () => {
     const groupSelector = await screen.findByLabelText('Group')
     userEvent.selectOptions(groupSelector, groups[1].id.toString())
 
-    await screen.findByRole('button', { name: 'Generate report' })
+    await screen.findByRole('button', { name: 'Download' })
     renderPdf()
     const title = await getReportTitle()
 

@@ -7,8 +7,6 @@ import { SubmitButton } from '../kit/buttons/SubmitButton'
 import { FormLayout } from '../kit/formLayout/FormLayout'
 import { ExternalError, useFormWithError } from '../../hooks/useFormWithError'
 import { InviteForm } from '../../types/invite'
-import { InviteLinkDialog } from '../auth/InviteLinkDialog'
-import { noop } from '../../utils/common'
 
 export type TeacherFormOutput = {
   name: string
@@ -24,18 +22,9 @@ interface Props {
   disabled?: boolean
   className?: string
   error?: ExternalError<InviteForm>
-  inviteLink?: string
   onDialogClose?: () => void
 }
-export const InviteUser: React.FC<Props> = ({
-  className = '',
-  onSubmit,
-  loading = false,
-  disabled = false,
-  error,
-  inviteLink,
-  onDialogClose = noop,
-}) => {
+export const InviteUser: React.FC<Props> = ({ className = '', onSubmit, loading = false, disabled = false, error }) => {
   const intl = useIntl()
   const { control, handleSubmit, errors } = useFormWithError<InviteForm>(
     {
@@ -66,8 +55,6 @@ export const InviteUser: React.FC<Props> = ({
           />
         </FormLayout>
       </Container>
-
-      {inviteLink && <InviteLinkDialog link={inviteLink} onClose={onDialogClose} />}
     </div>
   )
 }

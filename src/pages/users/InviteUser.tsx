@@ -1,47 +1,40 @@
-import { useCallback, useState } from 'react'
-import { useToasts } from 'react-toast-notifications'
+import { useCallback } from 'react'
 import { Helmet } from 'react-helmet'
+import { useIntl } from 'react-intl'
 import { InviteUser } from '../../components/users/InviteUser'
 import { useCurrentOrg } from '../../hooks/useCurrentOrg'
 import useUsersStore from '../../store/usersStore'
 import { TITLE_POSTFIX } from '../../config'
+import { useNotification } from 'hooks/useNotification'
 
 export const InviteUserPage = () => {
+  const intl = useIntl()
   const { submitting, inviteUser } = useUsersStore()
   const org = useCurrentOrg()
-  const [link, setLink] = useState('')
-  const { addToast } = useToasts()
+  const { showError, showSuccess } = useNotification()
   const onSubmit = useCallback(
     async (data) => {
       if (org) {
         try {
-          const result = (await inviteUser(org.id, data)).data
+          await inviteUser(org.id, data)
 
-          if (result.id) {
-            setLink(`${document.location.origin}/${org.key}/invite/confirm/${result.token}`)
-          }
+          showSuccess(intl.formatMessage({ id: 'users.invite.success' }))
         } catch (error) {
           if (error instanceof Error) {
-            addToast(error.message, {
-              appearance: 'error',
-              autoDismiss: true,
-            })
+            showError(error.message)
           }
         }
       }
     },
-    [addToast, inviteUser, org]
+    [intl, inviteUser, org, showError, showSuccess]
   )
-  const onDialogClose = useCallback(() => {
-    setLink('')
-  }, [])
 
   return (
     <>
       <Helmet>
         <title>Invite Users{TITLE_POSTFIX}</title>
       </Helmet>
-      <InviteUser onSubmit={onSubmit} loading={submitting} inviteLink={link} onDialogClose={onDialogClose} />
+      <InviteUser onSubmit={onSubmit} loading={submitting} />
     </>
   )
 }

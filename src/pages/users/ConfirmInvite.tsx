@@ -10,11 +10,13 @@ import { TITLE_POSTFIX } from '../../config'
 import { Loader } from 'components/kit/loader/Loader'
 import { Message } from 'components/kit/message/Message'
 import { Header } from 'components/kit/header/Header'
+import { isAxiosError } from 'api/request'
 
 export const ConfirmInvitePage = () => {
   const { addToast } = useToasts()
-  const { submitting, confirmInvitation } = useUsersState()
+  const { submitting, confirmInvitation, profile } = useUsersState()
   const { fetchAll, getInviteInfo, inviteInfo, inviteInfoError } = useOrganizationsState()
+  const parsedError = parseError(inviteInfoError)
   const { currentUser } = useAuthStore()
   const { token } = useParams<{ token: string }>()
   const orgId = useOrgId()
@@ -39,11 +41,11 @@ export const ConfirmInvitePage = () => {
     getInviteInfo(token)
   }, [getInviteInfo, token])
 
-  if (inviteInfoError) {
+  if (parsedError) {
     return (
       <>
         <Header />
-        <Message type="error">{inviteInfoError.message}</Message>
+        <Message type="error">{parsedError}</Message>
       </>
     )
   }
@@ -63,7 +65,17 @@ export const ConfirmInvitePage = () => {
         <title>Confirm Invitation{TITLE_POSTFIX}</title>
       </Helmet>
 
-      <ConfirmInvite onSubmit={onSubmit} loading={submitting} user={currentUser} inviteInfo={inviteInfo} />
+      <ConfirmInvite onSubmit={onSubmit} loading={submitting} user={profile} inviteInfo={inviteInfo} />
     </>
   )
+}
+
+function parseError(error?: Error) {
+  if (!error) {
+    return
+  }
+  if (isAxiosError(error)) {
+    return error.response?.data
+  }
+  return error.message
 }

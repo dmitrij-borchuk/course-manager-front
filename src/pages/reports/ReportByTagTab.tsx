@@ -2,8 +2,10 @@ import { ComponentProps, useCallback, useState } from 'react'
 import { FormattedMessage, useIntl } from 'react-intl'
 import { DatePicker } from 'react-materialize'
 import { useQuery } from 'react-query'
+import Grid from '@mui/material/Unstable_Grid2'
+import Box from '@mui/material/Box'
 import { getReportByTagRequest } from 'modules/reports/api'
-import { Select } from '../../components/kit/select/Select'
+import { SortByField } from 'components/kit/SortByField'
 import { TagsEditor } from '../../components/kit/tag/TagsEditor'
 import { Text } from '../../components/kit/text/Text'
 import { ReportByTag } from '../../components/reports/ReportByTag'
@@ -15,6 +17,7 @@ export const ReportByTagTab = () => {
   const [to, setTo] = useState(new Date())
   const [from, setFrom] = useState(subMonth(to))
   const [order, setOrder] = usePersistenceState<SortOrder>(orderStoreKey, 'asc')
+  const [orderBy, setOrderBy] = usePersistenceState<string>(orderByStoreKey, 'participantName')
   const [tags, setTags] = useState<string[]>([])
   const onTagsUpdate = useCallback(
     (newTags: string[]) => {
@@ -23,67 +26,83 @@ export const ReportByTagTab = () => {
     [setTags]
   )
 
-  const data = useReportRecords(from, to, tags, order)
+  const [data, isFetching] = useReportRecords(from, to, tags, order, orderBy)
 
   return (
     <div>
-      <div className="pt-4 grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="">
-          <DatePicker
-            id="dateFrom"
-            options={{
-              autoClose: true,
-              format: 'mmm dd, yyyy',
-              defaultDate: from,
-              setDefaultDate: true,
-              maxDate: new Date(),
+      <Grid container spacing={2}>
+        <Grid xs={12} md={6}>
+          <Box>
+            <DatePicker
+              id="dateFrom"
+              options={{
+                autoClose: true,
+                format: 'mmm dd, yyyy',
+                defaultDate: from,
+                setDefaultDate: true,
+                maxDate: new Date(),
+              }}
+              // @ts-ignore
+              label={`${intl.formatMessage({ id: 'common.from' })} *`}
+              onChange={setFrom}
+              s={12}
+            />
+          </Box>
+        </Grid>
+        <Grid xs={12} md={6}>
+          <Box>
+            <DatePicker
+              id="dateTo"
+              options={{
+                autoClose: true,
+                format: 'mmm dd, yyyy',
+                defaultDate: to,
+                setDefaultDate: true,
+                maxDate: new Date(),
+              }}
+              // @ts-ignore
+              label={`${intl.formatMessage({ id: 'common.to' })} *`}
+              onChange={(d) => setTo(new Date(d.getTime() + dayWithoutSecondInMs))}
+              s={12}
+            />
+          </Box>
+        </Grid>
+        <Grid xs={12} md={6}>
+          <Box px={3}>
+            <TagsEditor value={tags} onUpdate={onTagsUpdate} inputClassName="w-full" />
+          </Box>
+        </Grid>
+        <Grid xs={12} md={6} display="flex" alignItems="center">
+          <SortByField
+            value={{ order, orderBy }}
+            options={[
+              {
+                label: 'by participant',
+                value: 'participantName',
+              },
+              {
+                label: 'by activity',
+                value: 'activityName',
+              },
+              {
+                label: 'by rate',
+                value: 'rate',
+              },
+            ]}
+            onChange={(data) => {
+              setOrder(data.order)
+              setOrderBy(data.orderBy)
             }}
-            // @ts-ignore
-            label={`${intl.formatMessage({ id: 'common.from' })} *`}
-            onChange={setFrom}
-            s={12}
           />
-        </div>
-        <div className="">
-          <DatePicker
-            id="dateTo"
-            options={{
-              autoClose: true,
-              format: 'mmm dd, yyyy',
-              defaultDate: to,
-              setDefaultDate: true,
-              maxDate: new Date(),
-            }}
-            // @ts-ignore
-            label={`${intl.formatMessage({ id: 'common.to' })} *`}
-            onChange={(d) => setTo(new Date(d.getTime() + dayWithoutSecondInMs))}
-            s={12}
-          />
-        </div>
-      </div>
-      <div className="pt-4 grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="">
-          <TagsEditor value={tags} onUpdate={onTagsUpdate} inputClassName="w-full" />
-        </div>
-        <div className="flex items-end row">
-          <Select
-            onChange={(e) => setOrder(e.target.value as SortOrder)}
-            id="sortSelect"
-            label={intl.formatMessage({ id: 'reports.sortOrder' })}
-            value={order}
-            s={12}
-          >
-            <option value="asc">{intl.formatMessage({ id: 'common.sort.asc' })}</option>
-            <option value="desc">{intl.formatMessage({ id: 'common.sort.desc' })}</option>
-          </Select>
-        </div>
-      </div>
-      <ReportBody tags={tags} reportRecords={data} />
+        </Grid>
+      </Grid>
+      <ReportBody tags={tags} reportRecords={data} loading={isFetching} />
     </div>
   )
 }
 
 const orderStoreKey = 'reports.attendance.order'
+const orderByStoreKey = 'reports.attendance.orderBy'
 const ReportBody = (props: ComponentProps<typeof ReportByTag>) => {
   const { tags } = props
   if (!tags.length) {
@@ -105,14 +124,14 @@ function subMonth(date: Date) {
   return newDate
 }
 
-function useReportRecords(from: Date, to: Date, tags: string[], order: SortOrder) {
-  const { data } = useQuery(
-    ['report', from, to, tags, order],
+function useReportRecords(from: Date, to: Date, tags: string[], order: SortOrder, orderBy: string) {
+  const { data, isFetching } = useQuery(
+    ['report', from, to, tags, order, orderBy],
     () => {
       if (!tags.length) {
         return
       }
-      return getReportByTagRequest(from, to, tags, order)
+      return getReportByTagRequest(from, to, tags, order, orderBy)
     },
     {
       refetchOnWindowFocus: false,
@@ -125,5 +144,5 @@ function useReportRecords(from: Date, to: Date, tags: string[], order: SortOrder
       activity: r.activityName,
     })) || []
 
-  return parsedData
+  return [parsedData, isFetching] as const
 }

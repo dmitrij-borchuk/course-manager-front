@@ -75,7 +75,17 @@
     "extends": [
       "react-app",
       "react-app/jest"
-    ]
+    ],
+    "rules": {
+      "no-restricted-imports": [
+        "error",
+        {
+          "patterns": [
+            "@mui/*/*/*"
+          ]
+        }
+      ]
+    }
   },
   "browserslist": {
     "production": [

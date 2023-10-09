@@ -7,6 +7,10 @@ export function getReportByTagRequest(from: Date, to: Date, tags: string[], orde
   )
 }
 
+export function getReportByPromptRequest(text: string) {
+  return request.post<any>(`/report/auto`, { message: text })
+}
+
 type ReportServerRecord = {
   activityId: number
   activityName: string

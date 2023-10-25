@@ -7,8 +7,9 @@ import { TableDataTemplate } from 'components/pdf/TableDataTemplate'
 type Props = {
   tags: string[]
   reportRecords: ReportRecord[]
+  loading?: boolean
 }
-export const ReportByTag = ({ tags, reportRecords }: Props) => {
+export const ReportByTag = ({ tags, reportRecords, loading = false }: Props) => {
   const attendancesReport = reportRecords.map((r) => {
     const rate = `${Math.round(r.rate * 100)}%`
 
@@ -64,14 +65,23 @@ export const ReportByTag = ({ tags, reportRecords }: Props) => {
             node="a"
             waves="light"
             download={name}
+            disabled={loading}
           >
             <FormattedMessage id="reports.submitButton" />
           </Button>
         )}
         <BlobProvider document={document}>
           {({ url }) => (
-            // @ts-ignore
-            <a href={url} target="_blank" rel="noreferrer" className="self-center">
+            // eslint-disable-next-line jsx-a11y/anchor-is-valid, jsx-a11y/no-redundant-roles
+            <a
+              href={!loading && url ? url : undefined}
+              target="_blank"
+              rel="noreferrer"
+              className="self-center"
+              aria-disabled={loading}
+              role="link"
+              style={{ opacity: loading ? 0.5 : 1 }}
+            >
               <FormattedMessage id="reports.open" />
             </a>
           )}

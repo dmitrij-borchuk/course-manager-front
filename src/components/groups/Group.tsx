@@ -197,7 +197,7 @@ function Heading({ data, onDelete, onCloseGroup }: HeadingProps) {
       {upMd && (
         <div className="flex gap-3">
           <EditButton onClick={onEdit} />
-          <CloseButton onClick={() => setCancelConfirmation(true)} />
+          {data.archived ? null : <CloseButton onClick={() => setCancelConfirmation(true)} />}
           <DeleteButton onClick={() => setDeleteConfirmation(true)} />
         </div>
       )}
@@ -206,6 +206,7 @@ function Heading({ data, onDelete, onCloseGroup }: HeadingProps) {
           onEditClick={onEdit}
           onCloseClick={() => setCancelConfirmation(true)}
           onDeleteClick={() => setDeleteConfirmation(true)}
+          hideClose={data.archived}
         />
       )}
 
@@ -244,8 +245,9 @@ type ActivityMenuProps = {
   onEditClick: () => void
   onCloseClick: () => void
   onDeleteClick: () => void
+  hideClose?: boolean
 }
-function ActivityMenu({ onEditClick, onCloseClick, onDeleteClick }: ActivityMenuProps) {
+function ActivityMenu({ onEditClick, onCloseClick, onDeleteClick, hideClose = false }: ActivityMenuProps) {
   const intl = useIntl()
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -290,14 +292,16 @@ function ActivityMenu({ onEditClick, onCloseClick, onDeleteClick }: ActivityMenu
           </ListItemText>
         </MenuItem>
         {/* Close */}
-        <MenuItem onClick={onCloseClick}>
-          <ListItemIcon>
-            <ArchiveIcon />
-          </ListItemIcon>
-          <ListItemText>
-            <FormattedMessage id="groups.closeBtn.label" />
-          </ListItemText>
-        </MenuItem>
+        {hideClose ? null : (
+          <MenuItem onClick={onCloseClick}>
+            <ListItemIcon>
+              <ArchiveIcon />
+            </ListItemIcon>
+            <ListItemText>
+              <FormattedMessage id="groups.closeBtn.label" />
+            </ListItemText>
+          </MenuItem>
+        )}
         {/* Delete */}
         <MenuItem onClick={onDeleteClick}>
           <ListItemIcon>

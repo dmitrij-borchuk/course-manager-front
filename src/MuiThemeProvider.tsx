@@ -23,10 +23,12 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           textTransform: 'none',
-          borderRadius: '12px',
-          height: '45px',
-          paddingInline: '28px',
-          fontSize: '15px',
+          // TODO: needs to be clarified with design
+          // impact on `ButtonGroup` component (report sorting)
+          // height: '45px',
+          // fontSize: '15px',
+          // borderRadius: '12px',
+          // paddingInline: '28px',
         },
       },
     },

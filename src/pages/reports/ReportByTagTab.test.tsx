@@ -1,14 +1,9 @@
 import { render, screen } from '@testing-library/react'
-import * as firestore from 'firebase/firestore'
 import * as reactPdf from '@react-pdf/renderer'
 import userEvent from '@testing-library/user-event'
 import * as reportsApi from 'modules/reports/api'
-import { asMock, getAxiosMock, getFirebaseSnapshotFromArray, TestWrapper } from '../../utils/test'
+import { asMock, getAxiosMock, TestWrapper } from '../../utils/test'
 import { ReportByTagTab } from './ReportByTagTab'
-import { Group } from '../../types/group'
-import { Attendance } from '../../types/attendance'
-import { StudentOfGroup } from '../../types/studentOfGroup'
-import { Student } from '../../types/student'
 
 jest.mock('modules/reports/api')
 jest.mock('react-router-dom', () => {
@@ -31,7 +26,6 @@ jest.mock('@react-pdf/renderer', () => {
   }
 })
 
-const { getDocs } = asMock(firestore)
 const { usePDF } = asMock(reactPdf)
 const { getReportByTagRequest } = asMock(reportsApi)
 
@@ -110,7 +104,6 @@ describe('ReportByTagTab', () => {
 
   async function getPercentsArray() {
     const el = await screen.findAllByTestId('pdf-text')
-    const t = el.map((e) => e.textContent)
     return (
       el
         // Get text

@@ -3,6 +3,7 @@ import { nanoid } from 'nanoid'
 import { NewStudent, Student } from '../types/student'
 import { fetchStudents, migrateStudents, deleteStudent, createStudent, editStudent } from '../api/students'
 import { fetchParticipant } from 'api/participants'
+import { recalculateRates } from 'modules/students/api'
 
 export type InitialStudentsState = {
   list?: Map<number, Student>
@@ -91,6 +92,9 @@ export default function useStudentsStore(initial: InitialStudentsState = {}) {
         setSubmittingSemaphore((v) => v - 1)
         throw error
       }
+    }, []),
+    recalculateRates: useCallback(async (orgKey: string) => {
+      return await recalculateRates(orgKey)
     }, []),
   }
 }

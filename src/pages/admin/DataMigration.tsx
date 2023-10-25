@@ -5,6 +5,7 @@ import { StudentsMigration } from './StudentsMigration'
 import { GroupsMigration } from './GroupsMigration'
 import { UsersMigration } from './UsersMigration'
 import { TITLE_POSTFIX } from '../../config'
+import { RecalculateRates } from './RecalculateRates'
 
 export const DataMigration = () => {
   return (
@@ -32,6 +33,12 @@ export const DataMigration = () => {
       </div>
 
       <GroupsMigration />
+
+      <div className="my-3">
+        <Divider />
+      </div>
+
+      <RecalculateRates />
     </div>
   )
 }

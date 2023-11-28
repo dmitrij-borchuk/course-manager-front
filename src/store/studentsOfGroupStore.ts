@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react'
-import { useQueryClient } from 'react-query'
+import { useMutation, useQueryClient } from 'react-query'
 import { assignParticipant, fetchActivity, unassignParticipant } from '../modules/activities/api'
 import { fetchParticipantsByActivity } from '../api/participants'
 import { useDictionaryToArray } from '../hooks/useDictionaryToArray'
@@ -13,9 +13,6 @@ export default function useStudentsOfGroupStore() {
   const [studentsOfGroupById, setStudentsOfGroupById] = useState<Dictionary<Student>>({})
   const studentsOfGroup = useDictionaryToArray(studentsOfGroupById)
   const [submitting, setSubmitting] = useState(false)
-  const unassignStudentFromGroup = useCallback(async (studentId: number, groupId: number) => {
-    return await unassignParticipant(groupId, studentId)
-  }, [])
   const queryClient = useQueryClient()
 
   return {
@@ -53,31 +50,15 @@ export default function useStudentsOfGroupStore() {
       },
       [queryClient]
     ),
-    deleteStudentFromGroup: useCallback(async (groupId: number, studentId: number) => {
+    deleteStudentFromGroup: useCallback(async (groupId: number, studentId: number, leaveReasonComment: string) => {
       setSubmitting(true)
-      await unassignParticipant(groupId, studentId)
+      await unassignParticipant(groupId, studentId, leaveReasonComment)
       setStudentsOfGroupById((state) => {
         delete state[studentId]
         return { ...state }
       })
       setSubmitting(false)
     }, []),
-    deleteGroupFromStudent: useCallback(
-      async (groupId: number, studentId: number) => {
-        setSubmitting(true)
-        try {
-          await unassignStudentFromGroup(studentId, groupId)
-          queryClient.setQueryData<Activity[]>('groups', (old) => {
-            return old?.filter((group) => group.id !== groupId) ?? []
-          })
-          setSubmitting(false)
-        } catch (error) {
-          setFetching(false)
-          throw error
-        }
-      },
-      [queryClient, unassignStudentFromGroup]
-    ),
     fetchStudentsOfGroup: useCallback(async (groupId: number, date = new Date()) => {
       setFetching(true)
       try {
@@ -98,4 +79,10 @@ export default function useStudentsOfGroupStore() {
       setStudentsOfGroupById({})
     }, []),
   }
+}
+
+export function useUnassignForActivity() {
+  return useMutation((params: { participantId: number; activityId: number; leaveReasonComment: string }) =>
+    unassignParticipant(params.activityId, params.participantId, params.leaveReasonComment)
+  )
 }

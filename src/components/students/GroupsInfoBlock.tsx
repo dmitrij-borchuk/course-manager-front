@@ -1,9 +1,12 @@
-import { useEffect, useMemo } from 'react'
-import { Button, Preloader } from 'react-materialize'
+import { createContext, useContext, useEffect, useMemo, useState } from 'react'
+import { Preloader } from 'react-materialize'
 import { FormattedMessage } from 'react-intl'
 import { useParams } from 'react-router-dom'
 import FilterAltIcon from '@mui/icons-material/FilterAlt'
-import { Box } from '@mui/material'
+import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline'
+import AddIcon from '@mui/icons-material/Add'
+import Box from '@mui/material/Box'
+import IconButton from '@mui/material/IconButton'
 import { useGroups, useParticipation } from 'store/groupsStore'
 import { useAttendancesState } from 'store'
 import { useActivitiesFiltering } from 'modules/activities/activitiesFilteringContext'
@@ -15,60 +18,89 @@ import { Activity } from '../../types/activity'
 import { Dictionary } from '../../types/dictionary'
 import { Student } from '../../types/student'
 import { AttendanceRateBadge } from '../kit/attendanceRateBadge/AttendancerateBadge'
-import { IconButton } from '../kit/buttons/IconButton'
 import { CollectionItemLink } from '../kit/collectionItemLink/CollectionItemLink'
 import { Ellipsis } from '../kit/ellipsis/Ellipsis'
 import { List } from '../kit/list/List'
 import { Text } from '../kit/text/Text'
 import { AssignGroups } from './AssignGroups'
+import Tooltip from '@mui/material/Tooltip'
+import { Button } from '@mui/material'
+import { UnassignDialog } from 'modules/activities/components/UnassignParticipantDialog'
 
 interface Props {
   student: Student
 }
 export const GroupsInfoBlock = ({ student }: Props) => {
   const { setOpenFilterDialog } = useActivitiesFiltering()
-  const { groups, loadingGroups, attendanceRates } = useData(student?.outerId)
+  const { groups, loadingGroups, attendanceRates, reload } = useData(student?.outerId)
   const renderItem = useMemo(() => getGroupItemRender(attendanceRates, student), [attendanceRates, student])
+  const [activityToUnassign, setActivityToUnassign] = useState<Activity>()
+  const initiateUnassign = (activity: number) => {
+    setActivityToUnassign(groups.find((g) => g.id === activity))
+  }
 
   return (
     <>
-      <div className="flex justify-between items-center">
-        <Text type="h5" color="primary">
-          <FormattedMessage id="groups.list.title" />
-        </Text>
+      <AssigningContext.Provider
+        value={{
+          initiateUnassign,
+        }}
+      >
+        <div className="flex justify-between items-center">
+          <Text type="h5" color="primary">
+            <FormattedMessage id="groups.list.title" />
+          </Text>
 
-        <Box display="flex">
-          <ResponsiveButtons
-            items={[
-              {
-                id: 'filter',
-                label: <FormattedMessage id="common.filter" />,
-                icon: <FilterAltIcon />,
-                onClick: () => setOpenFilterDialog(true),
-              },
-            ]}
-          />
-
-          {/* Assign groups dialog */}
-          {!!groups?.length && (
-            <AssignGroups
-              student={student}
-              initialGroups={groups}
-              trigger={<IconButton type="square" size={40} icon="edit" />}
+          <Box display="flex">
+            <ResponsiveButtons
+              items={[
+                {
+                  id: 'filter',
+                  label: <FormattedMessage id="common.filter" />,
+                  icon: <FilterAltIcon />,
+                  onClick: () => setOpenFilterDialog(true),
+                },
+              ]}
             />
-          )}
-        </Box>
-      </div>
 
-      {loadingGroups ? (
-        <div className="flex justify-center">
-          <Preloader color="red" flashing={false} size="medium" />
+            {/* Assign groups dialog */}
+            {!!groups?.length && (
+              <AssignGroups
+                student={student}
+                initialGroups={groups}
+                trigger={
+                  <Box ml={1}>
+                    <IconButton>
+                      <AddIcon />
+                    </IconButton>
+                  </Box>
+                }
+                onDone={reload}
+              />
+            )}
+          </Box>
         </div>
-      ) : groups?.length ? (
-        <List items={groups} renderItem={renderItem} />
-      ) : (
-        <NoGroupsInfoBlock student={student} />
-      )}
+
+        {loadingGroups ? (
+          <div className="flex justify-center">
+            <Preloader color="red" flashing={false} size="medium" />
+          </div>
+        ) : groups?.length ? (
+          <List items={groups} renderItem={renderItem} />
+        ) : (
+          <NoGroupsInfoBlock student={student} />
+        )}
+
+        <UnassignDialog
+          activity={activityToUnassign}
+          participant={student}
+          onDone={() => {
+            setActivityToUnassign(undefined)
+            reload()
+          }}
+          onCancel={() => setActivityToUnassign(undefined)}
+        />
+      </AssigningContext.Provider>
     </>
   )
 }
@@ -88,7 +120,7 @@ const NoGroupsInfoBlock = ({ student }: NoGroupsInfoBlockProps) => {
         student={student}
         initialGroups={[]}
         trigger={
-          <Button waves="light">
+          <Button variant="contained">
             <FormattedMessage id="students.groups.assignBtn.label" />
           </Button>
         }
@@ -98,30 +130,63 @@ const NoGroupsInfoBlock = ({ student }: NoGroupsInfoBlockProps) => {
 }
 
 interface GroupWithAttendanceProps {
-  group: Activity
+  activity: Activity
   participant: Student
   attendanceRate?: number
+  onRemoveClick?: (activity: Activity) => void
 }
-const GroupWithAttendance = ({ group, attendanceRate, participant }: GroupWithAttendanceProps) => {
+const GroupWithAttendance = ({ activity, attendanceRate, participant }: GroupWithAttendanceProps) => {
   const orgId = useOrgId()
+  const { initiateUnassign } = useAssigningContext()
 
   return (
-    <CollectionItemLink to={`/${orgId}${ROUTES.makeStudentsByActivity(participant.id, group.id)}`}>
-      <div
-        className={`flex justify-between transition-opacity ${group.archived ? 'opacity-40 hover:opacity-100' : ''}`}
-      >
-        <Ellipsis>
-          {group.archived ? <FormattedMessage id="groups.archived.name" values={{ name: group.name }} /> : group.name}
-        </Ellipsis>
-        {attendanceRate !== undefined && <AttendanceRateBadge value={attendanceRate} />}
-      </div>
-    </CollectionItemLink>
+    <>
+      <CollectionItemLink to={`/${orgId}${ROUTES.makeStudentsByActivity(participant.id, activity.id)}`}>
+        <div
+          className={`flex justify-between transition-opacity items-center ${
+            activity.archived ? 'opacity-40 hover:opacity-100' : ''
+          }`}
+        >
+          <Ellipsis>
+            {activity.archived ? (
+              <FormattedMessage id="groups.archived.name" values={{ name: activity.name }} />
+            ) : (
+              activity.name
+            )}
+          </Ellipsis>
+          <Box display="flex" alignItems="center" gap={2} ml={2}>
+            {attendanceRate !== undefined && <AttendanceRateBadge value={attendanceRate} />}
+            <Tooltip title={<FormattedMessage id="groups.unassignStudents.tooltip" />} placement="top">
+              <IconButton
+                onClick={(e) => {
+                  e.stopPropagation()
+                  e.preventDefault()
+                  initiateUnassign(activity.id)
+                }}
+              >
+                <RemoveCircleOutlineIcon />
+              </IconButton>
+            </Tooltip>
+          </Box>
+        </div>
+      </CollectionItemLink>
+    </>
   )
 }
 
-function getGroupItemRender(attendances: Dictionary<number>, participant: Student) {
+function getGroupItemRender(
+  attendances: Dictionary<number>,
+  participant: Student,
+  onRemoveClick?: (activity: Activity) => void
+) {
   return (data: Activity) => (
-    <GroupWithAttendance key={data.id} group={data} attendanceRate={attendances[data.id]} participant={participant} />
+    <GroupWithAttendance
+      key={data.id}
+      activity={data}
+      attendanceRate={attendances[data.id]}
+      participant={participant}
+      onRemoveClick={onRemoveClick}
+    />
   )
 }
 
@@ -129,7 +194,7 @@ const emptyGroups: Activity[] = []
 
 export function useData(studentOuterId?: string) {
   const orgKey = useOrgId()
-  const date = useMemo(() => new Date(), [])
+  const [date, setDate] = useState(new Date())
   let { id: idStr } = useParams<{ id: string }>()
   const id = parseInt(idStr)
   const { filter } = useActivitiesFiltering()
@@ -165,5 +230,11 @@ export function useData(studentOuterId?: string) {
     groups,
     loadingGroups,
     attendanceRates,
+    reload: () => setDate(new Date()),
   }
 }
+
+const AssigningContext = createContext({
+  initiateUnassign: (activity: number) => {},
+})
+const useAssigningContext = () => useContext(AssigningContext)

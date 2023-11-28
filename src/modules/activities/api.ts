@@ -37,6 +37,7 @@ export type ParticipationRecord = {
   startDate: string
   endDate: string
   participantId: number
+  leaveReasonComment?: string
 }
 
 export function fetchActivity(id: number) {
@@ -63,6 +64,12 @@ export function assignParticipant(groupId: number, participantId: number) {
   return request.post<void>(`/activities/${groupId}/participant/${participantId}`)
 }
 
-export function unassignParticipant(groupId: number, participantId: number) {
-  return request.delete<void>(`/activities/${groupId}/participant/${participantId}`)
+export function unassignParticipant(activityId: number, participantId: number, leaveReasonComment: string) {
+  return request.delete<void>(`/activities/participant`, {
+    data: {
+      activityId,
+      participantId,
+      leaveReasonComment,
+    },
+  })
 }

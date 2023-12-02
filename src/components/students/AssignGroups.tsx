@@ -6,7 +6,7 @@ import { useToggle } from '../../hooks/useToggle'
 import { useGroupsState, useStudentsOfGroupState } from '../../store'
 import { Activity } from '../../types/activity'
 import { Student } from '../../types/student'
-import { getDiff, noop } from '../../utils/common'
+import { noop } from '../../utils/common'
 import { SelectDialog } from '../kit/selectDialog/SelectDialog'
 
 interface Props {

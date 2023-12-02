@@ -1,6 +1,6 @@
 import React from 'react'
 import { FormattedMessage, useIntl } from 'react-intl'
-import { Container } from '@mui/material'
+import { Box, Container } from '@mui/material'
 import { ROUTES } from '../../constants'
 import { useOrgId } from '../../hooks/useOrgId'
 import { Student as StudentType } from '../../types/student'
@@ -49,7 +49,9 @@ export const Student: React.FC<Props> = ({ className = '', data, onDelete }) => 
           <GroupsInfoBlock student={data} />
         </div>
 
-        <ParticipationTimeline outerId={data.outerId} participantId={data.id} />
+        <Box mt={2}>
+          <ParticipationTimeline outerId={data.outerId} participantId={data.id} />
+        </Box>
       </Container>
     </div>
   )

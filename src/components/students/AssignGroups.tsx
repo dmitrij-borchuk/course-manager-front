@@ -6,7 +6,7 @@ import { useToggle } from '../../hooks/useToggle'
 import { useGroupsState, useStudentsOfGroupState } from '../../store'
 import { Activity } from '../../types/activity'
 import { Student } from '../../types/student'
-import { getDiff, noop } from '../../utils/common'
+import { noop } from '../../utils/common'
 import { SelectDialog } from '../kit/selectDialog/SelectDialog'
 
 interface Props {
@@ -20,15 +20,12 @@ export const AssignGroups = ({ student, onDone = noop, trigger, initialGroups }:
   const { addToast } = useToasts()
   const [open, toggler] = useToggle(false)
   const { groups, fetchGroups, fetching } = useGroupsState()
-  const { addGroupToStudent, deleteGroupFromStudent } = useStudentsOfGroupState()
+  const { addGroupToStudent } = useStudentsOfGroupState()
   const onSubmit = useCallback(
     async (data: Activity[]) => {
       try {
-        const initialGroupsIds = (initialGroups || [])?.map((g) => g.id)
-        const resultGroupsIds = data.map((g) => g.id)
-        const { added, removed } = getDiff(initialGroupsIds, resultGroupsIds)
-        await Promise.all(added.map(async (gId) => addGroupToStudent(gId, student.id)))
-        await Promise.all(removed.map(async (gId) => deleteGroupFromStudent(gId, student.id)))
+        // TODO: make butch request
+        await Promise.all(data.map(async (item) => addGroupToStudent(item.id, student.id)))
         toggler.off()
         onDone()
 
@@ -45,8 +42,10 @@ export const AssignGroups = ({ student, onDone = noop, trigger, initialGroups }:
         }
       }
     },
-    [addGroupToStudent, addToast, deleteGroupFromStudent, initialGroups, onDone, student, toggler]
+    [addGroupToStudent, addToast, onDone, student, toggler]
   )
+  const initialIds = initialGroups?.map((g) => g.id) || []
+  const itemsToShow = groups.filter((g) => !initialIds.includes(g.id))
 
   useEffect(() => {
     fetchGroups()
@@ -59,11 +58,10 @@ export const AssignGroups = ({ student, onDone = noop, trigger, initialGroups }:
         loading={fetching}
         open={open}
         header={intl.formatMessage({ id: 'students.groups.assignDialog.header' })}
-        items={groups}
+        items={itemsToShow}
         onSubmit={onSubmit}
         labelProp={(g) => g.name}
         onCloseStart={toggler.off}
-        initial={initialGroups}
         multiSelect
         data-testid="assign-group-dialog"
       />

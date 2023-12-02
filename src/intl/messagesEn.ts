@@ -26,6 +26,7 @@ export const messages = {
   'common.unknownError': 'Unknown error',
   'common.edit': 'Edit',
   'common.filter': 'Filter',
+  'common.remove': 'Remove',
 
   'Auth.form.error.invalid': 'Identifier or password invalid.',
   'Auth.form.error.500': 'Something went wrong',
@@ -92,6 +93,9 @@ export const messages = {
   'groups.moreMenu.title': 'more',
   'groups.filtering.showArchived.inputLabel': 'Show archived',
   'groups.archived.name': '{name} (Archived)',
+  'groups.unassignStudents.tooltip': 'Unassign from group',
+  'groups.unassignStudents.confirmation.title': 'Are you sure you want to unassign {participant} from {name}?',
+  'groups.unassignStudents.comment.title': 'Reason',
 
   'students.add.title': 'Add student',
   'students.add': 'Add student',

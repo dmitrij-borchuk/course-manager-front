@@ -56,11 +56,16 @@ export function ParticipationTimeline({ participantId, outerId }: Props) {
                       {/* TODO: add link to user */}
                       <Stack>
                         <Box>
-                          {d.type === 'assign' ? 'Assigned' : 'Unassigned'} to {d.activity.name} by {"{user's name}"}
+                          {d.type === 'assign' ? 'Assigned to' : 'Unassigned from'} {d.activity.name} by{' '}
+                          {"{user's name}"}
                         </Box>
+                        {d.type === 'unassign' && (
+                          <Box display="flex" gap={2}>
+                            Reason: {d.reason ? d.reason : <Box color="gray">---</Box>}
+                          </Box>
+                        )}
                         {(d.type === 'unassign' || d.isActive) && (
-                          // <Stack direction="row">
-                          <Box>
+                          <Box display="flex">
                             <Box>Attendance rate:</Box>
                             <AttendanceRateBadge
                               value={attendanceRates[d.activity.id] || 0}
@@ -69,7 +74,6 @@ export function ParticipationTimeline({ participantId, outerId }: Props) {
                               }}
                             />
                           </Box>
-                          // </Stack>
                         )}
                       </Stack>
                     </Box>
@@ -99,6 +103,7 @@ function convertToTimeline(participationRecords: ParticipationRecord[]) {
           activity: d.activity,
           date: new Date(d.endDate),
           isActive: false,
+          reason: d.leaveReasonComment,
         }
         return [...acc, assign, unassign]
       }
@@ -115,4 +120,5 @@ type TimelineDataItem = {
   activity: Activity
   date: Date
   isActive: boolean
+  reason?: string
 }

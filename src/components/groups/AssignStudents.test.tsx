@@ -36,29 +36,6 @@ describe('AssignStudents', () => {
     // Check that item is not selected
     expect(queryChip('Student 1')).toBeNull()
   })
-
-  test('Should not select twice the same student', async () => {
-    const axiosMock = getAxiosMock()
-    axiosMock.onGet('/organizations').reply(200, [])
-
-    renderComponent({
-      studentsOfGroup: [
-        {
-          id: 1,
-          outerId: 'studentId1',
-          name: 'Student 1',
-          tags: [],
-        },
-      ],
-    })
-    await openDialog()
-    await findChip('Student 1')
-    // Select item again
-    await selectItem('Student 1', { disableCheck: true })
-    // Check that item is not selected (second selection unselects it)
-    const items = screen.queryAllByRole('button', { name: 'Student 1' })
-    expect(items).toHaveLength(0)
-  })
 })
 
 function renderComponent(props: Partial<ComponentProps<typeof AssignStudents>> = {}) {
@@ -94,10 +71,6 @@ async function openDialog() {
   const trigger = await screen.findByText('Open dialog')
   fireEvent.click(trigger)
   await screen.findByTestId('students-select-dialog')
-}
-
-async function findChip(label: string) {
-  return screen.findByRole('button', { name: label })
 }
 
 function queryChip(label: string) {

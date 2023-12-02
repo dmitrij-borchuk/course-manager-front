@@ -1,9 +1,14 @@
 import { useCallback, useMemo, useState } from 'react'
 import { FormattedMessage } from 'react-intl'
-import { Button, Dropdown, Preloader } from 'react-materialize'
+import { Button, Preloader } from 'react-materialize'
 import { Link } from 'react-router-dom'
+import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline'
+import IconButton from '@mui/material/IconButton'
+import Tooltip from '@mui/material/Tooltip'
+import AddIcon from '@mui/icons-material/Add'
+import Box from '@mui/material/Box'
+import { UnassignDialog } from 'modules/activities/components/UnassignParticipantDialog'
 import { ROUTES } from '../../constants'
-import { useNotification } from '../../hooks/useNotification'
 import { useOrgId } from '../../hooks/useOrgId'
 import { useStudentsOfGroupState } from '../../store'
 import { Activity } from '../../types/activity'
@@ -11,11 +16,9 @@ import { Dictionary } from '../../types/dictionary'
 import { Student } from '../../types/student'
 import { noop } from '../../utils/common'
 import { AttendanceRateBadge } from '../kit/attendanceRateBadge/AttendancerateBadge'
-import { IconButton } from '../kit/buttons/IconButton'
 import { Ellipsis } from '../kit/ellipsis/Ellipsis'
 import { List } from '../kit/list/List'
 import { Text } from '../kit/text/Text'
-import { TinyPreloader } from '../kit/TinyPreloader/TinyPreloader'
 import { AssignStudents } from './AssignStudents'
 
 interface StudentsInfoBlockProps {
@@ -30,41 +33,24 @@ export const StudentsInfoBlock = ({
   attendanceRates,
   loadingGroups = false,
 }: StudentsInfoBlockProps) => {
-  const { showSuccess } = useNotification()
-  const { deleteStudentFromGroup } = useStudentsOfGroupState()
-  const [loading, setLoading] = useState<Dictionary<boolean>>({})
   const { fetchStudentsOfGroup } = useStudentsOfGroupState()
   const refetchStudents = useCallback(async () => {
     fetchStudentsOfGroup(group.id, new Date())
   }, [fetchStudentsOfGroup, group.id])
-  const onStudentRemove = useCallback(
-    async (id: number) => {
-      setLoading((l) => {
-        l[id] = true
-        return l
-      })
-      try {
-        await deleteStudentFromGroup(group.id, id)
-        refetchStudents()
-        showSuccess(<FormattedMessage id="groups.unassignStudents.success" />)
-      } catch (error) {
-        if (error instanceof Error) {
-          showSuccess(<FormattedMessage id="groups.unassignStudents.error" values={{ message: error.message }} />)
-        } else {
-          throw error
-        }
-      } finally {
-        setLoading((l) => {
-          l[id] = false
-          return l
-        })
-      }
+  const [participantToRemove, setParticipantToRemove] = useState<Student>()
+  const onStudentRemoveInitiate = useCallback(
+    (id: number) => {
+      setParticipantToRemove(students?.find((s) => s.id === id))
     },
-    [deleteStudentFromGroup, group.id, refetchStudents, showSuccess]
+    [students]
   )
+  const onStudentRemoved = useCallback(async () => {
+    setParticipantToRemove(undefined)
+    refetchStudents()
+  }, [refetchStudents])
   const renderItem = useMemo(
-    () => getStudentItemRender(attendanceRates, loading, onStudentRemove),
-    [attendanceRates, loading, onStudentRemove]
+    () => getStudentItemRender(attendanceRates, onStudentRemoveInitiate),
+    [attendanceRates, onStudentRemoveInitiate]
   )
 
   return (
@@ -77,7 +63,13 @@ export const StudentsInfoBlock = ({
         {!!students?.length && (
           <AssignStudents
             group={group}
-            trigger={<IconButton type="square" size={40} icon="edit" />}
+            trigger={
+              <Box ml={1}>
+                <IconButton>
+                  <AddIcon />
+                </IconButton>
+              </Box>
+            }
             studentsOfGroup={students}
             onDone={refetchStudents}
           />
@@ -93,6 +85,15 @@ export const StudentsInfoBlock = ({
       ) : (
         <NoStudentsInfoBlock group={group} />
       )}
+
+      <UnassignDialog
+        activity={group}
+        participant={participantToRemove}
+        onCancel={() => setParticipantToRemove(undefined)}
+        onDone={() => {
+          onStudentRemoved()
+        }}
+      />
     </div>
   )
 }
@@ -132,72 +133,43 @@ interface StudentWithAttendanceProps {
   data: Student
   attendanceRate?: number
   onRemoveClick?: (id: number) => void
-  loading?: boolean
 }
-const StudentWithAttendance = ({
-  data,
-  attendanceRate,
-  onRemoveClick = noop,
-  loading = false,
-}: StudentWithAttendanceProps) => {
+const StudentWithAttendance = ({ data, attendanceRate, onRemoveClick = noop }: StudentWithAttendanceProps) => {
   const orgId = useOrgId()
 
   return (
     <div className="collection-item flex justify-between items-center" data-testid={`student-${data.id}`}>
       <div className="flex">
-        {loading && <TinyPreloader />}
         <Ellipsis>
           <Link to={`/${orgId}${ROUTES.STUDENTS_ROOT}/${data.id}`}>{data.name}</Link>
         </Ellipsis>
       </div>
-      <div className="flex">
+      <Box display="flex" alignItems="center" gap={2}>
         {/* TODO: add loading */}
         {attendanceRate !== undefined && <AttendanceRateBadge value={attendanceRate} />}
-        {/* <Icon right>more_horiz</Icon> */}
 
-        <Dropdown
-          options={{
-            alignment: 'right',
-            autoTrigger: true,
-            closeOnClick: true,
-            constrainWidth: false,
-            container: null,
-            coverTrigger: true,
-            hover: false,
-            inDuration: 150,
-            outDuration: 250,
-          }}
-          className="w-52"
-          trigger={
-            <IconButton
-              type="round"
-              size={40}
-              icon="more_horiz"
-              className="collection-menu-btn flex items-center justify-center"
-            />
-          }
-        >
-          {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-          <a href="#" className="whitespace-nowrap w-52" onClick={() => onRemoveClick(data.id)}>
-            <FormattedMessage id="groups.studentList.removeBtn" />
-          </a>
-        </Dropdown>
-      </div>
+        <Tooltip title={<FormattedMessage id="groups.studentList.removeBtn" />} placement="top">
+          <IconButton
+            onClick={(e) => {
+              e.stopPropagation()
+              e.preventDefault()
+              onRemoveClick(data.id)
+            }}
+          >
+            <RemoveCircleOutlineIcon />
+          </IconButton>
+        </Tooltip>
+      </Box>
     </div>
   )
 }
 
-function getStudentItemRender(
-  attendances: Dictionary<number>,
-  loading: Dictionary<boolean> = {},
-  onRemoveClick?: (id: number) => void
-) {
+function getStudentItemRender(attendances: Dictionary<number>, onRemoveClick?: (id: number) => void) {
   return (data: Student) => (
     <StudentWithAttendance
       key={data.id}
       data={data}
       attendanceRate={attendances[data.outerId]}
-      loading={loading[data.outerId]}
       onRemoveClick={onRemoveClick}
     />
   )

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react'
+import { useCallback, useEffect } from 'react'
 import { FormattedMessage, useIntl } from 'react-intl'
 import { ModalProps } from 'react-materialize'
 import { useHistory } from 'react-router-dom'
@@ -8,7 +8,7 @@ import { useToggle } from '../../hooks/useToggle'
 import { useStudentsOfGroupState, useStudentsState } from '../../store'
 import { Activity } from '../../types/activity'
 import { Student } from '../../types/student'
-import { getDiff, noop } from '../../utils/common'
+import { noop } from '../../utils/common'
 import { SelectStudentsDialog } from './SelectStudentsDialog'
 
 interface Props {
@@ -24,31 +24,16 @@ export const AssignStudents = ({ group, onDone = noop, trigger, studentsOfGroup 
   const action = query.get('action')
   const intl = useIntl()
   const [open, toggler] = useToggle(action === 'openStudentsDialog')
-  const { students, studentsById, fetching, fetchStudents } = useStudentsState()
-  const { addStudentToGroup, deleteStudentFromGroup } = useStudentsOfGroupState()
+  const { students, fetching, fetchStudents } = useStudentsState()
+  const assignedIds = studentsOfGroup?.map((s) => s.id) ?? []
+  const notAssignedParticipants = students.filter((student) => !assignedIds.includes(student.id))
+  const { addStudentToGroup } = useStudentsOfGroupState()
   const onSubmit = useCallback(
     async (data: Student[]) => {
       try {
-        const initialStudentsIds = (studentsOfGroup || [])?.map((s) => s.id)
-        const resultStudentsIds = data.map((s) => s.id)
-        const { added, removed } = getDiff(initialStudentsIds, resultStudentsIds)
         await Promise.all(
-          added.map(async (sId) => {
-            const student = studentsById.get(sId)
-            if (!student) {
-              throw new Error(`Student with id ${sId} not found in the store`)
-            }
+          data.map(async (student) => {
             return addStudentToGroup(group.id, student.id)
-          })
-        )
-        await Promise.all(
-          removed.map(async (sId) => {
-            const student = studentsById.get(sId)
-            if (!student) {
-              throw new Error(`Student with id ${sId} not found in the store`)
-            }
-
-            return deleteStudentFromGroup(group.id, student.id)
           })
         )
         toggler.off()
@@ -67,7 +52,7 @@ export const AssignStudents = ({ group, onDone = noop, trigger, studentsOfGroup 
         }
       }
     },
-    [addStudentToGroup, addToast, deleteStudentFromGroup, group.id, onDone, studentsById, studentsOfGroup, toggler]
+    [addStudentToGroup, addToast, group.id, onDone, toggler]
   )
 
   useEffect(() => {
@@ -90,10 +75,9 @@ export const AssignStudents = ({ group, onDone = noop, trigger, studentsOfGroup 
         loading={fetching}
         open={open}
         header={intl.formatMessage({ id: 'groups.students.assignDialog.header' })}
-        items={students}
+        items={notAssignedParticipants}
         onSubmit={onSubmit}
         onClose={toggler.off}
-        initial={studentsOfGroup}
         groupId={group.id}
       />
     </>

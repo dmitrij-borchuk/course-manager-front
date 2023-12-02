@@ -73,10 +73,6 @@ async function openDialog() {
   await screen.findByTestId('students-select-dialog')
 }
 
-async function findChip(label: string) {
-  return screen.findByRole('button', { name: label })
-}
-
 function queryChip(label: string) {
   return screen.queryByRole('button', { name: label })
 }

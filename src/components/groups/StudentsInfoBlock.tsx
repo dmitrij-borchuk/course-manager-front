@@ -24,7 +24,7 @@ import { AssignStudents } from './AssignStudents'
 interface StudentsInfoBlockProps {
   students?: Student[]
   group: Activity
-  attendanceRates: Dictionary<number>
+  attendanceRates: Dictionary<{ rate: number }>
   loadingGroups?: boolean
 }
 export const StudentsInfoBlock = ({
@@ -164,12 +164,12 @@ const StudentWithAttendance = ({ data, attendanceRate, onRemoveClick = noop }: S
   )
 }
 
-function getStudentItemRender(attendances: Dictionary<number>, onRemoveClick?: (id: number) => void) {
+function getStudentItemRender(attendances: Dictionary<{ rate: number }>, onRemoveClick?: (id: number) => void) {
   return (data: Student) => (
     <StudentWithAttendance
       key={data.id}
       data={data}
-      attendanceRate={attendances[data.outerId]}
+      attendanceRate={attendances?.[data.outerId]?.rate}
       onRemoveClick={onRemoveClick}
     />
   )

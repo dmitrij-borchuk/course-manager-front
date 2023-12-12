@@ -1,4 +1,4 @@
-import { usePDF } from '@react-pdf/renderer'
+import { BlobProvider, usePDF } from '@react-pdf/renderer'
 import { useEffect, useMemo } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { Button } from 'react-materialize'
@@ -26,22 +26,19 @@ export const ReportByGroup = ({ group, attendances, students, order, loading, fr
   const attendanceRate = useAttendanceRateByStudent(attendancesOfGroup)
   const attendancesReport = sortAttendanceReport(
     order,
-    students.map((s) => ({
-      label: s.name,
-      value: attendanceRate[s.outerId] && attendanceRate[s.outerId] * 100,
-    }))
-  )
-    .filter(hasRate)
-    .map((r) => {
-      const rate = `${Math.round(r.value)}%`
-
+    students.map((s) => {
+      const r = attendanceRate[s.outerId]
+      const rate = r && Math.round((r.attended / r.total) * 100)
       return {
-        label: r.label,
-        value: rate,
+        label: s.name,
+        value: r && `${rate}% (${r.attended}/${r.total})`,
+        rate,
       }
     })
+  ).filter(hasRate)
+  const document = <AttendanceReportTemplate title={group.name} heading={group.name} attendances={attendancesReport} />
   const [instance, updateInstance] = usePDF({
-    document: <AttendanceReportTemplate title={group.name} heading={group.name} attendances={attendancesReport} />,
+    document,
   })
   const date = new Date().toLocaleDateString()
 
@@ -65,6 +62,22 @@ export const ReportByGroup = ({ group, attendances, students, order, loading, fr
           <FormattedMessage id="reports.submitButton" />
         </Button>
       )}
+      <BlobProvider document={document}>
+        {({ url }) => (
+          // eslint-disable-next-line jsx-a11y/anchor-is-valid, jsx-a11y/no-redundant-roles
+          <a
+            href={!loading && url ? url : undefined}
+            target="_blank"
+            rel="noreferrer"
+            className="self-center"
+            aria-disabled={loading}
+            role="link"
+            style={{ opacity: loading ? 0.5 : 1 }}
+          >
+            <FormattedMessage id="reports.open" />
+          </a>
+        )}
+      </BlobProvider>
     </>
   )
 }

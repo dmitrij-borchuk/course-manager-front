@@ -92,9 +92,19 @@ export function useAttendanceRateByStudent(attendances: Attendance[]) {
         attendancesOfStudents[key].push(attendance.attended[key])
       })
     })
-    const attendancesByStudents: Dictionary<number> = {}
+    const attendancesByStudents: Dictionary<{
+      rate: number
+      attended: number
+      total: number
+    }> = {}
     Object.entries(attendancesOfStudents).forEach(([key, values]) => {
-      attendancesByStudents[key] = values.filter(Boolean).length / values.length
+      const attended = values.filter(Boolean).length
+      const total = values.length
+      attendancesByStudents[key] = {
+        rate: attended / total,
+        attended,
+        total,
+      }
     })
 
     return attendancesByStudents

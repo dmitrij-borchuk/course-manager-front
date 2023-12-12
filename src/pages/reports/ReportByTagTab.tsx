@@ -142,6 +142,8 @@ function useReportRecords(from: Date, to: Date, tags: string[], order: SortOrder
       name: r.participantName,
       rate: r.rate,
       activity: r.activityName,
+      attended: r.attended,
+      total: r.total,
     })) || []
 
   return [parsedData, isFetching] as const

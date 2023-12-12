@@ -11,7 +11,7 @@ type Props = {
 }
 export const ReportByTag = ({ tags, reportRecords, loading = false }: Props) => {
   const attendancesReport = reportRecords.map((r) => {
-    const rate = `${Math.round(r.rate * 100)}%`
+    const rate = `${Math.round((r.attended / r.total) * 100)}% (${r.attended}/${r.total})`
 
     return {
       name: r.name,
@@ -36,7 +36,7 @@ export const ReportByTag = ({ tags, reportRecords, loading = false }: Props) => 
         },
         {
           key: 'rate',
-          width: 70,
+          width: 120,
           align: 'right',
         },
       ]}
@@ -93,6 +93,7 @@ export const ReportByTag = ({ tags, reportRecords, loading = false }: Props) => 
 
 type ReportRecord = {
   name: string
-  rate: number
+  attended: number
+  total: number
   activity: string
 }

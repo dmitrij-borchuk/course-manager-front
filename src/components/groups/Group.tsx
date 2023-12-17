@@ -39,7 +39,9 @@ interface Props {
   performer?: Profile
   onDelete: () => void
   onClose: () => void
-  attendanceRates: Dictionary<number>
+  attendanceRates: Dictionary<{
+    rate: number
+  }>
   studentsOfGroup: Student[]
   loadingGroups?: boolean
   onUpdateTeacher: () => void

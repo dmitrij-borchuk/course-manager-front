@@ -14,9 +14,10 @@ interface Props {
   loading?: boolean
   className?: string
   items?: Student[]
-  attendanceRates?: Dictionary<number>
+  attendanceRates?: Dictionary<{ rate: number }>
 }
 export const StudentList: React.FC<Props> = ({ className = '', loading = false, items = [], attendanceRates }) => {
+  console.log('=-= 🚀 ~ attendanceRates:', attendanceRates)
   const orgId = useOrgId()
   const renderItem = useCallback((d: TableContentItem) => {
     return (
@@ -37,7 +38,7 @@ export const StudentList: React.FC<Props> = ({ className = '', loading = false, 
       id: s.id,
       name: s.name,
       outerId: s.outerId,
-      attendanceRate: attendanceRates && attendanceRates[s.outerId],
+      attendanceRate: attendanceRates?.[s.outerId]?.rate,
     }))
   }, [items, attendanceRates])
   const getData = useCallback((d: TableContentItem, prop: keyof TableContentItem) => d[prop], [])

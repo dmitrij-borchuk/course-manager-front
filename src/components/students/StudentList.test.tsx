@@ -45,8 +45,8 @@ describe('StudentList', () => {
       },
     ]
     const rates = {
-      s1: 0,
-      s3: 0.3333333,
+      s1: { rate: 0 },
+      s3: { rate: 0.3333333 },
     }
     render(
       <TestWrapper>
@@ -66,8 +66,8 @@ describe('StudentList', () => {
         <StudentList
           items={students}
           attendanceRates={{
-            s2: 0,
-            s3: 0.3333333,
+            s2: { rate: 0 },
+            s3: { rate: 0.3333333 },
           }}
         />
       </TestWrapper>

@@ -61,6 +61,8 @@ describe('ReportByTagTab', () => {
           activityName: 'g1',
           activityOuterId: 'g1',
           rate: 0,
+          attended: 0,
+          total: 1,
         },
         {
           participantId: 2,
@@ -69,6 +71,8 @@ describe('ReportByTagTab', () => {
           activityName: 'g1',
           activityOuterId: 'g1',
           rate: 1,
+          attended: 1,
+          total: 1,
         },
       ],
       status: 200,
@@ -91,8 +95,8 @@ describe('ReportByTagTab', () => {
 
     const percents = await getPercentsArray()
 
-    expect(percents[0]).toBe('0%')
-    expect(percents[1]).toBe('100%')
+    expect(percents[0]).toBe('0% (0/1)')
+    expect(percents[1]).toBe('100% (1/1)')
   })
 
   function renderPdf() {

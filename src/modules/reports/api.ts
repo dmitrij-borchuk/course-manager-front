@@ -14,4 +14,6 @@ type ReportServerRecord = {
   participantId: number
   participantName: string
   rate: number
+  attended: number
+  total: number
 }

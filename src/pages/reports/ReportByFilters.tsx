@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
+import { styled } from '@mui/material'
 import Box from '@mui/material/Box'
 import { ReportFilter, getReportPreviewRequest } from 'modules/reports/api'
 import { SortOrder } from '../../types/sorting'
@@ -9,9 +10,10 @@ import { Filters } from './reportByFilter/Filters'
 // TODO: add filtering
 // TODO: resize columns
 // TODO: sorting
+// TODO fix pagination
 export function ReportByFiltersTab() {
   const [filters, setFilters] = useState<Filter[]>([])
-  const validFilters = filterInvalidFilters(filters)
+  const validFilters = useValidFilters(filters)
   const [tableConfig] = useState({ order: 'asc' as SortOrder, orderBy: 'name', page: 0, pageSize: 25 })
   const [data, isFetching] = useReportPreview(useThrottle(validFilters, 500), tableConfig)
 
@@ -74,6 +76,15 @@ const columns: GridColDef[] = [
     filterable: false,
   },
   {
+    field: 'groups',
+    renderCell: ({ row }: any) => {
+      const groups = row.studentsToActivities.map((s: any) => s.activity.name).join(', ')
+      return <GroupsCell title={groups}>{groups}</GroupsCell>
+    },
+    headerName: 'Groups',
+    width: 300,
+  },
+  {
     field: 'outerId',
     headerName: 'Outer id',
     width: 300,
@@ -108,6 +119,14 @@ function useReportPreview(
   return [parsedData, isFetching] as const
 }
 
-function filterInvalidFilters(filters: Filter[]): ReportFilter[] {
-  return filters.filter((f) => f.field.length > 0 && f.operation.length > 0 && f.value.length > 0)
+function useValidFilters(filters: Filter[]): ReportFilter[] {
+  return useMemo(() => {
+    return filters.filter((f) => f.field.length > 0 && f.operation.length > 0 && f.value.length > 0)
+  }, [filters])
 }
+
+const GroupsCell = styled(Box)`
+  text-overflow: ellipsis;
+  width: 100%;
+  overflow: hidden;
+`

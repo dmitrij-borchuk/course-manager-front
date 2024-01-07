@@ -2,6 +2,7 @@ import { FormattedMessage, useIntl } from 'react-intl'
 import { Container, Tab, Tabs } from 'react-materialize'
 import { Helmet } from 'react-helmet'
 import { SectionHeader } from '../../components/kit/sectionHeader/SectionHeader'
+import { ReportByFiltersTab } from './ReportByFilters'
 import { ReportByGroupTab } from './ReportByGroupTab'
 import { ReportByTagTab } from './ReportByTagTab'
 import './styles.css'
@@ -25,8 +26,13 @@ export const Reports = () => {
           <Tab title={intl.formatMessage({ id: 'reports.tabs.byTag' })} idx="tags">
             <ReportByTagTab />
           </Tab>
+
           <Tab title={intl.formatMessage({ id: 'reports.tabs.byGroup' })} idx="group">
             <ReportByGroupTab />
+          </Tab>
+
+          <Tab title={intl.formatMessage({ id: 'reports.tabs.byFilters' })} idx="filters">
+            <ReportByFiltersTab />
           </Tab>
         </Tabs>
       </Container>

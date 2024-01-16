@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { FormattedMessage } from 'react-intl'
 import { DataGrid, GridColDef } from '@mui/x-data-grid'
 import { Button, styled } from '@mui/material'
 import Box from '@mui/material/Box'
@@ -32,7 +33,11 @@ export function ReportByFiltersTab() {
       <Box>
         <Filters onFiltersChanged={(f) => setFilters(f)} onRageChanged={(v) => setRange(v)} range={range} />
       </Box>
-      <Button onClick={() => fetch()}>Generate</Button>
+      <Box mt={2}>
+        <Button variant="contained" onClick={() => fetch()}>
+          <FormattedMessage id="reports.byFilters.generateBtn.label" />
+        </Button>
+      </Box>
       <Box mt={3}>
         <DataGrid
           sx={{ maxHeight: '600px' }}

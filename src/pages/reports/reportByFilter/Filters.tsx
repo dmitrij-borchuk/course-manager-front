@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Button, Divider, Grid, Stack, TextField } from '@mui/material'
+import { Button, Divider, Grid, Stack, TextField, Typography } from '@mui/material'
 import Box from '@mui/material/Box'
 import { FilterEditor, ValueInputProps } from '../reportByFilter/FilterEditor'
 import { Filter } from './types'
@@ -86,8 +86,22 @@ export function Filters(props: FiltersProps) {
   return (
     <>
       <DateRange onRageChanged={onRageChanged} range={range} />
+
       <Box>
+        <Button variant="contained" onClick={() => addFilter()}>
+          <FormattedMessage id="reports.addFilterBtn.label" />
+        </Button>
+      </Box>
+
+      <Box mt={2}>
         <Stack spacing={2} divider={<Divider flexItem />}>
+          {filters.length === 0 && (
+            <Box display="flex" justifyContent="center">
+              <Typography>
+                <FormattedMessage id="reports.byFilters.emptyFilters" />
+              </Typography>
+            </Box>
+          )}
           {filters.map((f) => (
             <Box key={f.id}>
               <FilterEditor
@@ -99,12 +113,6 @@ export function Filters(props: FiltersProps) {
             </Box>
           ))}
         </Stack>
-      </Box>
-
-      <Box mt={2}>
-        <Button variant="contained" onClick={() => addFilter()}>
-          <FormattedMessage id="reports.addFilterBtn.label" />
-        </Button>
       </Box>
     </>
   )

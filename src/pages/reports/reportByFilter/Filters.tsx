@@ -30,6 +30,11 @@ export function Filters(props: FiltersProps) {
     setFilters(newFilter)
     onFiltersChanged(newFilter)
   }
+  const removeFilter = (filter: Filter<string | string[]>) => {
+    const newFilter = filters.filter((f) => f.id !== filter.id)
+    setFilters(newFilter)
+    onFiltersChanged(newFilter)
+  }
   const intl = useIntl()
   const fields = [
     {
@@ -107,7 +112,7 @@ export function Filters(props: FiltersProps) {
               <FilterEditor
                 fields={fields}
                 onChange={(f) => updateFilter(f)}
-                onRemove={(f) => setFilters((filters) => filters.filter((filter) => filter.id !== f.id))}
+                onRemove={(f) => removeFilter(f)}
                 value={f}
               />
             </Box>

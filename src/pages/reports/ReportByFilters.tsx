@@ -10,7 +10,6 @@ import { Filters } from './reportByFilter/Filters'
 import { useReport } from './reportByFilter/useReport'
 import { SortOrder } from 'utils/sorting'
 
-// TODO: request on remove filter
 // TODO: after edit filter order is changed
 // TODO: resize columns
 // TODO: sorting
@@ -26,7 +25,7 @@ export function ReportByFiltersTab() {
     return { from, to }
   })
   const [rows, isFetching] = useReportPreview(useDebounce(validFilters, 500), tableConfig, range)
-  const [report, fetch] = useReport(validFilters, tableConfig, range)
+  const [fetch] = useReport(validFilters, tableConfig, range)
 
   return (
     <Box mt={3}>
@@ -65,12 +64,6 @@ export function ReportByFiltersTab() {
           }}
           disableRowSelectionOnClick
         />
-
-        {report.map((r) => (
-          <div key={`${r.id}-${r.activityId}`}>
-            {r.name} - {r.activityName} - {r.rate}
-          </div>
-        ))}
       </Box>
     </Box>
   )

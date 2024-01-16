@@ -11,7 +11,7 @@ export function useReport(
   range: { from: Date; to: Date }
 ) {
   const { showError } = useNotification()
-  const { data, isFetching, refetch } = useQuery(
+  const { isFetching, refetch } = useQuery(
     [
       'reportByFilter',
       filters,
@@ -47,9 +47,8 @@ export function useReport(
       enabled: false,
     }
   )
-  const parsedData = data?.data ?? []
 
-  return [parsedData, refetch, isFetching] as const
+  return [refetch, isFetching] as const
 }
 async function generateReport(data: ReportByFilterServerRecord[]) {
   const attendancesReport = data.map((r) => {

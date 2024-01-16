@@ -26,7 +26,9 @@ export function Filters(props: FiltersProps) {
     onFiltersChanged(newFilter)
   }
   const updateFilter = (filter: Filter<string | string[]>) => {
-    const newFilter = filters.filter((f) => f.id !== filter.id).concat(filter)
+    const index = filters.findIndex((f) => f.id === filter.id)
+    const newFilter = [...filters]
+    newFilter[index] = filter
     setFilters(newFilter)
     onFiltersChanged(newFilter)
   }

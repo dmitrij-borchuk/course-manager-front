@@ -1,5 +1,6 @@
 import { pdf } from '@react-pdf/renderer'
 import { TableDataTemplate } from 'components/pdf/TableDataTemplate'
+import { useNotification } from 'hooks/useNotification'
 import { ReportByFilterServerRecord, ReportFilter, getReportByFilterRequest } from 'modules/reports/api'
 import { useQuery } from 'react-query'
 import { SortOrder } from 'utils/sorting'
@@ -9,6 +10,7 @@ export function useReport(
   tableConfig: { order: SortOrder; orderBy: string; page: number; pageSize: number },
   range: { from: Date; to: Date }
 ) {
+  const { showError } = useNotification()
   const { data, isFetching, refetch } = useQuery(
     [
       'reportByFilter',
@@ -21,18 +23,25 @@ export function useReport(
       range.to,
     ],
     async () => {
-      const report = await getReportByFilterRequest(
-        filters,
-        tableConfig.page,
-        tableConfig.pageSize,
-        tableConfig.order,
-        tableConfig.orderBy,
-        range.from,
-        range.to
-      )
+      try {
+        const report = await getReportByFilterRequest(
+          filters,
+          tableConfig.page,
+          tableConfig.pageSize,
+          tableConfig.order,
+          tableConfig.orderBy,
+          range.from,
+          range.to
+        )
+        await generateReport(report.data)
+        return report
+      } catch (error) {
+        if (error instanceof Error) {
+          showError(error.message)
+        }
 
-      await generateReport(report.data)
-      return report
+        throw error
+      }
     },
     {
       enabled: false,

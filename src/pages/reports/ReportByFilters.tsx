@@ -10,12 +10,12 @@ import { Filters } from './reportByFilter/Filters'
 import { useReport } from './reportByFilter/useReport'
 import { SortOrder } from 'utils/sorting'
 
-// TODO: add filtering
+// TODO: request on remove filter
+// TODO: after edit filter order is changed
 // TODO: resize columns
 // TODO: sorting
 // TODO fix pagination
-// TODO: request on remove filter
-// TODO: after edit filter order is changed
+// TODO: add loader
 export function ReportByFiltersTab() {
   const [filters, setFilters] = useState<Filter[]>([])
   const validFilters = useValidFilters(filters)

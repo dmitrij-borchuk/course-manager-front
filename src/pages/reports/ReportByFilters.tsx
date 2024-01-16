@@ -1,55 +1,74 @@
-import { useEffect, useMemo, useState } from 'react'
-import { useQuery } from 'react-query'
-import { styled } from '@mui/material'
-import Box from '@mui/material/Box'
-import { ReportFilter, getReportPreviewRequest } from 'modules/reports/api'
-import { SortOrder } from '../../types/sorting'
+import { useMemo, useState } from 'react'
 import { DataGrid, GridColDef } from '@mui/x-data-grid'
+import { Button, styled } from '@mui/material'
+import Box from '@mui/material/Box'
+import { useDebounce } from 'utils/common'
+import { ReportFilter } from 'modules/reports/api'
+import { useReportPreview } from './reportByFilter/useReportPreview'
 import { Filters } from './reportByFilter/Filters'
+import { useReport } from './reportByFilter/useReport'
+import { SortOrder } from 'utils/sorting'
 
 // TODO: add filtering
 // TODO: resize columns
 // TODO: sorting
 // TODO fix pagination
+// TODO: request on remove filter
+// TODO: after edit filter order is changed
 export function ReportByFiltersTab() {
   const [filters, setFilters] = useState<Filter[]>([])
   const validFilters = useValidFilters(filters)
-  const [tableConfig] = useState({ order: 'asc' as SortOrder, orderBy: 'name', page: 0, pageSize: 25 })
-  const [data, isFetching] = useReportPreview(useThrottle(validFilters, 500), tableConfig)
+  const [tableConfig, setTableConfig] = useState({ order: 'asc' as SortOrder, orderBy: 'name', page: 0, pageSize: 25 })
+  const [range, setRange] = useState(() => {
+    const to = new Date()
+    const from = subMonth(to)
+    return { from, to }
+  })
+  const [rows, isFetching] = useReportPreview(useDebounce(validFilters, 500), tableConfig, range)
+  const [report, fetch] = useReport(validFilters, tableConfig, range)
 
   return (
     <Box mt={3}>
       <Box>
-        <Filters onFiltersChanged={(f) => setFilters(f)} />
+        <Filters onFiltersChanged={(f) => setFilters(f)} onRageChanged={(v) => setRange(v)} range={range} />
       </Box>
+      <Button onClick={() => fetch()}>Generate</Button>
       <Box mt={3}>
         <DataGrid
+          sx={{ maxHeight: '600px' }}
           loading={isFetching}
-          rows={data}
+          rows={rows.data}
           columns={columns}
           initialState={{
             pagination: {
               paginationModel: tableConfig,
             },
           }}
+          onPaginationModelChange={(model) =>
+            setTableConfig({
+              ...tableConfig,
+              page: model.page,
+              pageSize: model.pageSize,
+            })
+          }
+          pageSizeOptions={[5, 25, 50, 100]}
+          rowCount={rows.total}
+          paginationMode="server"
+          paginationModel={{
+            page: tableConfig.page,
+            pageSize: tableConfig.pageSize,
+          }}
           disableRowSelectionOnClick
         />
+
+        {report.map((r) => (
+          <div key={`${r.id}-${r.activityId}`}>
+            {r.name} - {r.activityName} - {r.rate}
+          </div>
+        ))}
       </Box>
     </Box>
   )
-}
-
-function useThrottle<T>(value: T, delay: number) {
-  const [throttledValue, setThrottledValue] = useState(value)
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setThrottledValue(value)
-    }, delay)
-    return () => {
-      clearTimeout(handler)
-    }
-  }, [value, delay])
-  return throttledValue
 }
 
 type Filter = {
@@ -78,46 +97,20 @@ const columns: GridColDef[] = [
   {
     field: 'groups',
     renderCell: ({ row }: any) => {
-      const groups = row.studentsToActivities.map((s: any) => s.activity.name).join(', ')
-      return <GroupsCell title={groups}>{groups}</GroupsCell>
+      return <EllipsisCell>{row.activityName}</EllipsisCell>
     },
-    headerName: 'Groups',
+    headerName: 'Group',
     width: 300,
   },
   {
-    field: 'outerId',
-    headerName: 'Outer id',
+    field: 'performer',
+    renderCell: ({ row }: any) => {
+      return <EllipsisCell>{row.performerName}</EllipsisCell>
+    },
+    headerName: 'Teacher',
     width: 300,
-    sortable: false,
-    filterable: false,
   },
 ]
-
-function useReportPreview(
-  filters: ReportFilter[],
-  tableConfig: { order: SortOrder; orderBy: string; page: number; pageSize: number }
-) {
-  const { data, isFetching } = useQuery(
-    ['reportPreview', filters],
-    () => {
-      return getReportPreviewRequest(
-        filters,
-        tableConfig.page,
-        tableConfig.pageSize,
-        tableConfig.order,
-        tableConfig.orderBy
-      )
-    },
-    {
-      refetchOnWindowFocus: false,
-      retry: false,
-      keepPreviousData: true,
-    }
-  )
-  const parsedData = data?.data ?? []
-
-  return [parsedData, isFetching] as const
-}
 
 function useValidFilters(filters: Filter[]): ReportFilter[] {
   return useMemo(() => {
@@ -125,8 +118,14 @@ function useValidFilters(filters: Filter[]): ReportFilter[] {
   }, [filters])
 }
 
-const GroupsCell = styled(Box)`
+const EllipsisCell = styled(Box)`
   text-overflow: ellipsis;
   width: 100%;
   overflow: hidden;
 `
+
+function subMonth(date: Date) {
+  const newDate = new Date(date)
+  newDate.setMonth(newDate.getMonth() - 1)
+  return newDate
+}

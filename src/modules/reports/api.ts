@@ -11,14 +11,40 @@ export function getReportPreviewRequest(
   page: number,
   pageSize: number,
   order: 'asc' | 'desc',
-  orderBy: string
+  orderBy: string,
+  from: Date,
+  to: Date
 ) {
-  return request.post<ReportPreviewRecord[]>(`/report/preview`, {
+  return request.post<{
+    data: ReportPreviewRecord[]
+    total: number
+  }>(`/report/preview`, {
     filters,
     page,
     pageSize,
     order,
     orderBy,
+    from,
+    to,
+  })
+}
+export function getReportByFilterRequest(
+  filters: ReportFilter[],
+  page: number,
+  pageSize: number,
+  order: 'asc' | 'desc',
+  orderBy: string,
+  from: Date,
+  to: Date
+) {
+  return request.post<ReportByFilterServerRecord[]>(`/report/byFilter`, {
+    filters,
+    page,
+    pageSize,
+    order,
+    orderBy,
+    from,
+    to,
   })
 }
 
@@ -38,9 +64,23 @@ type ReportServerRecord = {
   attended: number
   total: number
 }
+export type ReportByFilterServerRecord = ReportPreviewRecord & {
+  rate: number
+  attended: number
+  total: number
+}
 type ReportPreviewRecord = {
   id: number
   name: string
   tags: string[]
   outerId: string
+  startDate: string
+  endDate: string
+  activityId: number
+  activityOuterId: string
+  activityName: string
+  activityDeleted: boolean
+  activityArchived: boolean
+  performerId: number
+  performerName: string
 }

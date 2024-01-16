@@ -17,7 +17,6 @@ interface Props {
   attendanceRates?: Dictionary<{ rate: number }>
 }
 export const StudentList: React.FC<Props> = ({ className = '', loading = false, items = [], attendanceRates }) => {
-  console.log('=-= 🚀 ~ attendanceRates:', attendanceRates)
   const orgId = useOrgId()
   const renderItem = useCallback((d: TableContentItem) => {
     return (

@@ -184,6 +184,7 @@ export const messages = {
   'reports.operationInput.label': 'Operation',
   'reports.addFilterBtn.label': 'Add filter',
   'reports.valueInput.label': 'Value',
+  'reports.filter.group.label': 'Group',
 
   'calendar.previousBtn.label': 'Previous',
   'calendar.nextBtn.label': 'Next',

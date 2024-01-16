@@ -1,21 +1,24 @@
 import { useState } from 'react'
-import { Button, Divider, Stack, TextField } from '@mui/material'
+import { Button, Divider, Grid, Stack, TextField } from '@mui/material'
 import Box from '@mui/material/Box'
 import { FilterEditor, ValueInputProps } from '../reportByFilter/FilterEditor'
 import { Filter } from './types'
 import { FormattedMessage, useIntl } from 'react-intl'
+import { DatePicker } from 'react-materialize'
 
 type FiltersProps = {
   onFiltersChanged: (filters: Filter<string | string[]>[]) => void
+  onRageChanged: (value: { from: Date; to: Date }) => void
+  range: { from: Date; to: Date }
 }
 
-// TODO: btn to remove filter
 // TODO: save filters between refreshes
 // TODO: collapsible filters
 // TODO: tags selector
 // TODO: add groups to the list
+// TODO: add empty message
 export function Filters(props: FiltersProps) {
-  const { onFiltersChanged } = props
+  const { onFiltersChanged, onRageChanged, range } = props
   const [filters, setFilters] = useState<Filter<string | string[]>[]>([])
   const addFilter = () => {
     const newFilter = filters.concat({ id: Math.random().toString(), field: '', value: '', operation: '' })
@@ -37,6 +40,14 @@ export function Filters(props: FiltersProps) {
           value: 'contains',
           label: 'Contains',
         },
+        {
+          value: 'startsWith',
+          label: 'Starts with',
+        },
+        {
+          value: 'endsWith',
+          label: 'Ends with',
+        },
       ],
       Input: TextValueInput,
     },
@@ -51,10 +62,30 @@ export function Filters(props: FiltersProps) {
       ],
       Input: TextValueInput,
     },
+    {
+      id: 'group',
+      label: intl.formatMessage({ id: 'reports.filter.group.label' }),
+      operations: [
+        {
+          value: 'contains',
+          label: 'Contains',
+        },
+        {
+          value: 'startsWith',
+          label: 'Starts with',
+        },
+        {
+          value: 'endsWith',
+          label: 'Ends with',
+        },
+      ],
+      Input: TextValueInput,
+    },
   ]
 
   return (
     <>
+      <DateRange onRageChanged={onRageChanged} range={range} />
       <Box>
         <Stack spacing={2} divider={<Divider flexItem />}>
           {filters.map((f) => (
@@ -92,3 +123,60 @@ function TextValueInput(props: ValueInputProps) {
     />
   )
 }
+
+type DateRangeProps = {
+  onRageChanged: (value: { from: Date; to: Date }) => void
+  range: { from: Date; to: Date }
+}
+function DateRange(props: DateRangeProps) {
+  const { onRageChanged, range } = props
+  const { from, to } = range
+  const intl = useIntl()
+
+  return (
+    <Grid container spacing={2}>
+      <Grid item xs={12} md={6}>
+        <Box>
+          <DatePicker
+            id="dateFrom"
+            options={{
+              autoClose: true,
+              format: 'mmm dd, yyyy',
+              defaultDate: from,
+              setDefaultDate: true,
+              maxDate: new Date(),
+            }}
+            // @ts-ignore
+            label={`${intl.formatMessage({ id: 'common.from' })} *`}
+            onChange={(v) => {
+              onRageChanged({ from: v, to })
+            }}
+            s={12}
+          />
+        </Box>
+      </Grid>
+      <Grid item xs={12} md={6}>
+        <Box>
+          <DatePicker
+            id="dateTo"
+            options={{
+              autoClose: true,
+              format: 'mmm dd, yyyy',
+              defaultDate: to,
+              setDefaultDate: true,
+              maxDate: new Date(),
+            }}
+            // @ts-ignore
+            label={`${intl.formatMessage({ id: 'common.to' })} *`}
+            onChange={(d) => {
+              onRageChanged({ from, to: new Date(d.getTime() + dayWithoutSecondInMs) })
+            }}
+            s={12}
+          />
+        </Box>
+      </Grid>
+    </Grid>
+  )
+}
+
+const dayWithoutSecondInMs = 24 * 60 * 60 * 1000 - 60 * 1000

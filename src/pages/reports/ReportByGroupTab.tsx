@@ -8,7 +8,7 @@ import { ReportByGroup } from '../../components/reports/ReportByGroup'
 import { getItem, setItem } from '../../services/localStore'
 import { useGroupsState, useStudentsOfGroupState } from '../../store'
 import { Activity } from '../../types/activity'
-import { SortOrder } from '../../types/sorting'
+import { SortOrder } from 'utils/sorting'
 
 export const ReportByGroupTab = () => {
   const intl = useIntl()

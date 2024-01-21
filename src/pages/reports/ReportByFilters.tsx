@@ -10,10 +10,7 @@ import { Filters } from './reportByFilter/Filters'
 import { useReport } from './reportByFilter/useReport'
 import { SortOrder } from 'utils/sorting'
 
-// TODO: after edit filter order is changed
-// TODO: resize columns
 // TODO: sorting
-// TODO fix pagination
 // TODO: add loader
 export function ReportByFiltersTab() {
   const [filters, setFilters] = useState<Filter[]>([])
@@ -98,6 +95,7 @@ const columns: GridColDef[] = [
       return <EllipsisCell>{row.activityName}</EllipsisCell>
     },
     headerName: 'Group',
+    sortable: false,
     width: 300,
   },
   {
@@ -106,6 +104,7 @@ const columns: GridColDef[] = [
       return <EllipsisCell>{row.performerName}</EllipsisCell>
     },
     headerName: 'Teacher',
+    sortable: false,
     width: 300,
   },
 ]

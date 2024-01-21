@@ -25,6 +25,7 @@ jest.mock('@react-pdf/renderer', () => {
     StyleSheet: {
       create: () => ({}),
     },
+    BlobProvider: () => <div>BlobProvider</div>,
   }
 })
 
@@ -95,9 +96,9 @@ describe('ReportByGroupTab', () => {
       // Get text
       .map((e) => e.textContent)
 
-    expect(persents[0]).toBe('0%')
-    expect(persents[1]).toBe('50%')
-    expect(persents[2]).toBe('100%')
+    expect(persents[0]).toBe('0% (0/2)')
+    expect(persents[1]).toBe('50% (1/2)')
+    expect(persents[2]).toBe('100% (2/2)')
   })
   test('should generate report with desc sorting', async () => {
     const { attendances, groups, students } = getSortingDataMocks()
@@ -130,9 +131,9 @@ describe('ReportByGroupTab', () => {
       // Get text
       .map((e) => e.textContent)
 
-    expect(persents[0]).toBe('100%')
-    expect(persents[1]).toBe('50%')
-    expect(persents[2]).toBe('0%')
+    expect(persents[0]).toBe('100% (2/2)')
+    expect(persents[1]).toBe('50% (1/2)')
+    expect(persents[2]).toBe('0% (0/2)')
   })
   test('should render attendance rate as integer', async () => {
     const groups: Activity[] = [
@@ -219,7 +220,7 @@ describe('ReportByGroupTab', () => {
       // Get text
       .map((e) => e.textContent)
 
-    expect(persents[0]).toBe('33%')
+    expect(persents[0]).toBe('33% (1/3)')
   })
   test('should render attendance rate between dates', async () => {
     const groups: Activity[] = [
@@ -312,9 +313,9 @@ describe('ReportByGroupTab', () => {
       .map((e) => e.textContent)
 
     expect(persents[0]).toBe('st 2')
-    expect(persents[1]).toBe('0%')
+    expect(persents[1]).toBe('0% (0/1)')
     expect(persents[2]).toBe('st 1')
-    expect(persents[3]).toBe('100%')
+    expect(persents[3]).toBe('100% (1/1)')
   })
 
   test('should show report only related to group selected', async () => {
@@ -335,7 +336,7 @@ describe('ReportByGroupTab', () => {
     renderPdf()
     const percents = await getPercentsArray()
 
-    expect(percents[0]).toBe('50%')
+    expect(percents[0]).toBe('50% (1/2)')
   })
 
   test('should show report for any group', async () => {

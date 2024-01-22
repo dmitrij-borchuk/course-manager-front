@@ -25,7 +25,7 @@ import {
 import { LogoutPage } from './pages/auth/Logout'
 import { SchedulePageLoadable } from './pages/schedules'
 import { AttendanceEditorLoadable } from './pages/attendance'
-import { ProfilePage } from './pages/profile/Profile'
+import { OrganizationsPage } from './pages/organizations/Organizations'
 import { CreateOrganizationPageLoadable } from './pages/organizations'
 import { InviteUserPage } from './pages/users/InviteUser'
 import { ConfirmInvitePage } from './pages/users/ConfirmInvite'
@@ -90,12 +90,11 @@ export const Routing = React.memo(function () {
       {/* Admin */}
       <AuthGuardedRoute component={AdminPage} path="/admin" exact />
 
-      <AuthGuardedRoute component={ProfilePage} path="/" exact />
-
       <Route component={ConfirmInvitePage} path="/:orgId/invite/confirm/:token" exact />
 
       {/* Organizations */}
       <AuthGuardedRoute component={CreateOrganizationPage} path={`${ROUTES.ORGANIZATIONS_ADD}`} exact />
+      <AuthGuardedRoute component={OrganizationsPage} path="/" exact />
 
       <Route path={`/:orgId`}>
         <OrganizationGuardedRoute />

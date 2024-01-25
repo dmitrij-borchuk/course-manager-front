@@ -38,6 +38,7 @@ import { Loader } from './components/kit/loader/Loader'
 import { FormattedMessage } from 'react-intl'
 import { Text } from './components/kit/text/Text'
 import { setHeader } from './api/request'
+import { ProfilePage } from 'pages/profile/ProfilePage'
 
 const GroupsListPage = withHeader(GroupsListPageLoadable)
 const CreateGroupPage = withHeader(CreateGroupPageLoadable)
@@ -190,6 +191,8 @@ const OrganizationGuardedRoute = () => {
 
       {/* Import */}
       <AuthGuardedRoute component={StudentImportPage} path="/:orgId/import" exact />
+
+      <AuthGuardedRoute component={ProfilePage} path="/:orgId/profile" exact />
     </Switch>
   )
 }

@@ -22,7 +22,7 @@ export const OrganizationsPage = () => {
   return (
     <>
       <Helmet>
-        <title>Profile{TITLE_POSTFIX}</title>
+        <title>Organizations{TITLE_POSTFIX}</title>
       </Helmet>
 
       <Organizations organizations={allItems} user={profile} organizationsLoading={loading} />

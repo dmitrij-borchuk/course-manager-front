@@ -182,6 +182,8 @@ export const messages = {
 
   'calendar.previousBtn.label': 'Previous',
   'calendar.nextBtn.label': 'Next',
+
+  'profile.link.title': 'Profile',
 }
 
 export default messages

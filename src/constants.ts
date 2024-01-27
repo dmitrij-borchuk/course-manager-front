@@ -45,4 +45,6 @@ export const ROUTES = {
   ORGANIZATIONS_ADD: '/organizations/add',
 
   LOGOUT: '/logout',
+
+  PROFILE: '/profile',
 }

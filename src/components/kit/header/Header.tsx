@@ -1,7 +1,10 @@
-import { useMemo } from 'react'
-import { FormattedMessage } from 'react-intl'
+import React, { useMemo } from 'react'
 import { Divider, Icon, Navbar } from 'react-materialize'
+import { FormattedMessage } from 'react-intl'
+import { useQuery } from 'react-query'
 import { Link } from 'react-router-dom'
+import { Avatar, IconButton, Menu, MenuItem, styled } from '@mui/material'
+import { getMyProfileRequest } from 'modules/profiles/api'
 import { ROUTES } from '../../../constants'
 import { useAccessManager } from '../../../hooks/useAccessManager'
 import { useOrgIdNotStrict } from '../../../hooks/useOrgId'
@@ -61,9 +64,7 @@ export const Header = () => {
       <Divider key="divider" />,
 
       currentUser ? (
-        <Link key="logout" to={`/${orgId}${ROUTES.LOGOUT}`}>
-          <FormattedMessage id="header.nav.logout" />
-        </Link>
+        <ProfileButton key="profile" />
       ) : (
         <Link key="login" to={ROUTES.LOGIN}>
           <FormattedMessage id="header.nav.login" />
@@ -101,3 +102,69 @@ export const Header = () => {
     </Navbar>
   )
 }
+
+function ProfileButton() {
+  const orgId = useOrgIdNotStrict()
+  const { data } = useProfile()
+  const { name = '' } = data?.data ?? {}
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
+  const open = Boolean(anchorEl)
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget)
+  }
+  const handleClose = () => {
+    setAnchorEl(null)
+  }
+
+  return (
+    <>
+      <IconButton
+        onClick={handleClick}
+        aria-controls={open ? 'account-menu' : undefined}
+        aria-haspopup="true"
+        aria-expanded={open ? 'true' : undefined}
+      >
+        <Avatar>{getInitials(name)}</Avatar>
+      </IconButton>
+
+      <Menu
+        id="basic-menu"
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        MenuListProps={{
+          'aria-labelledby': 'basic-button',
+        }}
+        transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+      >
+        <MenuItem onClick={handleClose}>
+          <MenuLink key="logout" to={`/${orgId}${ROUTES.PROFILE}`}>
+            <FormattedMessage id="profile.link.title" />
+          </MenuLink>
+        </MenuItem>
+        <MenuItem onClick={handleClose}>
+          <MenuLink key="logout" to={`/${orgId}${ROUTES.LOGOUT}`}>
+            <FormattedMessage id="header.nav.logout" />
+          </MenuLink>
+        </MenuItem>
+      </Menu>
+    </>
+  )
+}
+
+// TODO: move to appropriate place
+function useProfile() {
+  return useQuery(['myProfile'], () => getMyProfileRequest(), {
+    refetchOnWindowFocus: false,
+  })
+}
+
+function getInitials(name: string) {
+  const [first, last] = name.split(' ')
+  return `${first[0] ?? ''}${(last ?? '')[0] ?? ''}`.toUpperCase()
+}
+
+const MenuLink = styled(Link)`
+  color: inherit;
+`

@@ -192,7 +192,7 @@ const OrganizationGuardedRoute = () => {
       {/* Import */}
       <AuthGuardedRoute component={StudentImportPage} path="/:orgId/import" exact />
 
-      <AuthGuardedRoute component={ProfilePage} path="/:orgId/profile" exact />
+      <AuthGuardedRoute component={ProfilePage} path={`/:orgId${ROUTES.MY_WORK}`} exact />
     </Switch>
   )
 }

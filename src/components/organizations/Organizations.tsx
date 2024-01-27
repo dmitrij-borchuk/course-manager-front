@@ -21,7 +21,7 @@ interface Props {
   user?: User
   organizationsLoading?: boolean
 }
-export const Profile = (props: Props) => {
+export const Organizations = (props: Props) => {
   const { className, organizations = [], user, organizationsLoading = false } = props
 
   if (!user) {

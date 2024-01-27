@@ -10,6 +10,10 @@ export function getProfileRequest(id: number) {
   return request.get<Profile>(`/profiles/${id}`)
 }
 
+export function getMyProfileRequest() {
+  return request.get<Profile>(`/profiles/me`)
+}
+
 export function updateProfileRequest(id: number, name: string) {
   return request.put<Profile>(`/profiles/${id}`, {
     name,

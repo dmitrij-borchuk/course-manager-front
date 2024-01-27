@@ -25,7 +25,7 @@ import {
 import { LogoutPage } from './pages/auth/Logout'
 import { SchedulePageLoadable } from './pages/schedules'
 import { AttendanceEditorLoadable } from './pages/attendance'
-import { ProfilePage } from './pages/profile/Profile'
+import { OrganizationsPage } from './pages/organizations/Organizations'
 import { CreateOrganizationPageLoadable } from './pages/organizations'
 import { InviteUserPage } from './pages/users/InviteUser'
 import { ConfirmInvitePage } from './pages/users/ConfirmInvite'
@@ -38,6 +38,7 @@ import { Loader } from './components/kit/loader/Loader'
 import { FormattedMessage } from 'react-intl'
 import { Text } from './components/kit/text/Text'
 import { setHeader } from './api/request'
+import { ProfilePage } from 'pages/profile/ProfilePage'
 
 const GroupsListPage = withHeader(GroupsListPageLoadable)
 const CreateGroupPage = withHeader(CreateGroupPageLoadable)
@@ -90,12 +91,11 @@ export const Routing = React.memo(function () {
       {/* Admin */}
       <AuthGuardedRoute component={AdminPage} path="/admin" exact />
 
-      <AuthGuardedRoute component={ProfilePage} path="/" exact />
-
       <Route component={ConfirmInvitePage} path="/:orgId/invite/confirm/:token" exact />
 
       {/* Organizations */}
       <AuthGuardedRoute component={CreateOrganizationPage} path={`${ROUTES.ORGANIZATIONS_ADD}`} exact />
+      <AuthGuardedRoute component={OrganizationsPage} path="/" exact />
 
       <Route path={`/:orgId`}>
         <OrganizationGuardedRoute />
@@ -191,6 +191,8 @@ const OrganizationGuardedRoute = () => {
 
       {/* Import */}
       <AuthGuardedRoute component={StudentImportPage} path="/:orgId/import" exact />
+
+      <AuthGuardedRoute component={ProfilePage} path="/:orgId/profile" exact />
     </Switch>
   )
 }

@@ -10,7 +10,7 @@ import { TagsEditor } from '../../components/kit/tag/TagsEditor'
 import { Text } from '../../components/kit/text/Text'
 import { ReportByTag } from '../../components/reports/ReportByTag'
 import { usePersistenceState } from '../../hooks/usePersistenceState'
-import { SortOrder } from '../../types/sorting'
+import { SortOrder } from 'utils/sorting'
 
 export const ReportByTagTab = () => {
   const intl = useIntl()

@@ -3,7 +3,9 @@ import { Divider, Icon, Navbar } from 'react-materialize'
 import { FormattedMessage } from 'react-intl'
 import { useQuery } from 'react-query'
 import { Link } from 'react-router-dom'
-import { Avatar, IconButton, Menu, MenuItem, styled } from '@mui/material'
+import { Avatar, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, Typography, styled } from '@mui/material'
+import AccountCircleIcon from '@mui/icons-material/AccountCircle'
+import LogoutIcon from '@mui/icons-material/Logout'
 import { getMyProfileRequest } from 'modules/profiles/api'
 import { ROUTES } from '../../../constants'
 import { useAccessManager } from '../../../hooks/useAccessManager'
@@ -139,14 +141,26 @@ function ProfileButton() {
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
         <MenuItem onClick={handleClose}>
-          <MenuLink key="logout" to={`/${orgId}${ROUTES.PROFILE}`}>
-            <FormattedMessage id="profile.link.title" />
-          </MenuLink>
+          <ListItemIcon>
+            <AccountCircleIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText>
+            <MenuLink key="logout" to={`/${orgId}${ROUTES.MY_WORK}`}>
+              <FormattedMessage id="myWork.link.title" />
+            </MenuLink>
+          </ListItemText>
         </MenuItem>
         <MenuItem onClick={handleClose}>
-          <MenuLink key="logout" to={`/${orgId}${ROUTES.LOGOUT}`}>
-            <FormattedMessage id="header.nav.logout" />
-          </MenuLink>
+          <ListItemIcon>
+            <LogoutIcon fontSize="small" color="error" />
+          </ListItemIcon>
+          <ListItemText>
+            <MenuLink key="logout" to={`/${orgId}${ROUTES.LOGOUT}`}>
+              <Typography color="error">
+                <FormattedMessage id="header.nav.logout" />
+              </Typography>
+            </MenuLink>
+          </ListItemText>
         </MenuItem>
       </Menu>
     </>

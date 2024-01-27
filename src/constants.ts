@@ -46,5 +46,5 @@ export const ROUTES = {
 
   LOGOUT: '/logout',
 
-  PROFILE: '/profile',
+  MY_WORK: '/my-work',
 }

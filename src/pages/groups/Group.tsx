@@ -35,7 +35,8 @@ export const GroupPage = () => {
   }, [deleteGroup, history, id, orgKey])
   const onClose = useCallback(async () => {
     await closeGroup(id)
-  }, [closeGroup, id])
+    activityQuery.refetch()
+  }, [closeGroup, id, activityQuery])
   const attendanceRate = useAttendanceRateByStudent(attendances || [])
   const onUpdateTeacher = useCallback(() => {
     activityQuery.refetch()

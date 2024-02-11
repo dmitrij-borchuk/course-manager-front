@@ -89,7 +89,7 @@ export const messages = {
   'groups.studentList.removeBtn': 'Remove from group',
   'groups.closeBtn.label': 'Close group',
   'groups.deleteBtn.label': 'Delete',
-  'groups.closed.message': 'This group is closed by {name} {date}',
+  'groups.closed.message': 'This group was closed by {name} {date}',
   'groups.closed.message.simple': 'This group is closed',
   'groups.moreMenu.title': 'more',
   'groups.filtering.showArchived.inputLabel': 'Show archived',

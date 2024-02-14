@@ -1,7 +1,7 @@
 import { useCallback, useEffect } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-import { Helmet } from 'react-helmet'
 import { useQuery } from 'react-query'
+import { Helmet } from 'react-helmet-async'
 import { useAttendancesForGroups } from 'store/attendancesStore'
 import { fetchActivity } from 'modules/activities/api'
 import { useGroupsState, useStudentsOfGroupState } from '../../store'

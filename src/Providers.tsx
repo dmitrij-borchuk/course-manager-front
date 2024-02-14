@@ -2,6 +2,7 @@ import React from 'react'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { BrowserRouter as Router } from 'react-router-dom'
 import { ReactQueryDevtools } from 'react-query/devtools'
+import { HelmetProvider } from 'react-helmet-async'
 import { ToastProvider } from 'react-toast-notifications'
 import { IntlProvider } from 'react-intl'
 import { ActivitiesFilteringProvider } from 'modules/activities/activitiesFilteringContext'
@@ -20,7 +21,9 @@ export const Providers: React.FC<Props> = ({ children }) => {
           <StoreProvider>
             <IntlProvider messages={messages} locale="en" defaultLocale="en">
               <ToastProvider>
-                <ActivitiesFilteringProvider>{children}</ActivitiesFilteringProvider>
+                <HelmetProvider>
+                  <ActivitiesFilteringProvider>{children}</ActivitiesFilteringProvider>
+                </HelmetProvider>
               </ToastProvider>
             </IntlProvider>
           </StoreProvider>

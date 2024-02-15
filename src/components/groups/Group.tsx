@@ -19,7 +19,10 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
 import { Edit, MoreHoriz } from '@mui/icons-material'
 import { useHistory } from 'react-router-dom'
+import { ActivityExtended } from 'modules/activities/api'
 import { ConfirmationDialogBase } from 'components/kit/ConfirmationDialog/ConfirmationDialog'
+import { RelativeTime } from 'components/dates/RelativeTime'
+import { OrgLink } from 'components/routing/OrgLink'
 import { Profile } from 'types/profile'
 import { ROUTES } from '../../constants'
 import { useOrgId } from '../../hooks/useOrgId'
@@ -33,9 +36,10 @@ import { UserPreview } from '../kit/userInfo/UserInfo'
 import { AssignTeacher } from './AssignTeacher'
 import { StudentsInfoBlock } from './StudentsInfoBlock'
 
+// TODO: this file needs to be decomposed
 interface Props {
   className?: string
-  data: Activity
+  data: ActivityExtended
   performer?: Profile
   onDelete: () => void
   onClose: () => void
@@ -67,7 +71,7 @@ export const Group: React.FC<Props> = ({
         </div>
 
         <div className="mt-6">
-          <ArchivedMessage archived={archived} />
+          <ArchivedMessage archived={archived} subject={data.archivedBy} date={data.archivedAt} />
         </div>
 
         {/* Schedule */}
@@ -320,12 +324,27 @@ function ActivityMenu({ onEditClick, onCloseClick, onDeleteClick, hideClose = fa
   )
 }
 
-function ArchivedMessage({ archived }: { archived: boolean }) {
+type ArchivedMessageProps = { archived: boolean; subject?: { name: string; id: number }; date?: string }
+function ArchivedMessage({ archived, subject, date }: ArchivedMessageProps) {
   if (!archived) return null
 
   return (
     <Alert severity="warning">
-      <FormattedMessage id="groups.closed.message" />
+      {subject && date ? (
+        <FormattedMessage
+          id="groups.closed.message"
+          values={{
+            name: <OrgLink to={`${ROUTES.TEACHERS_ROOT}/${subject.id}`}>{subject.name}</OrgLink>,
+            date: (
+              <b>
+                <RelativeTime date={new Date(date)} updateInterval={1} />
+              </b>
+            ),
+          }}
+        />
+      ) : (
+        <FormattedMessage id="groups.closed.message.simple" />
+      )}
     </Alert>
   )
 }

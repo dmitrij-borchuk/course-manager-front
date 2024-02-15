@@ -1,7 +1,7 @@
 import { useCallback, useEffect } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-import { Helmet } from 'react-helmet'
 import { useQuery } from 'react-query'
+import { Helmet } from 'react-helmet-async'
 import { useAttendancesForGroups } from 'store/attendancesStore'
 import { fetchActivity } from 'modules/activities/api'
 import { useGroupsState, useStudentsOfGroupState } from '../../store'
@@ -35,7 +35,8 @@ export const GroupPage = () => {
   }, [deleteGroup, history, id, orgKey])
   const onClose = useCallback(async () => {
     await closeGroup(id)
-  }, [closeGroup, id])
+    activityQuery.refetch()
+  }, [closeGroup, id, activityQuery])
   const attendanceRate = useAttendanceRateByStudent(attendances || [])
   const onUpdateTeacher = useCallback(() => {
     activityQuery.refetch()

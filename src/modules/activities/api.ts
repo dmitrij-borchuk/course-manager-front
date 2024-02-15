@@ -41,11 +41,12 @@ export type ParticipationRecord = {
 }
 
 export function fetchActivity(id: number) {
-  return request.get<
-    Activity & {
-      performer: Profile
-    }
-  >(`/activities/${id}`)
+  return request.get<ActivityExtended>(`/activities/${id}`)
+}
+export type ActivityExtended = Activity & {
+  performer: Profile
+  archivedAt?: string
+  archivedBy?: { id: number; name: string }
 }
 
 export function deleteActivity(id: number) {

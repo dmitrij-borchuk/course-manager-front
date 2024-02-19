@@ -89,6 +89,7 @@ export const Header = () => {
         outDuration: 200,
         preventScrolling: true,
       }}
+      className="z-1300 fixed"
     >
       {orgId ? (
         orgItems

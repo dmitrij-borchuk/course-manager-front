@@ -1,8 +1,11 @@
 import React from 'react'
 import { Helmet } from 'react-helmet'
 import { Container } from '@mui/material'
+import Toolbar from '@mui/material/Toolbar'
+import Box from '@mui/material/Box'
 import { Header } from 'components/kit/header/Header'
 import { TITLE_POSTFIX } from 'config'
+import { NavBar } from './NavBar'
 
 type Props = {
   title: string
@@ -18,9 +21,18 @@ export function GeneralPage(props: Props) {
           {TITLE_POSTFIX}
         </title>
       </Helmet>
-      <Header />
 
-      <Container sx={{ p: 2 }}>{children}</Container>
+      <Box sx={{ display: 'flex' }}>
+        <Header />
+
+        <NavBar />
+        <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+          {/* To make some gap under the header */}
+          <Toolbar />
+
+          <Container sx={{ p: 2 }}>{children}</Container>
+        </Box>
+      </Box>
     </>
   )
 }

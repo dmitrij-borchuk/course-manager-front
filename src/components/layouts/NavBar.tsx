@@ -21,13 +21,13 @@ import { useAuthStore } from 'store/authStore'
 import { ROUTES } from '../../constants'
 
 export function NavBar() {
-  const { open } = useNavBarContext()
+  const { open, toggle } = useNavBarContext()
   const breakpoints = useTheme().breakpoints
   const isMobile = useMediaQuery(breakpoints.down('md'))
 
   return (
     <>
-      <AppDrawer variant={isMobile ? 'temporary' : 'permanent'} open={open}>
+      <AppDrawer variant={isMobile ? 'temporary' : 'permanent'} open={open} onClose={() => toggle(false)}>
         {/* To make some gap under the header */}
         <Toolbar />
 

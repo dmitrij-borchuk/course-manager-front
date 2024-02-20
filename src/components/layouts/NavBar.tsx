@@ -1,6 +1,6 @@
 import React, { ReactNode, useMemo } from 'react'
 import { FormattedMessage } from 'react-intl'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import Drawer, { drawerClasses } from '@mui/material/Drawer'
 import { styled, useMediaQuery, useTheme } from '@mui/material'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
@@ -45,13 +45,20 @@ function useOrgItems() {
   const { currentUser } = useAuthStore()
   const orgId = useOrgIdNotStrict()
   const { hasAccess } = useAccessManager()
+  const location = useLocation()
+  const { pathname } = location
+
   return useMemo(() => {
     const items: JSX.Element[] = []
 
     if (currentUser && orgId) {
       items.push(
         <Link key="dashboard" to={`/${orgId}`}>
-          <NavItem label={<FormattedMessage id="header.nav.dashboard" />} icon={<DashboardIcon />} />
+          <NavItem
+            label={<FormattedMessage id="header.nav.dashboard" />}
+            icon={<DashboardIcon />}
+            active={`/${orgId}` === pathname}
+          />
         </Link>
       )
     }
@@ -59,44 +66,61 @@ function useOrgItems() {
     if (hasAccess('MANAGE_TEACHERS')) {
       items.push(
         <Link key="teachers" to={`/${orgId}${ROUTES.TEACHERS_LIST}`}>
-          <NavItem label={<FormattedMessage id="header.nav.teachers" />} icon={<AccountCircleIcon />} />
+          <NavItem
+            label={<FormattedMessage id="header.nav.teachers" />}
+            icon={<AccountCircleIcon />}
+            active={new RegExp(ROUTES.TEACHERS_LIST).test(pathname)}
+          />
         </Link>
       )
     }
     if (hasAccess('MANAGE_GROUPS')) {
       items.push(
         <Link key="groups" to={`/${orgId}${ROUTES.GROUPS_LIST}`}>
-          <NavItem label={<FormattedMessage id="header.nav.groups" />} icon={<GroupIcon />} />
+          <NavItem
+            label={<FormattedMessage id="header.nav.groups" />}
+            icon={<GroupIcon />}
+            active={new RegExp(ROUTES.GROUPS_LIST).test(pathname)}
+          />
         </Link>
       )
     }
     if (hasAccess('MANAGE_STUDENTS')) {
       items.push(
         <Link key="students" to={`/${orgId}${ROUTES.STUDENTS_LIST}`}>
-          <NavItem label={<FormattedMessage id="header.nav.students" />} icon={<GroupsIcon />} />
+          <NavItem
+            label={<FormattedMessage id="header.nav.students" />}
+            icon={<GroupsIcon />}
+            active={new RegExp(ROUTES.STUDENTS_LIST).test(pathname)}
+          />
         </Link>
       )
     }
     if (hasAccess('VIEW_REPORTS')) {
       items.push(
         <Link key="reports" to={`/${orgId}${ROUTES.REPORTS_ROOT}`}>
-          <NavItem label={<FormattedMessage id="header.nav.reports" />} icon={<AssessmentIcon />} />
+          <NavItem
+            label={<FormattedMessage id="header.nav.reports" />}
+            icon={<AssessmentIcon />}
+            active={new RegExp(ROUTES.REPORTS_ROOT).test(pathname)}
+          />
         </Link>
       )
     }
 
     return items
-  }, [currentUser, hasAccess, orgId])
+  }, [currentUser, hasAccess, orgId, pathname])
 }
 
 type NavItemProps = {
   label: ReactNode
   icon: ReactNode
+  active?: boolean
 }
-function NavItem({ label, icon }: NavItemProps) {
+function NavItem({ label, icon, active }: NavItemProps) {
   const theme = useTheme()
   return (
-    <ListItem disablePadding>
+    <ListItem disablePadding sx={{ backgroundColor: active ? theme.palette.action.focus : undefined }}>
       <ListItemButton>
         <ListItemIcon>{icon}</ListItemIcon>
         <ListItemText primary={label} sx={{ color: theme.palette.text.primary }} />

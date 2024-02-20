@@ -1,8 +1,8 @@
-import { ReactNode, useMemo } from 'react'
+import React, { ReactNode, useMemo } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { Link } from 'react-router-dom'
 import Drawer, { drawerClasses } from '@mui/material/Drawer'
-import { styled, useTheme } from '@mui/material'
+import { styled, useMediaQuery, useTheme } from '@mui/material'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import ListItemButton from '@mui/material/ListItemButton'
 import AssessmentIcon from '@mui/icons-material/Assessment'
@@ -21,9 +21,13 @@ import { useAuthStore } from 'store/authStore'
 import { ROUTES } from '../../constants'
 
 export function NavBar() {
+  const { open } = useNavBarContext()
+  const breakpoints = useTheme().breakpoints
+  const isMobile = useMediaQuery(breakpoints.down('md'))
+
   return (
     <>
-      <AppDrawer variant="permanent">
+      <AppDrawer variant={isMobile ? 'temporary' : 'permanent'} open={open}>
         {/* To make some gap under the header */}
         <Toolbar />
 
@@ -108,3 +112,20 @@ const AppDrawer = styled(Drawer)`
     box-sizing: border-box;
   }
 `
+
+export const navBarContext = React.createContext({
+  open: false,
+  toggle: (value?: boolean) => {},
+})
+
+export function useNavBarContext() {
+  return React.useContext(navBarContext)
+}
+
+export function NavBarProvider({ children }: { children?: ReactNode }) {
+  const [open, setOpen] = React.useState(false)
+  const toggle = (value?: boolean) => {
+    setOpen(value ?? !open)
+  }
+  return <navBarContext.Provider value={{ open, toggle }}>{children}</navBarContext.Provider>
+}

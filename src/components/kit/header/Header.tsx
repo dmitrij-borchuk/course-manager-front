@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom'
 import { Avatar, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, Typography, styled } from '@mui/material'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import LogoutIcon from '@mui/icons-material/Logout'
+import { useNavBarContext } from 'components/layouts/NavBar'
 import { getMyProfileRequest } from 'modules/profiles/api'
 import { ROUTES } from '../../../constants'
 import { useAccessManager } from '../../../hooks/useAccessManager'
@@ -18,6 +19,7 @@ export const Header = () => {
   const { currentUser } = useAuthStore()
   const orgId = useOrgIdNotStrict()
   const { hasAccess } = useAccessManager()
+  const { toggle } = useNavBarContext()
   const orgItems = useMemo(() => {
     const items: JSX.Element[] = []
 
@@ -80,7 +82,7 @@ export const Header = () => {
       alignLinks="right"
       brand={<Link to="/">Checkinizer</Link>}
       id="mobile-nav"
-      menuIcon={<Icon>menu</Icon>}
+      menuIcon={<Icon onClick={() => toggle()}>menu</Icon>}
       centerChildren
       options={{
         draggable: true,

@@ -1,15 +1,15 @@
 import { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Preloader } from 'react-materialize'
 import { useToasts } from 'react-toast-notifications'
-import { Helmet } from 'react-helmet'
 import { Dashboard } from '../../components/dashboard/Dashboard'
 import { Loader } from '../../components/kit/loader/Loader'
-import { ROLES, TITLE_POSTFIX } from '../../config'
+import { ROLES } from '../../config'
 import { useCurrentOrg } from '../../hooks/useCurrentOrg'
 import { useCurrentUser } from '../../hooks/useCurrentUser'
 import { useOrgId } from '../../hooks/useOrgId'
 import { useAttendanceGrouping } from '../../services/attendances'
 import { useAttendancesState, useGroupsState } from '../../store'
+import { GeneralPage } from 'components/layouts/GeneralPage'
 
 export function DashboardPage() {
   const org = useCurrentOrg()
@@ -18,20 +18,18 @@ export function DashboardPage() {
   if (!org || !organizationUser) {
     return (
       <>
-        <Helmet>
-          <title>Dashboard - Loading{TITLE_POSTFIX}</title>
-        </Helmet>
-        <Loader color="red" />
+        <GeneralPage title="Dashboard">
+          <Loader color="red" />
+        </GeneralPage>
       </>
     )
   }
 
   return (
     <>
-      <Helmet>
-        <title>Dashboard{TITLE_POSTFIX}</title>
-      </Helmet>
-      <DashboardContent />
+      <GeneralPage title="Dashboard">
+        <DashboardContent />
+      </GeneralPage>
     </>
   )
 }

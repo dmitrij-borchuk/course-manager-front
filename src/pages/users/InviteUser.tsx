@@ -1,11 +1,10 @@
 import { useCallback } from 'react'
-import { Helmet } from 'react-helmet'
 import { useIntl } from 'react-intl'
 import { InviteUser } from '../../components/users/InviteUser'
 import { useCurrentOrg } from '../../hooks/useCurrentOrg'
 import useUsersStore from '../../store/usersStore'
-import { TITLE_POSTFIX } from '../../config'
 import { useNotification } from 'hooks/useNotification'
+import { GeneralPage } from 'components/layouts/GeneralPage'
 
 export const InviteUserPage = () => {
   const intl = useIntl()
@@ -31,10 +30,9 @@ export const InviteUserPage = () => {
 
   return (
     <>
-      <Helmet>
-        <title>Invite Users{TITLE_POSTFIX}</title>
-      </Helmet>
-      <InviteUser onSubmit={onSubmit} loading={submitting} />
+      <GeneralPage title="Invite Users">
+        <InviteUser onSubmit={onSubmit} loading={submitting} />
+      </GeneralPage>
     </>
   )
 }

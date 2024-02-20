@@ -18,6 +18,7 @@ import Box from '@mui/material/Box'
 import { useOrgIdNotStrict } from 'hooks/useOrgId'
 import { useAccessManager } from 'hooks/useAccessManager'
 import { useAuthStore } from 'store/authStore'
+import { DRAWER_WIDTH } from 'config'
 import { ROUTES } from '../../constants'
 
 export function NavBar() {
@@ -47,7 +48,7 @@ function useOrgItems() {
   return useMemo(() => {
     const items: JSX.Element[] = []
 
-    if (currentUser) {
+    if (currentUser && orgId) {
       items.push(
         <Link key="dashboard" to={`/${orgId}`}>
           <NavItem label={<FormattedMessage id="header.nav.dashboard" />} icon={<DashboardIcon />} />
@@ -105,10 +106,10 @@ function NavItem({ label, icon }: NavItemProps) {
 }
 
 const AppDrawer = styled(Drawer)`
-  width: 240px;
+  width: ${DRAWER_WIDTH}px;
   flex-shrink: 0;
   & .${drawerClasses.paper} {
-    width: 240px;
+    width: ${DRAWER_WIDTH}px;
     box-sizing: border-box;
   }
 `

@@ -43,10 +43,6 @@ export const CreateOrganizationPage = () => {
 
   return (
     <>
-      <Helmet>
-        <title>Create Organization{TITLE_POSTFIX}</title>
-      </Helmet>
-
       <EditOrganization onSubmit={submit} loading={submitting || loading} error={error} />
     </>
   )

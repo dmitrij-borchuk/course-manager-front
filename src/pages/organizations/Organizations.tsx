@@ -1,9 +1,8 @@
 import { useEffect } from 'react'
-import { Helmet } from 'react-helmet'
 import { useOrganizationsState, useUsersState } from '../../store'
 import { Organizations } from '../../components/organizations/Organizations'
 import { useNotification } from '../../hooks/useNotification'
-import { TITLE_POSTFIX } from '../../config'
+import { GeneralPage } from 'components/layouts/GeneralPage'
 
 export const OrganizationsPage = () => {
   const { fetchAll, allItems, loading } = useOrganizationsState()
@@ -21,11 +20,9 @@ export const OrganizationsPage = () => {
 
   return (
     <>
-      <Helmet>
-        <title>Organizations{TITLE_POSTFIX}</title>
-      </Helmet>
-
-      <Organizations organizations={allItems} user={profile} organizationsLoading={loading} />
+      <GeneralPage title="Organizations">
+        <Organizations organizations={allItems} user={profile} organizationsLoading={loading} />
+      </GeneralPage>
     </>
   )
 }

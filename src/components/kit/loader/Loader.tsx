@@ -7,7 +7,7 @@ interface Props {
 }
 export const Loader: FC<Props & ComponentProps<'div'>> = ({ children, className = '', show = true, ...props }) => {
   return (
-    <div className={`relative ${className}`} data-testid="loader-wrapper" {...props}>
+    <div className={` ${className}`} data-testid="loader-wrapper" {...props}>
       {children}
       {show && (
         <div

@@ -1,10 +1,8 @@
 import React, { useCallback, useEffect } from 'react'
-import { Helmet } from 'react-helmet'
 import { useQuery } from '../../hooks/useQuery'
 import { useGroupsState } from '../../store'
 import { EditSchedule, ScheduleFormData } from '../../components/Schedule/EditSchedule'
 import { Message } from '../../components/kit/message/Message'
-import { TITLE_POSTFIX } from '../../config'
 
 export const SchedulePage = () => {
   const query = useQuery()
@@ -50,10 +48,6 @@ export const SchedulePage = () => {
 
   return (
     <>
-      <Helmet>
-        <title>Schedule{TITLE_POSTFIX}</title>
-      </Helmet>
-
       <EditSchedule onSubmit={onSubmit} /* initial={schedule} */ />
     </>
   )

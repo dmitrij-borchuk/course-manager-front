@@ -1,10 +1,8 @@
 import { useMemo } from 'react'
-import { Helmet } from 'react-helmet'
 import { useAttendancesForGroups } from 'store/attendancesStore'
 import { useGroups } from 'store/groupsStore'
 import { useActivitiesFiltering } from 'modules/activities/activitiesFilteringContext'
 import { GroupsList } from '../../components/groups/GroupsList'
-import { TITLE_POSTFIX } from '../../config'
 import { useAttendanceRateByGroups } from '../../hooks/useAttendanceRate'
 
 export const GroupsListPage = () => {
@@ -12,9 +10,6 @@ export const GroupsListPage = () => {
 
   return (
     <>
-      <Helmet>
-        <title>Groups{TITLE_POSTFIX}</title>
-      </Helmet>
       <GroupsList items={groups} loading={fetching} attendanceRates={rateByGroup} />
     </>
   )

@@ -3,17 +3,15 @@ import { useParams } from 'react-router-dom'
 import { AxiosError } from 'axios'
 import { FormattedMessage } from 'react-intl'
 import { useMutation, useQuery } from 'react-query'
-import { Helmet } from 'react-helmet'
-import { Header } from '../../components/kit/header/Header'
 import { Loader } from '../../components/kit/loader/Loader'
 import { Teacher } from '../../components/teachers/Teacher'
 import { useAttendanceRateByGroups } from '../../hooks/useAttendanceRate'
 import { useNotification } from 'hooks/useNotification'
-import { TITLE_POSTFIX } from '../../config'
 import { useActivitiesFiltering } from 'modules/activities/activitiesFilteringContext'
 import { getProfileRequest, updateProfileRequest } from 'modules/profiles/api'
 import { useAttendancesForGroups } from 'store/attendancesStore'
 import { useGroups } from 'store/groupsStore'
+import { GeneralPage } from 'components/layouts/GeneralPage'
 
 // TODO: Add loading skeleton
 export const TeacherPage = () => {
@@ -48,23 +46,20 @@ export const TeacherPage = () => {
 
   return (
     <>
-      <Helmet>
-        <title>Teacher{TITLE_POSTFIX}</title>
-      </Helmet>
-
-      <Header />
-      {/* TODO: skeleton loader */}
-      <Loader show={fetching}>
-        {teacher && (
-          <Teacher
-            key={id}
-            data={teacher}
-            attendanceRates={rateByGroup}
-            teachersGroups={groups}
-            onEdit={mutation.mutateAsync}
-          />
-        )}
-      </Loader>
+      <GeneralPage title="Teacher">
+        {/* TODO: skeleton loader */}
+        <Loader show={fetching}>
+          {teacher && (
+            <Teacher
+              key={id}
+              data={teacher}
+              attendanceRates={rateByGroup}
+              teachersGroups={groups}
+              onEdit={mutation.mutateAsync}
+            />
+          )}
+        </Loader>
+      </GeneralPage>
     </>
   )
 }

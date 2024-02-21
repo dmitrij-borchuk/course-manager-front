@@ -42,11 +42,9 @@ export const Header = () => {
           <MenuIcon />
         </IconButton>
         <Box display="flex" sx={{ flexGrow: 1, color: 'white' }}>
-          <Link to="/">
-            <Typography variant="h6" sx={{ color: 'white' }}>
-              Checkinizer
-            </Typography>
-          </Link>
+          <FlexLink to="/">
+            <img src={`${process.env.PUBLIC_URL}/logoWithName.png`} alt="logo" />
+          </FlexLink>
         </Box>
         <ProfileButton />
       </Toolbar>
@@ -130,4 +128,8 @@ function getInitials(name: string) {
 
 const MenuLink = styled(Link)`
   color: inherit;
+`
+
+const FlexLink = styled(Link)`
+  display: flex;
 `

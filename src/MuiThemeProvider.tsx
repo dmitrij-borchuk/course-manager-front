@@ -32,5 +32,17 @@ const theme = createTheme({
         },
       },
     },
+    MuiAppBar: {
+      styleOverrides: {
+        root: (ownerState) => ({
+          boxShadow: 'none',
+          borderBottom: '1px solid #E5E5E5',
+          color: ownerState.theme.palette.text.primary,
+        }),
+        colorPrimary: {
+          backgroundColor: '#fff',
+        },
+      },
+    },
   },
 })

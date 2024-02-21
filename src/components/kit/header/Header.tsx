@@ -87,28 +87,28 @@ function ProfileButton() {
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
-        <MenuItem onClick={handleClose}>
-          <ListItemIcon>
-            <AccountCircleIcon fontSize="small" />
-          </ListItemIcon>
-          <ListItemText>
-            <MenuLink key="logout" to={`/${orgId}${ROUTES.MY_WORK}`}>
+        <MenuLink key="profile" to={`/${orgId}${ROUTES.MY_WORK}`}>
+          <MenuItem onClick={handleClose}>
+            <ListItemIcon>
+              <AccountCircleIcon fontSize="small" />
+            </ListItemIcon>
+            <ListItemText>
               <FormattedMessage id="myWork.link.title" />
-            </MenuLink>
-          </ListItemText>
-        </MenuItem>
-        <MenuItem onClick={handleClose}>
-          <ListItemIcon>
-            <LogoutIcon fontSize="small" color="error" />
-          </ListItemIcon>
-          <ListItemText>
-            <MenuLink key="logout" to={`/${orgId}${ROUTES.LOGOUT}`}>
+            </ListItemText>
+          </MenuItem>
+        </MenuLink>
+        <MenuLink key="logout" to={`/${orgId}${ROUTES.LOGOUT}`}>
+          <MenuItem onClick={handleClose}>
+            <ListItemIcon>
+              <LogoutIcon fontSize="small" color="error" />
+            </ListItemIcon>
+            <ListItemText>
               <Typography color="error">
                 <FormattedMessage id="header.nav.logout" />
               </Typography>
-            </MenuLink>
-          </ListItemText>
-        </MenuItem>
+            </ListItemText>
+          </MenuItem>
+        </MenuLink>
       </Menu>
     </>
   )

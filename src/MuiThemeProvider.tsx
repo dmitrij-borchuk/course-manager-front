@@ -14,6 +14,9 @@ const theme = createTheme({
     primary: {
       main: '#346473',
     },
+    secondary: {
+      main: '#25A55F',
+    },
   },
   typography: {
     fontFamily: "'Red Hat Display', sans-serif",

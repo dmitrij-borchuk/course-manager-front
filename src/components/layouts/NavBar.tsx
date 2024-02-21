@@ -2,22 +2,22 @@ import React, { ReactNode, useMemo } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { Link, useLocation } from 'react-router-dom'
 import Drawer, { drawerClasses } from '@mui/material/Drawer'
-import { styled, useMediaQuery, useTheme } from '@mui/material'
-import AccountCircleIcon from '@mui/icons-material/AccountCircle'
+import { styled, typographyClasses, useMediaQuery, useTheme } from '@mui/material'
+import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined'
+import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined'
+import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined'
+import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined'
+import GroupOutlinedIcon from '@mui/icons-material/GroupOutlined'
 import ListItemButton from '@mui/material/ListItemButton'
-import AssessmentIcon from '@mui/icons-material/Assessment'
-import DashboardIcon from '@mui/icons-material/Dashboard'
 import ListItemText from '@mui/material/ListItemText'
-import ListItemIcon from '@mui/material/ListItemIcon'
-import GroupsIcon from '@mui/icons-material/Groups'
-import GroupIcon from '@mui/icons-material/Group'
+import ListItemIcon, { listItemIconClasses } from '@mui/material/ListItemIcon'
 import ListItem from '@mui/material/ListItem'
 import Toolbar from '@mui/material/Toolbar'
 import List from '@mui/material/List'
 import Box from '@mui/material/Box'
 import { useOrgIdNotStrict } from 'hooks/useOrgId'
 import { useAccessManager } from 'hooks/useAccessManager'
-import { useAuthStore } from 'store/authStore'
+import { useAuthState } from 'store'
 import { DRAWER_WIDTH } from 'config'
 import { ROUTES } from '../../constants'
 
@@ -40,9 +40,8 @@ export function NavBar() {
   )
 }
 
-// TODO: highlight active item
 function useOrgItems() {
-  const { currentUser } = useAuthStore()
+  const { currentUser } = useAuthState()
   const orgId = useOrgIdNotStrict()
   const { hasAccess } = useAccessManager()
   const location = useLocation()
@@ -56,7 +55,7 @@ function useOrgItems() {
         <Link key="dashboard" to={`/${orgId}`}>
           <NavItem
             label={<FormattedMessage id="header.nav.dashboard" />}
-            icon={<DashboardIcon />}
+            icon={<DashboardOutlinedIcon />}
             active={`/${orgId}` === pathname}
           />
         </Link>
@@ -68,7 +67,7 @@ function useOrgItems() {
         <Link key="teachers" to={`/${orgId}${ROUTES.TEACHERS_LIST}`}>
           <NavItem
             label={<FormattedMessage id="header.nav.teachers" />}
-            icon={<AccountCircleIcon />}
+            icon={<AccountCircleOutlinedIcon />}
             active={new RegExp(ROUTES.TEACHERS_LIST).test(pathname)}
           />
         </Link>
@@ -79,7 +78,7 @@ function useOrgItems() {
         <Link key="groups" to={`/${orgId}${ROUTES.GROUPS_LIST}`}>
           <NavItem
             label={<FormattedMessage id="header.nav.groups" />}
-            icon={<GroupIcon />}
+            icon={<GroupOutlinedIcon />}
             active={new RegExp(ROUTES.GROUPS_LIST).test(pathname)}
           />
         </Link>
@@ -90,7 +89,7 @@ function useOrgItems() {
         <Link key="students" to={`/${orgId}${ROUTES.STUDENTS_LIST}`}>
           <NavItem
             label={<FormattedMessage id="header.nav.students" />}
-            icon={<GroupsIcon />}
+            icon={<GroupsOutlinedIcon />}
             active={new RegExp(ROUTES.STUDENTS_LIST).test(pathname)}
           />
         </Link>
@@ -101,7 +100,7 @@ function useOrgItems() {
         <Link key="reports" to={`/${orgId}${ROUTES.REPORTS_ROOT}`}>
           <NavItem
             label={<FormattedMessage id="header.nav.reports" />}
-            icon={<AssessmentIcon />}
+            icon={<ArticleOutlinedIcon />}
             active={new RegExp(ROUTES.REPORTS_ROOT).test(pathname)}
           />
         </Link>
@@ -117,15 +116,14 @@ type NavItemProps = {
   icon: ReactNode
   active?: boolean
 }
-function NavItem({ label, icon, active }: NavItemProps) {
-  const theme = useTheme()
+function NavItem({ label, icon, active = false }: NavItemProps) {
   return (
-    <ListItem disablePadding sx={{ backgroundColor: active ? theme.palette.action.focus : undefined }}>
+    <NavigationItem disablePadding active={active}>
       <ListItemButton>
         <ListItemIcon>{icon}</ListItemIcon>
-        <ListItemText primary={label} sx={{ color: theme.palette.text.primary }} />
+        <ListItemText primary={label} />
       </ListItemButton>
-    </ListItem>
+    </NavigationItem>
   )
 }
 
@@ -154,3 +152,15 @@ export function NavBarProvider({ children }: { children?: ReactNode }) {
   }
   return <navBarContext.Provider value={{ open, toggle }}>{children}</navBarContext.Provider>
 }
+
+const NavigationItem = styled(ListItem, { shouldForwardProp: (prop: string) => !['active'].includes(prop) })<{
+  active: boolean
+}>`
+  color: ${({ theme, active }) => (active ? theme.palette.primary.main : theme.palette.text.primary)};
+  & .${typographyClasses.root} {
+    font-weight: ${({ active }) => (active ? 'bold' : undefined)};
+  }
+  & .${listItemIconClasses.root} {
+    color: ${({ theme, active }) => (active ? theme.palette.secondary.light : undefined)};
+  }
+`

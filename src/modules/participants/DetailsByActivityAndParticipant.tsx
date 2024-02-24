@@ -1,4 +1,4 @@
-import { Box, Container, Typography } from '@mui/material'
+import { Box, Typography } from '@mui/material'
 import { fetchActivity } from 'modules/activities/api'
 import { fetchParticipant } from 'api/participants'
 import { AttendanceDetails } from 'modules/attendance/AttendanceDetails'
@@ -32,17 +32,15 @@ export function DetailsByActivityAndParticipant({ activityId, participantId }: P
 
   return (
     <>
-      <Container className="px-4 mt-8">
-        <Typography variant="h4">
-          <Ellipsis>{participantName}</Ellipsis>
-        </Typography>
-        <Typography variant="h5" color="GrayText">
-          <Ellipsis>{activityName}</Ellipsis>
-        </Typography>
-        <Box mt={3}>
-          <AttendanceDetails participant={participantResp.data} activityId={activityId} />
-        </Box>
-      </Container>
+      <Typography variant="h4">
+        <Ellipsis>{participantName}</Ellipsis>
+      </Typography>
+      <Typography variant="h5" color="GrayText">
+        <Ellipsis>{activityName}</Ellipsis>
+      </Typography>
+      <Box mt={3}>
+        <AttendanceDetails participant={participantResp.data} activityId={activityId} />
+      </Box>
     </>
   )
 }

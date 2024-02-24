@@ -1,14 +1,12 @@
 import { useCallback, useEffect } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { useQuery } from 'react-query'
-import { Helmet } from 'react-helmet-async'
 import { useAttendancesForGroups } from 'store/attendancesStore'
 import { fetchActivity } from 'modules/activities/api'
 import { useGroupsState, useStudentsOfGroupState } from '../../store'
 import { Group } from '../../components/groups/Group'
 import { useOrgId } from '../../hooks/useOrgId'
 import { useAttendanceRateByStudent } from '../../hooks/useAttendanceRate'
-import { TITLE_POSTFIX } from '../../config'
 import { ROUTES } from '../../constants'
 
 export const GroupPage = () => {
@@ -56,9 +54,6 @@ export const GroupPage = () => {
 
   return (
     <>
-      <Helmet>
-        <title>Group{TITLE_POSTFIX}</title>
-      </Helmet>
       <Group
         data={activity}
         performer={activity.performer}

@@ -2,7 +2,6 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { useActivitiesFiltering } from 'modules/activities/activitiesFilteringContext'
 import { FabBtn } from 'components/kit/FabBtn/FabBtn'
-import { PageLayout } from 'components/kit/layout/Page'
 import { ROUTES } from '../../constants'
 import { useOrgId } from '../../hooks/useOrgId'
 import { Activity } from '../../types/activity'
@@ -21,11 +20,9 @@ export const GroupsList: React.FC<Props> = ({ loading = false, items = [], atten
 
   return (
     <>
-      <PageLayout>
-        <Heading onFilterClick={() => setOpenFilterDialog(true)} />
+      <Heading onFilterClick={() => setOpenFilterDialog(true)} />
 
-        <ActivitiesList items={items} attendanceRates={attendanceRates} loading={loading} />
-      </PageLayout>
+      <ActivitiesList items={items} attendanceRates={attendanceRates} loading={loading} />
 
       <Link to={`/${orgId}${ROUTES.GROUPS_ADD}`} data-testid="fab-btn">
         <FabBtn />

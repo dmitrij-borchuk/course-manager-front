@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react'
 import { FormattedMessage } from 'react-intl'
-import { Button, Container } from 'react-materialize'
+import { Button } from 'react-materialize'
 import { Box } from '@mui/material'
 import FilterAltIcon from '@mui/icons-material/FilterAlt'
 import { useActivitiesFiltering } from 'modules/activities/activitiesFilteringContext'
@@ -37,27 +37,25 @@ export const Teacher: React.FC<Props> = ({ className = '', data, attendanceRates
 
   return (
     <div className={className}>
-      <Container className="px-4">
-        <div className="flex justify-between">
-          <TitleWithEdit
-            placeholder={<FormattedMessage id="profile.user.noName" />}
-            value={name}
-            onSubmit={onEdit}
-            canEdit={canEditName}
-          />
-          <div className="flex items-center space-x-2 pt-4">
-            {/* TODO */}
-            {/* <DeleteIconWithDialog
+      <div className="flex justify-between">
+        <TitleWithEdit
+          placeholder={<FormattedMessage id="profile.user.noName" />}
+          value={name}
+          onSubmit={onEdit}
+          canEdit={canEditName}
+        />
+        <div className="flex items-center space-x-2 pt-4">
+          {/* TODO */}
+          {/* <DeleteIconWithDialog
               header={intl.formatMessage({ id: 'teachers.delete.header' })}
               content={<FormattedMessage id="teachers.delete.text" />}
               onSubmit={onDelete}
             /> */}
-          </div>
         </div>
+      </div>
 
-        {/* Groups */}
-        <GroupsInfoBlock teacherId={data.user.id} teachersGroups={teachersGroups} attendanceRates={attendanceRates} />
-      </Container>
+      {/* Groups */}
+      <GroupsInfoBlock teacherId={data.user.id} teachersGroups={teachersGroups} attendanceRates={attendanceRates} />
     </div>
   )
 }

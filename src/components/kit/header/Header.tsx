@@ -1,107 +1,54 @@
-import React, { useMemo } from 'react'
-import { Divider, Icon, Navbar } from 'react-materialize'
+import React from 'react'
 import { FormattedMessage } from 'react-intl'
 import { useQuery } from 'react-query'
 import { Link } from 'react-router-dom'
-import { Avatar, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, Typography, styled } from '@mui/material'
+import {
+  AppBar,
+  Avatar,
+  Box,
+  IconButton,
+  ListItemIcon,
+  ListItemText,
+  Menu,
+  MenuItem,
+  Toolbar,
+  Typography,
+  styled,
+} from '@mui/material'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
+import MenuIcon from '@mui/icons-material/Menu'
 import LogoutIcon from '@mui/icons-material/Logout'
+import { useNavBarContext } from 'components/layouts/NavBar'
 import { getMyProfileRequest } from 'modules/profiles/api'
 import { ROUTES } from '../../../constants'
-import { useAccessManager } from '../../../hooks/useAccessManager'
 import { useOrgIdNotStrict } from '../../../hooks/useOrgId'
-import { useAuthStore } from '../../../store/authStore'
 
 // TODO: use logo
 
 export const Header = () => {
-  const { currentUser } = useAuthStore()
-  const orgId = useOrgIdNotStrict()
-  const { hasAccess } = useAccessManager()
-  const orgItems = useMemo(() => {
-    const items: JSX.Element[] = []
-
-    if (currentUser) {
-      items.push(
-        <Link key="dashboard" to={`/${orgId}`}>
-          <FormattedMessage id="header.nav.dashboard" />
-        </Link>
-      )
-    }
-
-    if (hasAccess('MANAGE_TEACHERS')) {
-      items.push(
-        <Link key="teachers" to={`/${orgId}${ROUTES.TEACHERS_LIST}`}>
-          <FormattedMessage id="header.nav.teachers" />
-        </Link>
-      )
-    }
-    if (hasAccess('MANAGE_GROUPS')) {
-      items.push(
-        <Link key="groups" to={`/${orgId}${ROUTES.GROUPS_LIST}`}>
-          <FormattedMessage id="header.nav.groups" />
-        </Link>
-      )
-    }
-    if (hasAccess('MANAGE_STUDENTS')) {
-      items.push(
-        <Link key="students" to={`/${orgId}${ROUTES.STUDENTS_LIST}`}>
-          <FormattedMessage id="header.nav.students" />
-        </Link>
-      )
-    }
-    if (hasAccess('VIEW_REPORTS')) {
-      items.push(
-        <Link key="reports" to={`/${orgId}${ROUTES.REPORTS_ROOT}`}>
-          <FormattedMessage id="header.nav.reports" />
-        </Link>
-      )
-    }
-
-    return items.concat([
-      // TODO
-      // <Link key="users" to={`/${orgId}${ROUTES.USERS_LIST}`}>
-      // <FormattedMessage id="header.nav.users" />
-      // </Link>
-      <Divider key="divider" />,
-
-      currentUser ? (
-        <ProfileButton key="profile" />
-      ) : (
-        <Link key="login" to={ROUTES.LOGIN}>
-          <FormattedMessage id="header.nav.login" />
-        </Link>
-      ),
-    ])
-  }, [currentUser, hasAccess, orgId])
+  const { toggle } = useNavBarContext()
 
   return (
-    <Navbar
-      alignLinks="right"
-      brand={<Link to="/">Checkinizer</Link>}
-      id="mobile-nav"
-      menuIcon={<Icon>menu</Icon>}
-      centerChildren
-      options={{
-        draggable: true,
-        edge: 'left',
-        inDuration: 250,
-        outDuration: 200,
-        preventScrolling: true,
-      }}
-    >
-      {orgId ? (
-        orgItems
-      ) : currentUser ? (
-        <Link to={ROUTES.LOGOUT}>
-          <FormattedMessage id="header.nav.logout" />
-        </Link>
-      ) : (
-        <Link to={ROUTES.LOGIN}>
-          <FormattedMessage id="header.nav.login" />
-        </Link>
-      )}
-    </Navbar>
+    <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+      <Toolbar>
+        <IconButton
+          size="large"
+          edge="start"
+          color="inherit"
+          aria-label="menu"
+          sx={{ mr: 2, display: { md: 'none' } }}
+          onClick={() => toggle()}
+        >
+          <MenuIcon />
+        </IconButton>
+        <Box display="flex" sx={{ flexGrow: 1, color: 'white' }}>
+          <FlexLink to="/">
+            <img src={`${process.env.PUBLIC_URL}/logoWithName.png`} alt="logo" />
+          </FlexLink>
+        </Box>
+        <ProfileButton />
+      </Toolbar>
+    </AppBar>
   )
 }
 
@@ -140,28 +87,28 @@ function ProfileButton() {
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
-        <MenuItem onClick={handleClose}>
-          <ListItemIcon>
-            <AccountCircleIcon fontSize="small" />
-          </ListItemIcon>
-          <ListItemText>
-            <MenuLink key="logout" to={`/${orgId}${ROUTES.MY_WORK}`}>
+        <MenuLink key="profile" to={`/${orgId}${ROUTES.MY_WORK}`}>
+          <MenuItem onClick={handleClose}>
+            <ListItemIcon>
+              <AccountCircleIcon fontSize="small" />
+            </ListItemIcon>
+            <ListItemText>
               <FormattedMessage id="myWork.link.title" />
-            </MenuLink>
-          </ListItemText>
-        </MenuItem>
-        <MenuItem onClick={handleClose}>
-          <ListItemIcon>
-            <LogoutIcon fontSize="small" color="error" />
-          </ListItemIcon>
-          <ListItemText>
-            <MenuLink key="logout" to={`/${orgId}${ROUTES.LOGOUT}`}>
+            </ListItemText>
+          </MenuItem>
+        </MenuLink>
+        <MenuLink key="logout" to={`/${orgId}${ROUTES.LOGOUT}`}>
+          <MenuItem onClick={handleClose}>
+            <ListItemIcon>
+              <LogoutIcon fontSize="small" color="error" />
+            </ListItemIcon>
+            <ListItemText>
               <Typography color="error">
                 <FormattedMessage id="header.nav.logout" />
               </Typography>
-            </MenuLink>
-          </ListItemText>
-        </MenuItem>
+            </ListItemText>
+          </MenuItem>
+        </MenuLink>
       </Menu>
     </>
   )
@@ -181,4 +128,8 @@ function getInitials(name: string) {
 
 const MenuLink = styled(Link)`
   color: inherit;
+`
+
+const FlexLink = styled(Link)`
+  display: flex;
 `

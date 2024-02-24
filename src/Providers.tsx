@@ -9,6 +9,7 @@ import { ActivitiesFilteringProvider } from 'modules/activities/activitiesFilter
 import messages from './intl/messagesEn'
 import StoreProvider from './store'
 import { MuiThemeProvider } from './MuiThemeProvider'
+import { NavBarProvider } from 'components/layouts/NavBar'
 
 const queryClient = new QueryClient()
 
@@ -22,7 +23,9 @@ export const Providers: React.FC<Props> = ({ children }) => {
             <IntlProvider messages={messages} locale="en" defaultLocale="en">
               <ToastProvider>
                 <HelmetProvider>
-                  <ActivitiesFilteringProvider>{children}</ActivitiesFilteringProvider>
+                  <NavBarProvider>
+                    <ActivitiesFilteringProvider>{children}</ActivitiesFilteringProvider>
+                  </NavBarProvider>
                 </HelmetProvider>
               </ToastProvider>
             </IntlProvider>

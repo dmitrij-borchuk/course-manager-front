@@ -2,7 +2,12 @@ module.exports = {
   purge: ['./src/**/*.{js,jsx,ts,tsx}', './public/index.html'],
   darkMode: false, // or 'media' or 'class'
   theme: {
-    extend: {},
+    extend: {
+      zIndex: {
+        // To fix materialize.css header z-index issue
+        1300: '1300',
+      },
+    },
   },
   variants: {
     extend: {},

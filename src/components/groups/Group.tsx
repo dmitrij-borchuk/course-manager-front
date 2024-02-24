@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react'
 import { FormattedMessage, useIntl } from 'react-intl'
-import { Button, Container } from 'react-materialize'
+import { Button } from 'react-materialize'
 import {
   Alert,
   Button as MuiButton,
@@ -65,31 +65,29 @@ export const Group: React.FC<Props> = ({
 
   return (
     <div className={className}>
-      <Container className="px-4">
-        <div className="flex w-full items-center mt-6">
-          <Heading data={data} onDelete={onDelete} onCloseGroup={onClose} />
-        </div>
+      <div className="flex w-full items-center mt-6">
+        <Heading data={data} onDelete={onDelete} onCloseGroup={onClose} />
+      </div>
 
-        <div className="mt-6">
-          <ArchivedMessage archived={archived} subject={data.archivedBy} date={data.archivedAt} />
-        </div>
+      <div className="mt-6">
+        <ArchivedMessage archived={archived} subject={data.archivedBy} date={data.archivedAt} />
+      </div>
 
-        {/* Schedule */}
-        {/* Disabled due to lack of requirements and low priority */}
-        {/* <ScheduleInfoBlock group={data} /> */}
+      {/* Schedule */}
+      {/* Disabled due to lack of requirements and low priority */}
+      {/* <ScheduleInfoBlock group={data} /> */}
 
-        {/* Teacher */}
-        <TeacherInfoBlock teacher={performer} group={data} onUpdateTeacher={onUpdateTeacher} />
+      {/* Teacher */}
+      <TeacherInfoBlock teacher={performer} group={data} onUpdateTeacher={onUpdateTeacher} />
 
-        {/* Students */}
-        {/* TODO: add loader */}
-        <StudentsInfoBlock
-          group={data}
-          students={studentsOfGroup}
-          attendanceRates={attendanceRates}
-          loadingGroups={loadingGroups}
-        />
-      </Container>
+      {/* Students */}
+      {/* TODO: add loader */}
+      <StudentsInfoBlock
+        group={data}
+        students={studentsOfGroup}
+        attendanceRates={attendanceRates}
+        loadingGroups={loadingGroups}
+      />
     </div>
   )
 }

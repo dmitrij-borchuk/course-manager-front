@@ -1,5 +1,4 @@
 import React, { useCallback, useMemo, useState } from 'react'
-import { Container } from 'react-materialize'
 import { Link } from 'react-router-dom'
 import { Box } from '@mui/material'
 import { FilterField } from 'components/inputs/FilterField'
@@ -34,13 +33,11 @@ export function ListPage<T extends { id: string | number }>({
 
   return (
     <div className={className}>
-      <Container className="px-4">
-        {listHeader && <SectionHeader>{listHeader}</SectionHeader>}
+      {listHeader && <SectionHeader>{listHeader}</SectionHeader>}
 
-        {filter && <Filter onFilter={onFilter} />}
+      {filter && <Filter onFilter={onFilter} />}
 
-        <ListWithLinks<T> items={filteredItems} {...rest} />
-      </Container>
+      <ListWithLinks<T> items={filteredItems} {...rest} />
 
       {fabBtnLink && (
         <Link to={fabBtnLink} data-testid="fab-btn">

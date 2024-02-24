@@ -2,9 +2,7 @@ import React, { useCallback, useState } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { useHistory } from 'react-router'
 import { useToasts } from 'react-toast-notifications'
-import { Helmet } from 'react-helmet'
 import { EditStudent, StudentForm } from '../../components/students/EditStudent'
-import { TITLE_POSTFIX } from '../../config'
 import { ROUTES } from '../../constants'
 import { useQuery } from '../../hooks/useQuery'
 import { useStudentsState } from '../../store'
@@ -65,10 +63,6 @@ export const CreateStudent = () => {
 
   return (
     <>
-      <Helmet>
-        <title>Create Student{TITLE_POSTFIX}</title>
-      </Helmet>
-
       <EditStudent onSubmit={submit} loading={submitting} />
 
       <ConfirmationDialogBase

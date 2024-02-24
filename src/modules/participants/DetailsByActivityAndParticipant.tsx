@@ -1,4 +1,4 @@
-import { Box, Container, Typography } from '@mui/material'
+import { Box, Typography } from '@mui/material'
 import { fetchActivity } from 'modules/activities/api'
 import { fetchParticipant } from 'api/participants'
 import { AttendanceDetails } from 'modules/attendance/AttendanceDetails'

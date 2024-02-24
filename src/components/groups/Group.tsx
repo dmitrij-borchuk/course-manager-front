@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react'
 import { FormattedMessage, useIntl } from 'react-intl'
-import { Button, Container } from 'react-materialize'
+import { Button } from 'react-materialize'
 import {
   Alert,
   Button as MuiButton,

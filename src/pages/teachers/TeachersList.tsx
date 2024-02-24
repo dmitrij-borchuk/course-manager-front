@@ -1,11 +1,9 @@
 import { useMemo } from 'react'
 import { useToasts } from 'react-toast-notifications'
-import { Helmet } from 'react-helmet'
 import { useGroups } from 'store/groupsStore'
 import { useAttendancesForGroups } from 'store/attendancesStore'
 import { TeachersList } from '../../components/teachers/TeachersList'
 import { useAttendanceRateByTeacher } from '../../hooks/useAttendanceRate'
-import { TITLE_POSTFIX } from '../../config'
 import { useQuery } from 'react-query'
 import { getProfilesRequest } from 'modules/profiles/api'
 
@@ -42,10 +40,6 @@ export const TeachersListPage = () => {
 
   return (
     <>
-      <Helmet>
-        <title>Teachers{TITLE_POSTFIX}</title>
-      </Helmet>
-
       <TeachersList items={processed} loading={fetching} attendanceRates={rateByTeacher} />
     </>
   )

@@ -1,6 +1,4 @@
 import { FormattedMessage } from 'react-intl'
-import { Container } from 'react-materialize'
-import { Helmet } from 'react-helmet'
 import React from 'react'
 import ScienceIcon from '@mui/icons-material/Science'
 import Tooltip from '@mui/material/Tooltip'
@@ -8,7 +6,6 @@ import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
 import Box from '@mui/material/Box'
 import { SectionHeader } from '../../components/kit/sectionHeader/SectionHeader'
-import { TITLE_POSTFIX } from '../../config'
 import { ReportByFiltersTab } from './ReportByFilters'
 import { ReportByGroupTab } from './ReportByGroupTab'
 import { ReportByTagTab } from './ReportByTagTab'
@@ -23,41 +20,35 @@ export const Reports = () => {
 
   return (
     <div className="report-page-wrapper flex flex-col">
-      <Helmet>
-        <title>Reports{TITLE_POSTFIX}</title>
-      </Helmet>
+      <SectionHeader>
+        <FormattedMessage id="reports.header" />
+      </SectionHeader>
 
-      <Container className="px-4">
-        <SectionHeader>
-          <FormattedMessage id="reports.header" />
-        </SectionHeader>
+      <Tabs value={value} onChange={handleChange} aria-label="report tabs">
+        <Tab label={<FormattedMessage id="reports.tabs.byTag" />} {...a11yProps(0)} />
+        <Tab label={<FormattedMessage id="reports.tabs.byGroup" />} {...a11yProps(1)} />
+        <Tab
+          label={
+            <Box display="flex" alignItems="center" gap={2}>
+              <FormattedMessage id="reports.tabs.byFilters" />
+              <Tooltip title={<FormattedMessage id="reports.tabs.byFilters.iconTitle" />}>
+                <ScienceIcon />
+              </Tooltip>
+            </Box>
+          }
+          {...a11yProps(2)}
+        />
+      </Tabs>
 
-        <Tabs value={value} onChange={handleChange} aria-label="report tabs">
-          <Tab label={<FormattedMessage id="reports.tabs.byTag" />} {...a11yProps(0)} />
-          <Tab label={<FormattedMessage id="reports.tabs.byGroup" />} {...a11yProps(1)} />
-          <Tab
-            label={
-              <Box display="flex" alignItems="center" gap={2}>
-                <FormattedMessage id="reports.tabs.byFilters" />
-                <Tooltip title={<FormattedMessage id="reports.tabs.byFilters.iconTitle" />}>
-                  <ScienceIcon />
-                </Tooltip>
-              </Box>
-            }
-            {...a11yProps(2)}
-          />
-        </Tabs>
-
-        <CustomTabPanel value={value} index={0}>
-          <ReportByTagTab />
-        </CustomTabPanel>
-        <CustomTabPanel value={value} index={1}>
-          <ReportByGroupTab />
-        </CustomTabPanel>
-        <CustomTabPanel value={value} index={2}>
-          <ReportByFiltersTab />
-        </CustomTabPanel>
-      </Container>
+      <CustomTabPanel value={value} index={0}>
+        <ReportByTagTab />
+      </CustomTabPanel>
+      <CustomTabPanel value={value} index={1}>
+        <ReportByGroupTab />
+      </CustomTabPanel>
+      <CustomTabPanel value={value} index={2}>
+        <ReportByFiltersTab />
+      </CustomTabPanel>
     </div>
   )
 }

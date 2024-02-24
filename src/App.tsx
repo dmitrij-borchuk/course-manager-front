@@ -1,4 +1,4 @@
-import React from 'react'
+import CssBaseline from '@mui/material/CssBaseline'
 import { Providers } from './Providers'
 import { Routing } from './Routing'
 import 'materialize-css'
@@ -24,6 +24,7 @@ function Initiator() {
   if (initiatingAuth) {
     return (
       <div>
+        <CssBaseline enableColorScheme />
         {/* TODO: add splash screen */}
         <Loader show data-testid="app-preloader" />
       </div>

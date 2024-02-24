@@ -1,10 +1,8 @@
 import { useNotification } from 'hooks/useNotification'
 import { useEffect, useMemo } from 'react'
-import { Helmet } from 'react-helmet'
 import { useAttendancesForGroups } from 'store/attendancesStore'
 import { useGroups } from 'store/groupsStore'
 import { StudentList } from '../../components/students/StudentList'
-import { TITLE_POSTFIX } from '../../config'
 import { useAttendanceRateByStudent } from '../../hooks/useAttendanceRate'
 import { useStudentsState } from '../../store'
 
@@ -34,10 +32,6 @@ export const StudentListPage = () => {
 
   return (
     <>
-      <Helmet>
-        <title>Students{TITLE_POSTFIX}</title>
-      </Helmet>
-
       <StudentList items={students} attendanceRates={attendanceRate} loading={fetching} />
     </>
   )

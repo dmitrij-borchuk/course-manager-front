@@ -14,6 +14,9 @@ const theme = createTheme({
     primary: {
       main: '#346473',
     },
+    secondary: {
+      main: '#25A55F',
+    },
   },
   typography: {
     fontFamily: "'Red Hat Display', sans-serif",
@@ -29,6 +32,18 @@ const theme = createTheme({
           // fontSize: '15px',
           // borderRadius: '12px',
           // paddingInline: '28px',
+        },
+      },
+    },
+    MuiAppBar: {
+      styleOverrides: {
+        root: (ownerState) => ({
+          boxShadow: 'none',
+          borderBottom: '1px solid #E5E5E5',
+          color: ownerState.theme.palette.text.primary,
+        }),
+        colorPrimary: {
+          backgroundColor: '#fff',
         },
       },
     },

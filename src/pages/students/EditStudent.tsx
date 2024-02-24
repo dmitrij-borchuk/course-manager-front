@@ -2,13 +2,11 @@ import React, { useCallback, useEffect } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { useHistory, useParams } from 'react-router-dom'
 import { useToasts } from 'react-toast-notifications'
-import { Helmet } from 'react-helmet'
 import { Loader } from '../../components/kit/loader/Loader'
 import { EditStudent, StudentForm } from '../../components/students/EditStudent'
 import { ROUTES } from '../../constants'
 import { useOrgId } from '../../hooks/useOrgId'
 import { useStudentsState } from '../../store'
-import { TITLE_POSTFIX } from '../../config'
 import { useCurrentOrg } from '../../hooks/useCurrentOrg'
 
 export const EditStudentPage = () => {
@@ -60,10 +58,6 @@ export const EditStudentPage = () => {
 
   return (
     <>
-      <Helmet>
-        <title>Edit Student{TITLE_POSTFIX}</title>
-      </Helmet>
-
       <Loader show={fetching}>
         <EditStudent onSubmit={update} loading={submitting} initial={student} isEdit />
       </Loader>

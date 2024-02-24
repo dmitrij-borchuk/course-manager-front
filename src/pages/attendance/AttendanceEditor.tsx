@@ -2,14 +2,12 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { useToasts } from 'react-toast-notifications'
 import { FormattedMessage } from 'react-intl'
-import { Helmet } from 'react-helmet'
 import { useAttendancesState, useGroupsState, useUsersState } from '../../store'
 import AttendanceEditor from '../../components/attendance/AttendanceEditor'
 import { useOrgId } from '../../hooks/useOrgId'
 import useStudentsOfGroupStore from '../../store/studentsOfGroupStore'
 import { Dictionary } from '../../types/dictionary'
 import { useCurrentUser } from '../../hooks/useCurrentUser'
-import { TITLE_POSTFIX } from '../../config'
 import { useCurrentOrg } from '../../hooks/useCurrentOrg'
 import { Activity } from '../../types/activity'
 
@@ -148,10 +146,6 @@ export const AttendanceEditorPage = () => {
 
   return (
     <>
-      <Helmet>
-        <title>Attendance editor{TITLE_POSTFIX}</title>
-      </Helmet>
-
       <AttendanceEditor
         activities={groups}
         onSubmit={onSubmit}

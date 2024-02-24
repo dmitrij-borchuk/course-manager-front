@@ -1,10 +1,9 @@
 import { useParams } from 'react-router-dom'
 import { useQuery } from 'react-query'
-import { Helmet } from 'react-helmet'
-import { TITLE_POSTFIX } from '../../config'
 import { DetailsByActivityAndParticipant } from 'modules/participants'
 import { fetchParticipant } from 'api/participants'
 import { fetchActivity } from 'modules/activities/api'
+import { GeneralPage } from 'components/layouts/GeneralPage'
 
 // TODO: Add 404 state
 export const StudentInGroup = () => {
@@ -22,13 +21,9 @@ export const StudentInGroup = () => {
   const activityName = activityQuery.data?.data?.name || ''
   return (
     <>
-      <Helmet>
-        <title>
-          {participantName} - {activityName} {TITLE_POSTFIX}
-        </title>
-      </Helmet>
-
-      <DetailsByActivityAndParticipant activityId={activityId} participantId={participantId} />
+      <GeneralPage title={`${participantName} - ${activityName}`}>
+        <DetailsByActivityAndParticipant activityId={activityId} participantId={participantId} />
+      </GeneralPage>
     </>
   )
 }

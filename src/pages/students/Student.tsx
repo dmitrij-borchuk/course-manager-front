@@ -1,11 +1,9 @@
 import { useCallback, useEffect } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-import { Helmet } from 'react-helmet'
 import { useStudentsState } from '../../store'
 import { ROUTES } from '../../constants'
 import { Student } from '../../components/students/Student'
 import { useOrgId } from '../../hooks/useOrgId'
-import { TITLE_POSTFIX } from '../../config'
 import { useCurrentOrg } from '../../hooks/useCurrentOrg'
 
 // TODO: Add 404 state
@@ -41,10 +39,6 @@ export const StudentPage = () => {
 
   return (
     <>
-      <Helmet>
-        <title>Student{TITLE_POSTFIX}</title>
-      </Helmet>
-
       <Student data={student} onDelete={onDelete} />
     </>
   )

@@ -125,7 +125,6 @@ const emptyGroups: ActivityWithParticipation[] = []
 
 export function useData(studentOuterId?: string) {
   const orgKey = useOrgId()
-  const [date, setDate] = useState(new Date())
   let { id: idStr } = useParams<{ id: string }>()
   const id = parseInt(idStr)
   const { filter } = useActivitiesFiltering()

@@ -161,7 +161,7 @@ export function useData(studentOuterId?: string) {
     groups,
     loadingGroups,
     attendanceRates,
-    reload: () => setDate(new Date()),
+    reload: () => query.refetch(),
   }
 }
 

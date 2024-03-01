@@ -5,3 +5,15 @@
 @import 'materialize-css';
 @import 'react-tiny-fab/dist/styles.css';
 @import './App.css';
+
+/* TODO: remove after Materialize dialogs will be moved to MUI */
+.modal-overlay {
+  /* TO fix Materialize dialogs to be above header and sidebar */
+  z-index: 2001 !important;
+}
+
+/* TODO: remove after Materialize dialogs will be moved to MUI */
+.modal.open {
+  /* TO fix Materialize dialogs to be above header and sidebar */
+  z-index: 2002 !important;
+}

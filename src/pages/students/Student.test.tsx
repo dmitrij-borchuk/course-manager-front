@@ -136,6 +136,7 @@ describe('Student', () => {
         outerId: 'group1',
         name: 'group name',
         performerId: 1,
+        studentsToActivities: [],
       },
     ])
     axiosMock.onGet('/organizations').reply(200, [

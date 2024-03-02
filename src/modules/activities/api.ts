@@ -14,9 +14,21 @@ type FetchActivitiesParams = {
   date?: Date
 }
 export function fetchActivities(params?: FetchActivitiesParams) {
-  return request.get<Activity[]>(`/activities`, {
+  return request.get<ActivityWithParticipation[]>(`/activities`, {
     params,
   })
+}
+export type ActivityWithParticipation = Activity & { studentsToActivities: ParticipationRaw[] }
+type ParticipationRaw = {
+  id: number
+  activityId: number | null
+  participantId: number | null
+  startDate: string
+  endDate: string | null
+  createdAt: string
+  updatedAt: string
+  updatedBy: number
+  leaveReasonComment: string | null
 }
 
 type FetchParticipationParamsParams = {

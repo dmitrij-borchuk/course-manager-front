@@ -10,7 +10,7 @@ export const AttendanceRateBadge = ({ value, BoxProps }: Props) => {
   return (
     <Box
       // TODO: color depends on rate
-      className="p-1 rate-bg-alert color-text-light rounded-sm w-10 h-6 text-xs flex-shrink-0 flex justify-center"
+      className="p-1 rate-bg-alert color-text-light rounded-sm w-10 h-6 text-xs flex-shrink-0 inline-flex justify-center"
       data-testid="attendance-rate-badge"
       {...BoxProps}
     >

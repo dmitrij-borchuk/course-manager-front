@@ -30,7 +30,7 @@ import { InviteUserPage } from './pages/users/InviteUser'
 import { ConfirmInvitePage } from './pages/users/ConfirmInvite'
 import { StudentImportPageLoadable } from './pages/import/students'
 import { ReportsPageLoadable } from './pages/reports'
-import { AdminPageLoadable } from './pages/admin'
+import { AdminBackupPageLoadable, AdminPageLoadable } from './pages/admin'
 import { useAuthState, useOrganizationsState, useUsersState } from './store'
 import { useCurrentOrg } from './hooks/useCurrentOrg'
 import { Loader } from './components/kit/loader/Loader'
@@ -64,6 +64,11 @@ const AdminPage = () => (
     <AdminPageLoadable />
   </>
 )
+const BackupPage = () => (
+  <>
+    <AdminBackupPageLoadable />
+  </>
+)
 
 export const Routing = React.memo(function () {
   const { currentUser } = useAuthState()
@@ -93,6 +98,7 @@ export const Routing = React.memo(function () {
       </Route>
 
       {/* Admin */}
+      <AuthGuardedRoute component={BackupPage} path="/admin/backup" exact />
       <AuthGuardedRoute component={AdminPage} path="/admin" exact />
 
       <Route component={ConfirmInvitePage} path="/:orgId/invite/confirm/:token" exact />

@@ -48,7 +48,7 @@ export function SortByField({ onChange, value, options = [] }: Props) {
 
   return (
     <>
-      <ButtonGroup variant="contained" ref={anchorRef} aria-label="split button" fullWidth>
+      <ButtonGroup variant="outlined" ref={anchorRef} aria-label="split button" fullWidth>
         <Button size="small" onClick={onSortOrderChange} sx={{ width: 'auto' }}>
           {value.order === 'asc' ? <SortAscIcon /> : <SortDescIcon />}
         </Button>

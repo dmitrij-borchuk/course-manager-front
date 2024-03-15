@@ -38,7 +38,7 @@ export function ParticipationTimeline({ participantId, outerId }: Props) {
 
       <Timeline>
         {timeline.map((d, i) => (
-          <TimelineItem key={d.activity.name}>
+          <TimelineItem key={d.activity.id}>
             <TimelineOppositeContent color="textSecondary">
               <FormattedDate value={d.date.toLocaleDateString()} month="short" day="numeric" year="numeric" />
             </TimelineOppositeContent>

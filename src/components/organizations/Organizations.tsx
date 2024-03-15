@@ -1,8 +1,8 @@
 import { useCallback } from 'react'
 import { FormattedMessage } from 'react-intl'
-import { Container, Preloader } from 'react-materialize'
+import { Container } from 'react-materialize'
 import { Link } from 'react-router-dom'
-import { Typography } from '@mui/material'
+import { CircularProgress, Typography } from '@mui/material'
 import { ROUTES } from '../../constants'
 import { Organization } from '../../types/organization'
 import { User } from '../../types/user'
@@ -70,7 +70,7 @@ const OrganizationList = (props: OrganizationListProps) => {
   if (loading) {
     return (
       <div className="flex justify-center">
-        <Preloader color="red" flashing={false} size="medium" />
+        <CircularProgress />
       </div>
     )
   }

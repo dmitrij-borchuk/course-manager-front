@@ -1,8 +1,9 @@
 import { useCallback, useMemo, useState } from 'react'
 import { FormattedMessage } from 'react-intl'
-import { Button, Preloader } from 'react-materialize'
+import { Button } from 'react-materialize'
 import { Link } from 'react-router-dom'
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline'
+import { CircularProgress, Typography } from '@mui/material'
 import IconButton from '@mui/material/IconButton'
 import Tooltip from '@mui/material/Tooltip'
 import AddIcon from '@mui/icons-material/Add'
@@ -56,9 +57,9 @@ export const StudentsInfoBlock = ({
   return (
     <div data-testid="students-list">
       <div className="flex justify-between items-center">
-        <Text type="h5" color="primary">
+        <Typography variant="h5">
           <FormattedMessage id="students.list.title" />
-        </Text>
+        </Typography>
         {/* Assign groups dialog */}
         {!!students?.length && (
           <AssignStudents
@@ -78,7 +79,7 @@ export const StudentsInfoBlock = ({
 
       {loadingGroups ? (
         <div className="flex justify-center">
-          <Preloader color="red" flashing={false} size="medium" />
+          <CircularProgress />
         </div>
       ) : students?.length ? (
         <List items={students} renderItem={renderItem} className="overflow-visible" />

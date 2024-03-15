@@ -100,9 +100,9 @@ interface TeacherInfoBlockProps {
 const TeacherInfoBlock = ({ teacher, group, onUpdateTeacher }: TeacherInfoBlockProps) => {
   return (
     <>
-      <Text type="h5" color="primary">
+      <Typography variant="h5">
         <FormattedMessage id="groups.teacher.title" />
-      </Text>
+      </Typography>
       {/* TODO: loading for the teacher */}
       {teacher?.id ? (
         <div className="flex justify-between">

@@ -19,7 +19,7 @@ export function DashboardPage() {
     return (
       <>
         <GeneralPage title="Dashboard">
-          <Loader color="red" />
+          <Loader />
         </GeneralPage>
       </>
     )

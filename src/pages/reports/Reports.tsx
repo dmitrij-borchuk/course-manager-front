@@ -86,4 +86,8 @@ function CustomTabPanel(props: TabPanelProps) {
 
 const WideTab = styled(Tab)`
   width: 140px;
+  // To fix redundant background color from Materialize-css
+  &:focus {
+    background-color: transparent !important;
+  }
 `

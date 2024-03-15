@@ -1,7 +1,8 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Controller } from 'react-hook-form'
 import { FormattedMessage, useIntl } from 'react-intl'
-import { Container, DatePicker, Icon, Preloader, Select } from 'react-materialize'
+import { DatePicker, Icon, Select } from 'react-materialize'
+import { CircularProgress } from '@mui/material'
 import { useFormWithError } from '../../hooks/useFormWithError'
 import { Activity } from '../../types/activity'
 import { Attendance } from '../../types/attendance'
@@ -84,128 +85,126 @@ export const AttendanceEditor = (props: Props) => {
 
   return (
     <div className={className}>
-      <Container className="px-4">
-        <HeadingWithControls
-          text={<FormattedMessage id={attendance ? 'attendance.header.edit' : 'attendance.header.add'} />}
-          deleteProps={
-            attendance && {
-              header: intl.formatMessage({ id: 'attendance.delete.header' }),
-              content: <FormattedMessage id="attendance.delete.text" />,
-              onSubmit: onDelete,
-            }
+      <HeadingWithControls
+        text={<FormattedMessage id={attendance ? 'attendance.header.edit' : 'attendance.header.add'} />}
+        deleteProps={
+          attendance && {
+            header: intl.formatMessage({ id: 'attendance.delete.header' }),
+            content: <FormattedMessage id="attendance.delete.text" />,
+            onSubmit: onDelete,
           }
-        />
-        <FormLayout
-          controls={<SubmitButton loading={submitting} disabled={submitting || studentsLoading || noStudents} />}
-          onSubmit={handleSubmit(onSubmitInternal)}
-        >
-          {/* Teacher */}
-          <div className="mb-12">
-            <Text type="h4">{teacher?.name}</Text>
-          </div>
+        }
+      />
+      <FormLayout
+        controls={<SubmitButton loading={submitting} disabled={submitting || studentsLoading || noStudents} />}
+        onSubmit={handleSubmit(onSubmitInternal)}
+      >
+        {/* Teacher */}
+        <div className="mb-12">
+          <Text type="h4">{teacher?.name}</Text>
+        </div>
 
-          <div>
-            {/* TODO: move to component */}
-            {/* Date */}
-            <Controller
-              id="date"
-              control={control}
-              name="date"
-              label={`${intl.formatMessage({ id: 'common.date' })} *`}
-              rules={{
-                required: {
-                  value: true,
-                  message: 'Required',
-                },
-              }}
-              render={({ value, ...renderProps }) => {
-                return (
-                  <DatePicker
-                    id="date"
-                    options={{
-                      autoClose: true,
-                      format: 'mmm dd, yyyy',
-                      defaultDate: value,
-                      setDefaultDate: true,
-                      maxDate: new Date(),
-                    }}
-                    // @ts-ignore
-                    label={`${intl.formatMessage({ id: 'common.date' })} *`}
-                    disabled={submitting}
-                    onChange={renderProps.onChange}
-                    name={renderProps.name}
-                  />
-                )
-              }}
-            />
-          </div>
-
+        <div>
+          {/* TODO: move to component */}
+          {/* Date */}
           <Controller
-            id="group"
+            id="date"
             control={control}
-            name="group"
-            label={`${intl.formatMessage({ id: 'attendance.groupSelector.placeholder' })} *`}
+            name="date"
+            label={`${intl.formatMessage({ id: 'common.date' })} *`}
             rules={{
               required: {
                 value: true,
                 message: 'Required',
               },
             }}
-            render={({ ...renderProps }) => {
-              const error = errors['group']?.message
-              const validationClass = error ? 'invalid' : ''
-
+            render={({ value, ...renderProps }) => {
               return (
-                <Select
-                  id="group-selector"
-                  multiple={false}
+                <DatePicker
+                  id="date"
                   options={{
-                    classes: validationClass,
-                    dropdownOptions: {
-                      alignment: 'left',
-                      autoTrigger: true,
-                      closeOnClick: true,
-                      constrainWidth: true,
-                      coverTrigger: true,
-                      hover: false,
-                      inDuration: 150,
-                      outDuration: 250,
-                    },
+                    autoClose: true,
+                    format: 'mmm dd, yyyy',
+                    defaultDate: value,
+                    setDefaultDate: true,
+                    maxDate: new Date(),
                   }}
-                  error={error}
-                  className={validationClass}
+                  // @ts-ignore
+                  label={`${intl.formatMessage({ id: 'common.date' })} *`}
+                  disabled={submitting}
                   onChange={renderProps.onChange}
-                  value={renderProps.value}
                   name={renderProps.name}
-                  data-testid="group-selector"
-                  label={intl.formatMessage({ id: 'attendance.groupSelector.placeholder' })}
-                >
-                  <option disabled value="">
-                    {intl.formatMessage({ id: 'attendance.groupSelector.placeholder' })}
-                  </option>
-                  {groups.map((g) => (
-                    <option key={g.id} value={g.outerId}>
-                      {g.name}
-                    </option>
-                  ))}
-                </Select>
+                />
               )
             }}
           />
+        </div>
 
-          {studentsLoading && (
-            <div className="flex justify-center">
-              <Preloader color="red" flashing={false} size="medium" />
-            </div>
-          )}
+        <Controller
+          id="group"
+          control={control}
+          name="group"
+          label={`${intl.formatMessage({ id: 'attendance.groupSelector.placeholder' })} *`}
+          rules={{
+            required: {
+              value: true,
+              message: 'Required',
+            },
+          }}
+          render={({ ...renderProps }) => {
+            const error = errors['group']?.message
+            const validationClass = error ? 'invalid' : ''
 
-          {!group ? (
-            <GroupIsNotSelected />
-          ) : (
-            <StudentsSelector students={students} onChange={onStudentsChanged} initialSelected={attendance?.attended} />
-          )}
-        </FormLayout>
-      </Container>
+            return (
+              <Select
+                id="group-selector"
+                multiple={false}
+                options={{
+                  classes: validationClass,
+                  dropdownOptions: {
+                    alignment: 'left',
+                    autoTrigger: true,
+                    closeOnClick: true,
+                    constrainWidth: true,
+                    coverTrigger: true,
+                    hover: false,
+                    inDuration: 150,
+                    outDuration: 250,
+                  },
+                }}
+                error={error}
+                className={validationClass}
+                onChange={renderProps.onChange}
+                value={renderProps.value}
+                name={renderProps.name}
+                data-testid="group-selector"
+                label={intl.formatMessage({ id: 'attendance.groupSelector.placeholder' })}
+              >
+                <option disabled value="">
+                  {intl.formatMessage({ id: 'attendance.groupSelector.placeholder' })}
+                </option>
+                {groups.map((g) => (
+                  <option key={g.id} value={g.outerId}>
+                    {g.name}
+                  </option>
+                ))}
+              </Select>
+            )
+          }}
+        />
+
+        {studentsLoading && (
+          <div className="flex justify-center">
+            <CircularProgress />
+          </div>
+        )}
+
+        {!group ? (
+          <GroupIsNotSelected />
+        ) : (
+          <StudentsSelector students={students} onChange={onStudentsChanged} initialSelected={attendance?.attended} />
+        )}
+      </FormLayout>
     </div>
   )
 }

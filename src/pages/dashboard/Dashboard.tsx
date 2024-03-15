@@ -1,6 +1,6 @@
 import { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { Preloader } from 'react-materialize'
 import { useToasts } from 'react-toast-notifications'
+import { CircularProgress } from '@mui/material'
 import { Dashboard } from '../../components/dashboard/Dashboard'
 import { Loader } from '../../components/kit/loader/Loader'
 import { ROLES } from '../../config'
@@ -41,7 +41,7 @@ export function DashboardContent() {
     <div>
       <Dashboard items={timelineData} />
       <div className="flex justify-center pt-7 pb-7">
-        {loading && <Preloader color="red" flashing={false} size="medium" />}
+        {loading && <CircularProgress />}
         <LazyLoading loadMore={loadMore} />
       </div>
     </div>

@@ -1,24 +1,22 @@
 import { Container } from 'react-materialize'
+import { Box } from '@mui/material'
 import { AttendanceTimeLine } from '../attendance/AttendanceTimeline'
-import { Header } from '../kit/header/Header'
 import { DashboardMenu } from '../dashboardMenu/DashboardMenu'
 
 type AttendanceTimeLineProps = React.ComponentProps<typeof AttendanceTimeLine>
 
 interface Props {
   items?: AttendanceTimeLineProps['items']
-  className?: string
 }
-export const Dashboard: React.FC<Props> = ({ className = '', items }) => {
+export const Dashboard: React.FC<Props> = ({ items }) => {
   return (
-    <div className={className}>
-      <Header />
+    <Box display="flex" position="relative">
       <Container className="px-4">
         <AttendanceTimeLine items={items} />
       </Container>
 
       {/* Fab */}
       <DashboardMenu />
-    </div>
+    </Box>
   )
 }

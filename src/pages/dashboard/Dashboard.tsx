@@ -38,13 +38,13 @@ export function DashboardContent() {
   const { loadMore, timelineData, loading } = useAttendance()
 
   return (
-    <div>
+    <>
       <Dashboard items={timelineData} />
       <div className="flex justify-center pt-7 pb-7">
         {loading && <CircularProgress />}
         <LazyLoading loadMore={loadMore} />
       </div>
-    </div>
+    </>
   )
 }
 

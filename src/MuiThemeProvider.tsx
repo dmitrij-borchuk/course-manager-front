@@ -23,14 +23,17 @@ const theme = createTheme({
   },
   components: {
     MuiButton: {
+      defaultProps: {
+        size: 'large',
+      },
       styleOverrides: {
         root: {
           textTransform: 'none',
+          borderRadius: '12px',
           // TODO: needs to be clarified with design
           // impact on `ButtonGroup` component (report sorting)
           // height: '45px',
           // fontSize: '15px',
-          // borderRadius: '12px',
           // paddingInline: '28px',
         },
       },

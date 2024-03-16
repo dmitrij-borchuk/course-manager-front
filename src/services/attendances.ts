@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+import { Profile } from 'types/profile'
 import { Activity } from '../types/activity'
 import { Attendance } from '../types/attendance'
 import { groupBy } from '../utils/common'
@@ -43,16 +44,24 @@ function getBlockData(date: Date, attendances: Attendance[], groups: Activity[])
   })
   return {
     date,
-    items: items.filter(Boolean) as unknown as {
-      id: string
-      text: string
-      progress: number
-    }[],
+    items: items.filter(filterOutNull),
   }
 }
+function filterOutNull<T>(d: T | null): d is T {
+  return !!d
+}
 
-function getMeterData(attendance: Attendance, group: Activity) {
-  return { id: attendance.id, text: group.name, progress: getMeterProgress(attendance) }
+function getMeterData(
+  attendance: Attendance,
+  group: Activity
+): {
+  id: string
+  activity: Activity
+  performer?: Profile
+  rate?: number
+  studentsNumber?: number
+} {
+  return { id: attendance.id, activity: group }
 }
 
 export function getMeterProgress(attendance: Attendance) {

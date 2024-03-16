@@ -17,11 +17,21 @@ const theme = createTheme({
     secondary: {
       main: '#25A55F',
     },
+    action: {
+      active: '#9BDF46',
+    },
   },
   typography: {
     fontFamily: "'Red Hat Display', sans-serif",
   },
   components: {
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          borderRadius: '12px',
+        },
+      },
+    },
     MuiButton: {
       defaultProps: {
         size: 'large',

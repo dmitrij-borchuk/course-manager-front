@@ -1,36 +1,50 @@
 import React from 'react'
+import { FormattedMessage } from 'react-intl'
+import { Box, Paper, Typography, styled } from '@mui/material'
+import { Activity } from 'types/activity'
+import { Profile } from 'types/profile'
+import { AttendanceRateBadge } from 'components/kit/attendanceRateBadge/AttendancerateBadge'
 import { Ellipsis } from '../kit/ellipsis/Ellipsis'
-import { Text } from '../kit/text/Text'
-import './styles.css'
-
-interface ProgressProps {
-  progress: number
-}
-const Progress: React.FC<ProgressProps> = ({ progress }) => {
-  return <div className="attendance-progress absolute inset-0" style={{ width: `${progress * 100}%` }} />
-}
 
 interface Props {
-  text?: string
-  /* progress: 0 - 1 */
-  progress?: number
-  className?: string
+  activity: Activity
+  performer?: Profile
+  rate?: number
+  studentsNumber?: number
 }
-export const AttendanceMeter: React.FC<Props> = ({ className = '', text = '', progress = 1 }) => {
-  const progressText = `${Math.round(progress * 100)}%`
+export const AttendanceMeter: React.FC<Props> = ({ activity, performer, rate = 0, studentsNumber = 0 }) => {
   return (
-    <div className={`${className} attendance-meter flex items-center h-16 rounded p-5 relative overflow-hidden`}>
-      <Progress progress={progress} />
-      <div className="flex justify-between w-full">
+    <MeterContainer elevation={5}>
+      <Box display="flex" justifyContent="space-between" alignItems="center">
         <Ellipsis className="z-10">
-          <Text size="16" className="overflow-ellipsis overflow-hidden">
-            {text}
-          </Text>
+          <Typography variant="h6">{activity.name}</Typography>
         </Ellipsis>
-        <Text className="z-10" size="16">
-          {progressText}
-        </Text>
-      </div>
-    </div>
+        <AttendanceRateBadge value={rate} />
+      </Box>
+      <Box display="flex" flexDirection="column" gap={2.5} mt={2}>
+        <InfoItem>
+          <Typography>
+            <FormattedMessage id="groups.teacher.title" />
+          </Typography>
+          <Typography>{performer?.name}</Typography>
+        </InfoItem>
+        <InfoItem>
+          <Typography>
+            <FormattedMessage id="common.students" />
+          </Typography>
+          <Typography>{studentsNumber}</Typography>
+        </InfoItem>
+      </Box>
+    </MeterContainer>
   )
 }
+
+const MeterContainer = styled(Paper)`
+  padding: ${({ theme }) => theme.spacing(2.5)};
+`
+
+const InfoItem = styled(Box)`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`

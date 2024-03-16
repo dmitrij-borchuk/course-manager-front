@@ -161,6 +161,6 @@ const NavigationItem = styled(ListItem, { shouldForwardProp: (prop: string) => !
     font-weight: ${({ active }) => (active ? 'bold' : undefined)};
   }
   & .${listItemIconClasses.root} {
-    color: ${({ theme, active }) => (active ? theme.palette.secondary.light : undefined)};
+    color: ${({ theme, active }) => (active ? theme.palette.secondary.light : theme.palette.text.primary)};
   }
 `

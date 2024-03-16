@@ -61,7 +61,7 @@ function getMeterData(
   rate?: number
   studentsNumber?: number
 } {
-  return { id: attendance.id, activity: group }
+  return { id: attendance.id, activity: group, rate: getMeterProgress(attendance) }
 }
 
 export function getMeterProgress(attendance: Attendance) {

@@ -1,5 +1,5 @@
+import { CircularProgress } from '@mui/material'
 import { ComponentProps, FC } from 'react'
-import { Preloader } from 'react-materialize'
 
 interface Props {
   className?: string
@@ -14,7 +14,7 @@ export const Loader: FC<Props & ComponentProps<'div'>> = ({ children, className 
           className="absolute top-0 left-0 w-screen h-screen flex justify-center items-center bg-opacity-30 bg-black z-10"
           data-testid="loader-spinner"
         >
-          <Preloader color="red" flashing={false} size="medium" />
+          <CircularProgress />
         </div>
       )}
     </div>

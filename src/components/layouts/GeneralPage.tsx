@@ -23,7 +23,7 @@ export function GeneralPage(props: Props) {
 
       <Header />
 
-      <Box sx={{ display: 'flex' }}>
+      <Box display="flex" height="100%">
         <NavBar />
         <Box
           component="main"

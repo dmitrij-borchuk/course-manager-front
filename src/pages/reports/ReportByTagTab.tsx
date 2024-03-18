@@ -30,7 +30,7 @@ export const ReportByTagTab = () => {
 
   return (
     <div>
-      <Grid container spacing={2}>
+      <Grid container spacing={2} pt={2}>
         <Grid xs={12} md={6}>
           <Box>
             <DatePicker
@@ -68,7 +68,7 @@ export const ReportByTagTab = () => {
           </Box>
         </Grid>
         <Grid xs={12} md={6}>
-          <Box px={3}>
+          <Box>
             <TagsEditor value={tags} onUpdate={onTagsUpdate} inputClassName="w-full" />
           </Box>
         </Grid>

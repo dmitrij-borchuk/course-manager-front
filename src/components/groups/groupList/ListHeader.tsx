@@ -8,7 +8,7 @@ type Props = {
 }
 export function Heading({ onFilterClick }: Props) {
   return (
-    <div className="flex w-full items-center mt-6 justify-between">
+    <div className="flex w-full items-center justify-between">
       <SectionHeader>
         <FormattedMessage id="groups.list.title" />
       </SectionHeader>

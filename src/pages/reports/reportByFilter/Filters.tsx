@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { Button, Divider, Grid, Stack, TextField, Typography } from '@mui/material'
+import { Button, Divider, Grid, Paper, Stack, TextField, Tooltip, Typography } from '@mui/material'
+import AddIcon from '@mui/icons-material/Add'
 import Box from '@mui/material/Box'
 import { FilterEditor, ValueInputProps } from '../reportByFilter/FilterEditor'
 import { Filter } from './types'
@@ -19,7 +20,9 @@ type FiltersProps = {
 // TODO: add empty message
 export function Filters(props: FiltersProps) {
   const { onFiltersChanged, onRageChanged, range } = props
-  const [filters, setFilters] = useState<Filter<string | string[]>[]>([])
+  const [filters, setFilters] = useState<Filter<string | string[]>[]>([
+    { id: Math.random().toString(), field: '', value: '', operation: '' },
+  ])
   const addFilter = () => {
     const newFilter = filters.concat({ id: Math.random().toString(), field: '', value: '', operation: '' })
     setFilters(newFilter)
@@ -34,6 +37,9 @@ export function Filters(props: FiltersProps) {
   }
   const removeFilter = (filter: Filter<string | string[]>) => {
     const newFilter = filters.filter((f) => f.id !== filter.id)
+    if (newFilter.length === 0) {
+      newFilter.push({ id: Math.random().toString(), field: '', value: '', operation: '' })
+    }
     setFilters(newFilter)
     onFiltersChanged(newFilter)
   }
@@ -92,35 +98,47 @@ export function Filters(props: FiltersProps) {
 
   return (
     <>
-      <DateRange onRageChanged={onRageChanged} range={range} />
+      <Paper sx={{ px: 2, pt: 2 }}>
+        <Typography variant="subtitle2">Date range:</Typography>
+        <DateRange onRageChanged={onRageChanged} range={range} />
+      </Paper>
 
-      <Box>
-        <Button variant="contained" onClick={() => addFilter()}>
-          <FormattedMessage id="reports.addFilterBtn.label" />
-        </Button>
-      </Box>
+      <Paper sx={{ p: 2, pt: 1, mt: 2 }}>
+        <Typography variant="subtitle2">Filters:</Typography>
 
-      <Box mt={2}>
-        <Stack spacing={2} divider={<Divider flexItem />}>
-          {filters.length === 0 && (
-            <Box display="flex" justifyContent="center">
-              <Typography>
-                <FormattedMessage id="reports.byFilters.emptyFilters" />
-              </Typography>
-            </Box>
-          )}
-          {filters.map((f) => (
-            <Box key={f.id}>
-              <FilterEditor
-                fields={fields}
-                onChange={(f) => updateFilter(f)}
-                onRemove={(f) => removeFilter(f)}
-                value={f}
-              />
-            </Box>
-          ))}
-        </Stack>
-      </Box>
+        <Box mt={1}>
+          <Stack spacing={2} divider={<Divider flexItem />}>
+            {filters.length === 0 && (
+              <Box display="flex" justifyContent="center">
+                <Typography>
+                  <FormattedMessage id="reports.byFilters.emptyFilters" />
+                </Typography>
+              </Box>
+            )}
+            {filters.map((f) => (
+              <Box key={f.id}>
+                <FilterEditor
+                  fields={fields}
+                  onChange={(f) => updateFilter(f)}
+                  onRemove={(f) => removeFilter(f)}
+                  value={f}
+                />
+              </Box>
+            ))}
+          </Stack>
+        </Box>
+        <Box mt={2} mr={5}>
+          <Grid container spacing={2} xs={12}>
+            <Grid item xs={12} sm={4}>
+              <Tooltip title={<FormattedMessage id="reports.addFilterBtn.label" />}>
+                <Button fullWidth variant="outlined" onClick={() => addFilter()} size="large">
+                  <AddIcon />
+                </Button>
+              </Tooltip>
+            </Grid>
+          </Grid>
+        </Box>
+      </Paper>
     </>
   )
 }

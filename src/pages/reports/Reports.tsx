@@ -10,6 +10,7 @@ import { ReportByFiltersTab } from './ReportByFilters'
 import { ReportByGroupTab } from './ReportByGroupTab'
 import { ReportByTagTab } from './ReportByTagTab'
 import './styles.css'
+import { styled } from '@mui/material'
 
 export const Reports = () => {
   const [value, setValue] = React.useState(0)
@@ -25,9 +26,9 @@ export const Reports = () => {
       </SectionHeader>
 
       <Tabs value={value} onChange={handleChange} aria-label="report tabs">
-        <Tab label={<FormattedMessage id="reports.tabs.byTag" />} {...a11yProps(0)} />
-        <Tab label={<FormattedMessage id="reports.tabs.byGroup" />} {...a11yProps(1)} />
-        <Tab
+        <WideTab label={<FormattedMessage id="reports.tabs.byTag" />} {...a11yProps(0)} />
+        <WideTab label={<FormattedMessage id="reports.tabs.byGroup" />} {...a11yProps(1)} />
+        <WideTab
           label={
             <Box display="flex" alignItems="center" gap={2}>
               <FormattedMessage id="reports.tabs.byFilters" />
@@ -57,8 +58,8 @@ export default Reports
 
 function a11yProps(index: number) {
   return {
-    id: `simple-tab-${index}`,
-    'aria-controls': `simple-tabpanel-${index}`,
+    id: `report-tab-${index}`,
+    'aria-controls': `report-tabpanel-${index}`,
   }
 }
 
@@ -82,3 +83,11 @@ function CustomTabPanel(props: TabPanelProps) {
     </div>
   )
 }
+
+const WideTab = styled(Tab)`
+  width: 140px;
+  // To fix redundant background color from Materialize-css
+  &:focus {
+    background-color: transparent !important;
+  }
+`

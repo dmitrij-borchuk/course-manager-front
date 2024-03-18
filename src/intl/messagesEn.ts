@@ -181,7 +181,7 @@ export const messages = {
   'reports.tabs.byTag': 'By tag',
   'reports.tabs.byFilters': 'By filters',
   'reports.tabs.byFilters.iconTitle': 'Experimental',
-  'reports.byFilters.generateBtn.label': 'Generate',
+  'reports.byFilters.generateBtn.label': 'Generate report',
   'reports.byFilters.emptyFilters': 'No filters so far',
   'reports.noGroups': 'Please create some group to be able to generate report',
   'reports.noGroupSelected': 'Please select a group to be able to generate report',

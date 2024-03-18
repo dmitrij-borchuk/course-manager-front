@@ -38,7 +38,7 @@ export function ParticipationTimeline({ participantId, outerId }: Props) {
 
       <Timeline>
         {timeline.map((d, i) => (
-          <TimelineItem key={d.activity.name}>
+          <TimelineItem key={d.date.getTime()}>
             <TimelineOppositeContent color="textSecondary">
               <FormattedDate value={d.date.toLocaleDateString()} month="short" day="numeric" year="numeric" />
             </TimelineOppositeContent>
@@ -56,8 +56,7 @@ export function ParticipationTimeline({ participantId, outerId }: Props) {
                       {/* TODO: add link to user */}
                       <Stack>
                         <Box>
-                          {d.type === 'assign' ? 'Assigned to' : 'Unassigned from'} {d.activity.name} by{' '}
-                          {"{user's name}"}
+                          {d.type === 'assign' ? 'Assigned to' : 'Unassigned from'} "{d.activity.name}"
                         </Box>
                         {d.type === 'unassign' && (
                           <Box display="flex" gap={2}>

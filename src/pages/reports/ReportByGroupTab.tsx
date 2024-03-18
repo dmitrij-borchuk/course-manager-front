@@ -1,6 +1,7 @@
 import { ComponentProps, useEffect, useMemo, useState } from 'react'
 import { FormattedMessage, useIntl } from 'react-intl'
-import { DatePicker, Preloader } from 'react-materialize'
+import { DatePicker } from 'react-materialize'
+import { CircularProgress } from '@mui/material'
 import { useAttendancesForGroups } from 'store/attendancesStore'
 import { Select } from '../../components/kit/select/Select'
 import { Text } from '../../components/kit/text/Text'
@@ -58,7 +59,7 @@ export const ReportByGroupTab = () => {
   if (groupsFetching) {
     return (
       <div className="flex justify-center pt-4">
-        <Preloader color="red" flashing={false} size="medium" />
+        <CircularProgress />
       </div>
     )
   }
@@ -111,7 +112,7 @@ export const ReportByGroupTab = () => {
           />
         </div>
       </div>
-      <div className="pt-4 grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="pt-4 grid grid-cols-1 md:grid-cols-2 gap-6">
         <Select
           onChange={(e) => setGroup(groupsById.get(parseInt(e.target.value, 10)))}
           label={intl.formatMessage({ id: 'reports.groupSelector.label' })}

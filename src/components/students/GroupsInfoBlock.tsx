@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react'
-import { Preloader } from 'react-materialize'
 import { FormattedMessage } from 'react-intl'
 import { Link, useParams } from 'react-router-dom'
-import { Button, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material'
+import { Button, CircularProgress, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material'
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline'
 import FilterAltIcon from '@mui/icons-material/FilterAlt'
 import IconButton from '@mui/material/IconButton'
@@ -35,9 +34,9 @@ export const GroupsInfoBlock = ({ student }: Props) => {
   return (
     <>
       <div className="flex justify-between items-center">
-        <Text type="h5" color="primary">
+        <Typography variant="h5">
           <FormattedMessage id="groups.list.title" />
-        </Text>
+        </Typography>
 
         <Box display="flex">
           <ResponsiveButtons
@@ -71,7 +70,7 @@ export const GroupsInfoBlock = ({ student }: Props) => {
 
       {loadingGroups ? (
         <div className="flex justify-center">
-          <Preloader color="red" flashing={false} size="medium" />
+          <CircularProgress />
         </div>
       ) : groups?.length ? (
         <GroupsTable

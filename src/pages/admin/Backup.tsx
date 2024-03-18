@@ -29,7 +29,9 @@ function BackupBtn() {
       </ButtonWithLoader>
       <br />
       {isError && JSON.stringify(error)}
-      <Typography>{data?.data}</Typography>
+      <Typography>Dump is saved. You can download if you want.</Typography>
+
+      <a href={data?.data || ''}>Download dump</a>
     </>
   )
 }

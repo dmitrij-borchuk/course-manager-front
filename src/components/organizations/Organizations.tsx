@@ -1,7 +1,8 @@
 import { useCallback } from 'react'
 import { FormattedMessage } from 'react-intl'
-import { Container, Preloader } from 'react-materialize'
+import { Container } from 'react-materialize'
 import { Link } from 'react-router-dom'
+import { CircularProgress, Typography } from '@mui/material'
 import { ROUTES } from '../../constants'
 import { Organization } from '../../types/organization'
 import { User } from '../../types/user'
@@ -31,9 +32,9 @@ export const Organizations = (props: Props) => {
     <div className={className}>
       <Header />
       <Container className="px-4 pb-6">
-        <Text type="h3" color="primary" className="mt-2 truncate">
+        <Typography variant="h5">
           <FormattedMessage id="organizations.header.line1" />
-        </Text>
+        </Typography>
         <Text type="h6" color="textGray" className="mt-2 truncate">
           <FormattedMessage id="organizations.header.line2" />
         </Text>
@@ -69,7 +70,7 @@ const OrganizationList = (props: OrganizationListProps) => {
   if (loading) {
     return (
       <div className="flex justify-center">
-        <Preloader color="red" flashing={false} size="medium" />
+        <CircularProgress />
       </div>
     )
   }

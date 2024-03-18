@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { Button } from 'react-materialize'
-import { Box } from '@mui/material'
+import { Box, Typography } from '@mui/material'
 import FilterAltIcon from '@mui/icons-material/FilterAlt'
 import { useActivitiesFiltering } from 'modules/activities/activitiesFilteringContext'
 import { ResponsiveButtons } from 'components/kit/responsiveButtons/ResponsiveButtons'
@@ -73,9 +73,9 @@ const GroupsInfoBlock = ({ teacherId, attendanceRates, teachersGroups = [] }: Gr
   return (
     <>
       <div className="flex justify-between items-center">
-        <Text type="h5" color="primary">
+        <Typography variant="h5">
           <FormattedMessage id="groups.list.title" />
-        </Text>
+        </Typography>
 
         <Box display="flex">
           <ResponsiveButtons

@@ -1,5 +1,6 @@
 import React from 'react'
-import { Button, ButtonProps, Preloader } from 'react-materialize'
+import { Button, ButtonProps } from 'react-materialize'
+import { CircularProgress } from '@mui/material'
 import './styles.css'
 
 interface Props extends ButtonProps {
@@ -9,7 +10,7 @@ export const ButtonWithLoader: React.FC<Props> = ({ className, loading = false, 
   return (
     <Button waves="light" className={`button-with-loading ${className}`} disabled={disabled || loading} {...rest}>
       <div className="content">
-        {loading && <Preloader color="red" flashing={false} size="small" data-testid="button-loader" />}
+        {loading && <CircularProgress size={20} data-testid="button-loader" sx={{ mr: 1 }} />}
         {children}
       </div>
     </Button>

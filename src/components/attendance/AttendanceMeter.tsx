@@ -5,7 +5,6 @@ import { Activity } from 'types/activity'
 import { Profile } from 'types/profile'
 import { AttendanceRateBadge } from 'components/kit/attendanceRateBadge/AttendancerateBadge'
 import { OrgLink } from 'components/routing/OrgLink'
-import { Ellipsis } from '../kit/ellipsis/Ellipsis'
 import { ROUTES } from '../../constants'
 
 interface Props {
@@ -18,11 +17,9 @@ export const AttendanceMeter: React.FC<Props> = ({ activity, performer, rate = 0
   return (
     <MeterContainer elevation={4} hoverShadow={7}>
       <Box display="flex" justifyContent="space-between" alignItems="center">
-        <Ellipsis className="z-10">
-          <Typography variant="h6">
-            <CardLink to={`${ROUTES.GROUPS_ROOT}/${activity.id}`}>{activity.name}</CardLink>
-          </Typography>
-        </Ellipsis>
+        <EllipsisTypography variant="h6" title={activity.name}>
+          <CardLink to={`${ROUTES.GROUPS_ROOT}/${activity.id}`}>{activity.name}</CardLink>
+        </EllipsisTypography>
         <AttendanceRateBadge value={rate} />
       </Box>
       <Box display="flex" flexDirection="column" gap={2.5} mt={2}>
@@ -61,10 +58,13 @@ const InfoItem = styled(Box)`
   justify-content: space-between;
   align-items: center;
 `
-const BoldTypography = styled(Typography)`
-  font-weight: bold;
+const EllipsisTypography = styled(Typography)`
   text-overflow: ellipsis;
   overflow: hidden;
+  white-space: nowrap;
+`
+const BoldTypography = styled(EllipsisTypography)`
+  font-weight: bold;
 `
 
 const CardLink = styled(OrgLink)`

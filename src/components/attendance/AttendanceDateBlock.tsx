@@ -18,7 +18,7 @@ export const AttendanceDateBlock: React.FC<Props> = ({ date }) => {
           <PaperTypography variant="h6">
             <FormattedDate value={date} month="short" />
           </PaperTypography>
-          <DateTypography variant="h3" color="action.active" sx={{ mt: -1.25, fontWeight: 'bold' }}>
+          <DateTypography variant="h3" sx={{ mt: -1.25, fontWeight: 'bold' }}>
             {date.getDate()}
           </DateTypography>
         </Box>
@@ -40,6 +40,7 @@ const DateBlockContainer = styled(Paper)`
   border-radius: ${({ theme }) => theme.spacing(1.5)};
   flex-direction: column;
   padding: ${({ theme }) => theme.spacing(1.5)};
+  flex-shrink: 0;
 `
 
 const PaperTypography = styled(Typography)`
@@ -52,6 +53,7 @@ const PaperTypography = styled(Typography)`
 `
 
 const DateTypography = styled(Typography)`
+  color: ${({ theme }) => theme.palette.accent.main};
   ${({ theme }) => theme.breakpoints.down('sm')} {
     font-size: 1.5rem;
     line-height: 1.5rem;

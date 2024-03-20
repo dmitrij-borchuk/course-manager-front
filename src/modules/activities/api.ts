@@ -1,6 +1,7 @@
 import { Profile } from 'types/profile'
 import { Activity, NewActivity } from '../../types/activity'
 import request from '../../api/request'
+import { User } from 'types/user'
 
 export function migrateActivities() {
   return request.post<string>('/activities/migrate')
@@ -14,11 +15,18 @@ type FetchActivitiesParams = {
   date?: Date
 }
 export function fetchActivities(params?: FetchActivitiesParams) {
-  return request.get<ActivityWithParticipation[]>(`/activities`, {
-    params,
+  return request.get<ActivityWithParticipationAndPerformer[]>(`/activities`, {
+    params: {
+      ...params,
+      include: 'performer',
+    },
   })
 }
-export type ActivityWithParticipation = Activity & { studentsToActivities: ParticipationRaw[] }
+export type ActivityWithParticipationAndPerformer = Activity & { studentsToActivities: ParticipationRaw[] } & {
+  performer: User & {
+    organizationsConnections: Profile[]
+  }
+}
 type ParticipationRaw = {
   id: number
   activityId: number | null

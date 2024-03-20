@@ -30,13 +30,13 @@ export const AttendanceTimeLine: React.FC<Props> = ({ className = '', items = []
   return (
     <div className={`${className} mt-3`}>
       {items.map((item) => (
-        <Box>
-          <Box key={item.date.toISOString()} display="flex" flexDirection={{ xs: 'column', sm: 'row' }} gap={2.5}>
+        <Box key={item.date.toISOString()}>
+          <Box display="flex" flexDirection={{ xs: 'column', sm: 'row' }} gap={2.5}>
             <AttendanceDateBlock date={item.date} />
             <Grid2 container width="100%" spacing={1}>
               {item.items.map((item) => (
-                <Grid2 xs={12} md={6} lg={4}>
-                  <Link key={item.id} to={`/${orgId}${ROUTES.ATTENDANCE_EDIT}/${item.id}`}>
+                <Grid2 key={item.id} xs={12} md={6} lg={4}>
+                  <Link to={`/${orgId}${ROUTES.ATTENDANCE_EDIT}/${item.id}`}>
                     <AttendanceMeter {...item} />
                   </Link>
                 </Grid2>

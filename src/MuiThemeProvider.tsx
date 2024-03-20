@@ -1,5 +1,12 @@
 import React from 'react'
-import { ThemeProvider, createTheme } from '@mui/material/styles'
+import {
+  PaletteColor,
+  PaletteColorOptions,
+  ThemeProvider,
+  alpha,
+  createTheme,
+  getContrastRatio,
+} from '@mui/material/styles'
 import '@mui/lab/themeAugmentation'
 
 interface Props {
@@ -17,8 +24,11 @@ const theme = createTheme({
     secondary: {
       main: '#25A55F',
     },
-    action: {
-      active: '#9BDF46',
+    accent: {
+      main: '#9BDF46',
+      light: alpha('#9BDF46', 0.5),
+      dark: alpha('#9BDF46', 0.9),
+      contrastText: getContrastRatio('#9BDF46', '#fff') > 4.5 ? '#fff' : '#111',
     },
   },
   typography: {
@@ -62,3 +72,13 @@ const theme = createTheme({
     },
   },
 })
+
+declare module '@mui/material/styles' {
+  interface Palette {
+    accent: PaletteColor
+  }
+
+  interface PaletteOptions {
+    accent?: PaletteColorOptions
+  }
+}

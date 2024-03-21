@@ -10,7 +10,7 @@ import Tooltip from '@mui/material/Tooltip'
 import Box from '@mui/material/Box'
 import { useGroups, useParticipation } from 'store/groupsStore'
 import { useAttendancesState } from 'store'
-import { ActivityWithParticipation } from 'modules/activities/api'
+import { ActivityWithParticipationAndPerformer } from 'modules/activities/api'
 import { useActivitiesFiltering } from 'modules/activities/activitiesFilteringContext'
 import { UnassignDialog } from 'modules/activities/components/UnassignParticipantDialog'
 import { ResponsiveButtons } from 'components/kit/responsiveButtons/ResponsiveButtons'
@@ -29,7 +29,7 @@ interface Props {
 export const GroupsInfoBlock = ({ student }: Props) => {
   const { setOpenFilterDialog } = useActivitiesFiltering()
   const { groups, loadingGroups, attendanceRates, reload } = useData(student?.outerId)
-  const [activityToUnassign, setActivityToUnassign] = useState<ActivityWithParticipation>()
+  const [activityToUnassign, setActivityToUnassign] = useState<ActivityWithParticipationAndPerformer>()
 
   return (
     <>
@@ -120,7 +120,7 @@ const NoGroupsInfoBlock = ({ student }: NoGroupsInfoBlockProps) => {
   )
 }
 
-const emptyGroups: ActivityWithParticipation[] = []
+const emptyGroups: ActivityWithParticipationAndPerformer[] = []
 
 export function useData(studentOuterId?: string) {
   const orgKey = useOrgId()
@@ -165,10 +165,10 @@ export function useData(studentOuterId?: string) {
 }
 
 type GroupsTableProps = {
-  rows: ActivityWithParticipation[]
+  rows: ActivityWithParticipationAndPerformer[]
   participant: Student
   attendances: Dictionary<number>
-  onRemoveClick?: (activity: ActivityWithParticipation) => void
+  onRemoveClick?: (activity: ActivityWithParticipationAndPerformer) => void
 }
 function GroupsTable({ rows, participant, attendances, onRemoveClick }: GroupsTableProps) {
   return (
@@ -207,11 +207,11 @@ function GroupsTable({ rows, participant, attendances, onRemoveClick }: GroupsTa
 }
 
 type GroupsTableRowProps = {
-  data: ActivityWithParticipation
+  data: ActivityWithParticipationAndPerformer
   participant: Student
   attendances: Dictionary<number>
   rate: number
-  onClick?: (activity: ActivityWithParticipation) => void
+  onClick?: (activity: ActivityWithParticipationAndPerformer) => void
 }
 function GroupsTableRow({ data, participant, rate, onClick }: GroupsTableRowProps) {
   const orgId = useOrgId()

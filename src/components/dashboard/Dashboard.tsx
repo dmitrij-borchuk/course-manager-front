@@ -1,24 +1,38 @@
-import { Container } from 'react-materialize'
+import { useCallback } from 'react'
+import { useHistory } from 'react-router-dom'
+import { FormattedMessage } from 'react-intl'
+import { Box } from '@mui/material'
+import { useOrgId } from 'hooks/useOrgId'
+import { SectionHeader } from 'components/kit/sectionHeader/SectionHeader'
+import { AddButton } from 'components/inputs/AddButton'
 import { AttendanceTimeLine } from '../attendance/AttendanceTimeline'
-import { Header } from '../kit/header/Header'
-import { DashboardMenu } from '../dashboardMenu/DashboardMenu'
+import { ROUTES } from '../../constants'
 
 type AttendanceTimeLineProps = React.ComponentProps<typeof AttendanceTimeLine>
 
 interface Props {
   items?: AttendanceTimeLineProps['items']
-  className?: string
 }
-export const Dashboard: React.FC<Props> = ({ className = '', items }) => {
-  return (
-    <div className={className}>
-      <Header />
-      <Container className="px-4">
-        <AttendanceTimeLine items={items} />
-      </Container>
+export const Dashboard: React.FC<Props> = ({ items }) => {
+  const history = useHistory()
+  const orgId = useOrgId()
+  const onReportClick = useCallback(() => {
+    if (orgId) {
+      history.push(`/${orgId}${ROUTES.ATTENDANCE_ADD}`)
+    }
+  }, [history, orgId])
 
-      {/* Fab */}
-      <DashboardMenu />
-    </div>
+  return (
+    <Box>
+      <Box display="flex" alignItems="center" justifyContent="space-between">
+        <SectionHeader>
+          <FormattedMessage id="header.nav.dashboard" />
+        </SectionHeader>
+        <AddButton onClick={onReportClick}>
+          <FormattedMessage id="attendance.add.label" />
+        </AddButton>
+      </Box>
+      <AttendanceTimeLine items={items} />
+    </Box>
   )
 }

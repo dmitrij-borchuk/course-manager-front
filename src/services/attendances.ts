@@ -1,10 +1,17 @@
 import { useMemo } from 'react'
+import { Profile } from 'types/profile'
 import { Activity } from '../types/activity'
 import { Attendance } from '../types/attendance'
 import { groupBy } from '../utils/common'
 import { datesInRange } from '../utils/date'
+import { ActivityWithParticipationAndPerformer } from 'modules/activities/api'
 
-export function useAttendanceGrouping(from: Date, to: Date, attendances?: Attendance[], groups?: Activity[]) {
+export function useAttendanceGrouping(
+  from: Date,
+  to: Date,
+  attendances?: Attendance[],
+  groups?: ActivityWithParticipationAndPerformer[]
+) {
   return useMemo(() => {
     if (!attendances || !groups) {
       return []
@@ -17,7 +24,12 @@ export function useAttendanceGrouping(from: Date, to: Date, attendances?: Attend
 function getAttendanceDateKey(date: Date) {
   return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}}`
 }
-function getTimelineData(from: Date, to: Date, attendances: Attendance[], groups: Activity[]) {
+function getTimelineData(
+  from: Date,
+  to: Date,
+  attendances: Attendance[],
+  groups: ActivityWithParticipationAndPerformer[]
+) {
   const attByDate = groupBy(attendances, (att) => {
     const date = new Date(att.date)
     return getAttendanceDateKey(date)
@@ -29,8 +41,8 @@ function getTimelineData(from: Date, to: Date, attendances: Attendance[], groups
   })
 }
 
-function getBlockData(date: Date, attendances: Attendance[], groups: Activity[]) {
-  const groupsById = groups.reduce<Record<string, Activity>>((acc, group) => {
+function getBlockData(date: Date, attendances: Attendance[], groups: ActivityWithParticipationAndPerformer[]) {
+  const groupsById = groups.reduce<Record<string, ActivityWithParticipationAndPerformer>>((acc, group) => {
     acc[group.outerId] = group
     return acc
   }, {})
@@ -43,16 +55,30 @@ function getBlockData(date: Date, attendances: Attendance[], groups: Activity[])
   })
   return {
     date,
-    items: items.filter(Boolean) as unknown as {
-      id: string
-      text: string
-      progress: number
-    }[],
+    items: items.filter(filterOutNull),
   }
 }
+function filterOutNull<T>(d: T | null): d is T {
+  return !!d
+}
 
-function getMeterData(attendance: Attendance, group: Activity) {
-  return { id: attendance.id, text: group.name, progress: getMeterProgress(attendance) }
+function getMeterData(
+  attendance: Attendance,
+  group: ActivityWithParticipationAndPerformer
+): {
+  id: string
+  activity: Activity
+  performer?: Profile
+  rate?: number
+  studentsNumber?: number
+} {
+  return {
+    id: attendance.id,
+    activity: group,
+    rate: getMeterProgress(attendance),
+    performer: group.performer.organizationsConnections[0],
+    studentsNumber: group.studentsToActivities.length,
+  }
 }
 
 export function getMeterProgress(attendance: Attendance) {

@@ -1,5 +1,12 @@
 import React from 'react'
-import { ThemeProvider, createTheme } from '@mui/material/styles'
+import {
+  PaletteColor,
+  PaletteColorOptions,
+  ThemeProvider,
+  alpha,
+  createTheme,
+  getContrastRatio,
+} from '@mui/material/styles'
 import '@mui/lab/themeAugmentation'
 
 interface Props {
@@ -17,20 +24,36 @@ const theme = createTheme({
     secondary: {
       main: '#25A55F',
     },
+    accent: {
+      main: '#9BDF46',
+      light: alpha('#9BDF46', 0.5),
+      dark: alpha('#9BDF46', 0.9),
+      contrastText: getContrastRatio('#9BDF46', '#fff') > 4.5 ? '#fff' : '#111',
+    },
   },
   typography: {
     fontFamily: "'Red Hat Display', sans-serif",
   },
   components: {
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          borderRadius: '12px',
+        },
+      },
+    },
     MuiButton: {
+      defaultProps: {
+        size: 'large',
+      },
       styleOverrides: {
         root: {
           textTransform: 'none',
+          borderRadius: '12px',
           // TODO: needs to be clarified with design
           // impact on `ButtonGroup` component (report sorting)
           // height: '45px',
           // fontSize: '15px',
-          // borderRadius: '12px',
           // paddingInline: '28px',
         },
       },
@@ -49,3 +72,13 @@ const theme = createTheme({
     },
   },
 })
+
+declare module '@mui/material/styles' {
+  interface Palette {
+    accent: PaletteColor
+  }
+
+  interface PaletteOptions {
+    accent?: PaletteColorOptions
+  }
+}

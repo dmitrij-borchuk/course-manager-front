@@ -1,11 +1,23 @@
 import { render, screen } from '@testing-library/react'
 import { ComponentProps } from 'react'
-import { mockOrgId, TestWrapper } from '../../utils/test'
+import { getAxiosMock, mockOrgId, TestWrapper } from '../../utils/test'
 import { TeachersList } from './TeachersList'
 
 describe('TeachersList', () => {
+  const axiosMock = getAxiosMock()
   beforeEach(() => {
+    axiosMock.onGet('/organizations').reply(200, [
+      {
+        key: 'orgId',
+        id: 1,
+      },
+    ])
+
     mockOrgId('orgId')
+  })
+
+  afterEach(() => {
+    axiosMock.reset()
   })
   test('Renders user role', async () => {
     render(

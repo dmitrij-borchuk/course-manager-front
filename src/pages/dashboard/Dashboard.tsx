@@ -10,6 +10,7 @@ import { useOrgId } from '../../hooks/useOrgId'
 import { useAttendanceGrouping } from '../../services/attendances'
 import { useAttendancesState, useGroupsState } from '../../store'
 import { GeneralPage } from 'components/layouts/GeneralPage'
+import { useGroups } from 'store/groupsStore'
 
 export function DashboardPage() {
   const org = useCurrentOrg()
@@ -38,13 +39,13 @@ export function DashboardContent() {
   const { loadMore, timelineData, loading } = useAttendance()
 
   return (
-    <div>
+    <>
       <Dashboard items={timelineData} />
       <div className="flex justify-center pt-7 pb-7">
         {loading && <CircularProgress />}
         <LazyLoading loadMore={loadMore} />
       </div>
-    </div>
+    </>
   )
 }
 
@@ -85,10 +86,18 @@ function useAttendance() {
     clearAttendances,
     loading: loadingAttendances,
   } = useAttendancesState()
-  const { fetchGroups, fetchGroupsOfTeacher, groups, fetching: fetchingGroups } = useGroupsState()
+  const { fetching: fetchingGroups } = useGroupsState()
+  const org = useCurrentOrg()
+  const role = org?.role
+  const groupsQuery = useGroups(
+    {
+      performerId: role === ROLES.Administrator ? undefined : organizationUser?.id,
+    },
+    { refetchOnWindowFocus: false }
+  )
+  const groups = groupsQuery.data?.data
   const isLoading = loadingAttendances || fetchingGroups || userLoading
   const timelineData = useAttendanceGrouping(fromDate, toDate, attendances, groups)
-  const org = useCurrentOrg()
 
   const fetchAttendances = useCallback(
     async (fromDate: Date, toDate: Date) => {
@@ -111,23 +120,6 @@ function useAttendance() {
     },
     [addToast, fetchAttendancesByDate, fetchAttendancesForTeacher, org, orgKey, organizationUser]
   )
-  const fetchNeededGroups = useCallback(async () => {
-    if (!org || !organizationUser) {
-      return
-    }
-    try {
-      if (org.role === ROLES.Administrator) {
-        await fetchGroups()
-      } else {
-        await fetchGroupsOfTeacher(organizationUser.id)
-      }
-    } catch (error: any) {
-      addToast(error.message, {
-        appearance: 'error',
-        autoDismiss: true,
-      })
-    }
-  }, [addToast, fetchGroups, fetchGroupsOfTeacher, org, organizationUser])
   const loadMore = useCallback(() => {
     if (isLoading) {
       return
@@ -140,10 +132,6 @@ function useAttendance() {
   useEffect(() => {
     fetchAttendances(fromDate, lastLoadDate)
   }, [clearAttendances, fetchAttendances, fromDate, lastLoadDate])
-
-  useEffect(() => {
-    fetchNeededGroups()
-  }, [fetchNeededGroups])
 
   return { loadMore, timelineData, loading: isLoading }
 }

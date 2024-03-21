@@ -10,6 +10,7 @@ export function useCurrentOrg() {
   useEffect(() => {
     if (!loading && !byId) {
       // TODO: currently this method is called multiple times
+      // TODO: don't need to fetch all organizations to get the current one
       fetchAll()
     }
   }, [byId, fetchAll, loading])

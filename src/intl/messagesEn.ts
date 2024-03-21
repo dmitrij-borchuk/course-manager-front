@@ -27,6 +27,7 @@ export const messages = {
   'common.edit': 'Edit',
   'common.filter': 'Filter',
   'common.remove': 'Remove',
+  'common.students': 'Students',
 
   'Auth.form.error.invalid': 'Identifier or password invalid.',
   'Auth.form.error.500': 'Something went wrong',
@@ -142,6 +143,7 @@ export const messages = {
   'organizations.edit.conflict': 'Organization identifier is taken',
 
   'users.invite.title': 'Invite user',
+  'users.invite.btn.label': 'Invite user',
   'users.invite.confirmation.needLogin': 'You need to be signed in to proceed',
   'users.invite.confirmation.loginLink': 'Go to the login',
   'users.invite.message': 'You have been invited to organization "{organizationName}" by {userName}.',
@@ -158,6 +160,7 @@ export const messages = {
   'attendance.delete.header': 'Remove attendance report',
   'attendance.delete.text': 'Are you sure you want to delete this attendance report?',
   'attendance.listItem.header.title': 'Attendance Rate',
+  'attendance.add.label': 'Add item',
 
   'import.student.header': 'Import students',
   'import.student.file.label': 'file',

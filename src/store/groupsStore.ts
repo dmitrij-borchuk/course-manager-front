@@ -101,8 +101,11 @@ export default function useGroupsStore() {
   }
 }
 
-export function useGroups(params: Parameters<typeof fetchActivities>[0] = {}) {
-  return useQuery(['groups', params], () => fetchActivities(params))
+export function useGroups(
+  params: Parameters<typeof fetchActivities>[0] = {},
+  options?: { refetchOnWindowFocus: boolean }
+) {
+  return useQuery(['groups', params], () => fetchActivities(params), options)
 }
 export function useParticipation(params: Parameters<typeof fetchParticipation>[0] = {}) {
   return useQuery(['participation', params], () => fetchParticipation(params), {

@@ -1,7 +1,10 @@
 import React, { useCallback, useMemo } from 'react'
-import { Box, styled } from '@mui/material'
 import { FormattedMessage } from 'react-intl'
+import { useHistory } from 'react-router-dom'
+import { Box, styled } from '@mui/material'
 import { useSortingByHeader } from 'utils/sorting'
+import { useAccessManager } from 'hooks/useAccessManager'
+import { AddButton } from 'components/inputs/AddButton'
 import { ROUTES } from '../../constants'
 import { useOrgId } from '../../hooks/useOrgId'
 import { Dictionary } from '../../types/dictionary'
@@ -28,6 +31,13 @@ export const TeachersList: React.FC<Props> = ({ className = '', loading = false,
       attendanceRate: attendanceRates ? attendanceRates[s.user.outerId] : null,
     }))
   }, [items, attendanceRates])
+  const history = useHistory()
+  const { hasAccess } = useAccessManager()
+  const onInviteClick = useCallback(() => {
+    if (orgId) {
+      history.push(`/${orgId}/invite`)
+    }
+  }, [history, orgId])
   const renderItem = useCallback((d: TableContentItem) => {
     return (
       <div className="flex justify-between">
@@ -60,7 +70,16 @@ export const TeachersList: React.FC<Props> = ({ className = '', loading = false,
       loading={loading}
       // fabBtnLink={`/${orgId}${ROUTES.GROUPS_ADD}`}
       itemLinkRoot={`/${orgId}${ROUTES.TEACHERS_ROOT}`}
-      listHeader={<FormattedMessage id="teachers.list.title" />}
+      listHeader={
+        <Box display="flex" alignItems="center" justifyContent="space-between">
+          <FormattedMessage id="teachers.list.title" />
+          {hasAccess('MANAGE_TEACHERS') && (
+            <AddButton onClick={onInviteClick}>
+              <FormattedMessage id="users.invite.btn.label" />
+            </AddButton>
+          )}
+        </Box>
+      }
       labelProp="name"
       renderItem={renderItem}
       header={{

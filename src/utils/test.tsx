@@ -4,6 +4,7 @@ import { IntlProvider } from 'react-intl'
 import { ToastProvider } from 'react-toast-notifications'
 import * as reactRouterDom from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from 'react-query'
+import { MuiThemeProvider } from 'MuiThemeProvider'
 import AxiosMockAdapter from 'axios-mock-adapter'
 import messages from '../intl/messagesEn'
 import StoreProvider, { DefaultStore } from '../store'
@@ -16,13 +17,15 @@ type WrapperProps = {
 }
 export const TestWrapper = ({ children, store }: WrapperProps) => {
   return (
-    <QueryClientProvider client={queryClient}>
-      <IntlProvider messages={messages} locale="en" defaultLocale="en">
-        <ToastProvider>
-          <StoreProvider {...store}>{children}</StoreProvider>
-        </ToastProvider>
-      </IntlProvider>
-    </QueryClientProvider>
+    <MuiThemeProvider>
+      <QueryClientProvider client={queryClient}>
+        <IntlProvider messages={messages} locale="en" defaultLocale="en">
+          <ToastProvider>
+            <StoreProvider {...store}>{children}</StoreProvider>
+          </ToastProvider>
+        </IntlProvider>
+      </QueryClientProvider>
+    </MuiThemeProvider>
   )
 }
 

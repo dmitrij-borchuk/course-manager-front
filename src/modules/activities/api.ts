@@ -13,6 +13,7 @@ type FetchActivitiesParams = {
   deleted?: 'true' | 'false' | 'all'
   participantId?: number
   date?: Date
+  excludeOldParticipants?: boolean
 }
 export function fetchActivities(params?: FetchActivitiesParams) {
   return request.get<ActivityWithParticipationAndPerformer[]>(`/activities`, {

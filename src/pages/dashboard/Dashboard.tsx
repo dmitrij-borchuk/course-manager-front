@@ -92,6 +92,7 @@ function useAttendance() {
   const groupsQuery = useGroups(
     {
       performerId: role === ROLES.Administrator ? undefined : organizationUser?.id,
+      excludeOldParticipants: true,
     },
     { refetchOnWindowFocus: false }
   )

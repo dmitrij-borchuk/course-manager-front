@@ -1,6 +1,6 @@
-import { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useToasts } from 'react-toast-notifications'
-import { CircularProgress } from '@mui/material'
+import { Box } from '@mui/material'
 import { Dashboard } from '../../components/dashboard/Dashboard'
 import { Loader } from '../../components/kit/loader/Loader'
 import { ROLES } from '../../config'
@@ -40,35 +40,11 @@ export function DashboardContent() {
 
   return (
     <>
-      <Dashboard items={timelineData} />
-      <div className="flex justify-center pt-7 pb-7">
-        {loading && <CircularProgress />}
-        <LazyLoading loadMore={loadMore} />
-      </div>
+      <Box display="flex" height="calc(100% - 64px)" flexDirection="column">
+        <Dashboard items={timelineData} loading={loading} onLoadMore={loadMore} />
+      </Box>
     </>
   )
-}
-
-const LazyLoading = ({ loadMore, children }: { loadMore: () => void; children?: ReactNode }) => {
-  const containerRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    const observer = new IntersectionObserver((entries, observer) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          loadMore()
-        }
-      })
-    })
-    if (containerRef.current) {
-      const target = containerRef.current
-      observer.observe(target)
-
-      return () => observer.unobserve(target)
-    }
-  }, [loadMore])
-
-  return <div ref={containerRef}>{children}</div>
 }
 
 function useAttendance() {

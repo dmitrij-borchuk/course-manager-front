@@ -6,7 +6,7 @@ interface Props {
 }
 export const SectionHeader: React.FC<Props> = ({ children, className = '' }) => {
   return (
-    <Typography variant="h4" className={className}>
+    <Typography variant="h5" className={className} fontWeight="bold">
       {children}
     </Typography>
   )

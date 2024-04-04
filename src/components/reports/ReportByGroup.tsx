@@ -1,7 +1,7 @@
 import { BlobProvider, usePDF } from '@react-pdf/renderer'
 import { useEffect, useMemo } from 'react'
 import { FormattedMessage } from 'react-intl'
-import { Button } from 'react-materialize'
+import { Button } from '@mui/material'
 import { useAttendanceRateByStudent } from '../../hooks/useAttendanceRate'
 import { Activity } from '../../types/activity'
 import { Attendance } from '../../types/attendance'
@@ -52,12 +52,10 @@ export const ReportByGroup = ({ group, attendances, students, order, loading, fr
     <>
       {instance.url && (
         <Button
-          // @ts-ignore
           href={instance.url}
-          node="a"
-          waves="light"
           download={`attendance-report-${group.name}-${date}.pdf`}
           disabled={loading}
+          variant="contained"
         >
           <FormattedMessage id="reports.submitButton" />
         </Button>

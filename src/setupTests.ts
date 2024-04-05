@@ -4,3 +4,6 @@
 // learn more: https://github.com/testing-library/jest-dom
 import '@testing-library/jest-dom'
 import 'materialize-css'
+import MockIntersectionObserver from 'utils/tests/MockIntersectionObserver'
+
+window.IntersectionObserver = MockIntersectionObserver

@@ -64,6 +64,7 @@ const theme = createTheme({
           boxShadow: 'none',
           borderBottom: '1px solid #E5E5E5',
           color: ownerState.theme.palette.text.primary,
+          borderRadius: '0px',
         }),
         colorPrimary: {
           backgroundColor: '#fff',

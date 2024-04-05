@@ -15,6 +15,8 @@ interface Props {
   studentsNumber?: number
 }
 export const AttendanceMeter: React.FC<Props> = ({ activity, performer, rate = 0, studentsNumber = 0 }) => {
+  const attended = studentsNumber ? Math.round(studentsNumber * rate) : 0
+
   return (
     <MeterContainer elevation={4} hoverShadow={7}>
       <Box display="flex" justifyContent="space-between" alignItems="center">
@@ -45,7 +47,9 @@ export const AttendanceMeter: React.FC<Props> = ({ activity, performer, rate = 0
           <Typography>
             <FormattedMessage id="common.students" />
           </Typography>
-          <BoldTypography>{studentsNumber}</BoldTypography>
+          <BoldTypography>
+            {attended}/{studentsNumber}
+          </BoldTypography>
         </InfoItem>
       </Box>
     </MeterContainer>

@@ -22,7 +22,7 @@ export const AttendanceRateBadge = ({ value, BoxProps }: Props) => {
 const colors = {
   low: '#434242',
   medium: '#FFC12D',
-  high: '#25A55F',
+  high: '#F44336',
 }
 
 function useBadgeColor(value: number) {

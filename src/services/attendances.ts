@@ -77,7 +77,7 @@ function getMeterData(
     activity: group,
     rate: getMeterProgress(attendance),
     performer: group.performer.organizationsConnections[0],
-    studentsNumber: group.studentsToActivities.length,
+    studentsNumber: getParticipantCount(attendance),
   }
 }
 
@@ -86,6 +86,10 @@ export function getMeterProgress(attendance: Attendance) {
   const groupAtt = Object.values(attendance.attended).filter(Boolean).length
 
   return groupMembers === 0 ? 0 : groupAtt / groupMembers
+}
+
+export function getParticipantCount(attendance: Attendance) {
+  return Object.keys(attendance.attended).length
 }
 
 export function getAttendanceRate(attendance: Attendance) {

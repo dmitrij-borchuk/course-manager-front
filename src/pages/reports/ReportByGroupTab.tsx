@@ -1,7 +1,7 @@
 import { ComponentProps, useEffect, useMemo, useState } from 'react'
 import { FormattedMessage, useIntl } from 'react-intl'
 import { DatePicker } from 'react-materialize'
-import { CircularProgress } from '@mui/material'
+import { Box, CircularProgress } from '@mui/material'
 import { useAttendancesForGroups } from 'store/attendancesStore'
 import { Select } from '../../components/kit/select/Select'
 import { Text } from '../../components/kit/text/Text'
@@ -133,15 +133,17 @@ export const ReportByGroupTab = () => {
           <option value="desc">{intl.formatMessage({ id: 'common.sort.desc' })}</option>
         </Select>
 
-        <ReportBody
-          attendances={attendancesForReport}
-          group={group}
-          students={studentsOfGroup}
-          order={order}
-          loading={studentsFetching}
-          from={from}
-          to={to}
-        />
+        <Box display="flex" gap={2}>
+          <ReportBody
+            attendances={attendancesForReport}
+            group={group}
+            students={studentsOfGroup}
+            order={order}
+            loading={studentsFetching}
+            from={from}
+            to={to}
+          />
+        </Box>
       </div>
     </div>
   )

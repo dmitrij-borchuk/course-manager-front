@@ -1,7 +1,7 @@
 import { BlobProvider, usePDF } from '@react-pdf/renderer'
 import { useEffect } from 'react'
 import { FormattedMessage } from 'react-intl'
-import { Button } from 'react-materialize'
+import { Button } from '@mui/material'
 import { TableDataTemplate } from 'components/pdf/TableDataTemplate'
 
 type Props = {
@@ -59,14 +59,7 @@ export const ReportByTag = ({ tags, reportRecords, loading = false }: Props) => 
     <>
       <div className="flex gap-3 align-middle">
         {instance.url && (
-          <Button
-            // @ts-ignore
-            href={instance.url}
-            node="a"
-            waves="light"
-            download={name}
-            disabled={loading}
-          >
+          <Button href={instance.url} download={name} disabled={loading} variant="contained">
             <FormattedMessage id="reports.submitButton" />
           </Button>
         )}

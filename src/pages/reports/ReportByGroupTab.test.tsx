@@ -82,7 +82,7 @@ describe('ReportByGroupTab', () => {
       </TestWrapper>
     )
 
-    await screen.findByRole('button', { name: 'Download' })
+    await accessors.downloadBtn()
     const lastCall = usePDF.mock.calls[usePDF.mock.calls.length - 1]
     const document = lastCall[0].document
     render(document)
@@ -206,7 +206,7 @@ describe('ReportByGroupTab', () => {
       </TestWrapper>
     )
 
-    await screen.findByRole('button', { name: 'Download' })
+    await accessors.downloadBtn()
     const lastCall = usePDF.mock.calls[usePDF.mock.calls.length - 1]
     const document = lastCall[0].document
     render(document)
@@ -332,7 +332,7 @@ describe('ReportByGroupTab', () => {
       </TestWrapper>
     )
 
-    await screen.findByRole('button', { name: 'Download' })
+    await accessors.downloadBtn()
     renderPdf()
     const percents = await getPercentsArray()
 
@@ -356,7 +356,7 @@ describe('ReportByGroupTab', () => {
     const groupSelector = await screen.findByLabelText('Group')
     userEvent.selectOptions(groupSelector, groups[1].id.toString())
 
-    await screen.findByRole('button', { name: 'Download' })
+    await accessors.downloadBtn()
     renderPdf()
     const title = await getReportTitle()
 
@@ -536,4 +536,8 @@ function getGroupsFilteringData() {
 async function getReportTitle() {
   const el = await screen.findAllByTestId('pdf-text')
   return el[0]
+}
+
+const accessors = {
+  downloadBtn: () => screen.findByRole('link', { name: 'Download' }),
 }

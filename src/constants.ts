@@ -41,6 +41,10 @@ export const ROUTES = {
   // Reports
   REPORTS_ROOT: '/reports',
 
+  // Settings
+  SETTINGS_ROOT: '/settings',
+  SETTINGS_API_KEY: '/settings/api-key',
+
   // Organizations
   ORGANIZATIONS_ADD: '/organizations/add',
 

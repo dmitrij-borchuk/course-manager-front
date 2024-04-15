@@ -1,15 +1,19 @@
-import React, { ReactNode, useMemo } from 'react'
+import React, { ReactNode, useMemo, useState } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { Link, useLocation } from 'react-router-dom'
 import Drawer, { drawerClasses } from '@mui/material/Drawer'
-import { styled, typographyClasses, useMediaQuery, useTheme } from '@mui/material'
+import { Collapse, styled, typographyClasses, useMediaQuery, useTheme } from '@mui/material'
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined'
 import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined'
+import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined'
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined'
 import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined'
+import VpnKeyOutlinedIcon from '@mui/icons-material/VpnKeyOutlined'
 import GroupOutlinedIcon from '@mui/icons-material/GroupOutlined'
 import ListItemButton from '@mui/material/ListItemButton'
 import ListItemText from '@mui/material/ListItemText'
+import ExpandLess from '@mui/icons-material/ExpandLess'
+import ExpandMore from '@mui/icons-material/ExpandMore'
 import ListItemIcon, { listItemIconClasses } from '@mui/material/ListItemIcon'
 import ListItem from '@mui/material/ListItem'
 import Toolbar from '@mui/material/Toolbar'
@@ -106,6 +110,24 @@ function useOrgItems() {
         </Link>
       )
     }
+    if (hasAccess('VIEW_SETTINGS')) {
+      items.push(
+        <Link key="settings" to={`/${orgId}${ROUTES.SETTINGS_API_KEY}`}>
+          <NavItem
+            label={<FormattedMessage id="header.nav.settings" />}
+            icon={<SettingsOutlinedIcon />}
+            active={new RegExp(ROUTES.SETTINGS_ROOT).test(pathname)}
+            items={[
+              {
+                label: <FormattedMessage id="settings.nav.apiKey.label" />,
+                icon: <VpnKeyOutlinedIcon />,
+                active: new RegExp(ROUTES.SETTINGS_API_KEY).test(pathname),
+              },
+            ]}
+          />
+        </Link>
+      )
+    }
 
     return items
   }, [currentUser, hasAccess, orgId, pathname])
@@ -115,15 +137,36 @@ type NavItemProps = {
   label: ReactNode
   icon: ReactNode
   active?: boolean
+  items?: NavItemProps[]
 }
-function NavItem({ label, icon, active = false }: NavItemProps) {
+function NavItem({ label, icon, active = false, items = [] }: NavItemProps) {
+  const showSubMenu = items.length > 0
+  const [open, setOpen] = useState(false)
+
   return (
-    <NavigationItem disablePadding active={active}>
-      <ListItemButton>
-        <ListItemIcon>{icon}</ListItemIcon>
-        <ListItemText primary={label} />
-      </ListItemButton>
-    </NavigationItem>
+    <>
+      <NavigationItem disablePadding active={active}>
+        <ListItemButton onClick={() => setOpen((prev) => !prev)}>
+          <ListItemIcon>{icon}</ListItemIcon>
+          <ListItemText primary={label} />
+          {showSubMenu && (open ? <ExpandLess /> : <ExpandMore />)}
+        </ListItemButton>
+      </NavigationItem>
+      {showSubMenu && (
+        <Collapse in={open} timeout="auto" unmountOnExit>
+          <List component="div" disablePadding>
+            {items.map((item, index) => (
+              <NavigationItem key={index} active={item.active ?? false}>
+                <ListItemButton sx={{ pl: 4 }}>
+                  <ListItemIcon>{item.icon}</ListItemIcon>
+                  <ListItemText primary={item.label} />
+                </ListItemButton>
+              </NavigationItem>
+            ))}
+          </List>
+        </Collapse>
+      )}
+    </>
   )
 }
 

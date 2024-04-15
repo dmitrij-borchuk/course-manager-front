@@ -1,10 +1,10 @@
 import { useCallback, useMemo } from 'react'
 import { useCurrentOrg } from './useCurrentOrg'
 
-const ACTIONS = ['MANAGE_TEACHERS', 'MANAGE_GROUPS', 'MANAGE_STUDENTS', 'VIEW_REPORTS'] as const
-export type ActionType = typeof ACTIONS[number]
+const ACTIONS = ['MANAGE_TEACHERS', 'MANAGE_GROUPS', 'MANAGE_STUDENTS', 'VIEW_REPORTS', 'VIEW_SETTINGS'] as const
+export type ActionType = (typeof ACTIONS)[number]
 const rolesToActionsMap: Record<string, ActionType[]> = {
-  administrator: ['MANAGE_TEACHERS', 'MANAGE_GROUPS', 'MANAGE_STUDENTS', 'VIEW_REPORTS'],
+  administrator: ['MANAGE_TEACHERS', 'MANAGE_GROUPS', 'MANAGE_STUDENTS', 'VIEW_REPORTS', 'VIEW_SETTINGS'],
   teacher: ['MANAGE_GROUPS', 'MANAGE_STUDENTS'],
 }
 

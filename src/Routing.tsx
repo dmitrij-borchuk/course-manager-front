@@ -38,6 +38,7 @@ import { FormattedMessage } from 'react-intl'
 import { Text } from './components/kit/text/Text'
 import { setHeader } from './api/request'
 import { ProfilePage } from 'pages/profile/ProfilePage'
+import { SettingsPage } from 'modules/settings/components/SettingsPage'
 import { withGeneralPageLayout } from 'hocs/withGeneralPageLayout'
 
 const GroupsListPage = withGeneralPageLayout(GroupsListPageLoadable, 'Groups')
@@ -198,6 +199,9 @@ const OrganizationGuardedRoute = () => {
 
       {/* Reports */}
       <AuthGuardedRoute component={ReportsPage} path={`/:orgId${ROUTES.REPORTS_ROOT}`} exact />
+
+      {/* Settings */}
+      <AuthGuardedRoute component={SettingsPage} path={`/:orgId${ROUTES.SETTINGS_API_KEY}`} exact />
 
       {/* Import */}
       <AuthGuardedRoute component={StudentImportPage} path="/:orgId/import" exact />

@@ -13,6 +13,7 @@ import Autocomplete from '@mui/material/Autocomplete'
 import DialogContent from '@mui/material/DialogContent'
 import DialogActions from '@mui/material/DialogActions'
 import useMediaQuery from '@mui/material/useMediaQuery'
+import { useStudentsOfGroupState, useStudentsState } from 'store'
 import { ButtonWithLoader } from '../kit/buttons/ButtonWithLoader'
 import { useOrgId } from '../../hooks/useOrgId'
 import { Student } from '../../types/student'
@@ -20,54 +21,17 @@ import { ROUTES } from '../../constants'
 import './styles.css'
 
 interface Props {
-  items: Student[]
   groupId: number
   header?: string
   open?: boolean
-  loading?: boolean
   onClose?: () => void
   onSubmit: (data: Student[]) => void
   initial?: Student[]
 }
 export function SelectStudentsDialog(props: Props) {
-  const { onSubmit, open = false, header, items, onClose, initial, groupId } = props
+  const { open = false, onClose } = props
   const theme = useTheme()
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'))
-  const intl = useIntl()
-  const [submitting, setSubmitting] = useState(false)
-  const initialArray = useMemo(() => {
-    if (!initial) {
-      return []
-    }
-    return Array.isArray(initial) ? initial : [initial]
-  }, [initial])
-  const [selected, setSelected] = useState<Student[]>(initialArray)
-  useEffect(() => {
-    setSelected(initialArray)
-  }, [initialArray])
-  const submit = useCallback(
-    async (item?: Student) => {
-      setSubmitting(true)
-      try {
-        await onSubmit(selected as any)
-      } catch (error) {
-        // TODO: error handling
-      }
-      setSubmitting(false)
-    },
-    [onSubmit, selected]
-  )
-  const resetSelected = useCallback(() => {
-    setSelected(initialArray)
-  }, [initialArray])
-
-  const onSubmitClick = useCallback(() => {
-    submit()
-  }, [submit])
-
-  useEffect(() => {
-    open && resetSelected()
-  }, [open, resetSelected])
 
   return (
     <>
@@ -78,57 +42,122 @@ export function SelectStudentsDialog(props: Props) {
         className="students-select-dialog"
         data-testid="students-select-dialog"
       >
-        <DialogTitle className="flex justify-between">
-          {header}
-          <AddNewItemBtn group={groupId} />
-        </DialogTitle>
-        <DialogContent>
-          <Autocomplete<Student, true>
-            multiple
-            autoHighlight
-            handleHomeEndKeys
-            id="tags-standard"
-            options={items}
-            getOptionLabel={(option) => option.name}
-            value={selected}
-            // Workaround to be able to use items with same label
-            // filtering doesn't work properly otherwise
-            renderOption={(props, option) => (
-              <li {...props} key={option.id}>
-                {option.name}
-              </li>
-            )}
-            onChange={(event, value) => setSelected(value)}
-            isOptionEqualToValue={(option, value) => option.id === value.id}
-            sx={{
-              width: {
-                md: 500,
-              },
-            }}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                inputProps={{
-                  ...params.inputProps,
-                  className: `${params.inputProps.className} browser-default`,
-                }}
-                variant="standard"
-                label={<FormattedMessage id="groups.assignStudents.namePlaceholder" />}
-                placeholder={intl.formatMessage({ id: 'groups.assignStudents.moreNamePlaceholder' })}
-              />
-            )}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button flat disabled={submitting} onClick={onClose}>
-            <FormattedMessage id="common.dialog.btn.cancel" />
-          </Button>
-
-          <ButtonWithLoader loading={submitting} className="color-alert" onClick={onSubmitClick}>
-            <FormattedMessage id="common.dialog.btn.ok" />
-          </ButtonWithLoader>
-        </DialogActions>
+        <DialogInternal {...props} />
       </Dialog>
+    </>
+  )
+}
+
+interface DialogInternalProps {
+  groupId: number
+  header?: string
+  onClose?: () => void
+  onSubmit: (data: Student[]) => void
+  initial?: Student[]
+}
+function DialogInternal(props: DialogInternalProps) {
+  const { onSubmit, header, onClose, initial, groupId } = props
+  const [submitting, setSubmitting] = useState(false)
+  const { students, fetchStudents } = useStudentsState()
+  const {
+    // TODO: should use new API
+    studentsOfGroup,
+  } = useStudentsOfGroupState()
+  const assignedIds = studentsOfGroup?.map((s) => s.id) ?? []
+  const notAssignedParticipants = students.filter((student) => !assignedIds.includes(student.id))
+
+  const initialArray = useMemo(() => {
+    if (!initial) {
+      return []
+    }
+    return Array.isArray(initial) ? initial : [initial]
+  }, [initial])
+  const [selected, setSelected] = useState<Student[]>(initialArray)
+  useEffect(() => {
+    setSelected(initialArray)
+  }, [initialArray])
+  const submit = useCallback(async () => {
+    setSubmitting(true)
+    try {
+      await onSubmit(selected as any)
+    } catch (error) {
+      // TODO: error handling
+    }
+    setSubmitting(false)
+  }, [onSubmit, selected])
+
+  useEffect(() => {
+    fetchStudents()
+  }, [fetchStudents])
+
+  return (
+    <>
+      <DialogTitle className="flex justify-between">
+        {header}
+        <AddNewItemBtn group={groupId} />
+      </DialogTitle>
+      <DialogContent>
+        <ParticipantsSelector options={notAssignedParticipants} value={selected} onChange={setSelected} />
+      </DialogContent>
+      <DialogActions>
+        <Button flat disabled={submitting} onClick={onClose}>
+          <FormattedMessage id="common.dialog.btn.cancel" />
+        </Button>
+
+        <ButtonWithLoader loading={submitting} onClick={submit}>
+          <FormattedMessage id="common.dialog.btn.ok" />
+        </ButtonWithLoader>
+      </DialogActions>
+    </>
+  )
+}
+
+interface ParticipantsSelectorProps {
+  onChange?: (data: Student[]) => void
+  options?: Student[]
+  value?: Student[]
+}
+function ParticipantsSelector(props: ParticipantsSelectorProps) {
+  const { onChange, options = [], value } = props
+  const intl = useIntl()
+
+  return (
+    <>
+      <Autocomplete<Student, true>
+        multiple
+        autoHighlight
+        handleHomeEndKeys
+        id="tags-standard"
+        options={options}
+        getOptionLabel={(option) => option.name}
+        value={value}
+        // Workaround to be able to use items with same label
+        // filtering doesn't work properly otherwise
+        renderOption={(props, option) => (
+          <li {...props} key={option.id}>
+            {option.name}
+          </li>
+        )}
+        onChange={(event, value) => onChange?.(value)}
+        isOptionEqualToValue={(option, value) => option.id === value.id}
+        sx={{
+          width: {
+            md: 500,
+          },
+        }}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            inputProps={{
+              ...params.inputProps,
+              className: `${params.inputProps.className} browser-default`,
+            }}
+            variant="standard"
+            label={<FormattedMessage id="groups.assignStudents.namePlaceholder" />}
+            placeholder={intl.formatMessage({ id: 'groups.assignStudents.moreNamePlaceholder' })}
+          />
+        )}
+      />
     </>
   )
 }

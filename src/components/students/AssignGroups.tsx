@@ -16,9 +16,43 @@ interface Props {
   initialGroups: Activity[]
 }
 export const AssignGroups = ({ student, onDone = noop, trigger, initialGroups }: Props) => {
+  const [open, toggler] = useToggle(false)
+
+  return (
+    <>
+      <span onClick={toggler.on}>{trigger}</span>
+      {open && (
+        <AssignGroupsSelector
+          open={open}
+          initialGroups={initialGroups}
+          student={student}
+          onClose={toggler.off}
+          onDone={() => {
+            onDone()
+            toggler.off()
+          }}
+        />
+      )}
+    </>
+  )
+}
+
+interface AssignGroupsSelectorProps {
+  student: Student
+  onDone?: () => void
+  onClose?: () => void
+  initialGroups: Activity[]
+  open: boolean
+}
+export const AssignGroupsSelector = ({
+  student,
+  onDone = noop,
+  initialGroups,
+  open,
+  onClose,
+}: AssignGroupsSelectorProps) => {
   const intl = useIntl()
   const { addToast } = useToasts()
-  const [open, toggler] = useToggle(false)
   const { groups, fetchGroups, fetching } = useGroupsState()
   const { addGroupToStudent } = useStudentsOfGroupState()
   const onSubmit = useCallback(
@@ -26,7 +60,6 @@ export const AssignGroups = ({ student, onDone = noop, trigger, initialGroups }:
       try {
         // TODO: make butch request
         await Promise.all(data.map(async (item) => addGroupToStudent(item.id, student.id)))
-        toggler.off()
         onDone()
 
         addToast(<FormattedMessage id="students.assignGroups.success" />, {
@@ -42,7 +75,7 @@ export const AssignGroups = ({ student, onDone = noop, trigger, initialGroups }:
         }
       }
     },
-    [addGroupToStudent, addToast, onDone, student, toggler]
+    [addGroupToStudent, addToast, onDone, student]
   )
   const initialIds = initialGroups?.map((g) => g.id) || []
   const itemsToShow = groups.filter((g) => !initialIds.includes(g.id))
@@ -53,7 +86,6 @@ export const AssignGroups = ({ student, onDone = noop, trigger, initialGroups }:
 
   return (
     <>
-      <span onClick={toggler.on}>{trigger}</span>
       <SelectDialog
         loading={fetching}
         open={open}
@@ -61,7 +93,7 @@ export const AssignGroups = ({ student, onDone = noop, trigger, initialGroups }:
         items={itemsToShow}
         onSubmit={onSubmit}
         labelProp={(g) => g.name}
-        onCloseStart={toggler.off}
+        onCloseStart={onClose}
         multiSelect
         data-testid="assign-group-dialog"
       />

@@ -71,7 +71,6 @@ export const StudentsInfoBlock = ({
                 </IconButton>
               </Box>
             }
-            studentsOfGroup={students}
             onDone={refetchStudents}
           />
         )}
@@ -101,9 +100,8 @@ export const StudentsInfoBlock = ({
 
 interface NoStudentsInfoBlockProps {
   group: Activity
-  students?: Student[]
 }
-const NoStudentsInfoBlock = ({ group, students }: NoStudentsInfoBlockProps) => {
+const NoStudentsInfoBlock = ({ group }: NoStudentsInfoBlockProps) => {
   const { fetchStudentsOfGroup } = useStudentsOfGroupState()
   const refetchStudents = useCallback(async () => {
     fetchStudentsOfGroup(group.id, new Date())
@@ -123,7 +121,6 @@ const NoStudentsInfoBlock = ({ group, students }: NoStudentsInfoBlockProps) => {
             <FormattedMessage id="groups.students.assignBtn.label" />
           </Button>
         }
-        studentsOfGroup={students}
         onDone={refetchStudents}
       />
     </div>

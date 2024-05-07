@@ -100,7 +100,7 @@ export function SelectDialog<T extends { id: string | number }>({
     submit()
   }, [submit])
   const okBtn = multiSelect ? (
-    <ButtonWithLoader loading={submitting} flat node="button" className="color-alert" onClick={onSubmitClick}>
+    <ButtonWithLoader loading={submitting} className="color-alert" onClick={onSubmitClick}>
       <FormattedMessage id="common.dialog.btn.ok" />
     </ButtonWithLoader>
   ) : null

@@ -80,7 +80,7 @@ export const GroupsInfoBlock = ({ student }: Props) => {
           onRemoveClick={(d) => setActivityToUnassign(d)}
         />
       ) : (
-        <NoGroupsInfoBlock student={student} />
+        <NoGroupsInfoBlock student={student} onDone={reload} />
       )}
 
       <UnassignDialog
@@ -98,8 +98,9 @@ export const GroupsInfoBlock = ({ student }: Props) => {
 
 interface NoGroupsInfoBlockProps {
   student: Student
+  onDone?: () => void
 }
-const NoGroupsInfoBlock = ({ student }: NoGroupsInfoBlockProps) => {
+const NoGroupsInfoBlock = ({ student, onDone }: NoGroupsInfoBlockProps) => {
   return (
     <div className="text-center">
       <Text type="h6" color="textGray" className="mb-3">
@@ -115,6 +116,7 @@ const NoGroupsInfoBlock = ({ student }: NoGroupsInfoBlockProps) => {
             <FormattedMessage id="students.groups.assignBtn.label" />
           </Button>
         }
+        onDone={onDone}
       />
     </div>
   )
@@ -132,7 +134,6 @@ export function useData(studentOuterId?: string) {
     participantId: id,
     // date,
   })
-  // console.log('=-= 🚀 ~ useData ~ query:', query)
   const loadingGroups = query.isLoading
   const participationQuery = useParticipation({
     participantId: id,
@@ -253,17 +254,19 @@ function GroupsTableRow({ data, participant, rate, onClick }: GroupsTableRowProp
       </TableCell>
       <TableCell align="right">{rate !== undefined && <AttendanceRateBadge value={rate} />}</TableCell>
       <TableCell align="right">
-        <Tooltip title={<FormattedMessage id="groups.unassignStudents.tooltip" />} placement="top">
-          <IconButton
-            onClick={(e) => {
-              e.stopPropagation()
-              e.preventDefault()
-              onClick?.(data)
-            }}
-          >
-            <RemoveCircleOutlineIcon />
-          </IconButton>
-        </Tooltip>
+        {!lastParticipation?.endDate && (
+          <Tooltip title={<FormattedMessage id="groups.unassignStudents.tooltip" />} placement="top">
+            <IconButton
+              onClick={(e) => {
+                e.stopPropagation()
+                e.preventDefault()
+                onClick?.(data)
+              }}
+            >
+              <RemoveCircleOutlineIcon />
+            </IconButton>
+          </Tooltip>
+        )}
       </TableCell>
     </TableRow>
   )

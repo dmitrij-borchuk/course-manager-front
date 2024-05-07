@@ -28,8 +28,6 @@ export const DeleteIconWithDialog = ({ onSubmit = noop, header, content, trigger
         </Button>,
         <ButtonWithLoader
           loading={loading}
-          flat
-          node="button"
           className="color-alert"
           onClick={onSubmitClick}
           data-testid="dialog-btn-yes"

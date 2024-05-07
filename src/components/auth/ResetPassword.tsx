@@ -1,10 +1,10 @@
 import { useForm } from 'react-hook-form'
 import { FormattedMessage } from 'react-intl'
-import { Container, Icon } from 'react-materialize'
+import { Container } from 'react-materialize'
 import { Link } from 'react-router-dom'
+import { SubmitButton } from 'components/kit/buttons/SubmitButton'
 import { ROUTES } from '../../constants'
 import { useOrgIdNotStrict } from '../../hooks/useOrgId'
-import { ButtonWithLoader } from '../kit/buttons/ButtonWithLoader'
 import { Input } from '../kit/input/Input'
 import { SectionHeader } from '../kit/sectionHeader/SectionHeader'
 import './styles.css'
@@ -42,11 +42,10 @@ export const ResetPassword: React.FC<Props> = ({ onSubmit, loading = false }) =>
             disabled={loading}
           />
           <div className="flex justify-end">
-            <ButtonWithLoader loading={loading}>
+            <SubmitButton loading={loading}>
               {/* TODO: translate */}
               Submit
-              <Icon right>send</Icon>
-            </ButtonWithLoader>
+            </SubmitButton>
           </div>
         </form>
         <div className="flex flex-col items-center mt-8 gap-3">

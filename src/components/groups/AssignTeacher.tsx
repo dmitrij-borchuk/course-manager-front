@@ -16,8 +16,34 @@ interface Props {
   trigger?: ModalProps['trigger']
 }
 export const AssignTeacher = ({ group, onDone = noop, trigger }: Props) => {
-  const intl = useIntl()
   const [open, toggler] = useToggle(false)
+
+  return (
+    <>
+      <span onClick={toggler.on}>{trigger}</span>
+      {open && (
+        <AssignTeacherDialog
+          group={group}
+          onDone={() => {
+            toggler.off()
+            onDone()
+          }}
+          open={open}
+          onClose={toggler.off}
+        />
+      )}
+    </>
+  )
+}
+
+interface AssignTeacherDialogProps {
+  group: Activity
+  onDone?: () => void
+  onClose?: () => void
+  open: boolean
+}
+export const AssignTeacherDialog = ({ group, onDone = noop, onClose, open }: AssignTeacherDialogProps) => {
+  const intl = useIntl()
   const { editGroup } = useGroupsState()
   const { addToast } = useToasts()
   const profilesQuery = useProfiles(false)
@@ -28,7 +54,6 @@ export const AssignTeacher = ({ group, onDone = noop, trigger }: Props) => {
           name: group.name,
           performerId: data.user.id,
         })
-        toggler.off()
         onDone()
 
         addToast(<FormattedMessage id="groups.assignTeacher.success" />, {
@@ -42,12 +67,11 @@ export const AssignTeacher = ({ group, onDone = noop, trigger }: Props) => {
         })
       }
     },
-    [addToast, editGroup, group.id, group.name, onDone, toggler]
+    [addToast, editGroup, group.id, group.name, onDone]
   )
 
   return (
     <>
-      <span onClick={toggler.on}>{trigger}</span>
       <SelectDialog
         loading={profilesQuery.isFetching}
         open={open}
@@ -55,7 +79,7 @@ export const AssignTeacher = ({ group, onDone = noop, trigger }: Props) => {
         onSubmit={onSubmit}
         items={profilesQuery.data || []}
         labelProp={(t) => t.name}
-        onCloseStart={toggler.off}
+        onCloseStart={onClose}
         data-testid="assign-teacher-dialog"
       />
     </>

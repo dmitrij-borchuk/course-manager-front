@@ -1,11 +1,11 @@
 import { useForm } from 'react-hook-form'
 import { FormattedMessage } from 'react-intl'
-import { Container, Icon } from 'react-materialize'
+import { Container } from 'react-materialize'
 import { Link } from 'react-router-dom'
 import { ROUTES } from '../../constants'
 import { useOrgIdNotStrict } from '../../hooks/useOrgId'
-import { ButtonWithLoader } from '../kit/buttons/ButtonWithLoader'
 import { Input } from '../kit/input/Input'
+import { SubmitButton } from '../kit/buttons/SubmitButton'
 import { SectionHeader } from '../kit/sectionHeader/SectionHeader'
 import './styles.css'
 
@@ -60,11 +60,10 @@ export const Login: React.FC<Props> = ({ onSubmit, loading = false }) => {
 
           {/* Submit */}
           <div className="flex justify-end">
-            <ButtonWithLoader loading={loading} data-testid="submit">
+            <SubmitButton loading={loading} data-testid="submit">
               {/* TODO: translate */}
               Submit
-              <Icon right>send</Icon>
-            </ButtonWithLoader>
+            </SubmitButton>
           </div>
         </form>
         <div className="flex flex-col items-center mt-8 gap-3">

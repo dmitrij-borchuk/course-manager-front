@@ -35,7 +35,7 @@ export function FilterEditor<T = any>(props: Props<T>) {
               <FormattedMessage id="reports.fieldInput.label" />
             </InputLabel>
             <Select
-              defaultValue={value.field}
+              value={value.field}
               label={<FormattedMessage id="reports.fieldInput.label" />}
               onChange={(e) =>
                 onChange({
@@ -62,7 +62,7 @@ export function FilterEditor<T = any>(props: Props<T>) {
               <FormattedMessage id="reports.operationInput.label" />
             </InputLabel>
             <Select
-              defaultValue={value.operation}
+              value={value.operation}
               label={<FormattedMessage id="reports.operationInput.label" />}
               onChange={(e) =>
                 onChange({

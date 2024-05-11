@@ -1,11 +1,26 @@
-import { useState } from 'react'
-import { Button, Divider, Grid, Paper, Stack, TextField, Tooltip, Typography } from '@mui/material'
+import { ReactNode, useState } from 'react'
+import {
+  Button,
+  Divider,
+  FormControl,
+  Grid,
+  InputLabel,
+  MenuItem,
+  OutlinedInput,
+  Paper,
+  Select,
+  Stack,
+  TextField,
+  Tooltip,
+  Typography,
+} from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
 import Box from '@mui/material/Box'
-import { FilterEditor, ValueInputProps } from '../reportByFilter/FilterEditor'
-import { Filter } from './types'
 import { FormattedMessage, useIntl } from 'react-intl'
 import { DatePicker } from 'react-materialize'
+import { useGroups } from 'store/groupsStore'
+import { FilterEditor, ValueInputProps } from '../reportByFilter/FilterEditor'
+import { Filter } from './types'
 
 type FiltersProps = {
   onFiltersChanged: (filters: Filter<string | string[]>[]) => void
@@ -23,6 +38,7 @@ export function Filters(props: FiltersProps) {
   const [filters, setFilters] = useState<Filter<string | string[]>[]>([
     { id: Math.random().toString(), field: '', value: '', operation: '' },
   ])
+  const groupsQuery = useGroups()
   const addFilter = () => {
     const newFilter = filters.concat({ id: Math.random().toString(), field: '', value: '', operation: '' })
     setFilters(newFilter)
@@ -30,10 +46,21 @@ export function Filters(props: FiltersProps) {
   }
   const updateFilter = (filter: Filter<string | string[]>) => {
     const index = filters.findIndex((f) => f.id === filter.id)
-    const newFilter = [...filters]
-    newFilter[index] = filter
-    setFilters(newFilter)
-    onFiltersChanged(newFilter)
+    const newFilters = [...filters]
+    const newOperations = fields.find((f) => f.id === filter.field)?.operations
+    const hasInvalidOperation = filter.operation !== '' && !newOperations?.find((o) => o.value === filter.operation)
+    const fieldUpdated = filter.field !== '' && filter.field !== filters[index].field
+    const newFilter = {
+      ...filter,
+      operation: hasInvalidOperation ? '' : filter.operation,
+      value: fieldUpdated ? '' : filter.value,
+    }
+    newFilters[index] = {
+      ...newFilter,
+      operation: newOperations?.length === 1 ? newOperations?.[0].value : newFilter.operation,
+    }
+    setFilters(newFilters)
+    onFiltersChanged(newFilters)
   }
   const removeFilter = (filter: Filter<string | string[]>) => {
     const newFilter = filters.filter((f) => f.id !== filter.id)
@@ -80,19 +107,16 @@ export function Filters(props: FiltersProps) {
       label: intl.formatMessage({ id: 'reports.filter.group.label' }),
       operations: [
         {
-          value: 'contains',
-          label: 'Contains',
-        },
-        {
-          value: 'startsWith',
-          label: 'Starts with',
-        },
-        {
-          value: 'endsWith',
-          label: 'Ends with',
+          value: 'is',
+          label: 'Is',
         },
       ],
-      Input: TextValueInput,
+      Input: useMultiSelectValueInput(
+        groupsQuery.data?.data.map((g) => ({
+          value: g.id.toString(),
+          label: g.name,
+        })) ?? []
+      ),
     },
   ]
 
@@ -128,7 +152,7 @@ export function Filters(props: FiltersProps) {
           </Stack>
         </Box>
         <Box mt={2} mr={5}>
-          <Grid container spacing={2} xs={12}>
+          <Grid container spacing={2}>
             <Grid item xs={12} sm={4}>
               <Tooltip title={<FormattedMessage id="reports.addFilterBtn.label" />}>
                 <Button fullWidth variant="outlined" onClick={() => addFilter()} size="large">
@@ -154,6 +178,42 @@ function TextValueInput(props: ValueInputProps) {
       value={props.value}
       onChange={(e) => props.onChange?.(e.target.value)}
     />
+  )
+}
+
+function useMultiSelectValueInput(options: MultiSelectValueInputProps['options']) {
+  return (props: ValueInputProps) => {
+    return <MultiSelectValueInput options={options} {...props} />
+  }
+}
+
+type MultiSelectValueInputProps = ValueInputProps & {
+  options: { value: string; label: ReactNode }[]
+}
+function MultiSelectValueInput(props: MultiSelectValueInputProps) {
+  return (
+    <FormControl fullWidth>
+      <InputLabel id="demo-multiple-name-label">
+        <FormattedMessage id="reports.valueInput.label" />
+      </InputLabel>
+      <Select
+        multiple
+        value={typeof props.value === 'string' ? [] : props.value}
+        onChange={(e) => {
+          const {
+            target: { value },
+          } = e
+          props.onChange?.(typeof value === 'string' ? value.split(',') : value)
+        }}
+        input={<OutlinedInput label={<FormattedMessage id="reports.valueInput.label" />} />}
+      >
+        {props.options.map(({ label, value }) => (
+          <MenuItem key={value} value={value}>
+            {label}
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
   )
 }
 

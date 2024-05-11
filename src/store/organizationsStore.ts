@@ -23,8 +23,8 @@ export default function useOrganizationsBaseStore() {
       setLoading(true)
       try {
         const organizations = await getUserOrganizations()
-        const groupsById = arrayToDictionary(organizations.data)
-        setById(groupsById)
+        const recordsById = arrayToDictionary(organizations.data)
+        setById(recordsById)
         setLoading(false)
       } catch (error) {
         setLoading(false)

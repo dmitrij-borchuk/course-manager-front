@@ -84,8 +84,8 @@ describe('ReportByGroupTab', () => {
 
     await accessors.downloadBtn()
     const lastCall = usePDF.mock.calls[usePDF.mock.calls.length - 1]
-    const document = lastCall[0].document
-    render(document)
+    const document = lastCall[0]?.document
+    render(document!)
 
     const el = await screen.findAllByTestId('pdf-text')
     const persents = el
@@ -119,8 +119,8 @@ describe('ReportByGroupTab', () => {
     userEvent.selectOptions(sortOrderSelector, 'Descending')
 
     const lastCall = usePDF.mock.calls[usePDF.mock.calls.length - 1]
-    const document = lastCall[0].document
-    render(document)
+    const document = lastCall[0]?.document
+    render(document!)
 
     const el = await screen.findAllByTestId('pdf-text')
     const persents = el
@@ -208,8 +208,8 @@ describe('ReportByGroupTab', () => {
 
     await accessors.downloadBtn()
     const lastCall = usePDF.mock.calls[usePDF.mock.calls.length - 1]
-    const document = lastCall[0].document
-    render(document)
+    const document = lastCall[0]?.document
+    render(document!)
 
     const el = await screen.findAllByTestId('pdf-text')
     const persents = el
@@ -302,8 +302,8 @@ describe('ReportByGroupTab', () => {
     userEvent.type(datePickerTo, `${new Date('Wed May 22 2022 19:00:00').toLocaleDateString()}`)
 
     const lastCall = usePDF.mock.calls[usePDF.mock.calls.length - 1]
-    const document = lastCall[0].document
-    render(document)
+    const document = lastCall[0]?.document
+    render(document!)
 
     const el = await screen.findAllByTestId('pdf-text')
     const persents = el
@@ -366,8 +366,8 @@ describe('ReportByGroupTab', () => {
   function renderPdf() {
     expect(usePDF).toBeCalled()
     const lastCall = usePDF.mock.calls[usePDF.mock.calls.length - 1]
-    const document = lastCall[0].document
-    render(document)
+    const document = lastCall[0]?.document
+    render(document!)
   }
 
   async function getPercentsArray() {

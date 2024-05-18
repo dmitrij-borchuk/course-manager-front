@@ -43,7 +43,7 @@ export const Header = () => {
         </IconButton>
         <Box display="flex" sx={{ flexGrow: 1, color: 'white' }}>
           <FlexLink to="/">
-            <img src={`${process.env.PUBLIC_URL}/logoWithName.png`} alt="logo" />
+            <img src={`/logoWithName.png`} alt="logo" />
           </FlexLink>
         </Box>
         <ProfileButton />

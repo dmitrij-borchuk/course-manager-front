@@ -6,7 +6,7 @@ import { useAuthState } from './store'
 import { Loader } from './components/kit/loader/Loader'
 import { updateConfiguration } from './utils/rollbar'
 
-updateConfiguration()
+// updateConfiguration()
 
 function App() {
   return (

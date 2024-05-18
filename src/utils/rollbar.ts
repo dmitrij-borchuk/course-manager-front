@@ -1,7 +1,7 @@
 import { User } from 'firebase/auth'
 import { ENVIRONMENT } from '../config'
 
-const version = process.env.REACT_APP_VERSION
+const version = import.meta.env.REACT_APP_VERSION
 
 export function setUser(u: User | null) {
   if (typeof window.Rollbar !== 'undefined') {

@@ -5,35 +5,38 @@ import { ReactQueryDevtools } from 'react-query/devtools'
 import { HelmetProvider } from 'react-helmet-async'
 import { ToastProvider } from 'react-toast-notifications'
 import { IntlProvider } from 'react-intl'
-import { ActivitiesFilteringProvider } from 'modules/activities/activitiesFilteringContext'
+import { Provider as ReduxProvider } from 'react-redux'
+import { ActivitiesFilteringProvider } from './modules/activities/activitiesFilteringContext'
 import messages from './intl/messagesEn'
-import StoreProvider from './store'
+import StoreProvider, { rootStore } from './store'
 import { MuiThemeProvider } from './MuiThemeProvider'
-import { NavBarProvider } from 'components/layouts/NavBar'
+import { NavBarProvider } from './components/layouts/NavBar'
 
 const queryClient = new QueryClient()
 
 interface Props {}
 export const Providers: React.FC<Props> = ({ children }) => {
   return (
-    <QueryClientProvider client={queryClient}>
-      <MuiThemeProvider>
-        <Router>
-          <StoreProvider>
-            <IntlProvider messages={messages} locale="en" defaultLocale="en">
-              <ToastProvider>
-                <HelmetProvider>
-                  <NavBarProvider>
-                    <ActivitiesFilteringProvider>{children}</ActivitiesFilteringProvider>
-                  </NavBarProvider>
-                </HelmetProvider>
-              </ToastProvider>
-            </IntlProvider>
-          </StoreProvider>
-        </Router>
-      </MuiThemeProvider>
+    <ReduxProvider store={rootStore}>
+      <QueryClientProvider client={queryClient}>
+        <MuiThemeProvider>
+          <Router>
+            <StoreProvider>
+              <IntlProvider messages={messages} locale="en" defaultLocale="en">
+                <ToastProvider>
+                  <HelmetProvider>
+                    <NavBarProvider>
+                      <ActivitiesFilteringProvider>{children}</ActivitiesFilteringProvider>
+                    </NavBarProvider>
+                  </HelmetProvider>
+                </ToastProvider>
+              </IntlProvider>
+            </StoreProvider>
+          </Router>
+        </MuiThemeProvider>
 
-      <ReactQueryDevtools initialIsOpen={false} />
-    </QueryClientProvider>
+        <ReactQueryDevtools initialIsOpen={false} />
+      </QueryClientProvider>
+    </ReduxProvider>
   )
 }

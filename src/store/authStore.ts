@@ -21,7 +21,7 @@ export function useAuthStore() {
   useEffect(() => {
     auth.onIdTokenChanged(async (user) => {
       setCurrentUser(user)
-      setUser(user)
+      // setUser(user)
       if (user) {
         const token = await user.getIdToken()
         setHeader('authorization', token)

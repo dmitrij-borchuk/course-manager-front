@@ -7,6 +7,8 @@ import useActivitiesStore, { InitialActivitiesState } from './activitiesStore'
 import useOrganizationsStore from './organizationsStore'
 import useUsersStore from './usersStore'
 import useStudentsOfGroupStore from './studentsOfGroupStore'
+import { configureStore } from '@reduxjs/toolkit'
+import { organizationsReducer } from 'modules/organizations/store'
 
 export type DefaultStore = {
   students?: InitialStudentsState
@@ -48,3 +50,12 @@ export const useActivitiesState = activities
 export const useStudentsOfGroupState = studentsOfGroup
 export const useOrganizationsState = organizations
 export const useUsersState = users
+
+export const store = configureStore({
+  reducer: {
+    organizations: organizationsReducer,
+  },
+})
+
+export type RootState = ReturnType<typeof store.getState>
+export type AppDispatch = typeof store.dispatch

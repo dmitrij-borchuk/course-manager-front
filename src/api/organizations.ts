@@ -5,10 +5,6 @@ export function migrateOrganizations() {
   return request.post<string>('/organizations/migrate')
 }
 
-export function getUserOrganizations() {
-  return request.get<Organization[]>('/organizations')
-}
-
 export function getInviteInfo(token: string) {
   return request.get<InviteInfo>(`/organizations/inviteInfo/${token}`)
 }

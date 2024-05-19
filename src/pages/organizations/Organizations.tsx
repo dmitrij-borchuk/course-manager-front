@@ -1,17 +1,21 @@
 import { useEffect } from 'react'
-import { useOrganizationsState, useUsersState } from '../../store'
+import { useAppDispatch, useAppSelector } from 'store/hooks'
+import { fetchOrganizations } from 'modules/organizations/store/list'
+import { GeneralPage } from 'components/layouts/GeneralPage'
+import { useUsersState } from '../../store'
 import { Organizations } from '../../components/organizations/Organizations'
 import { useNotification } from '../../hooks/useNotification'
-import { GeneralPage } from 'components/layouts/GeneralPage'
 
 export const OrganizationsPage = () => {
-  const { fetchAll, allItems, loading } = useOrganizationsState()
+  const dispatch = useAppDispatch()
+  const orgsList = useAppSelector((state) => state.organizations.list.data)
+  const orgsLoading = useAppSelector((state) => state.organizations.list.loading)
   const { fetchProfile, profile } = useUsersState()
   const { showError } = useNotification()
 
   useEffect(() => {
-    fetchAll()
-  }, [fetchAll])
+    dispatch(fetchOrganizations())
+  }, [dispatch])
   useEffect(() => {
     fetchProfile().catch((error) => {
       showError(error.message)
@@ -21,7 +25,7 @@ export const OrganizationsPage = () => {
   return (
     <>
       <GeneralPage title="Organizations">
-        <Organizations organizations={allItems} user={profile} organizationsLoading={loading} />
+        <Organizations organizations={orgsList} user={profile} organizationsLoading={orgsLoading} />
       </GeneralPage>
     </>
   )

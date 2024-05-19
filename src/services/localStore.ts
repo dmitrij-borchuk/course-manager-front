@@ -8,3 +8,9 @@ export function getItem<T>(key: string): T | null {
   }
   return JSON.parse(value)
 }
+
+const storage = {
+  setItem,
+  getItem,
+}
+export default storage

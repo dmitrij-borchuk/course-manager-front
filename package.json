@@ -24,6 +24,7 @@
     "@mui/material": "^5.11.12",
     "@mui/x-data-grid": "^6.18.6",
     "@react-pdf/renderer": "^2.3.0",
+    "@reduxjs/toolkit": "^2.2.5",
     "@testing-library/cypress": "^8.0.3",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
@@ -53,14 +54,15 @@
     "postcss-flexbugs-fixes": "^5.0.2",
     "postcss-preset-env": "^7.7.2",
     "process": "^0.11.10",
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "react-helmet": "^6.1.0",
     "react-helmet-async": "^2.0.4",
     "react-hook-form": "^6.14.2",
     "react-intl": "^5.10.16",
     "react-materialize": "3.10.0",
     "react-query": "^3.39.3",
+    "react-redux": "^9.1.2",
     "react-responsive-calendar": "^0.6.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "^5.0.1",
@@ -136,5 +138,31 @@
       "!src/reportWebVitals.ts",
       "!src/MuiThemeProvider.tsx"
     ]
+  },
+  "overrides": {
+    "react-redux": {
+      "react": "$react",
+      "@types/react": "$@types/react"
+    },
+    "react-toast-notifications": {
+      "react": "$react",
+      "react-dom": "$react-dom"
+    },
+    "@react-pdf/renderer": {
+      "react": "$react",
+      "react-dom": "$react-dom"
+    },
+    "@testing-library/react-hooks": {
+      "react": "$react",
+      "react-dom": "$react-dom"
+    },
+    "react-hook-form": {
+      "react": "$react",
+      "react-dom": "$react-dom"
+    },
+    "react-materialize": {
+      "react": "$react",
+      "react-dom": "$react-dom"
+    }
   }
 }

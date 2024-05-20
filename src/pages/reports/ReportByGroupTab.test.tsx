@@ -77,7 +77,7 @@ describe('ReportByGroupTab', () => {
     usePDF.mockReturnValue([{ url: 'instance.url' } as any, jest.fn()])
 
     render(
-      <TestWrapper>
+      <TestWrapper initialState={storeWithOrg}>
         <ReportByGroupTab />
       </TestWrapper>
     )
@@ -110,7 +110,7 @@ describe('ReportByGroupTab', () => {
     usePDF.mockReturnValue([{} as any, jest.fn()])
 
     render(
-      <TestWrapper>
+      <TestWrapper initialState={storeWithOrg}>
         <ReportByGroupTab />
       </TestWrapper>
     )
@@ -201,7 +201,7 @@ describe('ReportByGroupTab', () => {
     })
 
     render(
-      <TestWrapper>
+      <TestWrapper initialState={storeWithOrg}>
         <ReportByGroupTab />
       </TestWrapper>
     )
@@ -291,7 +291,7 @@ describe('ReportByGroupTab', () => {
     })
 
     render(
-      <TestWrapper>
+      <TestWrapper initialState={storeWithOrg}>
         <ReportByGroupTab />
       </TestWrapper>
     )
@@ -327,7 +327,7 @@ describe('ReportByGroupTab', () => {
     })
 
     render(
-      <TestWrapper>
+      <TestWrapper initialState={storeWithOrg}>
         <ReportByGroupTab />
       </TestWrapper>
     )
@@ -348,7 +348,7 @@ describe('ReportByGroupTab', () => {
     })
 
     render(
-      <TestWrapper>
+      <TestWrapper initialState={storeWithOrg}>
         <ReportByGroupTab />
       </TestWrapper>
     )
@@ -540,4 +540,16 @@ async function getReportTitle() {
 
 const accessors = {
   downloadBtn: () => screen.findByRole('link', { name: 'Download' }),
+}
+
+const storeWithOrg = {
+  organizations: {
+    currentOrg: {
+      loading: false,
+      data: {
+        id: 1,
+        key: 'orgId',
+      },
+    },
+  },
 }

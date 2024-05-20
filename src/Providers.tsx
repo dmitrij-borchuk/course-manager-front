@@ -5,10 +5,9 @@ import { ReactQueryDevtools } from 'react-query/devtools'
 import { HelmetProvider } from 'react-helmet-async'
 import { ToastProvider } from 'react-toast-notifications'
 import { IntlProvider } from 'react-intl'
-import { Provider as ReduxProvider } from 'react-redux'
 import { ActivitiesFilteringProvider } from 'modules/activities/activitiesFilteringContext'
 import messages from './intl/messagesEn'
-import StoreProvider, { store } from './store'
+import ConstateStoreProvider, { StoreProvider } from './store'
 import { MuiThemeProvider } from './MuiThemeProvider'
 import { NavBarProvider } from 'components/layouts/NavBar'
 
@@ -17,11 +16,11 @@ const queryClient = new QueryClient()
 interface Props {}
 export const Providers: React.FC<Props> = ({ children }) => {
   return (
-    <ReduxProvider store={store}>
+    <StoreProvider>
       <QueryClientProvider client={queryClient}>
         <MuiThemeProvider>
           <Router>
-            <StoreProvider>
+            <ConstateStoreProvider>
               <IntlProvider messages={messages} locale="en" defaultLocale="en">
                 <ToastProvider>
                   <HelmetProvider>
@@ -31,12 +30,12 @@ export const Providers: React.FC<Props> = ({ children }) => {
                   </HelmetProvider>
                 </ToastProvider>
               </IntlProvider>
-            </StoreProvider>
+            </ConstateStoreProvider>
           </Router>
         </MuiThemeProvider>
 
         <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
-    </ReduxProvider>
+    </StoreProvider>
   )
 }

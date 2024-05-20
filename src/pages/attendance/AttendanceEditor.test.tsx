@@ -51,7 +51,7 @@ describe('AttendanceEditor', () => {
   test('should not fail', async () => {
     defaultMock()
     render(
-      <TestWrapper>
+      <TestWrapper initialState={storeWithOrg}>
         <AttendanceEditorPage />
       </TestWrapper>
     )
@@ -70,7 +70,7 @@ describe('AttendanceEditor', () => {
     axiosMock.onGet(new RegExp('/students/byActivity/1')).reply(200, students)
 
     render(
-      <TestWrapper>
+      <TestWrapper initialState={storeWithOrg}>
         <AttendanceEditorPage />
       </TestWrapper>
     )
@@ -113,7 +113,7 @@ describe('AttendanceEditor', () => {
     axiosMock.onGet(new RegExp('/students/byActivity/1')).reply(200, students)
 
     render(
-      <TestWrapper>
+      <TestWrapper initialState={storeWithOrg}>
         <AttendanceEditorPage />
       </TestWrapper>
     )
@@ -155,7 +155,7 @@ describe('AttendanceEditor', () => {
     mockDataByPath('organizations/orgId/groups', groups)
 
     render(
-      <TestWrapper>
+      <TestWrapper initialState={storeWithOrg}>
         <AttendanceEditorPage />
       </TestWrapper>
     )
@@ -226,4 +226,16 @@ describe('AttendanceEditor', () => {
 async function selectGroup(id: string) {
   const groupSelect = await screen.findByTestId('group-selector')
   fireEvent.change(groupSelect, { target: { value: id } })
+}
+
+const storeWithOrg = {
+  organizations: {
+    currentOrg: {
+      loading: false,
+      data: {
+        id: 1,
+        key: 'orgId',
+      },
+    },
+  },
 }

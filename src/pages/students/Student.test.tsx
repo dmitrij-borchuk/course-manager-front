@@ -17,7 +17,28 @@ describe('Student', () => {
   test('should omit attendance without student in calculation', async () => {
     makeDefaultMock()
     render(
-      <TestWrapper>
+      <TestWrapper
+        initialState={{
+          organizations: {
+            list: {
+              loading: false,
+              data: [
+                {
+                  id: 1,
+                  key: 'orgId',
+                },
+              ],
+            },
+            currentOrg: {
+              loading: false,
+              data: {
+                id: 1,
+                key: 'orgId',
+              },
+            },
+          },
+        }}
+      >
         <StudentPage />
       </TestWrapper>
     )

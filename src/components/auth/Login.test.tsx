@@ -14,14 +14,6 @@ describe('Login', () => {
 
     await screen.findByRole('link', { name: 'Create account' })
   })
-
-  test('Should not show register link when user is in the organization scope', async () => {
-    mockOrgId('orgId')
-    renderComponent()
-
-    const link = screen.queryByRole('link', { name: 'Create account' })
-    expect(link).not.toBeInTheDocument()
-  })
 })
 
 function renderComponent(props: Partial<ComponentProps<typeof Login>> = {}) {

@@ -1,4 +1,8 @@
 import constate from 'constate'
+import { ReactNode } from 'react'
+import { configureStore } from '@reduxjs/toolkit'
+import { Provider } from 'react-redux'
+import { organizationsReducer } from 'modules/organizations/store'
 import { useAttendancesStore } from './attendancesStore'
 import { useAuthStore } from './authStore'
 import useGroupsStore from './groupsStore'
@@ -7,8 +11,6 @@ import useActivitiesStore, { InitialActivitiesState } from './activitiesStore'
 import useOrganizationsStore from './organizationsStore'
 import useUsersStore from './usersStore'
 import useStudentsOfGroupStore from './studentsOfGroupStore'
-import { configureStore } from '@reduxjs/toolkit'
-import { organizationsReducer } from 'modules/organizations/store'
 
 export type DefaultStore = {
   students?: InitialStudentsState
@@ -27,7 +29,7 @@ function useStore({ students, activities }: DefaultStore) {
   }
 }
 
-const [StoreProvider, groups, auth, attendances, students, activities, studentsOfGroup, organizations, users] =
+const [ConstateStoreProvider, groups, auth, attendances, students, activities, studentsOfGroup, organizations, users] =
   constate(
     useStore,
     (value) => value.groups,
@@ -40,7 +42,7 @@ const [StoreProvider, groups, auth, attendances, students, activities, studentsO
     (value) => value.users
   )
 
-export default StoreProvider
+export default ConstateStoreProvider
 
 export const useGroupsState = groups
 export const useAuthState = auth
@@ -51,11 +53,17 @@ export const useStudentsOfGroupState = studentsOfGroup
 export const useOrganizationsState = organizations
 export const useUsersState = users
 
-export const store = configureStore({
-  reducer: {
-    organizations: organizationsReducer,
-  },
-})
+export function makeStore(initialState?: Record<any, any>) {
+  return configureStore({
+    reducer: {
+      organizations: organizationsReducer,
+    },
+    preloadedState: initialState,
+  })
+}
+const store = makeStore()
 
 export type RootState = ReturnType<typeof store.getState>
 export type AppDispatch = typeof store.dispatch
+
+export const StoreProvider = ({ children }: { children: ReactNode }) => <Provider store={store}>{children}</Provider>

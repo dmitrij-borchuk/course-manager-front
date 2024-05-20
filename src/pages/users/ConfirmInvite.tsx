@@ -3,9 +3,7 @@ import { useParams } from 'react-router'
 import { useToasts } from 'react-toast-notifications'
 import { Helmet } from 'react-helmet'
 import { ConfirmInvite } from '../../components/users/ConfirmInvite'
-import { useOrgId } from '../../hooks/useOrgId'
 import { useOrganizationsState, useUsersState } from '../../store'
-import { useAuthStore } from '../../store/authStore'
 import { TITLE_POSTFIX } from '../../config'
 import { Loader } from 'components/kit/loader/Loader'
 import { Message } from 'components/kit/message/Message'
@@ -18,24 +16,20 @@ export const ConfirmInvitePage = () => {
   const { submitting, confirmInvitation, profile } = useUsersState()
   const { fetchAll, getInviteInfo, inviteInfo, inviteInfoError } = useOrganizationsState()
   const parsedError = parseError(inviteInfoError)
-  const { currentUser } = useAuthStore()
   const { token } = useParams<{ token: string }>()
-  const orgId = useOrgId()
   const onSubmit = useCallback(
     async (data: { name: string }) => {
-      if (orgId && currentUser?.uid) {
-        try {
-          await confirmInvitation(orgId, currentUser.uid, token, 'Teacher', data.name)
-          await fetchAll()
-        } catch (error: any) {
-          addToast(error?.response?.data?.message || error?.response?.data || error.message, {
-            appearance: 'error',
-            autoDismiss: true,
-          })
-        }
+      try {
+        await confirmInvitation(token, data.name)
+        await fetchAll()
+      } catch (error: any) {
+        addToast(error?.response?.data?.message || error?.response?.data || error.message, {
+          appearance: 'error',
+          autoDismiss: true,
+        })
       }
     },
-    [addToast, confirmInvitation, currentUser?.uid, fetchAll, orgId, token]
+    [addToast, confirmInvitation, fetchAll, token]
   )
 
   useEffect(() => {

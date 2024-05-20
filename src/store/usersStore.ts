@@ -49,13 +49,13 @@ export default function useUsersStore() {
       }
     }, []),
     confirmInvitation: useCallback(
-      async (orgId: string, userId: string, token: string, role: Role, name: string) => {
+      async (token: string, name: string) => {
         setSubmitting(true)
         try {
           await confirmInvitation(token, name)
           setSubmitting(false)
 
-          history.push(`/${orgId}/`)
+          history.push(`/`)
         } catch (error: any) {
           setError(error)
           setSubmitting(false)

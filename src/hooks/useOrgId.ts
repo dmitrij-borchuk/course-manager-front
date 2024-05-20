@@ -9,9 +9,3 @@ export function useOrgId() {
 
   return currentOrg.key
 }
-
-export function useOrgIdNotStrict() {
-  const currentOrg = useCurrentOrg()
-
-  return currentOrg?.key
-}

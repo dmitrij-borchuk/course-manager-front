@@ -3,7 +3,6 @@ import { FormattedMessage } from 'react-intl'
 import { Container } from 'react-materialize'
 import { Link } from 'react-router-dom'
 import { ROUTES } from '../../constants'
-import { useOrgIdNotStrict } from '../../hooks/useOrgId'
 import { Input } from '../kit/input/Input'
 import { SubmitButton } from '../kit/buttons/SubmitButton'
 import { SectionHeader } from '../kit/sectionHeader/SectionHeader'
@@ -20,7 +19,6 @@ interface Props {
   loading?: boolean
 }
 export const Login: React.FC<Props> = ({ onSubmit, loading = false }) => {
-  const orgId = useOrgIdNotStrict()
   const { control, handleSubmit } = useForm<FormData>({
     defaultValues: {
       identifier: '',
@@ -66,25 +64,19 @@ export const Login: React.FC<Props> = ({ onSubmit, loading = false }) => {
           </div>
         </form>
         <div className="flex flex-col items-center mt-8 gap-3">
-          {/* Can't register inside of organization */}
-          {/* TODO: probably need to remove it, because we don't have any `inside` when we logged out */}
-          {!orgId && (
-            <>
-              {/* Separator */}
-              <div className="flex w-full items-center gap-2">
-                <div className="h-px bg-gray-400 w-full" />
-                <div className="-mt-1">
-                  <FormattedMessage id="auth.registerLink.separator" />
-                </div>
-                <div className="h-px bg-gray-400 w-full" />
-              </div>
+          {/* Separator */}
+          <div className="flex w-full items-center gap-2">
+            <div className="h-px bg-gray-400 w-full" />
+            <div className="-mt-1">
+              <FormattedMessage id="auth.registerLink.separator" />
+            </div>
+            <div className="h-px bg-gray-400 w-full" />
+          </div>
 
-              {/* Link */}
-              <Link to={`${ROUTES.REGISTER}`} role="link">
-                <FormattedMessage id="auth.registerLink.label" />
-              </Link>
-            </>
-          )}
+          {/* Link */}
+          <Link to={`${ROUTES.REGISTER}`} role="link">
+            <FormattedMessage id="auth.registerLink.label" />
+          </Link>
         </div>
       </div>
     </Container>

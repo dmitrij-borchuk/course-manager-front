@@ -46,6 +46,7 @@ export const ROUTES = {
   SETTINGS_API_KEY: '/settings/api-key',
 
   // Organizations
+  ORGANIZATIONS_ROOT: '/organizations',
   ORGANIZATIONS_ADD: '/organizations/add',
 
   LOGOUT: '/logout',

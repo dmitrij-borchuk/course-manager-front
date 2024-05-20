@@ -6,7 +6,6 @@ import { useSortingByHeader } from 'utils/sorting'
 import { useAccessManager } from 'hooks/useAccessManager'
 import { AddButton } from 'components/inputs/AddButton'
 import { ROUTES } from '../../constants'
-import { useOrgId } from '../../hooks/useOrgId'
 import { Dictionary } from '../../types/dictionary'
 import { Profile } from 'types/profile'
 import { AttendanceRateBadge } from '../kit/attendanceRateBadge/AttendancerateBadge'
@@ -21,7 +20,6 @@ interface Props {
   attendanceRates?: Dictionary<number>
 }
 export const TeachersList: React.FC<Props> = ({ className = '', loading = false, items = [], attendanceRates }) => {
-  const orgId = useOrgId()
   const preparedData: TableContentItem[] = useMemo(() => {
     return items.map((s) => ({
       id: s.id,
@@ -34,10 +32,8 @@ export const TeachersList: React.FC<Props> = ({ className = '', loading = false,
   const history = useHistory()
   const { hasAccess } = useAccessManager()
   const onInviteClick = useCallback(() => {
-    if (orgId) {
-      history.push(`/${orgId}/invite`)
-    }
-  }, [history, orgId])
+    history.push(`/invite`)
+  }, [history])
   const renderItem = useCallback((d: TableContentItem) => {
     return (
       <div className="flex justify-between">
@@ -68,8 +64,7 @@ export const TeachersList: React.FC<Props> = ({ className = '', loading = false,
       className={className}
       items={sortedItems}
       loading={loading}
-      // fabBtnLink={`/${orgId}${ROUTES.GROUPS_ADD}`}
-      itemLinkRoot={`/${orgId}${ROUTES.TEACHERS_ROOT}`}
+      itemLinkRoot={`${ROUTES.TEACHERS_ROOT}`}
       listHeader={
         <Box display="flex" alignItems="center" justifyContent="space-between">
           <FormattedMessage id="teachers.list.title" />

@@ -1,17 +1,17 @@
-import { useParams } from 'react-router-dom'
+import { useCurrentOrg } from './useCurrentOrg'
 
 export function useOrgId() {
-  const { orgId } = useParams<{ orgId?: string }>()
+  const currentOrg = useCurrentOrg()
 
-  if (!orgId) {
-    throw new Error('Organization ID is not provided in the URL')
+  if (!currentOrg) {
+    throw new Error('Organization is not set')
   }
 
-  return orgId
+  return currentOrg.key
 }
 
 export function useOrgIdNotStrict() {
-  const { orgId } = useParams<{ orgId?: string }>()
+  const currentOrg = useCurrentOrg()
 
-  return orgId
+  return currentOrg?.key
 }

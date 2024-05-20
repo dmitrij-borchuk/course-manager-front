@@ -3,7 +3,6 @@ import { FormattedMessage } from 'react-intl'
 import { Collection, Container } from 'react-materialize'
 import { Link } from 'react-router-dom'
 import { ROUTES } from '../../constants'
-import { useOrgId } from '../../hooks/useOrgId'
 import { CollectionItemLink } from '../kit/collectionItemLink/CollectionItemLink'
 import { FabBtn } from '../kit/FabBtn/FabBtn'
 import { Header } from '../kit/header/Header'
@@ -23,8 +22,6 @@ interface Props {
 }
 // TODO: probably needs to be deleted
 export const UsersList: React.FC<Props> = ({ className = '', loading = false, items = [] }) => {
-  const orgId = useOrgId()
-
   return (
     <div className={className}>
       <Header />
@@ -35,7 +32,7 @@ export const UsersList: React.FC<Props> = ({ className = '', loading = false, it
 
         <List loading={loading} items={items} />
       </Container>
-      <Link to={`${orgId}/invite`}>
+      <Link to={`/invite`}>
         <FabBtn />
       </Link>
     </div>

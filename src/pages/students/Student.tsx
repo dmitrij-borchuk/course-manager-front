@@ -21,7 +21,7 @@ export const StudentPage = () => {
     if (organization && student) {
       await deleteStudent(orgKey, organization.id, id, student.outerId)
       // TODO: Add notification
-      history.push(`/${orgKey}${ROUTES.STUDENTS_LIST}`)
+      history.push(`${ROUTES.STUDENTS_LIST}`)
     }
   }, [deleteStudent, history, id, orgKey, organization, student])
 

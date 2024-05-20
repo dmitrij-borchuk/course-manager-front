@@ -12,6 +12,7 @@ import { Message } from 'components/kit/message/Message'
 import { Header } from 'components/kit/header/Header'
 import { isAxiosError } from 'api/request'
 
+// TODO: rethink it, keep in mind new organization flow
 export const ConfirmInvitePage = () => {
   const { addToast } = useToasts()
   const { submitting, confirmInvitation, profile } = useUsersState()

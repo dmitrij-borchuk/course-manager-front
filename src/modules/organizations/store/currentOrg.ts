@@ -1,8 +1,9 @@
-import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit'
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { RootState } from 'store'
 import { Organization } from 'types/organization'
 import { fetchOrganizations } from './list'
 import storage from 'services/localStore'
+import { setHeader } from 'api/request'
 
 const initialState: {
   data: Organization | null
@@ -15,11 +16,7 @@ const initialState: {
 export const currentOrgSlice = createSlice({
   name: 'organizations/currentOrg',
   initialState,
-  reducers: {
-    setCurrentOrg: (state, action: PayloadAction<Organization>) => {
-      state.data = action.payload
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder.addCase(calcCurrentOrganization.pending, (state) => {
       state.loading = true
@@ -31,12 +28,21 @@ export const currentOrgSlice = createSlice({
     builder.addCase(calcCurrentOrganization.rejected, (state) => {
       state.loading = false
     })
+
+    builder.addCase(setCurrentOrganization.fulfilled, (state, action) => {
+      state.data = action.payload
+    })
   },
 })
 
-export const { setCurrentOrg } = currentOrgSlice.actions
-
 export default currentOrgSlice.reducer
+
+export const setCurrentOrganization = createAsyncThunk('organizations/setCurrent', async (org: Organization) => {
+  storage.setItem('currentOrgId', org.id)
+  setOrgToRequest(org.key)
+
+  return org
+})
 
 export const calcCurrentOrganization = createAsyncThunk<Organization | null, void, { state: RootState }>(
   'organizations/calcCurrent',
@@ -46,6 +52,8 @@ export const calcCurrentOrganization = createAsyncThunk<Organization | null, voi
     const list = state.organizations.list.data
     const savedOrg = storage.getItem<number>('currentOrgId')
     const selectedOrg = getCurrentOrganization(list, savedOrg)
+
+    setOrgToRequest(selectedOrg?.key)
 
     return selectedOrg
   }
@@ -65,4 +73,8 @@ function getCurrentOrganization(list: Organization[], savedOrg: number | null) {
   }
 
   return null
+}
+
+function setOrgToRequest(orgKey?: string) {
+  setHeader('X-Organization', orgKey)
 }

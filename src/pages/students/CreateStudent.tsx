@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { useHistory } from 'react-router'
 import { useToasts } from 'react-toast-notifications'
@@ -6,7 +6,6 @@ import { EditStudent, StudentForm } from '../../components/students/EditStudent'
 import { ROUTES } from '../../constants'
 import { useQuery } from '../../hooks/useQuery'
 import { useStudentsState } from '../../store'
-import { useOrgId } from '../../hooks/useOrgId'
 import { nanoid } from 'nanoid'
 import { checkStudentExistence } from 'modules/students/api'
 import { ConfirmationDialogBase } from 'components/kit/ConfirmationDialog/ConfirmationDialog'
@@ -16,9 +15,8 @@ export const CreateStudent = () => {
   const queryParams = useQuery()
   const { addToast } = useToasts()
   const history = useHistory()
-  const orgKey = useOrgId()
   const { createStudent, submitting } = useStudentsState()
-  const backUrl = queryParams.get('backUrl')
+  const backUrl = queryParams.get('backUrl') ?? ROUTES.STUDENTS_LIST
   const [confirmationDialog, setConfirmationDialog] = useState<StudentBase>()
   const [data, setData] = useState<StudentForm>()
 
@@ -29,7 +27,7 @@ export const CreateStudent = () => {
           ...data,
           outerId: nanoid(),
         })
-        history.push(backUrl || `/${orgKey}${ROUTES.STUDENTS_LIST}`)
+        history.push(backUrl)
 
         addToast(<FormattedMessage id="students.create.success" />, {
           appearance: 'success',
@@ -44,7 +42,7 @@ export const CreateStudent = () => {
         }
       }
     },
-    [addToast, backUrl, createStudent, history, orgKey]
+    [addToast, backUrl, createStudent, history]
   )
 
   const submit = useCallback(

@@ -21,7 +21,6 @@ import LogoutIcon from '@mui/icons-material/Logout'
 import { useNavBarContext } from 'components/layouts/NavBar'
 import { getMyProfileRequest } from 'modules/profiles/api'
 import { ROUTES } from '../../../constants'
-import { useOrgIdNotStrict } from '../../../hooks/useOrgId'
 
 // TODO: use logo
 
@@ -53,7 +52,6 @@ export const Header = () => {
 }
 
 function ProfileButton() {
-  const orgId = useOrgIdNotStrict()
   const { data } = useProfile()
   const { name = '' } = data?.data ?? {}
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
@@ -87,7 +85,7 @@ function ProfileButton() {
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
-        <MenuLink key="profile" to={`/${orgId}${ROUTES.MY_WORK}`}>
+        <MenuLink key="profile" to={`${ROUTES.MY_WORK}`}>
           <MenuItem onClick={handleClose}>
             <ListItemIcon>
               <AccountCircleIcon fontSize="small" />
@@ -97,7 +95,7 @@ function ProfileButton() {
             </ListItemText>
           </MenuItem>
         </MenuLink>
-        <MenuLink key="logout" to={`/${orgId}${ROUTES.LOGOUT}`}>
+        <MenuLink key="logout" to={`${ROUTES.LOGOUT}`}>
           <MenuItem onClick={handleClose}>
             <ListItemIcon>
               <LogoutIcon fontSize="small" color="error" />

@@ -2,9 +2,12 @@ import CssBaseline from '@mui/material/CssBaseline'
 import { Providers } from './Providers'
 import { Routing } from './Routing'
 import 'materialize-css'
-import { useAuthState } from './store'
+import { useAuthState, useUsersState } from './store'
 import { Loader } from './components/kit/loader/Loader'
 import { updateConfiguration } from './utils/rollbar'
+import { useAppDispatch, useAppSelector } from 'store/hooks'
+import { useEffect } from 'react'
+import { calcCurrentOrganization } from 'modules/organizations/store/currentOrg'
 
 updateConfiguration()
 
@@ -20,8 +23,23 @@ export default App
 
 function Initiator() {
   const { initiatingAuth } = useAuthState()
+  const dispatch = useAppDispatch()
+  const loadingCurrentOrg = useAppSelector((state) => state.organizations.currentOrg.loading)
+  const { currentUser } = useAuthState()
+  const { fetchProfile } = useUsersState()
 
-  if (initiatingAuth) {
+  useEffect(() => {
+    if (currentUser) {
+      fetchProfile()
+    }
+  }, [fetchProfile, currentUser])
+  useEffect(() => {
+    if (currentUser) {
+      dispatch(calcCurrentOrganization())
+    }
+  }, [currentUser, dispatch])
+
+  if (initiatingAuth || loadingCurrentOrg) {
     return (
       <div>
         <CssBaseline enableColorScheme />

@@ -4,7 +4,6 @@ import { Container } from 'react-materialize'
 import { Link } from 'react-router-dom'
 import { SubmitButton } from 'components/kit/buttons/SubmitButton'
 import { ROUTES } from '../../constants'
-import { useOrgIdNotStrict } from '../../hooks/useOrgId'
 import { Input } from '../kit/input/Input'
 import { SectionHeader } from '../kit/sectionHeader/SectionHeader'
 import './styles.css'
@@ -19,8 +18,6 @@ interface Props {
   loading?: boolean
 }
 export const Register: React.FC<Props> = ({ onSubmit, loading = false }) => {
-  const orgId = useOrgIdNotStrict()
-  const orgPrefix = orgId ? `/${orgId}` : ''
   const intl = useIntl()
   const { control, handleSubmit } = useForm<FormData>({
     defaultValues: {
@@ -76,7 +73,7 @@ export const Register: React.FC<Props> = ({ onSubmit, loading = false }) => {
             </div>
             <div className="h-px bg-gray-400 w-full" />
           </div>
-          <Link to={`${orgPrefix}${ROUTES.LOGIN}`} role="link">
+          <Link to={`${ROUTES.LOGIN}`} role="link">
             <FormattedMessage id="auth.loginLink.title" />
           </Link>
         </div>

@@ -6,11 +6,9 @@ import { useGroupsState } from '../../store'
 import { ROUTES } from '../../constants'
 import { EditGroup, GroupForm } from '../../components/groups/EditGroup'
 import { Loader } from '../../components/kit/loader/Loader'
-import { useOrgId } from '../../hooks/useOrgId'
 
 export const EditGroupPage = () => {
   const history = useHistory()
-  const orgKey = useOrgId()
   const params = useParams<{ id: string }>()
   const id = parseInt(params.id, 10)
   const { addToast } = useToasts()
@@ -24,7 +22,7 @@ export const EditGroupPage = () => {
       }
       try {
         await editGroup(group.id, data)
-        history.push(`/${orgKey}${ROUTES.GROUPS_ROOT}/${group.id}`)
+        history.push(`${ROUTES.GROUPS_ROOT}/${group.id}`)
 
         addToast(<FormattedMessage id="groups.edit.success" />, {
           appearance: 'success',
@@ -37,7 +35,7 @@ export const EditGroupPage = () => {
         })
       }
     },
-    [addToast, editGroup, group, history, orgKey]
+    [addToast, editGroup, group, history]
   )
 
   useEffect(() => {

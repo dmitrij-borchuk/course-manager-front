@@ -5,7 +5,6 @@ import { useToasts } from 'react-toast-notifications'
 import { Loader } from '../../components/kit/loader/Loader'
 import { EditStudent, StudentForm } from '../../components/students/EditStudent'
 import { ROUTES } from '../../constants'
-import { useOrgId } from '../../hooks/useOrgId'
 import { useStudentsState } from '../../store'
 import { useCurrentOrg } from '../../hooks/useCurrentOrg'
 
@@ -13,7 +12,6 @@ export const EditStudentPage = () => {
   const history = useHistory()
   const org = useCurrentOrg()
   const orgId = org?.id
-  const orgKey = useOrgId()
   let { id: idStr } = useParams<{ id: string }>()
   const id = parseInt(idStr)
   const { fetchStudent, editStudent, fetching, submitting, studentsById } = useStudentsState()
@@ -33,7 +31,7 @@ export const EditStudentPage = () => {
           ...student,
           ...data,
         })
-        history.push(`/${orgKey}${ROUTES.STUDENTS_ROOT}/${student.id}`)
+        history.push(`${ROUTES.STUDENTS_ROOT}/${student.id}`)
 
         addToast(<FormattedMessage id="students.edit.success" />, {
           appearance: 'success',
@@ -48,7 +46,7 @@ export const EditStudentPage = () => {
         }
       }
     },
-    [addToast, editStudent, history, orgId, orgKey, student]
+    [addToast, editStudent, history, orgId, student]
   )
 
   useEffect(() => {

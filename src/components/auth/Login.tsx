@@ -21,7 +21,6 @@ interface Props {
 }
 export const Login: React.FC<Props> = ({ onSubmit, loading = false }) => {
   const orgId = useOrgIdNotStrict()
-  const orgPrefix = orgId ? `/${orgId}` : ''
   const { control, handleSubmit } = useForm<FormData>({
     defaultValues: {
       identifier: '',
@@ -54,7 +53,7 @@ export const Login: React.FC<Props> = ({ onSubmit, loading = false }) => {
           />
 
           {/* Password reset */}
-          <Link to={`${orgPrefix}${ROUTES.RESET}`}>
+          <Link to={`${ROUTES.RESET}`}>
             <FormattedMessage id="auth.resetLink.label" />
           </Link>
 
@@ -68,6 +67,7 @@ export const Login: React.FC<Props> = ({ onSubmit, loading = false }) => {
         </form>
         <div className="flex flex-col items-center mt-8 gap-3">
           {/* Can't register inside of organization */}
+          {/* TODO: probably need to remove it, because we don't have any `inside` when we logged out */}
           {!orgId && (
             <>
               {/* Separator */}

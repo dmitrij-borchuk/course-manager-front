@@ -19,7 +19,6 @@ import ListItem from '@mui/material/ListItem'
 import Toolbar from '@mui/material/Toolbar'
 import List from '@mui/material/List'
 import Box from '@mui/material/Box'
-import { useOrgIdNotStrict } from 'hooks/useOrgId'
 import { useAccessManager } from 'hooks/useAccessManager'
 import { useAuthState } from 'store'
 import { DRAWER_WIDTH } from 'config'
@@ -46,7 +45,6 @@ export function NavBar() {
 
 function useOrgItems() {
   const { currentUser } = useAuthState()
-  const orgId = useOrgIdNotStrict()
   const { hasAccess } = useAccessManager()
   const location = useLocation()
   const { pathname } = location
@@ -54,13 +52,13 @@ function useOrgItems() {
   return useMemo(() => {
     const items: JSX.Element[] = []
 
-    if (currentUser && orgId) {
+    if (currentUser) {
       items.push(
-        <Link key="dashboard" to={`/${orgId}`}>
+        <Link key="dashboard" to={`/`}>
           <NavItem
             label={<FormattedMessage id="header.nav.dashboard" />}
             icon={<DashboardOutlinedIcon />}
-            active={`/${orgId}` === pathname}
+            active={`/` === pathname}
           />
         </Link>
       )
@@ -68,7 +66,7 @@ function useOrgItems() {
 
     if (hasAccess('MANAGE_TEACHERS')) {
       items.push(
-        <Link key="teachers" to={`/${orgId}${ROUTES.TEACHERS_LIST}`}>
+        <Link key="teachers" to={`${ROUTES.TEACHERS_LIST}`}>
           <NavItem
             label={<FormattedMessage id="header.nav.teachers" />}
             icon={<AccountCircleOutlinedIcon />}
@@ -79,7 +77,7 @@ function useOrgItems() {
     }
     if (hasAccess('MANAGE_GROUPS')) {
       items.push(
-        <Link key="groups" to={`/${orgId}${ROUTES.GROUPS_LIST}`}>
+        <Link key="groups" to={`${ROUTES.GROUPS_LIST}`}>
           <NavItem
             label={<FormattedMessage id="header.nav.groups" />}
             icon={<GroupOutlinedIcon />}
@@ -90,7 +88,7 @@ function useOrgItems() {
     }
     if (hasAccess('MANAGE_STUDENTS')) {
       items.push(
-        <Link key="students" to={`/${orgId}${ROUTES.STUDENTS_LIST}`}>
+        <Link key="students" to={`${ROUTES.STUDENTS_LIST}`}>
           <NavItem
             label={<FormattedMessage id="header.nav.students" />}
             icon={<GroupsOutlinedIcon />}
@@ -101,7 +99,7 @@ function useOrgItems() {
     }
     if (hasAccess('VIEW_REPORTS')) {
       items.push(
-        <Link key="reports" to={`/${orgId}${ROUTES.REPORTS_ROOT}`}>
+        <Link key="reports" to={`${ROUTES.REPORTS_ROOT}`}>
           <NavItem
             label={<FormattedMessage id="header.nav.reports" />}
             icon={<ArticleOutlinedIcon />}
@@ -112,7 +110,7 @@ function useOrgItems() {
     }
     if (hasAccess('VIEW_SETTINGS')) {
       items.push(
-        <Link key="settings" to={`/${orgId}${ROUTES.SETTINGS_API_KEY}`}>
+        <Link key="settings" to={`${ROUTES.SETTINGS_API_KEY}`}>
           <NavItem
             label={<FormattedMessage id="header.nav.settings" />}
             icon={<SettingsOutlinedIcon />}
@@ -130,7 +128,7 @@ function useOrgItems() {
     }
 
     return items
-  }, [currentUser, hasAccess, orgId, pathname])
+  }, [currentUser, hasAccess, pathname])
 }
 
 type NavItemProps = {

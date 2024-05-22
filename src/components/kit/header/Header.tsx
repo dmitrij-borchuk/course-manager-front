@@ -18,8 +18,8 @@ import {
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import MenuIcon from '@mui/icons-material/Menu'
 import LogoutIcon from '@mui/icons-material/Logout'
+import { useAppSelector } from 'store/hooks'
 import { useNavBarContext } from 'components/layouts/NavBar'
-import { getMyProfileRequest } from 'modules/profiles/api'
 import { ROUTES } from '../../../constants'
 
 // TODO: use logo
@@ -52,8 +52,8 @@ export const Header = () => {
 }
 
 function ProfileButton() {
-  const { data } = useProfile()
-  const { name = '' } = data?.data ?? {}
+  const profile = useAppSelector((state) => state.profiles.current.data)
+  const { name = '' } = profile ?? {}
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -110,13 +110,6 @@ function ProfileButton() {
       </Menu>
     </>
   )
-}
-
-// TODO: move to appropriate place
-function useProfile() {
-  return useQuery(['myProfile'], () => getMyProfileRequest(), {
-    refetchOnWindowFocus: false,
-  })
 }
 
 function getInitials(name: string) {

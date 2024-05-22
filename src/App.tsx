@@ -2,12 +2,11 @@ import CssBaseline from '@mui/material/CssBaseline'
 import { Providers } from './Providers'
 import { Routing } from './Routing'
 import 'materialize-css'
-import { useAuthState, useUsersState } from './store'
+import { initApplicationState, useAuthState, useUsersState } from './store'
 import { Loader } from './components/kit/loader/Loader'
 import { updateConfiguration } from './utils/rollbar'
 import { useAppDispatch, useAppSelector } from 'store/hooks'
 import { useEffect } from 'react'
-import { calcCurrentOrganization } from 'modules/organizations/store/currentOrg'
 
 updateConfiguration()
 
@@ -22,10 +21,9 @@ function App() {
 export default App
 
 function Initiator() {
-  const { initiatingAuth } = useAuthState()
+  const { initiatingAuth, currentUser } = useAuthState()
   const dispatch = useAppDispatch()
   const loadingCurrentOrg = useAppSelector((state) => state.organizations.currentOrg.loading)
-  const { currentUser } = useAuthState()
   const { fetchProfile } = useUsersState()
 
   useEffect(() => {
@@ -35,7 +33,7 @@ function Initiator() {
   }, [fetchProfile, currentUser])
   useEffect(() => {
     if (currentUser) {
-      dispatch(calcCurrentOrganization())
+      dispatch(initApplicationState())
     }
   }, [currentUser, dispatch])
 

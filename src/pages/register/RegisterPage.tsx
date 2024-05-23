@@ -16,12 +16,14 @@ export const RegisterPage = () => {
   const { addToast } = useToasts()
   const { register, loading } = useAuthState()
   const handleError = useDefaultErrorHandler()
+  const redirect = new URLSearchParams(history.location.search).get('redirect')
+  const redirectPath = redirect ? `?redirect=${redirect}` : ''
   const onSubmit = useCallback(
     async (data: SubmitData) => {
       try {
         await register(data.name, data.email, data.password)
 
-        history.push(`${ROUTES.LOGIN}`)
+        history.push(`${ROUTES.LOGIN}${redirectPath}`)
 
         addToast(<FormattedMessage id="auth.register.success" />, {
           appearance: 'success',
@@ -31,7 +33,7 @@ export const RegisterPage = () => {
         handleError(error)
       }
     },
-    [register, history, addToast, handleError]
+    [register, history, redirectPath, addToast, handleError]
   )
 
   return (

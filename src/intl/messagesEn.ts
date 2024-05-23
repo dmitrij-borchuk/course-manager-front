@@ -149,6 +149,7 @@ export const messages = {
   'users.invite.confirmation.loginLink': 'Go to the login',
   'users.invite.message': 'You have been invited to organization "{organizationName}" by {userName}.',
   'users.invite.success': 'User has been invited successfully',
+  'users.invite.needLogin': 'Please login/register to accept invitation',
   'users.list.title': 'Users',
   'users.list.empty': 'There is no users yet',
 

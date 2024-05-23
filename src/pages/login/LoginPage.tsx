@@ -16,12 +16,14 @@ export const LoginPage = () => {
   const history = useHistory()
   const { addToast } = useToasts()
   const { login, loading } = useAuthState()
+  const redirect = new URLSearchParams(history.location.search).get('redirect')
+  const redirectPath = redirect || ROUTES.ROOT
   const onLoginSubmit = useCallback(
     async (data: SubmitData) => {
       try {
         await login(data.identifier, data.password)
 
-        history.push(`${ROUTES.ROOT}`)
+        history.push(redirectPath)
       } catch (error: unknown) {
         if (isFirebaseError(error)) {
           if (['auth/user-not-found', 'auth/wrong-password'].includes(error.code)) {

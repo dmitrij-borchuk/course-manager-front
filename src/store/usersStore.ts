@@ -1,5 +1,4 @@
 import { useCallback, useState } from 'react'
-import { useHistory } from 'react-router-dom'
 import {
   confirmInvitation,
   getProfile,
@@ -8,14 +7,12 @@ import {
   migrateUsers,
   updateUser,
 } from '../api/users'
-import { Role } from '../config'
 import { useMapToArray } from '../hooks/useMapToArray'
 import { InviteForm } from '../types/invite'
 import { OrganizationUser, User } from '../types/user'
 import { sendToAnalytics } from '../utils/analytics'
 
 export default function useUsersStore() {
-  const history = useHistory()
   const [profile, setProfile] = useState<User>()
   const [usersById, setUsersById] = useState<Map<number, OrganizationUser>>(new Map())
   const [usersByOuterId, setUsersByOuterId] = useState<Map<string, OrganizationUser>>(new Map())
@@ -48,22 +45,17 @@ export default function useUsersStore() {
         throw error
       }
     }, []),
-    confirmInvitation: useCallback(
-      async (token: string, name: string) => {
-        setSubmitting(true)
-        try {
-          await confirmInvitation(token, name)
-          setSubmitting(false)
-
-          history.push(`/`)
-        } catch (error: any) {
-          setError(error)
-          setSubmitting(false)
-          throw error
-        }
-      },
-      [history]
-    ),
+    confirmInvitation: useCallback(async (token: string, name: string) => {
+      setSubmitting(true)
+      try {
+        await confirmInvitation(token, name)
+        setSubmitting(false)
+      } catch (error: any) {
+        setError(error)
+        setSubmitting(false)
+        throw error
+      }
+    }, []),
     fetchOrgUser: useCallback(async (orgId: number, id: string) => {
       setFetching(true)
       const res = await getUserByOuterIdRequest(orgId, id)

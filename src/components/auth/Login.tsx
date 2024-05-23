@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form'
 import { FormattedMessage } from 'react-intl'
 import { Container } from 'react-materialize'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import { ROUTES } from '../../constants'
 import { Input } from '../kit/input/Input'
 import { SubmitButton } from '../kit/buttons/SubmitButton'
@@ -19,6 +19,9 @@ interface Props {
   loading?: boolean
 }
 export const Login: React.FC<Props> = ({ onSubmit, loading = false }) => {
+  const history = useHistory()
+  const redirect = new URLSearchParams(history.location.search).get('redirect') ?? ''
+  const redirectPath = redirect ? `?redirect=${redirect}` : ''
   const { control, handleSubmit } = useForm<FormData>({
     defaultValues: {
       identifier: '',
@@ -74,7 +77,7 @@ export const Login: React.FC<Props> = ({ onSubmit, loading = false }) => {
           </div>
 
           {/* Link */}
-          <Link to={`${ROUTES.REGISTER}`} role="link">
+          <Link to={`${ROUTES.REGISTER}${redirectPath}`} role="link">
             <FormattedMessage id="auth.registerLink.label" />
           </Link>
         </div>

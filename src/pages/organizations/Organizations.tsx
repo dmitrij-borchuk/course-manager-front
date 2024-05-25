@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from 'store/hooks'
 import { setCurrentOrganization } from 'modules/organizations/store/currentOrg'
+import { fetchCurrentProfile } from 'modules/profiles/store/currentProfile'
 import { fetchOrganizations } from 'modules/organizations/store/list'
 import { Organization } from 'types/organization'
 import { NoSidebarPage } from 'components/layouts/NoSidebarPage'
@@ -19,6 +20,8 @@ export const OrganizationsPage = () => {
 
   const onOrgSelected = async (org: Organization) => {
     await dispatch(setCurrentOrganization(org))
+    await dispatch(fetchCurrentProfile())
+
     history.push(`/`)
   }
 

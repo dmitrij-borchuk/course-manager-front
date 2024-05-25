@@ -1,10 +1,11 @@
 import { useCallback } from 'react'
 import { useIntl } from 'react-intl'
+import { useNotification } from 'hooks/useNotification'
+import { GeneralPage } from 'components/layouts/GeneralPage'
+import { InviteForm } from 'types/invite'
 import { InviteUser } from '../../components/users/InviteUser'
 import { useCurrentOrg } from '../../hooks/useCurrentOrg'
 import useUsersStore from '../../store/usersStore'
-import { useNotification } from 'hooks/useNotification'
-import { GeneralPage } from 'components/layouts/GeneralPage'
 
 export const InviteUserPage = () => {
   const intl = useIntl()
@@ -12,7 +13,7 @@ export const InviteUserPage = () => {
   const org = useCurrentOrg()
   const { showError, showSuccess } = useNotification()
   const onSubmit = useCallback(
-    async (data) => {
+    async (data: InviteForm) => {
       if (org) {
         try {
           await inviteUser(org.id, data)

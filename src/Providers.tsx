@@ -14,8 +14,10 @@ import { NavBarProvider } from 'components/layouts/NavBar'
 
 const queryClient = new QueryClient()
 
-interface Props {}
-export const Providers: React.FC<Props> = ({ children }) => {
+interface Props {
+  children: React.ReactNode
+}
+export const Providers = ({ children }: Props) => {
   return (
     <>
       <IntlProvider messages={messages} locale="en" defaultLocale="en">

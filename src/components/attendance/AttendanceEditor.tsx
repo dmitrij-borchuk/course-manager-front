@@ -60,7 +60,7 @@ export const AttendanceEditor = (props: Props) => {
   })
   const [selected, setSelected] = useState<Dictionary<boolean>>({})
   const onSubmitInternal = useCallback(
-    (data) => {
+    (data: AttendanceForm) => {
       onSubmit({
         ...data,
         selected,

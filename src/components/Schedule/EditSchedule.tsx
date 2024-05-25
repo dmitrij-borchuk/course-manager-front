@@ -39,7 +39,7 @@ export const EditSchedule: React.FC<Props> = ({
     reValidateMode: 'onChange',
   })
   const onLocalSubmit = useCallback(
-    async (d) => {
+    async (d: ScheduleFormData) => {
       try {
         await onSubmit(d)
       } catch (error) {

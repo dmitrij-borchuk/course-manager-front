@@ -5,6 +5,7 @@ interface Props {
   className?: string
   onClose?: () => void
   onClick?: MouseEventHandler<HTMLDivElement>
+  children?: React.ReactNode
 }
 export const Tag: React.FC<Props> = ({ children, className, onClose, onClick }) => {
   return (

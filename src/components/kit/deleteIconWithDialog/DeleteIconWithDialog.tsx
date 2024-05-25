@@ -21,6 +21,7 @@ export const DeleteIconWithDialog = ({ onSubmit = noop, header, content, trigger
   }, [onSubmit])
 
   return (
+    // @ts-expect-error
     <Modal
       actions={[
         <Button flat modal="close" disabled={loading} data-testid="dialog-btn-no">

@@ -5,7 +5,8 @@ export const getAuth = jest.fn(() => {
       return cb({ uid: 'userId', getIdToken: () => Promise.resolve('token') })
     },
     onIdTokenChanged: (cb) => {
-      return cb({ uid: 'userId', getIdToken: () => Promise.resolve('token') })
+      cb({ uid: 'userId', getIdToken: () => Promise.resolve('token') })
+      return () => {}
     },
   }
 })

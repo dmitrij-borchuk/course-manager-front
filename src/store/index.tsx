@@ -1,12 +1,11 @@
 import constate from 'constate'
 import { ReactNode } from 'react'
-import { configureStore, createAsyncThunk } from '@reduxjs/toolkit'
+import { configureStore } from '@reduxjs/toolkit'
 import { Provider } from 'react-redux'
-import { calcCurrentOrganization } from 'modules/organizations/store/currentOrg'
 import { organizationsReducer } from 'modules/organizations/store'
-import { fetchCurrentProfile } from 'modules/profiles/store/currentProfile'
 import { profilesReducer } from 'modules/profiles/store'
 import { useAttendancesStore } from './attendancesStore'
+import { applicationReducer } from './applicationStore'
 import { useAuthStore } from './authStore'
 import useGroupsStore from './groupsStore'
 import useStudentsStore, { InitialStudentsState } from './studentsStore'
@@ -61,6 +60,7 @@ export function makeStore(initialState?: Record<any, any>) {
     reducer: {
       organizations: organizationsReducer,
       profiles: profilesReducer,
+      application: applicationReducer,
     },
     preloadedState: initialState,
   })
@@ -71,11 +71,3 @@ export type RootState = ReturnType<typeof store.getState>
 export type AppDispatch = typeof store.dispatch
 
 export const StoreProvider = ({ children }: { children: ReactNode }) => <Provider store={store}>{children}</Provider>
-
-export const initApplicationState = createAsyncThunk<void, void, { dispatch: AppDispatch }>(
-  'app/init',
-  async (_, { dispatch }) => {
-    await dispatch(calcCurrentOrganization())
-    await dispatch(fetchCurrentProfile())
-  }
-)

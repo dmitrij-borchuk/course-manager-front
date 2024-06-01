@@ -1,12 +1,14 @@
+import { useCallback, useEffect, useState } from 'react'
+import 'materialize-css'
 import CssBaseline from '@mui/material/CssBaseline'
 import { Providers } from './Providers'
 import { Routing } from './Routing'
-import 'materialize-css'
-import { initApplicationState, useAuthState, useUsersState } from './store'
-import { Loader } from './components/kit/loader/Loader'
-import { updateConfiguration } from './utils/rollbar'
+import { listenForAuthUserChange, unsubscribeFromAuthUserChange } from 'store/authSlice'
 import { useAppDispatch, useAppSelector } from 'store/hooks'
-import { useEffect } from 'react'
+import { initiateApp } from 'store/applicationStore'
+import { useUsersState } from './store'
+import { updateConfiguration } from './utils/rollbar'
+import { Loader } from './components/kit/loader/Loader'
 
 updateConfiguration()
 
@@ -21,23 +23,32 @@ function App() {
 export default App
 
 function Initiator() {
-  const { initiatingAuth, currentUser } = useAuthState()
   const dispatch = useAppDispatch()
-  const loadingCurrentOrg = useAppSelector((state) => state.organizations.currentOrg.loading)
+  const authUser = useAppSelector((state) => state.application.auth.data)
   const { fetchProfile } = useUsersState()
+  const [initiated, setInitiated] = useState(false)
 
   useEffect(() => {
-    if (currentUser) {
+    dispatch(listenForAuthUserChange())
+    return () => {
+      dispatch(unsubscribeFromAuthUserChange())
+    }
+  }, [dispatch])
+  useEffect(() => {
+    if (authUser) {
       fetchProfile()
     }
-  }, [fetchProfile, currentUser])
-  useEffect(() => {
-    if (currentUser) {
-      dispatch(initApplicationState())
-    }
-  }, [currentUser, dispatch])
+  }, [fetchProfile, authUser])
+  const initiate = useCallback(async () => {
+    await dispatch(initiateApp())
+    setInitiated(true)
+  }, [dispatch])
 
-  if (initiatingAuth || loadingCurrentOrg) {
+  useEffect(() => {
+    initiate()
+  }, [initiate])
+
+  if (!initiated) {
     return (
       <div>
         <CssBaseline enableColorScheme />

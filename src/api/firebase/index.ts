@@ -4,7 +4,7 @@ import { initializeApp } from 'firebase/app'
 // If you enabled Analytics in your project, add the Firebase SDK for Analytics
 import { getAnalytics } from 'firebase/analytics'
 
-import { getAuth } from 'firebase/auth'
+import { User, getAuth } from 'firebase/auth'
 import { initializeFirestore } from 'firebase/firestore'
 import { isProduction } from '../../config'
 
@@ -34,6 +34,15 @@ export const db = initializeFirestore(firebaseApp, {
   // Needed for Firestore support in Cypress (see https://github.com/cypress-io/cypress/issues/6350)
   experimentalForceLongPolling: !!win.Cypress,
 })
+
+export async function getFbUser() {
+  return new Promise<User | null>((resolve) => {
+    const unsubscribe = auth.onIdTokenChanged((user) => {
+      resolve(user)
+      unsubscribe()
+    })
+  })
+}
 
 if (isProduction) {
   getAnalytics(firebaseApp)

@@ -88,7 +88,7 @@ describe('ReportByTagTab', () => {
     )
 
     const tagsEditorInput = await screen.findByLabelText('Tags')
-    userEvent.type(tagsEditorInput, 'Lviv{enter}')
+    await userEvent.type(tagsEditorInput, 'Lviv{enter}')
     await screen.findByText('Open in new tab')
 
     renderPdf()
@@ -102,8 +102,8 @@ describe('ReportByTagTab', () => {
   function renderPdf() {
     expect(usePDF).toBeCalled()
     const lastCall = usePDF.mock.calls[usePDF.mock.calls.length - 1]
-    const document = lastCall[0].document
-    render(document)
+    const document = lastCall[0]?.document
+    render(document!)
   }
 
   async function getPercentsArray() {

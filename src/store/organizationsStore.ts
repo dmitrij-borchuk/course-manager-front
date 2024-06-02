@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'react'
-import { createOrganizations, getInviteInfo, getUserOrganizations, migrateOrganizations } from '../api/organizations'
+import { getUserOrganizations } from 'modules/organizations/api/list'
+import { createOrganizations, getInviteInfo, migrateOrganizations } from '../api/organizations'
 import { useDictionaryToArray } from '../hooks/useDictionaryToArray'
 import { Dictionary } from '../types/dictionary'
 import { InviteInfo, Organization, OrganizationCreate } from '../types/organization'

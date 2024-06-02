@@ -2,6 +2,7 @@ import React from 'react'
 
 interface Props {
   className?: string
+  children: React.ReactNode
 }
 export const Ellipsis: React.FC<Props> = ({ children, className = '' }) => {
   const stringContent = typeof children === 'string'

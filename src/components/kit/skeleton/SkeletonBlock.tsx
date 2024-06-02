@@ -5,6 +5,7 @@ interface Props {
   className?: string
   width?: string
   height?: string
+  children?: React.ReactNode
 }
 export const SkeletonBlock: React.FC<Props> = ({ className = '', width, height, children }) => {
   return (

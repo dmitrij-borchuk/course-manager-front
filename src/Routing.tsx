@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react'
-import { Switch, Route, Link, useLocation } from 'react-router-dom'
+import React from 'react'
+import { Switch, Route, Redirect } from 'react-router-dom'
 import { ROUTES } from './constants'
 import { AuthGuardedRoute } from './components/guardedRoute/GuardedRoute'
 import { LoginPageLoadable } from './pages/login'
@@ -31,15 +31,10 @@ import { ConfirmInvitePage } from './pages/users/ConfirmInvite'
 import { StudentImportPageLoadable } from './pages/import/students'
 import { ReportsPageLoadable } from './pages/reports'
 import { AdminBackupPageLoadable, AdminPageLoadable } from './pages/admin'
-import { useAuthState, useOrganizationsState, useUsersState } from './store'
-import { useCurrentOrg } from './hooks/useCurrentOrg'
-import { Loader } from './components/kit/loader/Loader'
-import { FormattedMessage } from 'react-intl'
-import { Text } from './components/kit/text/Text'
-import { setHeader } from './api/request'
 import { ProfilePage } from 'pages/profile/ProfilePage'
 import { SettingsPage } from 'modules/settings/components/SettingsPage'
 import { withGeneralPageLayout } from 'hocs/withGeneralPageLayout'
+import { useAppSelector } from 'store/hooks'
 
 const GroupsListPage = withGeneralPageLayout(GroupsListPageLoadable, 'Groups')
 const CreateGroupPage = withGeneralPageLayout(CreateGroupPageLoadable, 'Create Group')
@@ -72,14 +67,6 @@ const BackupPage = () => (
 )
 
 export const Routing = React.memo(function () {
-  const { currentUser } = useAuthState()
-  const { fetchProfile } = useUsersState()
-  useEffect(() => {
-    if (currentUser) {
-      fetchProfile()
-    }
-  }, [fetchProfile, currentUser])
-
   return (
     <Switch>
       {/* Default auth flow */}
@@ -102,13 +89,13 @@ export const Routing = React.memo(function () {
       <AuthGuardedRoute component={BackupPage} path="/admin/backup" exact />
       <AuthGuardedRoute component={AdminPage} path="/admin" exact />
 
-      <Route component={ConfirmInvitePage} path="/:orgId/invite/confirm/:token" exact />
+      <Route component={ConfirmInvitePage} path="/invite/confirm/:token" exact />
 
       {/* Organizations */}
       <AuthGuardedRoute component={CreateOrganizationPage} path={`${ROUTES.ORGANIZATIONS_ADD}`} exact />
-      <AuthGuardedRoute component={OrganizationsPage} path="/" exact />
+      <AuthGuardedRoute component={OrganizationsPage} path={`${ROUTES.ORGANIZATIONS_ROOT}`} exact />
 
-      <Route path={`/:orgId`}>
+      <Route path={`/`}>
         <OrganizationGuardedRoute />
       </Route>
 
@@ -119,94 +106,59 @@ export const Routing = React.memo(function () {
 })
 
 const OrganizationGuardedRoute = () => {
-  const organization = useCurrentOrg()
-  const { loading } = useOrganizationsState()
-  const location = useLocation()
+  const currentOrg = useAppSelector((state) => state.organizations.currentOrg.data)
 
-  useEffect(() => {
-    const parts = location.pathname.split('/')
-    setHeader('X-Organization', parts[1])
-
-    return () => {
-      setHeader('X-Organization', undefined)
-    }
-  }, [location])
-
-  if (loading) {
-    return <Loader show data-testid="org-preloader" />
-  }
-
-  if (!organization) {
-    return (
-      <Text type="h3">
-        <FormattedMessage id="organizations.notFound" />{' '}
-        <Link to="/">
-          <FormattedMessage id="organizations.notFound.backHome" />
-        </Link>
-      </Text>
-    )
+  if (!currentOrg) {
+    return <Redirect to={ROUTES.ORGANIZATIONS_ROOT} />
   }
 
   return (
     <Switch>
-      {/* Organization auth flow */}
-      <Route path={`/:orgId${ROUTES.LOGIN}`}>
-        {/* TODO: add lazy loading */}
-        <LoginPageLoadable />
-      </Route>
-      <Route path={`/:orgId${ROUTES.LOGOUT}`}>
-        <LogoutPage />
-      </Route>
-      <Route path={`/:orgId${ROUTES.RESET}`}>
-        {/* TODO: add lazy loading */}
-        <ResetPasswordPage />
-      </Route>
+      <AuthGuardedRoute component={DashboardPage} path="/" exact />
 
-      <AuthGuardedRoute component={DashboardPage} path="/:orgId/" exact />
-
-      <AuthGuardedRoute component={InviteUserPage} path="/:orgId/invite" exact />
+      <AuthGuardedRoute component={InviteUserPage} path="/invite" exact />
 
       {/* Users */}
-      {/* <AuthGuardedRoute component={CreateTeacherPage} path={`/:orgId${ROUTES.TEACHERS_ADD}`} exact />
-      <AuthGuardedRoute component={EditTeacherPage} path={`/:orgId${ROUTES.TEACHERS_EDIT}/:id`} exact /> */}
-      {/* <AuthGuardedRoute component={TeacherPage} path={`/:orgId$/{ROUTES.TEACHERS_ROOT}/:id`} exact /> */}
+      {/* <AuthGuardedRoute component={CreateTeacherPage} path={`${ROUTES.TEACHERS_ADD}`} exact />
+      <AuthGuardedRoute component={EditTeacherPage} path={`${ROUTES.TEACHERS_EDIT}/:id`} exact /> */}
+      {/* <AuthGuardedRoute component={TeacherPage} path={`$/{ROUTES.TEACHERS_ROOT}/:id`} exact /> */}
 
       {/* Teachers */}
       {/* TODO: rename to `users` */}
-      <AuthGuardedRoute component={TeachersListWithHeader} path={`/:orgId${ROUTES.TEACHERS_LIST}`} exact />
-      <AuthGuardedRoute component={TeacherPage} path={`/:orgId${ROUTES.TEACHERS_ROOT}/:id`} exact />
+      <AuthGuardedRoute component={TeachersListWithHeader} path={`${ROUTES.TEACHERS_LIST}`} exact />
+      <AuthGuardedRoute component={TeacherPage} path={`${ROUTES.TEACHERS_ROOT}/:id`} exact />
 
       {/* Groups */}
-      <AuthGuardedRoute component={CreateGroupPage} path={`/:orgId${ROUTES.GROUPS_ADD}`} exact />
-      <AuthGuardedRoute component={EditGroupPage} path={`/:orgId${ROUTES.GROUPS_EDIT}/:id`} exact />
-      <AuthGuardedRoute component={GroupsListPage} path={`/:orgId${ROUTES.GROUPS_LIST}`} exact />
-      <AuthGuardedRoute component={GroupPage} path={`/:orgId${ROUTES.GROUPS_ROOT}/:id`} exact />
+      <AuthGuardedRoute component={CreateGroupPage} path={`${ROUTES.GROUPS_ADD}`} exact />
+      <AuthGuardedRoute component={EditGroupPage} path={`${ROUTES.GROUPS_EDIT}/:id`} exact />
+      <AuthGuardedRoute component={GroupsListPage} path={`${ROUTES.GROUPS_LIST}`} exact />
+      <AuthGuardedRoute component={GroupPage} path={`${ROUTES.GROUPS_ROOT}/:id`} exact />
 
       {/* Students */}
-      <AuthGuardedRoute component={CreateStudentPage} path={`/:orgId${ROUTES.STUDENTS_ADD}`} exact />
-      <AuthGuardedRoute component={EditStudentPage} path={`/:orgId${ROUTES.STUDENTS_EDIT}/:id`} exact />
-      <AuthGuardedRoute component={StudentsListPage} path={`/:orgId${ROUTES.STUDENTS_LIST}`} exact />
-      <AuthGuardedRoute component={StudentPage} path={`/:orgId${ROUTES.STUDENTS_ROOT}/:id`} exact />
-      <AuthGuardedRoute component={() => <StudentInGroupPage />} path={`/:orgId${ROUTES.STUDENTS_BY_ACTIVITY}`} exact />
+      <AuthGuardedRoute component={CreateStudentPage} path={`${ROUTES.STUDENTS_ADD}`} exact />
+      <AuthGuardedRoute component={EditStudentPage} path={`${ROUTES.STUDENTS_EDIT}/:id`} exact />
+      <AuthGuardedRoute component={StudentsListPage} path={`${ROUTES.STUDENTS_LIST}`} exact />
+      <AuthGuardedRoute component={StudentPage} path={`${ROUTES.STUDENTS_ROOT}/:id`} exact />
+      <AuthGuardedRoute component={() => <StudentInGroupPage />} path={`${ROUTES.STUDENTS_BY_ACTIVITY}`} exact />
 
       {/* Schedule */}
-      <AuthGuardedRoute component={SchedulePage} path={`/:orgId${ROUTES.SCHEDULES_ROOT}`} exact />
+      <AuthGuardedRoute component={SchedulePage} path={`${ROUTES.SCHEDULES_ROOT}`} exact />
 
       {/* Attendance */}
-      <AuthGuardedRoute component={AttendanceEditor} path={`/:orgId${ROUTES.ATTENDANCE_EDIT}/:id`} exact />
-      <AuthGuardedRoute component={AttendanceEditor} path={`/:orgId${ROUTES.ATTENDANCE_ADD}`} exact />
-      <AuthGuardedRoute component={AttendanceEditor} path={`/:orgId${ROUTES.ATTENDANCE_ADD}/:date`} exact />
+      <AuthGuardedRoute component={AttendanceEditor} path={`${ROUTES.ATTENDANCE_EDIT}/:id`} exact />
+      <AuthGuardedRoute component={AttendanceEditor} path={`${ROUTES.ATTENDANCE_ADD}`} exact />
+      <AuthGuardedRoute component={AttendanceEditor} path={`${ROUTES.ATTENDANCE_ADD}/:date`} exact />
 
       {/* Reports */}
-      <AuthGuardedRoute component={ReportsPage} path={`/:orgId${ROUTES.REPORTS_ROOT}`} exact />
+      <AuthGuardedRoute component={ReportsPage} path={`${ROUTES.REPORTS_ROOT}`} exact />
 
       {/* Settings */}
-      <AuthGuardedRoute component={SettingsPage} path={`/:orgId${ROUTES.SETTINGS_API_KEY}`} exact />
+      <AuthGuardedRoute component={SettingsPage} path={`${ROUTES.SETTINGS_API_KEY}`} exact />
 
       {/* Import */}
-      <AuthGuardedRoute component={StudentImportPage} path="/:orgId/import" exact />
+      <AuthGuardedRoute component={StudentImportPage} path="/import" exact />
 
-      <AuthGuardedRoute component={ProfilePage} path={`/:orgId${ROUTES.MY_WORK}`} exact />
+      <AuthGuardedRoute component={ProfilePage} path={`${ROUTES.MY_WORK}`} exact />
     </Switch>
   )
 }

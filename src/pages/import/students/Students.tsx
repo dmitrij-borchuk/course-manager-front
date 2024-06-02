@@ -32,10 +32,10 @@ export const StudentsImport = () => {
   })
   const fileType = watch('fileType')
   const onSubmit = useCallback(
-    async (d) => {
+    async (d: ImportStudentsForm) => {
       setReading(true)
       try {
-        const textData = await d.file.text()
+        const textData = (await d.file?.text()) ?? ''
         const data = await fromFileToJson(fileType, textData)
         const { nameColumn, tagsColumn, isMultipleTags } = d
 
@@ -136,7 +136,9 @@ export const StudentsImport = () => {
           name={'fileType'}
         >
           {fileTypes.map((type) => (
-            <option value={type}>{intl.formatMessage({ id: `import.fileType.${type}` })}</option>
+            <option key={type} value={type}>
+              {intl.formatMessage({ id: `import.fileType.${type}` })}
+            </option>
           ))}
         </Select>
 

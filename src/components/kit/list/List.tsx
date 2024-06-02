@@ -68,6 +68,7 @@ function renderLinkItem<T extends { id: string | number }>(
 ) {
   return (data: T) => (
     <CollectionItemLink key={data.id} to={`${itemLinkRoot}/${data.id}`} data-testid="list-link-item">
+      {/* @ts-expect-error */}
       <Ellipsis>{renderItem ? renderItem(data) : data[labelProp]}</Ellipsis>
     </CollectionItemLink>
   )

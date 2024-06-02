@@ -63,7 +63,7 @@ export const TitleWithEdit = ({
     setIsEditing(false)
   }, [])
   const onDocumentKeydown = useCallback(
-    (e) => {
+    (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         setIsEditing(false)
         setNewValue(value || '')

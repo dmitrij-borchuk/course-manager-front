@@ -1,6 +1,5 @@
 import React from 'react'
 import { FormattedMessage } from 'react-intl'
-import { useQuery } from 'react-query'
 import { Link } from 'react-router-dom'
 import {
   AppBar,
@@ -18,10 +17,9 @@ import {
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import MenuIcon from '@mui/icons-material/Menu'
 import LogoutIcon from '@mui/icons-material/Logout'
+import { useAppSelector } from 'store/hooks'
 import { useNavBarContext } from 'components/layouts/NavBar'
-import { getMyProfileRequest } from 'modules/profiles/api'
 import { ROUTES } from '../../../constants'
-import { useOrgIdNotStrict } from '../../../hooks/useOrgId'
 
 // TODO: use logo
 
@@ -53,9 +51,8 @@ export const Header = () => {
 }
 
 function ProfileButton() {
-  const orgId = useOrgIdNotStrict()
-  const { data } = useProfile()
-  const { name = '' } = data?.data ?? {}
+  const profile = useAppSelector((state) => state.profiles.current.data)
+  const { name = '' } = profile ?? {}
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -87,7 +84,7 @@ function ProfileButton() {
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
-        <MenuLink key="profile" to={`/${orgId}${ROUTES.MY_WORK}`}>
+        <MenuLink key="profile" to={`${ROUTES.MY_WORK}`}>
           <MenuItem onClick={handleClose}>
             <ListItemIcon>
               <AccountCircleIcon fontSize="small" />
@@ -97,7 +94,7 @@ function ProfileButton() {
             </ListItemText>
           </MenuItem>
         </MenuLink>
-        <MenuLink key="logout" to={`/${orgId}${ROUTES.LOGOUT}`}>
+        <MenuLink key="logout" to={`${ROUTES.LOGOUT}`}>
           <MenuItem onClick={handleClose}>
             <ListItemIcon>
               <LogoutIcon fontSize="small" color="error" />
@@ -112,13 +109,6 @@ function ProfileButton() {
       </Menu>
     </>
   )
-}
-
-// TODO: move to appropriate place
-function useProfile() {
-  return useQuery(['myProfile'], () => getMyProfileRequest(), {
-    refetchOnWindowFocus: false,
-  })
 }
 
 function getInitials(name: string) {

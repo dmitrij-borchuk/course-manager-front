@@ -1,8 +1,6 @@
-import { useOrgId } from 'hooks/useOrgId'
 import { Link, LinkProps } from 'react-router-dom'
 
+// TODO: probably we don't need this component at all
 export function OrgLink({ to, ...props }: LinkProps) {
-  const orgKey = useOrgId()
-
-  return <Link {...props} to={`/${orgKey}${to}`} />
+  return <Link {...props} to={`${to}`} />
 }

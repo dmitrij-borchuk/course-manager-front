@@ -5,7 +5,6 @@ import { Activity } from 'types/activity'
 import { AttendanceRateBadge } from 'components/kit/attendanceRateBadge/AttendancerateBadge'
 import { ListWithLinks } from 'components/kit/list/List'
 import { Ellipsis } from 'components/kit/ellipsis/Ellipsis'
-import { useOrgId } from 'hooks/useOrgId'
 import { ROUTES } from '../../../constants'
 
 type Props = {
@@ -15,7 +14,6 @@ type Props = {
 }
 export function ActivitiesList({ items, attendanceRates, loading }: Props) {
   const { onSort, sortId, sortOrder, sortedItems } = useSortingByHeader(items, attendanceRates)
-  const orgKey = useOrgId()
   const renderItem = useCallback((g: TableContentItem) => {
     return (
       <div className={`flex justify-between transition-opacity ${g.archived ? 'opacity-40 hover:opacity-100' : ''}`}>
@@ -31,7 +29,7 @@ export function ActivitiesList({ items, attendanceRates, loading }: Props) {
     <ListWithLinks
       items={sortedItems}
       loading={loading}
-      itemLinkRoot={`/${orgKey}${ROUTES.GROUPS_ROOT}`}
+      itemLinkRoot={`${ROUTES.GROUPS_ROOT}`}
       labelProp="name"
       renderItem={renderItem}
       header={{

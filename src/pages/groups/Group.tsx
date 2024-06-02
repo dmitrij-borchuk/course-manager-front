@@ -5,7 +5,6 @@ import { useAttendancesForGroups } from 'store/attendancesStore'
 import { fetchActivity } from 'modules/activities/api'
 import { useGroupsState, useStudentsOfGroupState } from '../../store'
 import { Group } from '../../components/groups/Group'
-import { useOrgId } from '../../hooks/useOrgId'
 import { useAttendanceRateByStudent } from '../../hooks/useAttendanceRate'
 import { ROUTES } from '../../constants'
 
@@ -21,7 +20,6 @@ export const GroupPage = () => {
     fetching: loadingGroups,
   } = useStudentsOfGroupState()
   const activityQuery = useActivity(id)
-  const orgKey = useOrgId()
   const activity = activityQuery.data
   const attendanceQuery = useAttendancesForGroups(activity ? [activity.outerId] : [])
   const attendances = attendanceQuery.data
@@ -29,8 +27,8 @@ export const GroupPage = () => {
   const onDelete = useCallback(() => {
     deleteGroup(id)
 
-    history.push(`/${orgKey}${ROUTES.GROUPS_LIST}`)
-  }, [deleteGroup, history, id, orgKey])
+    history.push(`${ROUTES.GROUPS_LIST}`)
+  }, [deleteGroup, history, id])
   const onClose = useCallback(async () => {
     await closeGroup(id)
     activityQuery.refetch()

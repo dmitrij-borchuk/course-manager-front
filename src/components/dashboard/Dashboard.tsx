@@ -2,7 +2,6 @@ import { ReactNode, useCallback, useEffect, useRef } from 'react'
 import { useHistory } from 'react-router-dom'
 import { FormattedMessage } from 'react-intl'
 import { Box, CircularProgress } from '@mui/material'
-import { useOrgId } from 'hooks/useOrgId'
 import { noop } from 'utils/common'
 import { SectionHeader } from 'components/kit/sectionHeader/SectionHeader'
 import { AddButton } from 'components/inputs/AddButton'
@@ -18,12 +17,9 @@ interface Props {
 }
 export const Dashboard: React.FC<Props> = ({ items, loading = false, onLoadMore = noop }) => {
   const history = useHistory()
-  const orgId = useOrgId()
   const onReportClick = useCallback(() => {
-    if (orgId) {
-      history.push(`/${orgId}${ROUTES.ATTENDANCE_ADD}`)
-    }
-  }, [history, orgId])
+    history.push(`${ROUTES.ATTENDANCE_ADD}`)
+  }, [history])
 
   return (
     <Box display="flex" flexDirection="column" height="100%">

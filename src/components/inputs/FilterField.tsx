@@ -11,7 +11,7 @@ type Props = {
 export function FilterField({ onChange, onDebouncedChange = noop }: Props) {
   const [filterTerm, setFilterTerm] = useState('')
   const onDebouncedChangeCallback = useDebounceFn(onDebouncedChange, 300)
-  const onFilter = useCallback(
+  const onFilter: React.ChangeEventHandler<HTMLTextAreaElement> = useCallback(
     (e) => {
       setFilterTerm(e.target.value)
       onChange?.(e.target.value)
@@ -19,7 +19,7 @@ export function FilterField({ onChange, onDebouncedChange = noop }: Props) {
     },
     [onChange, onDebouncedChangeCallback]
   )
-  const clearFilter = useCallback(
+  const clearFilter: React.MouseEventHandler<HTMLButtonElement> = useCallback(
     (e) => {
       setFilterTerm('')
       onChange?.('')

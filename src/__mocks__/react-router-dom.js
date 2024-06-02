@@ -3,6 +3,9 @@ import React from 'react'
 export const useParams = jest.fn()
 export const useHistory = () => ({
   push: jest.fn(),
+  location: {
+    search: '',
+  },
 })
 export const Link = React.forwardRef(({ children, ...props }, ref) => (
   <a ref={ref} {...props}>

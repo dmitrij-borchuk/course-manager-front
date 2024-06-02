@@ -1,5 +1,11 @@
 import constate from 'constate'
+import { ReactNode } from 'react'
+import { configureStore } from '@reduxjs/toolkit'
+import { Provider } from 'react-redux'
+import { organizationsReducer } from 'modules/organizations/store'
+import { profilesReducer } from 'modules/profiles/store'
 import { useAttendancesStore } from './attendancesStore'
+import { applicationReducer } from './applicationStore'
 import { useAuthStore } from './authStore'
 import useGroupsStore from './groupsStore'
 import useStudentsStore, { InitialStudentsState } from './studentsStore'
@@ -25,7 +31,7 @@ function useStore({ students, activities }: DefaultStore) {
   }
 }
 
-const [StoreProvider, groups, auth, attendances, students, activities, studentsOfGroup, organizations, users] =
+const [ConstateStoreProvider, groups, auth, attendances, students, activities, studentsOfGroup, organizations, users] =
   constate(
     useStore,
     (value) => value.groups,
@@ -38,7 +44,7 @@ const [StoreProvider, groups, auth, attendances, students, activities, studentsO
     (value) => value.users
   )
 
-export default StoreProvider
+export default ConstateStoreProvider
 
 export const useGroupsState = groups
 export const useAuthState = auth
@@ -48,3 +54,20 @@ export const useActivitiesState = activities
 export const useStudentsOfGroupState = studentsOfGroup
 export const useOrganizationsState = organizations
 export const useUsersState = users
+
+export function makeStore(initialState?: Record<any, any>) {
+  return configureStore({
+    reducer: {
+      organizations: organizationsReducer,
+      profiles: profilesReducer,
+      application: applicationReducer,
+    },
+    preloadedState: initialState,
+  })
+}
+const store = makeStore()
+
+export type RootState = ReturnType<typeof store.getState>
+export type AppDispatch = typeof store.dispatch
+
+export const StoreProvider = ({ children }: { children: ReactNode }) => <Provider store={store}>{children}</Provider>

@@ -29,7 +29,7 @@ export function AttendanceDetails({ participant, activityId }: Props) {
   const incrementFn = useRef(getIncrementFunction(ViewType.DESKTOP))
   const [viewType, setViewType] = useState(ViewType.DESKTOP)
   const isCurrentYear = useMemo(() => date.getFullYear() === new Date().getFullYear(), [date])
-  const viewChangeHandler = useCallback((view) => {
+  const viewChangeHandler = useCallback((view: ViewType) => {
     setViewType(view)
     incrementFn.current = getIncrementFunction(view)
   }, [])
@@ -261,6 +261,7 @@ export function AttendanceDetailsTimeline({ attendances, studentOuterId, allGrou
                   const groupName = allGroupsById[a.group]?.name
                   return (
                     <div
+                      key={a.id}
                       className={`flex w-full justify-between pl-4 pr-4 items-center ${
                         attended ? 'bg-green-200' : 'bg-red-200'
                       }`}

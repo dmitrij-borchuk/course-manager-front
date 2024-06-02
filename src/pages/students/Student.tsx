@@ -3,8 +3,6 @@ import { useHistory, useParams } from 'react-router-dom'
 import { useStudentsState } from '../../store'
 import { ROUTES } from '../../constants'
 import { Student } from '../../components/students/Student'
-import { useOrgId } from '../../hooks/useOrgId'
-import { useCurrentOrg } from '../../hooks/useCurrentOrg'
 
 // TODO: Add 404 state
 export const StudentPage = () => {
@@ -14,16 +12,12 @@ export const StudentPage = () => {
 
   const { fetchStudent, studentsById, deleteStudent } = useStudentsState()
   const student = studentsById.get(id)
-  const orgKey = useOrgId()
-  const organization = useCurrentOrg()
 
   const onDelete = useCallback(async () => {
-    if (organization && student) {
-      await deleteStudent(orgKey, organization.id, id, student.outerId)
-      // TODO: Add notification
-      history.push(`/${orgKey}${ROUTES.STUDENTS_LIST}`)
-    }
-  }, [deleteStudent, history, id, orgKey, organization, student])
+    await deleteStudent(id)
+    // TODO: Add notification
+    history.push(`${ROUTES.STUDENTS_LIST}`)
+  }, [deleteStudent, history, id])
 
   useEffect(() => {
     fetchStudent(id)

@@ -27,7 +27,7 @@ export function ListPage<T extends { id: string | number }>({
     if (!filter) return items
     return items.filter((i) => filter.predicate(i, filterTerm))
   }, [filter, filterTerm, items])
-  const onFilter = useCallback((value) => {
+  const onFilter = useCallback((value: string) => {
     setFilterTerm(value)
   }, [])
 

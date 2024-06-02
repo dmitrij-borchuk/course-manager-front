@@ -1,5 +1,6 @@
 import { DocumentSnapshot, QuerySnapshot } from 'firebase/firestore'
 import * as firestore from 'firebase/firestore'
+import { Provider } from 'react-redux'
 import { IntlProvider } from 'react-intl'
 import { ToastProvider } from 'react-toast-notifications'
 import * as reactRouterDom from 'react-router-dom'
@@ -7,25 +8,30 @@ import { QueryClient, QueryClientProvider } from 'react-query'
 import { MuiThemeProvider } from 'MuiThemeProvider'
 import AxiosMockAdapter from 'axios-mock-adapter'
 import messages from '../intl/messagesEn'
-import StoreProvider, { DefaultStore } from '../store'
+import ConstateStoreProvider, { DefaultStore, RootState, StoreProvider, makeStore } from '../store'
+import { useMemo } from 'react'
 
 const queryClient = new QueryClient()
 
 type WrapperProps = {
   children: React.ReactNode
   store?: DefaultStore
+  initialState?: DeepPartial<RootState>
 }
-export const TestWrapper = ({ children, store }: WrapperProps) => {
+export const TestWrapper = ({ children, store: constateStore, initialState }: WrapperProps) => {
+  const store = useMemo(() => makeStore(initialState), [initialState])
   return (
-    <MuiThemeProvider>
-      <QueryClientProvider client={queryClient}>
-        <IntlProvider messages={messages} locale="en" defaultLocale="en">
-          <ToastProvider>
-            <StoreProvider {...store}>{children}</StoreProvider>
-          </ToastProvider>
-        </IntlProvider>
-      </QueryClientProvider>
-    </MuiThemeProvider>
+    <Provider store={store}>
+      <MuiThemeProvider>
+        <QueryClientProvider client={queryClient}>
+          <IntlProvider messages={messages} locale="en" defaultLocale="en">
+            <ToastProvider>
+              <ConstateStoreProvider {...constateStore}>{children}</ConstateStoreProvider>
+            </ToastProvider>
+          </IntlProvider>
+        </QueryClientProvider>
+      </MuiThemeProvider>
+    </Provider>
   )
 }
 
@@ -115,4 +121,8 @@ export function mockUrlParams(data: Record<string, string>) {
 
 export function getAxiosMock() {
   return require('axios').mock as AxiosMockAdapter
+}
+
+type DeepPartial<T> = {
+  [P in keyof T]?: DeepPartial<T[P]>
 }

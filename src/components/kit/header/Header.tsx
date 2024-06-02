@@ -1,6 +1,5 @@
 import React from 'react'
 import { FormattedMessage } from 'react-intl'
-import { useQuery } from 'react-query'
 import { Link } from 'react-router-dom'
 import {
   AppBar,

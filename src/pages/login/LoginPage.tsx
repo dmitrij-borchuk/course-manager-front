@@ -55,7 +55,7 @@ export const LoginPage = () => {
         })
       }
     },
-    [login, history, addToast, intl]
+    [addToast, history, intl, login, redirectPath]
   )
 
   return (

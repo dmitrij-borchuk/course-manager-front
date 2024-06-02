@@ -3,6 +3,7 @@ import React from 'react'
 
 interface Props {
   className?: string
+  children: React.ReactNode
 }
 export const SectionHeader: React.FC<Props> = ({ children, className = '' }) => {
   return (

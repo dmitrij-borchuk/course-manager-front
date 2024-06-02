@@ -50,7 +50,7 @@ export const AttendanceEditorPage = () => {
   }, [])
   const onDelete = useCallback(async () => {
     await removeAttendance(orgKey, id)
-    history.replace(`/${orgKey}`)
+    history.replace(`/`)
   }, [history, id, orgKey, removeAttendance])
   const attendance = attendancesById[id]
   const { organizationUser } = useCurrentUser()
@@ -82,7 +82,7 @@ export const AttendanceEditorPage = () => {
           appearance: 'success',
           autoDismiss: true,
         })
-        history.push(`/${orgKey}`)
+        history.push(`/`)
       } catch (error: any) {
         addToast(error.message, {
           appearance: 'error',

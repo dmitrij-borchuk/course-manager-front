@@ -6,6 +6,7 @@ interface Props {
   header?: ReactNode
   controls: ReactNode
   onSubmit: (event: React.FormEvent<HTMLFormElement>) => void
+  children: ReactNode
 }
 export const FormLayout: React.FC<Props> = ({ className = '', header, children, controls, onSubmit }) => {
   // `pt-1` is a workeround to make margin be inside container

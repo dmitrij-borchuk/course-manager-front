@@ -5,16 +5,13 @@ import { useIntl } from 'react-intl'
 import { Helmet } from 'react-helmet'
 import { ROUTES } from '../../constants'
 import { useAuthState } from '../../store'
-import { useOrgIdNotStrict } from '../../hooks/useOrgId'
 import { ResetPassword } from '../../components/auth/ResetPassword'
 import { TITLE_POSTFIX } from '../../config'
 
 type SubmitData = Parameters<ComponentProps<typeof ResetPassword>['onSubmit']>[0]
 
 export const ResetPasswordPage = () => {
-  const orgId = useOrgIdNotStrict()
   const intl = useIntl()
-  const orgPrefix = orgId ? `/${orgId}` : ''
   const history = useHistory()
   const { addToast } = useToasts()
   const { loading, resetPassword } = useAuthState()
@@ -27,7 +24,7 @@ export const ResetPasswordPage = () => {
           appearance: 'success',
           autoDismiss: true,
         })
-        history.push(`${orgPrefix}${ROUTES.LOGIN}`)
+        history.push(`${ROUTES.LOGIN}`)
       } catch (error: any) {
         addToast(error.message, {
           appearance: 'error',
@@ -35,7 +32,7 @@ export const ResetPasswordPage = () => {
         })
       }
     },
-    [addToast, history, intl, orgPrefix, resetPassword]
+    [addToast, history, intl, resetPassword]
   )
 
   return (

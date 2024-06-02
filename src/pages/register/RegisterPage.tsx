@@ -6,25 +6,24 @@ import { FormattedMessage } from 'react-intl'
 import { useDefaultErrorHandler } from 'utils/error'
 import { ROUTES } from '../../constants'
 import { useAuthState } from '../../store'
-import { useOrgIdNotStrict } from '../../hooks/useOrgId'
 import { Register } from '../../components/auth/Register'
 import { TITLE_POSTFIX } from '../../config'
 
 type SubmitData = Parameters<ComponentProps<typeof Register>['onSubmit']>[0]
 
 export const RegisterPage = () => {
-  const orgId = useOrgIdNotStrict()
-  const orgPrefix = orgId ? `/${orgId}` : ''
   const history = useHistory()
   const { addToast } = useToasts()
   const { register, loading } = useAuthState()
   const handleError = useDefaultErrorHandler()
+  const redirect = new URLSearchParams(history.location.search).get('redirect')
+  const redirectPath = redirect ? `?redirect=${redirect}` : ''
   const onSubmit = useCallback(
     async (data: SubmitData) => {
       try {
         await register(data.name, data.email, data.password)
 
-        history.push(`${orgPrefix}${ROUTES.LOGIN}`)
+        history.push(`${ROUTES.LOGIN}${redirectPath}`)
 
         addToast(<FormattedMessage id="auth.register.success" />, {
           appearance: 'success',
@@ -34,7 +33,7 @@ export const RegisterPage = () => {
         handleError(error)
       }
     },
-    [register, history, orgPrefix, addToast, handleError]
+    [register, history, redirectPath, addToast, handleError]
   )
 
   return (

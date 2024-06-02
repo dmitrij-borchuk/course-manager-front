@@ -15,7 +15,6 @@ import DialogActions from '@mui/material/DialogActions'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { useStudentsOfGroupState, useStudentsState } from 'store'
 import { ButtonWithLoader } from '../kit/buttons/ButtonWithLoader'
-import { useOrgId } from '../../hooks/useOrgId'
 import { Student } from '../../types/student'
 import { ROUTES } from '../../constants'
 import './styles.css'
@@ -164,13 +163,10 @@ function ParticipantsSelector(props: ParticipantsSelectorProps) {
 
 function AddNewItemBtn({ group }: { group: number }) {
   const intl = useIntl()
-  const orgId = useOrgId()
 
   return (
     <Tooltip title={intl.formatMessage({ id: 'students.add' })}>
-      <Link
-        to={`/${orgId}${ROUTES.STUDENTS_ADD}?backUrl=/${orgId}${ROUTES.GROUPS_ROOT}/${group}?action=openStudentsDialog`}
-      >
+      <Link to={`${ROUTES.STUDENTS_ADD}?backUrl=${ROUTES.GROUPS_ROOT}/${group}?action=openStudentsDialog`}>
         <IconButton aria-label={intl.formatMessage({ id: 'students.add' })}>
           <Icon>person_add</Icon>
         </IconButton>

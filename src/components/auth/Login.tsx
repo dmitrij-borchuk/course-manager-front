@@ -1,9 +1,8 @@
 import { useForm } from 'react-hook-form'
 import { FormattedMessage } from 'react-intl'
 import { Container } from 'react-materialize'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import { ROUTES } from '../../constants'
-import { useOrgIdNotStrict } from '../../hooks/useOrgId'
 import { Input } from '../kit/input/Input'
 import { SubmitButton } from '../kit/buttons/SubmitButton'
 import { SectionHeader } from '../kit/sectionHeader/SectionHeader'
@@ -20,8 +19,9 @@ interface Props {
   loading?: boolean
 }
 export const Login: React.FC<Props> = ({ onSubmit, loading = false }) => {
-  const orgId = useOrgIdNotStrict()
-  const orgPrefix = orgId ? `/${orgId}` : ''
+  const history = useHistory()
+  const redirect = new URLSearchParams(history.location.search).get('redirect') ?? ''
+  const redirectPath = redirect ? `?redirect=${redirect}` : ''
   const { control, handleSubmit } = useForm<FormData>({
     defaultValues: {
       identifier: '',
@@ -54,7 +54,7 @@ export const Login: React.FC<Props> = ({ onSubmit, loading = false }) => {
           />
 
           {/* Password reset */}
-          <Link to={`${orgPrefix}${ROUTES.RESET}`}>
+          <Link to={`${ROUTES.RESET}`}>
             <FormattedMessage id="auth.resetLink.label" />
           </Link>
 
@@ -67,24 +67,19 @@ export const Login: React.FC<Props> = ({ onSubmit, loading = false }) => {
           </div>
         </form>
         <div className="flex flex-col items-center mt-8 gap-3">
-          {/* Can't register inside of organization */}
-          {!orgId && (
-            <>
-              {/* Separator */}
-              <div className="flex w-full items-center gap-2">
-                <div className="h-px bg-gray-400 w-full" />
-                <div className="-mt-1">
-                  <FormattedMessage id="auth.registerLink.separator" />
-                </div>
-                <div className="h-px bg-gray-400 w-full" />
-              </div>
+          {/* Separator */}
+          <div className="flex w-full items-center gap-2">
+            <div className="h-px bg-gray-400 w-full" />
+            <div className="-mt-1">
+              <FormattedMessage id="auth.registerLink.separator" />
+            </div>
+            <div className="h-px bg-gray-400 w-full" />
+          </div>
 
-              {/* Link */}
-              <Link to={`${ROUTES.REGISTER}`} role="link">
-                <FormattedMessage id="auth.registerLink.label" />
-              </Link>
-            </>
-          )}
+          {/* Link */}
+          <Link to={`${ROUTES.REGISTER}${redirectPath}`} role="link">
+            <FormattedMessage id="auth.registerLink.label" />
+          </Link>
         </div>
       </div>
     </Container>

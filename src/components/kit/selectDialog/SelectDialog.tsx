@@ -125,8 +125,10 @@ export function SelectDialog<T extends { id: string | number }>({
   )
   // TODO: add loading for the !multiSelect
   // TODO: add cursor pinter
+  // TODO: use mui
 
   return (
+    // @ts-expect-error
     <Modal
       actions={[
         <Button flat modal="close" disabled={submitting}>

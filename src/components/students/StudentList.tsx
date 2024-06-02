@@ -2,7 +2,6 @@ import React, { useCallback, useMemo } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { useSortingByHeader } from 'utils/sorting'
 import { ROUTES } from '../../constants'
-import { useOrgId } from '../../hooks/useOrgId'
 import { Dictionary } from '../../types/dictionary'
 import { Student } from '../../types/student'
 import { AttendanceRateBadge } from '../kit/attendanceRateBadge/AttendancerateBadge'
@@ -17,7 +16,6 @@ interface Props {
   attendanceRates?: Dictionary<{ rate: number }>
 }
 export const StudentList: React.FC<Props> = ({ className = '', loading = false, items = [], attendanceRates }) => {
-  const orgId = useOrgId()
   const renderItem = useCallback((d: TableContentItem) => {
     return (
       <div className="flex justify-between">
@@ -51,8 +49,9 @@ export const StudentList: React.FC<Props> = ({ className = '', loading = false, 
       className={className}
       items={sortedItems}
       loading={loading}
-      fabBtnLink={`/${orgId}${ROUTES.STUDENTS_ADD}`}
-      itemLinkRoot={`/${orgId}${ROUTES.STUDENTS_ROOT}`}
+      // TODO: Move to top
+      fabBtnLink={`${ROUTES.STUDENTS_ADD}`}
+      itemLinkRoot={`${ROUTES.STUDENTS_ROOT}`}
       listHeader={<FormattedMessage id="students.list.title" />}
       labelProp="name"
       renderItem={renderItem}

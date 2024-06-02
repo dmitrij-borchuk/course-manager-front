@@ -10,7 +10,6 @@ import AddIcon from '@mui/icons-material/Add'
 import Box from '@mui/material/Box'
 import { UnassignDialog } from 'modules/activities/components/UnassignParticipantDialog'
 import { ROUTES } from '../../constants'
-import { useOrgId } from '../../hooks/useOrgId'
 import { useStudentsOfGroupState } from '../../store'
 import { Activity } from '../../types/activity'
 import { Dictionary } from '../../types/dictionary'
@@ -133,13 +132,11 @@ interface StudentWithAttendanceProps {
   onRemoveClick?: (id: number) => void
 }
 const StudentWithAttendance = ({ data, attendanceRate, onRemoveClick = noop }: StudentWithAttendanceProps) => {
-  const orgId = useOrgId()
-
   return (
     <div className="collection-item flex justify-between items-center" data-testid={`student-${data.id}`}>
       <div className="flex">
         <Ellipsis>
-          <Link to={`/${orgId}${ROUTES.STUDENTS_ROOT}/${data.id}`}>{data.name}</Link>
+          <Link to={`${ROUTES.STUDENTS_ROOT}/${data.id}`}>{data.name}</Link>
         </Ellipsis>
       </div>
       <Box display="flex" alignItems="center" gap={2}>

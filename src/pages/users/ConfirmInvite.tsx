@@ -1,51 +1,65 @@
 import { useCallback, useEffect } from 'react'
+import { FormattedMessage } from 'react-intl'
+import { useHistory } from 'react-router-dom'
 import { useParams } from 'react-router'
-import { useToasts } from 'react-toast-notifications'
 import { Helmet } from 'react-helmet'
-import { ConfirmInvite } from '../../components/users/ConfirmInvite'
-import { useOrgId } from '../../hooks/useOrgId'
-import { useOrganizationsState, useUsersState } from '../../store'
-import { useAuthStore } from '../../store/authStore'
-import { TITLE_POSTFIX } from '../../config'
+import { Container, Toolbar } from '@mui/material'
+import { useAppDispatch } from 'store/hooks'
+import { isAxiosError } from 'api/request'
+import { calcCurrentOrganization } from 'modules/organizations/store/currentOrg'
+import { useNotification } from 'hooks/useNotification'
 import { Loader } from 'components/kit/loader/Loader'
 import { Message } from 'components/kit/message/Message'
 import { Header } from 'components/kit/header/Header'
-import { isAxiosError } from 'api/request'
+import { ConfirmInvite } from '../../components/users/ConfirmInvite'
+import { useAuthState, useOrganizationsState, useUsersState } from '../../store'
+import { TITLE_POSTFIX } from '../../config'
+import { ROUTES } from '../../constants'
 
 export const ConfirmInvitePage = () => {
-  const { addToast } = useToasts()
+  const { initiatingAuth, currentUser } = useAuthState()
+  const dispatch = useAppDispatch()
   const { submitting, confirmInvitation, profile } = useUsersState()
   const { fetchAll, getInviteInfo, inviteInfo, inviteInfoError } = useOrganizationsState()
+  const history = useHistory()
+  const { showError } = useNotification()
   const parsedError = parseError(inviteInfoError)
-  const { currentUser } = useAuthStore()
   const { token } = useParams<{ token: string }>()
-  const orgId = useOrgId()
   const onSubmit = useCallback(
     async (data: { name: string }) => {
-      if (orgId && currentUser?.uid) {
-        try {
-          await confirmInvitation(orgId, currentUser.uid, token, 'Teacher', data.name)
-          await fetchAll()
-        } catch (error: any) {
-          addToast(error?.response?.data?.message || error?.response?.data || error.message, {
-            appearance: 'error',
-            autoDismiss: true,
-          })
-        }
+      try {
+        await confirmInvitation(token, data.name)
+        await fetchAll()
+        await dispatch(calcCurrentOrganization())
+
+        history.push(`/`)
+      } catch (error: any) {
+        showError(error?.response?.data?.message || error?.response?.data || error.message)
       }
     },
-    [addToast, confirmInvitation, currentUser?.uid, fetchAll, orgId, token]
+    [confirmInvitation, dispatch, fetchAll, history, showError, token]
   )
 
   useEffect(() => {
-    getInviteInfo(token)
-  }, [getInviteInfo, token])
+    if (!initiatingAuth) {
+      if (currentUser) {
+        getInviteInfo(token)
+      } else {
+        showError(<FormattedMessage id="users.invite.needLogin" />)
+        history.push(`${ROUTES.LOGIN}?redirect=/invite/confirm/${token}`)
+      }
+    }
+  }, [currentUser, getInviteInfo, history, initiatingAuth, showError, token])
 
   if (parsedError) {
     return (
       <>
         <Header />
-        <Message type="error">{parsedError}</Message>
+        <Container sx={{ mt: 2 }}>
+          {/* To make some gap under the header */}
+          <Toolbar />
+          <Message type="error">{parsedError}</Message>
+        </Container>
       </>
     )
   }
@@ -65,7 +79,11 @@ export const ConfirmInvitePage = () => {
         <title>Confirm Invitation{TITLE_POSTFIX}</title>
       </Helmet>
 
-      <ConfirmInvite onSubmit={onSubmit} loading={submitting} user={profile} inviteInfo={inviteInfo} />
+      <Container sx={{ mt: 2 }}>
+        {/* To make some gap under the header */}
+        <Toolbar />
+        <ConfirmInvite onSubmit={onSubmit} loading={submitting} user={profile} inviteInfo={inviteInfo} />
+      </Container>
     </>
   )
 }

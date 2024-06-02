@@ -1,4 +1,4 @@
-import { act, renderHook } from '@testing-library/react-hooks'
+import { act, renderHook } from '@testing-library/react'
 import { ActivitiesFilteringProvider, useActivitiesFiltering } from './activitiesFilteringContext'
 
 describe('useActivitiesFiltering', () => {

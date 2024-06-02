@@ -7,6 +7,7 @@ interface Props {
   loading?: boolean
   disabled?: boolean
   onSubmit?: () => void
+  children?: React.ReactNode
 }
 export const SubmitButton: React.FC<Props> = ({ loading = false, disabled = false, children, onSubmit }) => {
   return (

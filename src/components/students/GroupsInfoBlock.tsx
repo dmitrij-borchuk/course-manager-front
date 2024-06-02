@@ -215,7 +215,6 @@ type GroupsTableRowProps = {
   onClick?: (activity: ActivityWithParticipationAndPerformer) => void
 }
 function GroupsTableRow({ data, participant, rate, onClick }: GroupsTableRowProps) {
-  const orgId = useOrgId()
   const lastParticipation = data.studentsToActivities
     .sort((a, b) => {
       if (a.startDate > b.startDate) {
@@ -233,7 +232,7 @@ function GroupsTableRow({ data, participant, rate, onClick }: GroupsTableRowProp
   return (
     <TableRow key={data.name} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
       <TableCell component="th" scope="row">
-        <Link to={`/${orgId}${ROUTES.makeStudentsByActivity(participant.id, data.id)}`}>{data.name}</Link>
+        <Link to={`${ROUTES.makeStudentsByActivity(participant.id, data.id)}`}>{data.name}</Link>
       </TableCell>
       <TableCell align="right">
         {lastParticipation && new Date(lastParticipation?.startDate).toLocaleDateString()}

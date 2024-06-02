@@ -27,6 +27,7 @@ module.exports = {
           stream: require.resolve('stream-browserify'),
           zlib: require.resolve('browserify-zlib'),
           assert: require.resolve('assert'),
+          'process/browser': require.resolve('process/browser'),
         },
       },
     },

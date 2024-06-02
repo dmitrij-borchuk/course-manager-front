@@ -2,7 +2,6 @@ import React from 'react'
 import Box from '@mui/material/Box'
 import { AttendanceDateBlock } from './AttendanceDateBlock'
 import { Link } from 'react-router-dom'
-import { useOrgId } from 'hooks/useOrgId'
 import { ROUTES } from '../../constants'
 import { AttendanceMeter } from './AttendanceMeter'
 import Grid2 from '@mui/material/Unstable_Grid2'
@@ -24,8 +23,6 @@ interface Props {
   className?: string
 }
 export const AttendanceTimeLine: React.FC<Props> = ({ className = '', items = [] }) => {
-  const orgId = useOrgId()
-
   return (
     <div className={`${className} mt-3`}>
       {items.map((item) => (
@@ -35,7 +32,7 @@ export const AttendanceTimeLine: React.FC<Props> = ({ className = '', items = []
             <Grid2 container width="100%" spacing={1} m={0}>
               {item.items.map((item) => (
                 <Grid2 key={item.id} xs={12} md={6} lg={4}>
-                  <Link to={`/${orgId}${ROUTES.ATTENDANCE_EDIT}/${item.id}`}>
+                  <Link to={`${ROUTES.ATTENDANCE_EDIT}/${item.id}`}>
                     <AttendanceMeter {...item} />
                   </Link>
                 </Grid2>

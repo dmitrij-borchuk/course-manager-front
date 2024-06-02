@@ -30,7 +30,7 @@ export const ConfirmInvite: React.FC<Props> = ({
   return (
     <div className={className}>
       <Header />
-      <Container className="px-4">
+      <Container className="px-4 pt-4">
         <SectionHeader>
           <FormattedMessage
             id="users.invite.message"

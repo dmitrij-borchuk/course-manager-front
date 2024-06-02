@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react-hooks'
+import { renderHook, waitFor } from '@testing-library/react'
 import * as filteringContext from 'modules/activities/activitiesFilteringContext'
 import { useActivitiesData } from './GroupsList'
 import { asMock, TestWrapper } from 'utils/test'
@@ -45,9 +45,8 @@ describe('useActivitiesData', () => {
       updateFilter: jest.fn(),
       setOpenFilterDialog: jest.fn(),
     })
-    const { waitForNextUpdate, rerender } = renderHook(() => useActivitiesData(), { wrapper: TestWrapper })
-    await waitForNextUpdate()
-    expect(fetchAttendancesForGroups).toBeCalledWith('orgId', ['1'])
+    const { rerender } = renderHook(() => useActivitiesData(), { wrapper: TestWrapper })
+    await waitFor(() => expect(fetchAttendancesForGroups).toHaveBeenCalledWith('orgId', ['1']))
 
     fetchActivities.mockResolvedValue({
       data: [
@@ -84,7 +83,6 @@ describe('useActivitiesData', () => {
       setOpenFilterDialog: jest.fn(),
     })
     rerender()
-    await waitForNextUpdate()
-    expect(fetchAttendancesForGroups).toBeCalledWith('orgId', ['1', '2'])
+    await waitFor(() => expect(fetchAttendancesForGroups).toHaveBeenCalledWith('orgId', ['1', '2']))
   })
 })

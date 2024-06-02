@@ -10,7 +10,6 @@ import { Profile } from 'types/profile'
 import { useCurrentUser } from 'hooks/useCurrentUser'
 import { useAccessManager } from 'hooks/useAccessManager'
 import { ROUTES } from '../../constants'
-import { useOrgId } from '../../hooks/useOrgId'
 import { Activity } from '../../types/activity'
 import { Dictionary } from '../../types/dictionary'
 import { AttendanceRateBadge } from '../kit/attendanceRateBadge/AttendancerateBadge'
@@ -137,10 +136,8 @@ interface GroupWithAttendanceProps {
   attendanceRate?: number
 }
 const GroupWithAttendance = ({ group, attendanceRate }: GroupWithAttendanceProps) => {
-  const orgId = useOrgId()
-
   return (
-    <CollectionItemLink to={`/${orgId}${ROUTES.GROUPS_ROOT}/${group.id}`}>
+    <CollectionItemLink to={`${ROUTES.GROUPS_ROOT}/${group.id}`}>
       <div
         className={`flex justify-between transition-opacity ${group.archived ? 'opacity-40 hover:opacity-100' : ''}`}
       >

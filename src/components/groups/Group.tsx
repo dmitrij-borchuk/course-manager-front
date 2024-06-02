@@ -25,7 +25,6 @@ import { RelativeTime } from 'components/dates/RelativeTime'
 import { OrgLink } from 'components/routing/OrgLink'
 import { Profile } from 'types/profile'
 import { ROUTES } from '../../constants'
-import { useOrgId } from '../../hooks/useOrgId'
 import { Activity } from '../../types/activity'
 import { Dictionary } from '../../types/dictionary'
 import { Student } from '../../types/student'
@@ -177,11 +176,10 @@ type HeadingProps = {
   onCloseGroup: () => void
 }
 function Heading({ data, onDelete, onCloseGroup }: HeadingProps) {
-  const orgId = useOrgId()
   const { name, id } = data
   const theme = useTheme()
   const upMd = useMediaQuery(theme.breakpoints.up('md'))
-  const editPath = `/${orgId}${ROUTES.GROUPS_EDIT}/${id}`
+  const editPath = `${ROUTES.GROUPS_EDIT}/${id}`
   const history = useHistory()
   const onEdit = () => history.push(editPath)
   const [cancelConfirmation, setCancelConfirmation] = useState(false)

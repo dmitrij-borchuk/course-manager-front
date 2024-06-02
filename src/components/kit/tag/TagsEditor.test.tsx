@@ -23,8 +23,8 @@ describe('TagsEditor', () => {
     )
 
     const tagsEditorInput = await screen.findByLabelText('Tags')
-    userEvent.type(tagsEditorInput, 'Lviv{enter}')
+    await userEvent.type(tagsEditorInput, 'Lviv{enter}')
 
-    expect(fn).toBeCalledWith(['Lviv'])
+    expect(fn).toHaveBeenCalledWith(['Lviv'])
   })
 })

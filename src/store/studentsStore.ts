@@ -70,7 +70,7 @@ export default function useStudentsStore(initial: InitialStudentsState = {}) {
         throw error
       }
     }, []),
-    deleteStudent: useCallback(async (orgKey: string, orgId: number, id: number, outerId: string) => {
+    deleteStudent: useCallback(async (id: number) => {
       await deleteStudent(id)
       setStudentsById((state) => {
         state.delete(id)

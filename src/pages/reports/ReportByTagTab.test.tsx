@@ -88,7 +88,7 @@ describe('ReportByTagTab', () => {
     )
 
     const tagsEditorInput = await screen.findByLabelText('Tags')
-    userEvent.type(tagsEditorInput, 'Lviv{enter}')
+    await userEvent.type(tagsEditorInput, 'Lviv{enter}')
     await screen.findByText('Open in new tab')
 
     renderPdf()

@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react'
+import { act, fireEvent, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import * as reactRouterDom from 'react-router-dom'
 import { asMock, mockDoc, mockGetDocs, TestWrapper, getAxiosMock } from '../../utils/test'
@@ -85,11 +85,13 @@ describe('AttendanceEditor', () => {
 
     const datePicker = screen.getByLabelText('Date *')
     const time = new Date().getTime() - twoDaysInMs
-    userEvent.type(datePicker, `${new Date(time).toLocaleDateString()}`)
+    await userEvent.type(datePicker, `${new Date(time).toLocaleDateString()}`)
 
     // Check that only one student is exist
     await screen.findByText(student2.name)
     expect(screen.queryByText(student1.name)).toBeNull()
+
+    await waitForEnd()
   })
 
   test('while editing a teacher should preserved', async () => {
@@ -105,12 +107,12 @@ describe('AttendanceEditor', () => {
     const attendance: Attendance = {
       id: 'attendanceId',
       attended: {},
-      date: new Date().getTime(),
+      date: new Date('2024-06-01').getTime(),
       group: group.id,
       teacher: 'teacher1',
     }
     mockDocByPath('organizations/orgId/attendances/attendanceId', attendance)
-    axiosMock.onGet(new RegExp('/students/byActivity/1')).reply(200, students)
+    axiosMock.onGet('/students/byActivity/1?startDate=2024-06-01T00:00:00.000Z').reply(200, students)
 
     render(
       <TestWrapper initialState={storeWithOrg}>
@@ -118,6 +120,7 @@ describe('AttendanceEditor', () => {
       </TestWrapper>
     )
 
+    await screen.findAllByText(group.name)
     await selectGroup(group.id)
 
     const submitBtn = await screen.findByRole('button', {
@@ -125,18 +128,19 @@ describe('AttendanceEditor', () => {
     })
 
     expect(submitBtn).toBeEnabled()
-    fireEvent.click(submitBtn)
+    await fireEvent.click(submitBtn)
 
     await screen.findByText('Report has been successfully submitted')
 
-    expect(setDoc).toBeCalled()
+    expect(setDoc).toHaveBeenCalled()
     expect(setDoc.mock.calls[0][1]).toHaveProperty('teacher', attendance.teacher)
+
+    await waitForEnd()
   })
 
   test('Should show groups of teacher', async () => {
     const {
       data: { group, students },
-      mockDataByPath,
     } = defaultMock()
     axiosMock.onGet(new RegExp('/students/byActivity/1')).reply(200, students)
 
@@ -152,7 +156,7 @@ describe('AttendanceEditor', () => {
         teacher: 'teacher2',
       },
     ]
-    mockDataByPath('organizations/orgId/groups', groups)
+    axiosMock.onGet('/activities').reply(200, groups)
 
     render(
       <TestWrapper initialState={storeWithOrg}>
@@ -160,7 +164,6 @@ describe('AttendanceEditor', () => {
       </TestWrapper>
     )
 
-    await screen.findByRole('option', { name: 'Group' })
     await selectGroup(group.id)
 
     const req = axiosMock.history.get.filter((r) => r.url === '/activities' && r.params.performerId === 1)
@@ -170,7 +173,9 @@ describe('AttendanceEditor', () => {
     // eslint-disable-next-line testing-library/no-node-access
     const options = groupSelect.querySelectorAll('option')
     const optArray = Array.from(options)
-    expect(optArray.map((o) => o.textContent)).toContain('group 1')
+    expect(optArray.map((o) => o.textContent)).toContain('Group 1')
+
+    await waitForEnd()
   })
 
   function defaultMock() {
@@ -238,4 +243,10 @@ const storeWithOrg = {
       },
     },
   },
+}
+
+async function waitForEnd() {
+  await act(async () => {
+    await new Promise((resolve) => setTimeout(resolve, 0))
+  })
 }

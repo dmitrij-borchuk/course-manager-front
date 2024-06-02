@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import * as firestore from 'firebase/firestore'
 import * as reactPdf from '@react-pdf/renderer'
 import userEvent from '@testing-library/user-event'
@@ -83,22 +83,20 @@ describe('ReportByGroupTab', () => {
     )
 
     await accessors.downloadBtn()
+
     const lastCall = usePDF.mock.calls[usePDF.mock.calls.length - 1]
     const document = lastCall[0]?.document
-    render(document!)
+    const { rerender } = render(document!)
 
-    const el = await screen.findAllByTestId('pdf-text')
-    const persents = el
-      // Remove header
-      .splice(1)
-      // Filter out student names
-      .filter((e, i) => i % 2 === 1)
-      // Get text
-      .map((e) => e.textContent)
+    function getRenderedItems() {
+      const lastCall = usePDF.mock.calls[usePDF.mock.calls.length - 1]
+      const document = lastCall[0]?.document
+      rerender(document!)
 
-    expect(persents[0]).toBe('0% (0/2)')
-    expect(persents[1]).toBe('50% (1/2)')
-    expect(persents[2]).toBe('100% (2/2)')
+      return getPercentsArray()
+    }
+    await waitFor(async () => expect((await getRenderedItems()).length).not.toBe(0))
+    expect(await getRenderedItems()).toEqual(['0% (0/2)', '50% (1/2)', '100% (2/2)'])
   })
   test('should generate report with desc sorting', async () => {
     const { attendances, groups, students } = getSortingDataMocks()
@@ -115,25 +113,18 @@ describe('ReportByGroupTab', () => {
       </TestWrapper>
     )
 
+    await screen.findAllByText(groups[0].name!)
+
     const sortOrderSelector = await screen.findByLabelText('Sort order')
-    userEvent.selectOptions(sortOrderSelector, 'Descending')
+    await userEvent.selectOptions(sortOrderSelector, 'Descending')
 
-    const lastCall = usePDF.mock.calls[usePDF.mock.calls.length - 1]
-    const document = lastCall[0]?.document
-    render(document!)
+    await waitForPdfRender()
 
-    const el = await screen.findAllByTestId('pdf-text')
-    const persents = el
-      // Remove header
-      .splice(1)
-      // Filter out student names
-      .filter((e, i) => i % 2 === 1)
-      // Get text
-      .map((e) => e.textContent)
+    const percents = await getPercentsArray()
 
-    expect(persents[0]).toBe('100% (2/2)')
-    expect(persents[1]).toBe('50% (1/2)')
-    expect(persents[2]).toBe('0% (0/2)')
+    expect(percents[0]).toBe('100% (2/2)')
+    expect(percents[1]).toBe('50% (1/2)')
+    expect(percents[2]).toBe('0% (0/2)')
   })
   test('should render attendance rate as integer', async () => {
     const groups: Activity[] = [
@@ -207,20 +198,12 @@ describe('ReportByGroupTab', () => {
     )
 
     await accessors.downloadBtn()
-    const lastCall = usePDF.mock.calls[usePDF.mock.calls.length - 1]
-    const document = lastCall[0]?.document
-    render(document!)
 
-    const el = await screen.findAllByTestId('pdf-text')
-    const persents = el
-      // Remove header
-      .splice(1)
-      // Filter out student names
-      .filter((e, i) => i % 2 === 1)
-      // Get text
-      .map((e) => e.textContent)
+    await waitForPdfRender()
 
-    expect(persents[0]).toBe('33% (1/3)')
+    const percents = await getPercentsArray()
+
+    expect(percents[0]).toBe('33% (1/3)')
   })
   test('should render attendance rate between dates', async () => {
     const groups: Activity[] = [
@@ -297,25 +280,23 @@ describe('ReportByGroupTab', () => {
     )
 
     const datePickerFrom = await screen.findByLabelText(/From/i)
-    userEvent.type(datePickerFrom, `${new Date('Wed May 17 2022 19:00:00').toLocaleDateString()}`)
+    await userEvent.type(datePickerFrom, `${new Date('Wed May 17 2022 19:00:00').toLocaleDateString()}`)
     const datePickerTo = await screen.findByLabelText(/To/i)
-    userEvent.type(datePickerTo, `${new Date('Wed May 22 2022 19:00:00').toLocaleDateString()}`)
+    await userEvent.type(datePickerTo, `${new Date('Wed May 22 2022 19:00:00').toLocaleDateString()}`)
 
-    const lastCall = usePDF.mock.calls[usePDF.mock.calls.length - 1]
-    const document = lastCall[0]?.document
-    render(document!)
+    await waitForPdfRender()
 
     const el = await screen.findAllByTestId('pdf-text')
-    const persents = el
+    const percents = el
       // Remove header
       .splice(1)
       // Get text
       .map((e) => e.textContent)
 
-    expect(persents[0]).toBe('st 2')
-    expect(persents[1]).toBe('0% (0/1)')
-    expect(persents[2]).toBe('st 1')
-    expect(persents[3]).toBe('100% (1/1)')
+    expect(percents[0]).toBe('st 2')
+    expect(percents[1]).toBe('0% (0/1)')
+    expect(percents[2]).toBe('st 1')
+    expect(percents[3]).toBe('100% (1/1)')
   })
 
   test('should show report only related to group selected', async () => {
@@ -333,7 +314,7 @@ describe('ReportByGroupTab', () => {
     )
 
     await accessors.downloadBtn()
-    renderPdf()
+    await waitForPdfRender()
     const percents = await getPercentsArray()
 
     expect(percents[0]).toBe('50% (1/2)')
@@ -354,34 +335,14 @@ describe('ReportByGroupTab', () => {
     )
 
     const groupSelector = await screen.findByLabelText('Group')
-    userEvent.selectOptions(groupSelector, groups[1].id.toString())
+    await userEvent.selectOptions(groupSelector, groups[1].id.toString())
 
     await accessors.downloadBtn()
-    renderPdf()
+    await waitForPdfRender()
     const title = await getReportTitle()
 
     expect(title.textContent).toBe(groups[1].name)
   })
-
-  function renderPdf() {
-    expect(usePDF).toBeCalled()
-    const lastCall = usePDF.mock.calls[usePDF.mock.calls.length - 1]
-    const document = lastCall[0]?.document
-    render(document!)
-  }
-
-  async function getPercentsArray() {
-    const el = await screen.findAllByTestId('pdf-text')
-    return (
-      el
-        // Remove header
-        .splice(1)
-        // Filter out student names
-        .filter((e, i) => i % 2 === 1)
-        // Get text
-        .map((e) => e.textContent)
-    )
-  }
 })
 
 function mockGetDocs(attendances: Attendance[]) {
@@ -552,4 +513,32 @@ const storeWithOrg = {
       },
     },
   },
+}
+
+async function getPercentsArray() {
+  const el = await screen.findAllByTestId('pdf-text')
+  return (
+    el
+      // Remove header
+      .splice(1)
+      // Filter out student names
+      .filter((e, i) => i % 2 === 1)
+      // Get text
+      .map((e) => e.textContent)
+  )
+}
+
+async function waitForPdfRender() {
+  const lastCall = usePDF.mock.calls[usePDF.mock.calls.length - 1]
+  const document = lastCall[0]?.document
+  const { rerender } = render(document!)
+
+  function getRenderedItems() {
+    const lastCall = usePDF.mock.calls[usePDF.mock.calls.length - 1]
+    const document = lastCall[0]?.document
+    rerender(document!)
+
+    return getPercentsArray()
+  }
+  await waitFor(async () => expect((await getRenderedItems()).length).not.toBe(0))
 }

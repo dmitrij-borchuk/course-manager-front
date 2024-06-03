@@ -1,6 +1,5 @@
 import { ComponentProps, useEffect, useMemo, useState } from 'react'
 import { FormattedMessage, useIntl } from 'react-intl'
-import { DatePicker } from 'react-materialize'
 import { Box, CircularProgress } from '@mui/material'
 import { useAttendancesForGroups } from 'store/attendancesStore'
 import { Select } from '../../components/kit/select/Select'
@@ -10,6 +9,7 @@ import { getItem, setItem } from '../../services/localStore'
 import { useGroupsState, useStudentsOfGroupState } from '../../store'
 import { Activity } from '../../types/activity'
 import { SortOrder } from 'utils/sorting'
+import { DatePicker } from 'components/kit/inputs/datePicker'
 
 export const ReportByGroupTab = () => {
   const intl = useIntl()
@@ -81,34 +81,22 @@ export const ReportByGroupTab = () => {
       <div className="pt-4 grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="">
           <DatePicker
-            id="dateFrom"
-            options={{
-              autoClose: true,
-              format: 'mmm dd, yyyy',
-              defaultDate: from,
-              setDefaultDate: true,
-              maxDate: new Date(),
-            }}
-            // @ts-ignore
+            fullWidth
+            defaultValue={from}
             label={`${intl.formatMessage({ id: 'common.from' })} *`}
-            onChange={setFrom}
-            s={12}
+            onChange={(date) => setFrom(date ?? new Date())}
           />
         </div>
         <div className="">
           <DatePicker
-            id="dateTo"
-            options={{
-              autoClose: true,
-              format: 'mmm dd, yyyy',
-              defaultDate: to,
-              setDefaultDate: true,
-              maxDate: new Date(),
-            }}
-            // @ts-ignore
+            fullWidth
+            defaultValue={to}
             label={`${intl.formatMessage({ id: 'common.to' })} *`}
-            onChange={(d) => setTo(new Date(d.getTime() + dayWithoutSecondInMs))}
-            s={12}
+            onChange={(date) => {
+              const d = date ?? new Date()
+              setTo(date ?? new Date())
+              setTo(new Date(d.getTime() + dayWithoutSecondInMs))
+            }}
           />
         </div>
       </div>

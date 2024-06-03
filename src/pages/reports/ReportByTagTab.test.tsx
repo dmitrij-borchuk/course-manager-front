@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import * as reactPdf from '@react-pdf/renderer'
 import userEvent from '@testing-library/user-event'
 import * as reportsApi from 'modules/reports/api'
@@ -38,7 +38,7 @@ describe('ReportByTagTab', () => {
     useParams.mockReturnValue({
       orgId: 'orgId',
     })
-    usePDF.mockReturnValue([{} as any, jest.fn()])
+    usePDF.mockReturnValue([{ url: 'url' } as any, jest.fn()])
     axiosMock.onGet('/organizations').reply(200, [
       {
         id: 1,
@@ -89,6 +89,8 @@ describe('ReportByTagTab', () => {
 
     const tagsEditorInput = await screen.findByLabelText('Tags')
     await userEvent.type(tagsEditorInput, 'Lviv{enter}')
+    await screen.findByRole('button', { name: 'Lviv' })
+    await screen.findByRole('link', { name: 'Download' })
     await screen.findByText('Open in new tab')
 
     renderPdf()
@@ -99,8 +101,58 @@ describe('ReportByTagTab', () => {
     expect(percents[1]).toBe('100% (1/1)')
   })
 
+  test('should sent request with `to` data one day further then selected', async () => {
+    getReportByTagRequest.mockResolvedValue({
+      data: [
+        {
+          participantId: 1,
+          participantName: 'st 1',
+          activityId: 1,
+          activityName: 'g1',
+          activityOuterId: 'g1',
+          rate: 0,
+          attended: 0,
+          total: 1,
+        },
+        {
+          participantId: 2,
+          participantName: 'st 2',
+          activityId: 1,
+          activityName: 'g1',
+          activityOuterId: 'g1',
+          rate: 1,
+          attended: 1,
+          total: 1,
+        },
+      ],
+      status: 200,
+      statusText: '',
+      headers: {},
+      config: {},
+    })
+
+    render(
+      <TestWrapper>
+        <ReportByTagTab />
+      </TestWrapper>
+    )
+
+    const datePickerFrom = await screen.findByRole<HTMLInputElement>('textbox', { name: /From/i })
+    fireEvent.change(datePickerFrom, { target: { value: '05/20/2022' } })
+
+    const datePickerTo = await screen.findByRole<HTMLInputElement>('textbox', { name: /To/i })
+    fireEvent.change(datePickerTo, { target: { value: '05/22/2022' } })
+
+    const tagsEditorInput = await screen.findByLabelText('Tags')
+    await userEvent.type(tagsEditorInput, 'Lviv{enter}')
+
+    expect(getReportByTagRequest).toHaveBeenCalled()
+    const to = getReportByTagRequest.mock.lastCall?.[1]
+    expect(to?.getDate()).toBe(23)
+  })
+
   function renderPdf() {
-    expect(usePDF).toBeCalled()
+    expect(usePDF).toHaveBeenCalled()
     const lastCall = usePDF.mock.calls[usePDF.mock.calls.length - 1]
     const document = lastCall[0]?.document
     render(document!)

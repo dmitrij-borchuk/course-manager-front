@@ -209,7 +209,7 @@ export const messages = {
   'settings.apiKey.keyField.label': 'API Key',
   'settings.apiKey.generateBtn.label': 'Regenerate API Key',
   'settings.apiKey.info':
-    'API kay is used to authenticate your application to get data from b2b API. Copy API key after creation and save it in the safe place. You will not be able to view it again. You can regenerate new key anytime, but old key will be invalidated.',
+    'API key is used to authenticate your application to get data from b2b API. Copy API key after creation and save it in the safe place. You will not be able to view it again. You can regenerate new key anytime, but old key will be invalidated.',
 }
 
 export default messages

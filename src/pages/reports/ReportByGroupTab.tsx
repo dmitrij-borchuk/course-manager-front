@@ -94,7 +94,6 @@ export const ReportByGroupTab = () => {
             label={`${intl.formatMessage({ id: 'common.to' })} *`}
             onChange={(date) => {
               const d = date ?? new Date()
-              setTo(date ?? new Date())
               setTo(new Date(d.getTime() + dayWithoutSecondInMs))
             }}
           />

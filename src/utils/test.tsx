@@ -12,6 +12,7 @@ import { MuiThemeProvider } from 'MuiThemeProvider'
 import AxiosMockAdapter from 'axios-mock-adapter'
 import messages from '../intl/messagesEn'
 import ConstateStoreProvider, { DefaultStore, RootState, StoreProvider, makeStore } from '../store'
+import { SnackbarProvider } from 'notistack'
 
 const queryClient = new QueryClient()
 
@@ -27,6 +28,7 @@ export const TestWrapper = ({ children, store: constateStore, initialState }: Wr
       <MuiThemeProvider>
         <QueryClientProvider client={queryClient}>
           <IntlProvider messages={messages} locale="en" defaultLocale="en">
+            <SnackbarProvider />
             <ToastProvider>
               <ConstateStoreProvider {...constateStore}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>{children}</LocalizationProvider>

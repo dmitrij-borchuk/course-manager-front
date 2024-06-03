@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { useHistory } from 'react-router'
-import { useToasts } from 'react-toast-notifications'
+import { useNotification } from 'hooks/useNotification'
 import { EditStudent, StudentForm } from '../../components/students/EditStudent'
 import { ROUTES } from '../../constants'
 import { useQuery } from '../../hooks/useQuery'
@@ -13,7 +13,7 @@ import { StudentBase } from 'types/student'
 
 export const CreateStudent = () => {
   const queryParams = useQuery()
-  const { addToast } = useToasts()
+  const { showError, showSuccess } = useNotification()
   const history = useHistory()
   const { createStudent, submitting } = useStudentsState()
   const backUrl = queryParams.get('backUrl') ?? ROUTES.STUDENTS_LIST
@@ -29,20 +29,14 @@ export const CreateStudent = () => {
         })
         history.push(backUrl)
 
-        addToast(<FormattedMessage id="students.create.success" />, {
-          appearance: 'success',
-          autoDismiss: true,
-        })
+        showSuccess(<FormattedMessage id="students.create.success" />)
       } catch (error) {
         if (error instanceof Error) {
-          addToast(error.message, {
-            appearance: 'error',
-            autoDismiss: true,
-          })
+          showError(error.message)
         }
       }
     },
-    [addToast, backUrl, createStudent, history]
+    [backUrl, createStudent, history, showError, showSuccess]
   )
 
   const submit = useCallback(

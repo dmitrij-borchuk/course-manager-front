@@ -92,7 +92,7 @@ function parseError(error?: Error) {
   if (!error) {
     return
   }
-  if (isAxiosError(error)) {
+  if (isAxiosError<string>(error)) {
     return error.response?.data
   }
   return error.message

@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
+import { useIntl } from 'react-intl'
 import { useOrganizationsState } from '../../store'
 import { EditOrganization } from '../../components/organizations/EditOrganization'
 import { ROUTES } from '../../constants'
@@ -8,6 +9,7 @@ import { OrganizationCreate } from '../../types/organization'
 import { isAxiosError } from '../../api/request'
 
 export const CreateOrganizationPage = () => {
+  const intl = useIntl()
   const history = useHistory()
   const { save, submitting, fetchAll, loading } = useOrganizationsState()
   const [error, setError] = useState<ExternalError<OrganizationCreate>>()
@@ -20,19 +22,19 @@ export const CreateOrganizationPage = () => {
 
         history.push(`${ROUTES.ROOT}`)
       } catch (error) {
-        if (isAxiosError(error)) {
+        if (isAxiosError<{ message: string }>(error)) {
           setError({
             fields: [
               {
                 field: 'key',
-                message: error.response?.data.message,
+                message: error.response?.data.message || intl.formatMessage({ id: 'common.error.unknown' }),
               },
             ],
           })
         }
       }
     },
-    [history, save]
+    [history, intl, save]
   )
 
   useEffect(() => {

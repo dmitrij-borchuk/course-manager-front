@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event'
 import * as reportsApi from 'modules/reports/api'
 import { asMock, getAxiosMock, TestWrapper } from '../../utils/test'
 import { ReportByTagTab } from './ReportByTagTab'
+import { AxiosHeaders } from 'axios'
 
 jest.mock('modules/reports/api')
 jest.mock('react-router-dom', () => {
@@ -78,7 +79,9 @@ describe('ReportByTagTab', () => {
       status: 200,
       statusText: '',
       headers: {},
-      config: {},
+      config: {
+        headers: new AxiosHeaders(),
+      },
     })
 
     render(
@@ -128,7 +131,9 @@ describe('ReportByTagTab', () => {
       status: 200,
       statusText: '',
       headers: {},
-      config: {},
+      config: {
+        headers: new AxiosHeaders(),
+      },
     })
 
     render(

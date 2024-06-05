@@ -28,6 +28,7 @@ export const messages = {
   'common.filter': 'Filter',
   'common.remove': 'Remove',
   'common.students': 'Students',
+  'common.error.unknown': 'Something went wrong',
 
   'Auth.form.error.invalid': 'Identifier or password invalid.',
   'Auth.form.error.500': 'Something went wrong',

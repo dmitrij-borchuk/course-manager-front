@@ -4,30 +4,24 @@ import { Button, DialogActions, DialogContent, DialogTitle, Dialog } from '@mui/
 import { LoadingButton } from '@mui/lab'
 import { noop } from '../../../utils/common'
 
-interface ConfirmationDialogProps {
-  onSubmit?: () => void
-  title?: ReactNode
-  children?: ReactNode
+interface ConfirmationDialogProps extends ConfirmationDialogBaseProps {
   trigger: (props: { openConfirmation: () => void }) => ReactNode
 }
-export const ConfirmationDialog = ({ onSubmit = noop, title, children, trigger }: ConfirmationDialogProps) => {
+export const ConfirmationDialog = ({ trigger, ...props }: ConfirmationDialogProps) => {
   const [open, setOpen] = useState(false)
 
   return (
     <>
       {trigger({ openConfirmation: () => setOpen(true) })}
-      <ConfirmationDialogBase
-        title={title}
-        onClose={() => setOpen(false)}
-        onSubmit={onSubmit}
-        open={open}
-        children={children}
-      />
+      <ConfirmationDialogBase onClose={() => setOpen(false)} open={open} {...props} />
     </>
   )
 }
 
-interface ConfirmationDialogBaseProps extends Omit<ConfirmationDialogProps, 'trigger'> {
+interface ConfirmationDialogBaseProps {
+  title?: ReactNode
+  children?: ReactNode
+  onSubmit?: () => void
   open?: boolean
   onClose?: () => void
   cancelBtnProps?: React.ComponentProps<typeof Button>

@@ -138,6 +138,9 @@
       "!src/index.tsx",
       "!src/reportWebVitals.ts",
       "!src/MuiThemeProvider.tsx"
+    ],
+    "transformIgnorePatterns": [
+      "node_modules/(?!axios)"
     ]
   },
   "overrides": {

@@ -1,4 +1,4 @@
-import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
 import * as reactPdf from '@react-pdf/renderer'
 import userEvent from '@testing-library/user-event'
 import * as reportsApi from 'modules/reports/api'

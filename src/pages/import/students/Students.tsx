@@ -8,7 +8,7 @@ import { useFormWithError } from '../../../hooks/useFormWithError'
 import { FormLayout } from '../../../components/kit/formLayout/FormLayout'
 import { Input } from '../../../components/kit/input/Input'
 import { useToasts } from 'react-toast-notifications'
-import { StudentBase } from '../../../types/student'
+import { StudentImport } from '../../../types/student'
 import { Text } from '../../../components/kit/text/Text'
 import { useStudentsState } from '../../../store'
 import { Message } from '../../../components/kit/message/Message'
@@ -17,7 +17,7 @@ export const StudentsImport = () => {
   const intl = useIntl()
   const { addToast } = useToasts()
   const [reading, setReading] = useState(false)
-  const [previewData, setPreviewData] = useState<StudentBase[] | null>(null)
+  const [previewData, setPreviewData] = useState<StudentImport[] | null>(null)
   const { createStudent, submitting } = useStudentsState()
   const [processed, setProcessed] = useState(0)
   const loading = submitting || reading
@@ -27,6 +27,7 @@ export const StudentsImport = () => {
       file: '',
       nameColumn: '',
       tagsColumn: '',
+      emailColumn: '',
       isMultipleTags: false,
     },
   })
@@ -37,7 +38,7 @@ export const StudentsImport = () => {
       try {
         const textData = (await d.file?.text()) ?? ''
         const data = await fromFileToJson(fileType, textData)
-        const { nameColumn, tagsColumn, isMultipleTags } = d
+        const { nameColumn, tagsColumn, isMultipleTags, emailColumn } = d
 
         if (!data.every((item) => item[d.nameColumn])) {
           addToast(intl.formatMessage({ id: 'import.parse.emptyName' }, { column: d.nameColumn }), {
@@ -50,6 +51,7 @@ export const StudentsImport = () => {
               isMultipleTags,
               nameColumn,
               tagsColumn,
+              emailColumn,
             })
           )
         }
@@ -64,7 +66,7 @@ export const StudentsImport = () => {
     [addToast, fileType, intl]
   )
   const processStudent = useCallback(
-    async (element: StudentBase) => {
+    async (element: StudentImport) => {
       await createStudent(element)
       setProcessed((p) => p + 1)
     },
@@ -176,6 +178,15 @@ export const StudentsImport = () => {
           disabled={loading}
         />
 
+        {/* Email column */}
+        <Input
+          id="emailColumn"
+          control={control}
+          name="emailColumn"
+          label={`${intl.formatMessage({ id: 'import.student.email.label' })}`}
+          disabled={loading}
+        />
+
         {/* Tags column */}
         <Input
           id="tagsColumn"
@@ -220,6 +231,9 @@ export const StudentsImport = () => {
                 <FormattedMessage id="import.student.name" />
               </td>
               <td>
+                <FormattedMessage id="import.student.email" />
+              </td>
+              <td>
                 <FormattedMessage id="import.student.tags" />
               </td>
             </thead>
@@ -227,6 +241,7 @@ export const StudentsImport = () => {
               {previewData.map((d) => (
                 <tr>
                   <td>{d.name}</td>
+                  <td>{d.email}</td>
                   <td>{d.tags?.join(',')}</td>
                 </tr>
               ))}
@@ -257,6 +272,7 @@ interface ImportStudentsForm {
   fileType: string
   file: File | null
   nameColumn: string
+  emailColumn: string
   tagsColumn: string
   isMultipleTags: boolean
 }
@@ -275,21 +291,19 @@ async function fromFileToJson(type: string, data: string): Promise<any[]> {
 interface Config {
   nameColumn: string
   tagsColumn: string
+  emailColumn: string
   isMultipleTags: boolean
 }
-function fromJsonToData(type: string, data: any, config: Config): StudentBase[] {
-  const { isMultipleTags, nameColumn, tagsColumn } = config
+function fromJsonToData(type: string, data: any, config: Config): StudentImport[] {
+  const { isMultipleTags, nameColumn, tagsColumn, emailColumn } = config
 
-  if (type === 'csv') {
-    return data.map((item: any) => ({
-      name: item[nameColumn],
-      tags: isMultipleTags ? item[tagsColumn].split(',') : [item[tagsColumn]],
-    }))
-  }
-
-  // JSON
   return data.map((item: any) => ({
     name: item[nameColumn],
-    tags: item[tagsColumn],
+    tags: type === 'csv' ? parseCsvTags(item[tagsColumn], isMultipleTags) : item[tagsColumn],
+    email: item[emailColumn],
   }))
+}
+
+function parseCsvTags(tagsStr: string, isMultipleTags: boolean): string[] {
+  return isMultipleTags ? tagsStr.split(',').filter((t) => t.length > 0) : [tagsStr]
 }

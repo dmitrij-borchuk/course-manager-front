@@ -23,7 +23,7 @@ export function useDefaultErrorHandler() {
 
   return (error: unknown) => {
     let serverError: AxiosError | null = null
-    if (isAxiosError(error)) {
+    if (isAxiosError<string>(error)) {
       addToast(error.response?.data, {
         appearance: 'error',
         autoDismiss: true,

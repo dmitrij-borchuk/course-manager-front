@@ -5,6 +5,7 @@ export type StudentBase = {
   name: string
   tags: string[]
   outerId: string
+  email?: string
 }
 
 export type Student = StudentBase & {
@@ -17,3 +18,4 @@ export type StudentFull = Student & {
 }
 
 export type NewStudent = StudentBase
+export type StudentImport = NewStudent

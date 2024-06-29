@@ -17,10 +17,10 @@ import {
 import AddIcon from '@mui/icons-material/Add'
 import Box from '@mui/material/Box'
 import { FormattedMessage, useIntl } from 'react-intl'
-import { DatePicker } from 'react-materialize'
 import { useGroups } from 'store/groupsStore'
 import { FilterEditor, ValueInputProps } from '../reportByFilter/FilterEditor'
 import { Filter } from './types'
+import { DatePicker } from 'components/kit/inputs/datePicker'
 
 type FiltersProps = {
   onFiltersChanged: (filters: Filter<string | string[]>[]) => void
@@ -231,40 +231,25 @@ function DateRange(props: DateRangeProps) {
       <Grid item xs={12} md={6}>
         <Box>
           <DatePicker
-            id="dateFrom"
-            options={{
-              autoClose: true,
-              format: 'mmm dd, yyyy',
-              defaultDate: from,
-              setDefaultDate: true,
-              maxDate: new Date(),
-            }}
-            // @ts-ignore
+            fullWidth
+            defaultValue={from}
             label={`${intl.formatMessage({ id: 'common.from' })} *`}
             onChange={(v) => {
-              onRageChanged({ from: v, to })
+              onRageChanged({ from: v ?? new Date(), to })
             }}
-            s={12}
           />
         </Box>
       </Grid>
       <Grid item xs={12} md={6}>
         <Box>
           <DatePicker
-            id="dateTo"
-            options={{
-              autoClose: true,
-              format: 'mmm dd, yyyy',
-              defaultDate: to,
-              setDefaultDate: true,
-              maxDate: new Date(),
-            }}
-            // @ts-ignore
+            fullWidth
+            defaultValue={to}
             label={`${intl.formatMessage({ id: 'common.to' })} *`}
-            onChange={(d) => {
+            onChange={(date) => {
+              const d = date ?? new Date()
               onRageChanged({ from, to: new Date(d.getTime() + dayWithoutSecondInMs) })
             }}
-            s={12}
           />
         </Box>
       </Grid>

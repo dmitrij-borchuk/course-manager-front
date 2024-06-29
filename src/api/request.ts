@@ -1,5 +1,6 @@
 import axios, { AxiosError } from 'axios'
 
+// TODO: probably we don't need it
 const headers: Record<string, string | undefined> = {}
 const request = axios.create({
   baseURL: process.env.REACT_APP_API_GATEWAY,
@@ -7,11 +8,6 @@ const request = axios.create({
 })
 
 request.interceptors.request.use(function (config) {
-  config.headers = {
-    ...config.headers,
-    ...headers,
-  }
-
   return config
 })
 
@@ -31,10 +27,11 @@ request.interceptors.response.use(
 
 export function setHeader(key: string, value?: string) {
   headers[key] = value
+  request.defaults.headers.common[key] = value
 }
 
 export default request
 
-export function isAxiosError(error: any): error is AxiosError {
+export function isAxiosError<T = unknown>(error: any): error is AxiosError<T> {
   return error.isAxiosError
 }

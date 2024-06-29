@@ -1,10 +1,10 @@
 import { ComponentProps, useCallback, useState } from 'react'
 import { FormattedMessage, useIntl } from 'react-intl'
-import { DatePicker } from 'react-materialize'
 import { useQuery } from 'react-query'
 import Grid from '@mui/material/Unstable_Grid2'
 import Box from '@mui/material/Box'
 import { getReportByTagRequest } from 'modules/reports/api'
+import { DatePicker } from 'components/kit/inputs/datePicker'
 import { SortByField } from 'components/kit/SortByField'
 import { TagsEditor } from '../../components/kit/tag/TagsEditor'
 import { Text } from '../../components/kit/text/Text'
@@ -34,36 +34,24 @@ export const ReportByTagTab = () => {
         <Grid xs={12} md={6}>
           <Box>
             <DatePicker
-              id="dateFrom"
-              options={{
-                autoClose: true,
-                format: 'mmm dd, yyyy',
-                defaultDate: from,
-                setDefaultDate: true,
-                maxDate: new Date(),
-              }}
-              // @ts-ignore
+              fullWidth
+              defaultValue={from}
               label={`${intl.formatMessage({ id: 'common.from' })} *`}
-              onChange={setFrom}
-              s={12}
+              onChange={(date) => setFrom(date ?? new Date())}
             />
           </Box>
         </Grid>
         <Grid xs={12} md={6}>
           <Box>
             <DatePicker
-              id="dateTo"
-              options={{
-                autoClose: true,
-                format: 'mmm dd, yyyy',
-                defaultDate: to,
-                setDefaultDate: true,
-                maxDate: new Date(),
-              }}
-              // @ts-ignore
+              fullWidth
+              defaultValue={to}
               label={`${intl.formatMessage({ id: 'common.to' })} *`}
-              onChange={(d) => setTo(new Date(d.getTime() + dayWithoutSecondInMs))}
-              s={12}
+              onChange={(date) => {
+                const d = date ?? new Date()
+                setTo(date ?? new Date())
+                setTo(new Date(d.getTime() + dayWithoutSecondInMs))
+              }}
             />
           </Box>
         </Grid>

@@ -25,7 +25,7 @@ export const TeacherPage = () => {
 
   const { showError, showSuccess } = useNotification()
   const mutation = useMutation((name: string) => updateProfileRequest(id, name), {
-    onError: (error: AxiosError) => showError(error.response?.data?.message),
+    onError: (error: AxiosError<{ message: string }>) => showError(error.response?.data.message),
     onSuccess: async () => {
       await query.refetch()
       showSuccess(<FormattedMessage id="profile.user.nameChanged" />)

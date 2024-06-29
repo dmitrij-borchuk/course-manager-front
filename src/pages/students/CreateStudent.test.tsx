@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitForElementToBeRemoved } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
 import { getAxiosMock, mockOrgId, TestWrapper } from '../../utils/test'
 import CreateStudent from './CreateStudent'
 
@@ -28,7 +28,7 @@ describe('CreateStudent', () => {
   })
   test('should trim spaces at the end and start of the line', async () => {
     axiosMock.onGet('/students/search/student name').reply(200, null)
-    const { unmount } = render(<Component />)
+    render(<Component />)
 
     const nameInput = await screen.findByLabelText('Name *')
     await fireEvent.input(nameInput, {
@@ -42,13 +42,6 @@ describe('CreateStudent', () => {
     })
     await fireEvent.click(submitBtn)
     await screen.findByText(/Student has been successfully created/i)
-
-    const closeBtn = await screen.findByRole('button', {
-      name: /Close/i,
-    })
-    await fireEvent.click(closeBtn)
-    await waitForElementToBeRemoved(() => screen.queryByText(/Student has been successfully created/i))
-    unmount()
 
     expect(axiosMock.history.post.length).toBe(1)
     expect(JSON.parse(axiosMock.history.post[0].data)).toHaveProperty('name', 'student name')

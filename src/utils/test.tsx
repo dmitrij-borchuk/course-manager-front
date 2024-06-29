@@ -1,3 +1,6 @@
+import { useMemo } from 'react'
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { DocumentSnapshot, QuerySnapshot } from 'firebase/firestore'
 import * as firestore from 'firebase/firestore'
 import { Provider } from 'react-redux'
@@ -9,7 +12,7 @@ import { MuiThemeProvider } from 'MuiThemeProvider'
 import AxiosMockAdapter from 'axios-mock-adapter'
 import messages from '../intl/messagesEn'
 import ConstateStoreProvider, { DefaultStore, RootState, StoreProvider, makeStore } from '../store'
-import { useMemo } from 'react'
+import { SnackbarProvider } from 'notistack'
 
 const queryClient = new QueryClient()
 
@@ -25,8 +28,11 @@ export const TestWrapper = ({ children, store: constateStore, initialState }: Wr
       <MuiThemeProvider>
         <QueryClientProvider client={queryClient}>
           <IntlProvider messages={messages} locale="en" defaultLocale="en">
+            <SnackbarProvider />
             <ToastProvider>
-              <ConstateStoreProvider {...constateStore}>{children}</ConstateStoreProvider>
+              <ConstateStoreProvider {...constateStore}>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>{children}</LocalizationProvider>
+              </ConstateStoreProvider>
             </ToastProvider>
           </IntlProvider>
         </QueryClientProvider>

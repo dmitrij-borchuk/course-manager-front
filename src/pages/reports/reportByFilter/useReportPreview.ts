@@ -40,8 +40,8 @@ export function useReportPreview(
       refetchOnWindowFocus: false,
       retry: false,
       keepPreviousData: true,
-      onError: (error: AxiosError) => {
-        showError(error?.response?.data?.message ?? 'Unexpected Error')
+      onError: (error: AxiosError<{ message: string }>) => {
+        showError(error?.response?.data.message ?? 'Unexpected Error')
       },
     }
   )

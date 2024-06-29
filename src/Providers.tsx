@@ -5,6 +5,8 @@ import { ReactQueryDevtools } from 'react-query/devtools'
 import { HelmetProvider } from 'react-helmet-async'
 import { ToastProvider } from 'react-toast-notifications'
 import { IntlProvider } from 'react-intl'
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { SnackbarProvider } from 'notistack'
 import { ActivitiesFilteringProvider } from 'modules/activities/activitiesFilteringContext'
 import messages from './intl/messagesEn'
@@ -30,7 +32,9 @@ export const Providers = ({ children }: Props) => {
                   <ToastProvider>
                     <HelmetProvider>
                       <NavBarProvider>
-                        <ActivitiesFilteringProvider>{children}</ActivitiesFilteringProvider>
+                        <ActivitiesFilteringProvider>
+                          <LocalizationProvider dateAdapter={AdapterDayjs}>{children}</LocalizationProvider>
+                        </ActivitiesFilteringProvider>
                       </NavBarProvider>
                     </HelmetProvider>
                   </ToastProvider>

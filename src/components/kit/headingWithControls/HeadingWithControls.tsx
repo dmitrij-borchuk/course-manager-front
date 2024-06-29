@@ -1,9 +1,10 @@
 import React, { ComponentProps, ReactNode } from 'react'
 import { Link } from 'react-router-dom'
-import { IconButton } from '../buttons/IconButton'
+import EditIcon from '@mui/icons-material/Edit'
 import { DeleteIconWithDialog } from '../deleteIconWithDialog/DeleteIconWithDialog'
 import { Ellipsis } from '../ellipsis/Ellipsis'
 import { SectionHeader } from '../sectionHeader/SectionHeader'
+import IconButton from '@mui/material/IconButton'
 
 interface Props {
   text: ReactNode
@@ -18,11 +19,11 @@ export const HeadingWithControls = ({ text, editPath, deleteProps }: Props) => {
       </SectionHeader>
       <div className="flex items-center space-x-2">
         {editPath && (
-          <Link to={editPath} data-testid="edit-btn">
-            <IconButton type="square" size={40} icon="edit" />
-          </Link>
+          <IconButton component={Link} to={editPath} data-testid="edit-btn">
+            <EditIcon />
+          </IconButton>
         )}
-        {deleteProps && <DeleteIconWithDialog triggerProps={{ 'data-testid': 'delete-btn' }} {...deleteProps} />}
+        {deleteProps && <DeleteIconWithDialog {...deleteProps} />}
       </div>
     </div>
   )

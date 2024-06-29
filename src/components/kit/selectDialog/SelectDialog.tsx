@@ -1,9 +1,10 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { FormattedMessage } from 'react-intl'
-import { Button, Icon, Modal, ModalProps } from 'react-materialize'
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material'
+import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import { ButtonWithLoader } from '../buttons/ButtonWithLoader'
-import { List } from '../list/List'
 import { TinyPreloader } from '../TinyPreloader/TinyPreloader'
+import { List } from '../list/List'
 
 type Accessor<T> = keyof T | ((data: T) => any)
 
@@ -13,7 +14,6 @@ interface PropsBase<T> {
   open?: boolean
   labelProp: Accessor<T>
   loading?: boolean
-  trigger?: ModalProps['trigger']
   onCloseStart?: () => void
 }
 interface PropsSingle<T> extends PropsBase<T> {
@@ -26,17 +26,17 @@ interface PropsMulti<T> extends PropsBase<T> {
   onSubmit: (data: T[]) => void
   initial?: T[]
 }
+// TODO: tests
 export function SelectDialog<T extends { id: string | number }>(props: PropsMulti<T>): JSX.Element
 export function SelectDialog<T extends { id: string | number }>(props: PropsSingle<T>): JSX.Element
 export function SelectDialog<T extends { id: string | number }>({
   onSubmit,
-  open,
+  open = false,
   header,
   items,
   loading = false,
   multiSelect,
   labelProp,
-  trigger,
   onCloseStart,
   initial,
   ...rest
@@ -86,21 +86,12 @@ export function SelectDialog<T extends { id: string | number }>({
     },
     [multiSelect, selected, submit, submitting]
   )
-  const resetSelected = useCallback(() => {
-    setSelectedLoading(undefined)
-    setSelected(initialArray)
-  }, [initialArray])
-
-  // We need this workaround to make sure that we call last version of `resetSelected` callback
-  // `onCloseEnd` is saved in the `Modal` component once at the mount and never changed
-  const onCloseEnd = useRef<any>(resetSelected)
-  onCloseEnd.current = resetSelected
 
   const onSubmitClick = useCallback(() => {
     submit()
   }, [submit])
   const okBtn = multiSelect ? (
-    <ButtonWithLoader loading={submitting} className="color-alert" onClick={onSubmitClick}>
+    <ButtonWithLoader loading={submitting} onClick={onSubmitClick}>
       <FormattedMessage id="common.dialog.btn.ok" />
     </ButtonWithLoader>
   ) : null
@@ -115,7 +106,7 @@ export function SelectDialog<T extends { id: string | number }>({
           {selectedLoading === d && <TinyPreloader />}
           {isSelected && (
             <div className="ml-2 flex h-5">
-              <Icon center>check_circle</Icon>
+              <CheckCircleIcon />
             </div>
           )}
         </div>
@@ -128,33 +119,20 @@ export function SelectDialog<T extends { id: string | number }>({
   // TODO: use mui
 
   return (
-    // @ts-expect-error
-    <Modal
-      actions={[
-        <Button flat modal="close" disabled={submitting}>
-          <FormattedMessage id="common.dialog.btn.cancel" />
-        </Button>,
-        okBtn,
-      ]}
-      trigger={trigger}
-      open={open}
-      bottomSheet={false}
-      fixedFooter={false}
-      header={header}
-      options={{
-        dismissible: true,
-        endingTop: '10%',
-        inDuration: 250,
-        opacity: 0.5,
-        outDuration: 250,
-        preventScrolling: true,
-        startingTop: '4%',
-        onCloseStart,
-        onCloseEnd: () => onCloseEnd.current(),
-      }}
-      {...rest}
-    >
-      <List items={items} loading={loading} renderItem={renderItem} />
-    </Modal>
+    <>
+      <Dialog open={open} maxWidth="sm" fullWidth>
+        <DialogTitle>{header}</DialogTitle>
+        <DialogContent>
+          <List items={items} loading={loading} renderItem={renderItem} />
+        </DialogContent>
+
+        <DialogActions>
+          <Button disabled={submitting} onClick={onCloseStart}>
+            <FormattedMessage id="common.dialog.btn.cancel" />
+          </Button>
+          {okBtn}
+        </DialogActions>
+      </Dialog>
+    </>
   )
 }

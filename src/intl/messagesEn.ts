@@ -28,6 +28,7 @@ export const messages = {
   'common.filter': 'Filter',
   'common.remove': 'Remove',
   'common.students': 'Students',
+  'common.error.unknown': 'Something went wrong',
 
   'Auth.form.error.invalid': 'Identifier or password invalid.',
   'Auth.form.error.500': 'Something went wrong',
@@ -167,7 +168,9 @@ export const messages = {
   'import.student.header': 'Import students',
   'import.student.file.label': 'file',
   'import.student.name.label': 'Key for the name',
+  'import.student.email.label': 'Key for the email',
   'import.student.name': 'Name',
+  'import.student.email': 'Email',
   'import.student.tags.label': 'Key for the tags',
   'import.student.tags': 'Tags',
   'import.student.tags.isMultiple.label': 'Is multiple tags',
@@ -209,7 +212,7 @@ export const messages = {
   'settings.apiKey.keyField.label': 'API Key',
   'settings.apiKey.generateBtn.label': 'Regenerate API Key',
   'settings.apiKey.info':
-    'API kay is used to authenticate your application to get data from b2b API. Copy API key after creation and save it in the safe place. You will not be able to view it again. You can regenerate new key anytime, but old key will be invalidated.',
+    'API key is used to authenticate your application to get data from b2b API. Copy API key after creation and save it in the safe place. You will not be able to view it again. You can regenerate new key anytime, but old key will be invalidated.',
 }
 
 export default messages

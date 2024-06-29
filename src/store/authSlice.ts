@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { setHeader } from 'api/request'
-import { Unsubscribe, User } from 'firebase/auth'
+import { User } from 'firebase/auth'
 import { auth, getFbUser } from 'api/firebase'
 
 const initialState: {
@@ -38,8 +38,7 @@ export default authSlice.reducer
 export const { setAuthUser } = authSlice.actions
 
 export const listenForAuthUserChange = createAsyncThunk('auth/onChange', async (_, { dispatch }) => {
-  unsubscribe()
-  unsubscribe = auth.onIdTokenChanged(async (user) => {
+  return auth.onIdTokenChanged(async (user) => {
     if (user) {
       const token = await user.getIdToken()
       setHeader('authorization', token)
@@ -49,10 +48,6 @@ export const listenForAuthUserChange = createAsyncThunk('auth/onChange', async (
     dispatch(setAuthUser(getSerializedUser(user)))
   })
 })
-export const unsubscribeFromAuthUserChange = createAsyncThunk('auth/unsubscribeOnChange', async () => {
-  unsubscribe()
-})
-let unsubscribe: Unsubscribe = () => {}
 
 export const initAuthUser = createAsyncThunk('auth/initUser', async () => {
   const authUser = await getFbUser()

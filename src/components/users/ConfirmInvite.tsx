@@ -46,8 +46,8 @@ export const ConfirmInvite: React.FC<Props> = ({
               <FormattedMessage id="users.invite.confirmation.needLogin" />
             </Text>
             <Button
-              // @ts-ignore
-              href={ROUTES.LOGIN}
+              // @ts-expect-error
+              href={`${ROUTES.LOGIN}`}
               node="a"
             >
               <FormattedMessage id="users.invite.confirmation.loginLink" />

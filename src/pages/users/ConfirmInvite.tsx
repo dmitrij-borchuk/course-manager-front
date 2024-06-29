@@ -19,7 +19,7 @@ import { ROUTES } from '../../constants'
 export const ConfirmInvitePage = () => {
   const { initiatingAuth, currentUser } = useAuthState()
   const dispatch = useAppDispatch()
-  const { submitting, confirmInvitation, profile } = useUsersState()
+  const { submitting, confirmInvitation, profile, fetchProfile } = useUsersState()
   const { fetchAll, getInviteInfo, inviteInfo, inviteInfoError } = useOrganizationsState()
   const history = useHistory()
   const { showError } = useNotification()
@@ -44,12 +44,13 @@ export const ConfirmInvitePage = () => {
     if (!initiatingAuth) {
       if (currentUser) {
         getInviteInfo(token)
+        fetchProfile()
       } else {
         showError(<FormattedMessage id="users.invite.needLogin" />)
         history.push(`${ROUTES.LOGIN}?redirect=/invite/confirm/${token}`)
       }
     }
-  }, [currentUser, getInviteInfo, history, initiatingAuth, showError, token])
+  }, [currentUser, getInviteInfo, history, initiatingAuth, showError, token, fetchProfile])
 
   if (parsedError) {
     return (

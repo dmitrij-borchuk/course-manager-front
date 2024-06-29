@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { setHeader } from 'api/request'
-import { Unsubscribe, User } from 'firebase/auth'
+import { User } from 'firebase/auth'
 import { auth, getFbUser } from 'api/firebase'
 
 const initialState: {

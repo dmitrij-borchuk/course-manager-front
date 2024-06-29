@@ -95,9 +95,7 @@ export const Routing = React.memo(function () {
       <AuthGuardedRoute component={CreateOrganizationPage} path={`${ROUTES.ORGANIZATIONS_ADD}`} exact />
       <AuthGuardedRoute component={OrganizationsPage} path={`${ROUTES.ORGANIZATIONS_ROOT}`} exact />
 
-      <Route path={`/`}>
-        <OrganizationGuardedRoute />
-      </Route>
+      <AuthGuardedRoute component={OrganizationGuardedRoute} path="/" />
 
       {/* 404 */}
       <Route path={`/*`}>404</Route>
@@ -114,51 +112,51 @@ const OrganizationGuardedRoute = () => {
 
   return (
     <Switch>
-      <AuthGuardedRoute component={DashboardPage} path="/" exact />
+      <Route component={DashboardPage} path="/" exact />
 
-      <AuthGuardedRoute component={InviteUserPage} path="/invite" exact />
+      <Route component={InviteUserPage} path="/invite" exact />
 
       {/* Users */}
-      {/* <AuthGuardedRoute component={CreateTeacherPage} path={`${ROUTES.TEACHERS_ADD}`} exact />
-      <AuthGuardedRoute component={EditTeacherPage} path={`${ROUTES.TEACHERS_EDIT}/:id`} exact /> */}
-      {/* <AuthGuardedRoute component={TeacherPage} path={`$/{ROUTES.TEACHERS_ROOT}/:id`} exact /> */}
+      {/* <Route component={CreateTeacherPage} path={`${ROUTES.TEACHERS_ADD}`} exact />
+      <Route component={EditTeacherPage} path={`${ROUTES.TEACHERS_EDIT}/:id`} exact /> */}
+      {/* <Route component={TeacherPage} path={`$/{ROUTES.TEACHERS_ROOT}/:id`} exact /> */}
 
       {/* Teachers */}
       {/* TODO: rename to `users` */}
-      <AuthGuardedRoute component={TeachersListWithHeader} path={`${ROUTES.TEACHERS_LIST}`} exact />
-      <AuthGuardedRoute component={TeacherPage} path={`${ROUTES.TEACHERS_ROOT}/:id`} exact />
+      <Route component={TeachersListWithHeader} path={`${ROUTES.TEACHERS_LIST}`} exact />
+      <Route component={TeacherPage} path={`${ROUTES.TEACHERS_ROOT}/:id`} exact />
 
       {/* Groups */}
-      <AuthGuardedRoute component={CreateGroupPage} path={`${ROUTES.GROUPS_ADD}`} exact />
-      <AuthGuardedRoute component={EditGroupPage} path={`${ROUTES.GROUPS_EDIT}/:id`} exact />
-      <AuthGuardedRoute component={GroupsListPage} path={`${ROUTES.GROUPS_LIST}`} exact />
-      <AuthGuardedRoute component={GroupPage} path={`${ROUTES.GROUPS_ROOT}/:id`} exact />
+      <Route component={CreateGroupPage} path={`${ROUTES.GROUPS_ADD}`} exact />
+      <Route component={EditGroupPage} path={`${ROUTES.GROUPS_EDIT}/:id`} exact />
+      <Route component={GroupsListPage} path={`${ROUTES.GROUPS_LIST}`} exact />
+      <Route component={GroupPage} path={`${ROUTES.GROUPS_ROOT}/:id`} exact />
 
       {/* Students */}
-      <AuthGuardedRoute component={CreateStudentPage} path={`${ROUTES.STUDENTS_ADD}`} exact />
-      <AuthGuardedRoute component={EditStudentPage} path={`${ROUTES.STUDENTS_EDIT}/:id`} exact />
-      <AuthGuardedRoute component={StudentsListPage} path={`${ROUTES.STUDENTS_LIST}`} exact />
-      <AuthGuardedRoute component={StudentPage} path={`${ROUTES.STUDENTS_ROOT}/:id`} exact />
-      <AuthGuardedRoute component={() => <StudentInGroupPage />} path={`${ROUTES.STUDENTS_BY_ACTIVITY}`} exact />
+      <Route component={CreateStudentPage} path={`${ROUTES.STUDENTS_ADD}`} exact />
+      <Route component={EditStudentPage} path={`${ROUTES.STUDENTS_EDIT}/:id`} exact />
+      <Route component={StudentsListPage} path={`${ROUTES.STUDENTS_LIST}`} exact />
+      <Route component={StudentPage} path={`${ROUTES.STUDENTS_ROOT}/:id`} exact />
+      <Route component={() => <StudentInGroupPage />} path={`${ROUTES.STUDENTS_BY_ACTIVITY}`} exact />
 
       {/* Schedule */}
-      <AuthGuardedRoute component={SchedulePage} path={`${ROUTES.SCHEDULES_ROOT}`} exact />
+      <Route component={SchedulePage} path={`${ROUTES.SCHEDULES_ROOT}`} exact />
 
       {/* Attendance */}
-      <AuthGuardedRoute component={AttendanceEditor} path={`${ROUTES.ATTENDANCE_EDIT}/:id`} exact />
-      <AuthGuardedRoute component={AttendanceEditor} path={`${ROUTES.ATTENDANCE_ADD}`} exact />
-      <AuthGuardedRoute component={AttendanceEditor} path={`${ROUTES.ATTENDANCE_ADD}/:date`} exact />
+      <Route component={AttendanceEditor} path={`${ROUTES.ATTENDANCE_EDIT}/:id`} exact />
+      <Route component={AttendanceEditor} path={`${ROUTES.ATTENDANCE_ADD}`} exact />
+      <Route component={AttendanceEditor} path={`${ROUTES.ATTENDANCE_ADD}/:date`} exact />
 
       {/* Reports */}
-      <AuthGuardedRoute component={ReportsPage} path={`${ROUTES.REPORTS_ROOT}`} exact />
+      <Route component={ReportsPage} path={`${ROUTES.REPORTS_ROOT}`} exact />
 
       {/* Settings */}
-      <AuthGuardedRoute component={SettingsPage} path={`${ROUTES.SETTINGS_API_KEY}`} exact />
+      <Route component={SettingsPage} path={`${ROUTES.SETTINGS_API_KEY}`} exact />
 
       {/* Import */}
-      <AuthGuardedRoute component={StudentImportPage} path="/import" exact />
+      <Route component={StudentImportPage} path="/import" exact />
 
-      <AuthGuardedRoute component={ProfilePage} path={`${ROUTES.MY_WORK}`} exact />
+      <Route component={ProfilePage} path={`${ROUTES.MY_WORK}`} exact />
     </Switch>
   )
 }

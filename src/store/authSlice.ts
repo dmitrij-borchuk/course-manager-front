@@ -38,8 +38,7 @@ export default authSlice.reducer
 export const { setAuthUser } = authSlice.actions
 
 export const listenForAuthUserChange = createAsyncThunk('auth/onChange', async (_, { dispatch }) => {
-  unsubscribe()
-  unsubscribe = auth.onIdTokenChanged(async (user) => {
+  return auth.onIdTokenChanged(async (user) => {
     if (user) {
       const token = await user.getIdToken()
       setHeader('authorization', token)
@@ -49,10 +48,6 @@ export const listenForAuthUserChange = createAsyncThunk('auth/onChange', async (
     dispatch(setAuthUser(getSerializedUser(user)))
   })
 })
-export const unsubscribeFromAuthUserChange = createAsyncThunk('auth/unsubscribeOnChange', async () => {
-  unsubscribe()
-})
-let unsubscribe: Unsubscribe = () => {}
 
 export const initAuthUser = createAsyncThunk('auth/initUser', async () => {
   const authUser = await getFbUser()

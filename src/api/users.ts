@@ -6,11 +6,6 @@ export function createUserRequest(data: NewUser) {
   return request.post<User>('/users', data)
 }
 
-// TODO: Probably need to be removed
-export function getUsersRequest(orgId: number) {
-  return request.get<OrganizationUser[]>(`/users/${orgId}`)
-}
-
 export function getUserRequest(orgId: number, id: number) {
   return request.get<OrganizationUser>(`/users/${orgId}/${id}`)
 }

@@ -76,7 +76,8 @@ function getMeterData(
     id: attendance.id,
     activity: group,
     rate: getMeterProgress(attendance),
-    performer: group.performer.organizationsConnections[0],
+    // TODO: get exact user profile
+    performer: group.performer.organizationsConnected[0],
     studentsNumber: getParticipantCount(attendance),
   }
 }

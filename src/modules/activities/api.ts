@@ -25,7 +25,7 @@ export function fetchActivities(params?: FetchActivitiesParams) {
 }
 export type ActivityWithParticipationAndPerformer = Activity & { studentsToActivities: ParticipationRaw[] } & {
   performer: User & {
-    organizationsConnections: Profile[]
+    organizationsConnected: Profile[]
   }
 }
 type ParticipationRaw = {

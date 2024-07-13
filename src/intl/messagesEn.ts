@@ -143,6 +143,7 @@ export const messages = {
   'organizations.edit.title': 'Edit organization',
   'organizations.edit.noUserId': 'Looks like user is logged out',
   'organizations.edit.conflict': 'Organization identifier is taken',
+  'organizations.profileMenu.link.title': 'My organizations',
 
   'users.invite.title': 'Invite user',
   'users.invite.btn.label': 'Invite user',

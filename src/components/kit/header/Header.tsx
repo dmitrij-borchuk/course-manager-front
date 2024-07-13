@@ -14,6 +14,7 @@ import {
   Typography,
   styled,
 } from '@mui/material'
+import CorporateFareIcon from '@mui/icons-material/CorporateFare'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import MenuIcon from '@mui/icons-material/Menu'
 import LogoutIcon from '@mui/icons-material/Logout'
@@ -91,6 +92,16 @@ function ProfileButton() {
             </ListItemIcon>
             <ListItemText>
               <FormattedMessage id="myWork.link.title" />
+            </ListItemText>
+          </MenuItem>
+        </MenuLink>
+        <MenuLink key="organizations" to={`${ROUTES.ORGANIZATIONS_ROOT}`}>
+          <MenuItem onClick={handleClose}>
+            <ListItemIcon>
+              <CorporateFareIcon fontSize="small" />
+            </ListItemIcon>
+            <ListItemText>
+              <FormattedMessage id="organizations.profileMenu.link.title" />
             </ListItemText>
           </MenuItem>
         </MenuLink>

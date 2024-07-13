@@ -44,6 +44,8 @@ export default function useOrganizationsBaseStore() {
           [result.data.id]: result.data,
         }))
         setSubmitting(false)
+
+        return result.data
       } catch (error) {
         setSubmitting(false)
         throw error

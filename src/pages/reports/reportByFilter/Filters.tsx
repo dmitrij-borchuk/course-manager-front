@@ -122,7 +122,7 @@ export function Filters(props: FiltersProps) {
 
   return (
     <>
-      <Paper sx={{ px: 2, pt: 2 }}>
+      <Paper sx={{ px: 2, py: 2 }}>
         <Typography variant="subtitle2">Date range:</Typography>
         <DateRange onRageChanged={onRageChanged} range={range} />
       </Paper>

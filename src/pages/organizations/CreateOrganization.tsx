@@ -1,6 +1,9 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useIntl } from 'react-intl'
+import { useAppDispatch } from 'store/hooks'
+import { setCurrentOrganization } from 'modules/organizations/store/currentOrg'
+import { fetchCurrentProfile } from 'modules/profiles/store/currentProfile'
 import { useOrganizationsState } from '../../store'
 import { EditOrganization } from '../../components/organizations/EditOrganization'
 import { ROUTES } from '../../constants'
@@ -9,6 +12,7 @@ import { OrganizationCreate } from '../../types/organization'
 import { isAxiosError } from '../../api/request'
 
 export const CreateOrganizationPage = () => {
+  const dispatch = useAppDispatch()
   const intl = useIntl()
   const history = useHistory()
   const { save, submitting, fetchAll, loading } = useOrganizationsState()
@@ -16,9 +20,11 @@ export const CreateOrganizationPage = () => {
   const submit = useCallback(
     async (data: OrganizationCreate) => {
       try {
-        await save({
+        const newOrg = await save({
           ...data,
         })
+        await dispatch(setCurrentOrganization(newOrg))
+        await dispatch(fetchCurrentProfile())
 
         history.push(`${ROUTES.ROOT}`)
       } catch (error) {
@@ -34,7 +40,7 @@ export const CreateOrganizationPage = () => {
         }
       }
     },
-    [history, intl, save]
+    [dispatch, history, intl, save]
   )
 
   useEffect(() => {

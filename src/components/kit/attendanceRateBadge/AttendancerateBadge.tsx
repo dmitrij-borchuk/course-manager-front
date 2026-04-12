@@ -7,7 +7,6 @@ interface Props {
 export const AttendanceRateBadge = ({ value, BoxProps }: Props) => {
   return (
     <Box
-      // TODO: color depends on rate
       className="w-10 h-6 flex-shrink-0 inline-flex justify-center"
       data-testid="attendance-rate-badge"
       color={useBadgeColor(value)}

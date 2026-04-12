@@ -1,5 +1,5 @@
-export const initializeFirestore = jest.fn()
-export const connectFirestoreEmulator = jest.fn()
+export const initializeFirestore = vi.fn()
+export const connectFirestoreEmulator = vi.fn()
 export const collection = (_, path) => path
 export const query = (path) => path
 export const doc = (_, path, ...segments) => {
@@ -12,7 +12,9 @@ export const doc = (_, path, ...segments) => {
     }),
   }
 }
-export const getDocs = jest.fn()
-export const getDoc = jest.fn()
+export const getDocs = vi.fn()
+export const getDoc = vi.fn()
 export const where = (...args) => args
-export const setDoc = jest.fn()
+export const setDoc = vi.fn()
+
+console.log('=-= fb mock')

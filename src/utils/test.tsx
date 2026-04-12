@@ -11,7 +11,7 @@ import { QueryClient, QueryClientProvider } from 'react-query'
 import { MuiThemeProvider } from 'MuiThemeProvider'
 import AxiosMockAdapter from 'axios-mock-adapter'
 import messages from '../intl/messagesEn'
-import ConstateStoreProvider, { DefaultStore, RootState, StoreProvider, makeStore } from '../store'
+import ConstateStoreProvider, { DefaultStore, RootState, makeStore } from '../store'
 import { SnackbarProvider } from 'notistack'
 
 const queryClient = new QueryClient()
@@ -125,8 +125,10 @@ export function mockUrlParams(data: Record<string, string>) {
   useParams.mockReturnValue(data)
 }
 
-export function getAxiosMock() {
-  return require('axios').mock as AxiosMockAdapter
+export async function getAxiosMock() {
+  const a = await import('axios')
+  // @ts-ignore
+  return a.mock as AxiosMockAdapter
 }
 
 type DeepPartial<T> = {

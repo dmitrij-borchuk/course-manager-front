@@ -8,16 +8,17 @@ import { ReportByGroupTab } from './ReportByGroupTab'
 import { Attendance } from '../../types/attendance'
 import { Student } from '../../types/student'
 import { Activity } from '../../types/activity'
+import { mockFn } from '@/utils/tests'
 
 jest.mock('react-router-dom', () => {
   return {
-    useParams: jest.fn(),
-    useHistory: jest.fn(),
+    useParams: mockFn(),
+    useHistory: mockFn(),
   }
 })
 jest.mock('@react-pdf/renderer', () => {
   return {
-    usePDF: jest.fn(),
+    usePDF: mockFn(),
     Page: ({ children }: any) => <div>Page{children}</div>,
     Text: ({ children }: any) => <div data-testid="pdf-text">{children}</div>,
     View: ({ children }: any) => <div>View{children}</div>,
@@ -54,7 +55,7 @@ describe('ReportByGroupTab', () => {
       orgId: 'orgId',
     })
     localStorage.clear()
-    usePDF.mockReturnValue([{ url: 'instance.url' } as any, jest.fn()])
+    usePDF.mockReturnValue([{ url: 'instance.url' } as any, mockFn()])
     axiosMock.onGet('/organizations').reply(200, [
       {
         id: 1,
@@ -74,7 +75,7 @@ describe('ReportByGroupTab', () => {
     groups.forEach((g) => {
       axiosMock.onGet(new RegExp(`/students/byActivity/${g.id}`)).reply(200, students)
     })
-    usePDF.mockReturnValue([{ url: 'instance.url' } as any, jest.fn()])
+    usePDF.mockReturnValue([{ url: 'instance.url' } as any, mockFn()])
 
     render(
       <TestWrapper initialState={storeWithOrg}>
@@ -105,7 +106,7 @@ describe('ReportByGroupTab', () => {
     groups.forEach((g) => {
       axiosMock.onGet(new RegExp(`/students/byActivity/${g.id}`)).reply(200, students)
     })
-    usePDF.mockReturnValue([{} as any, jest.fn()])
+    usePDF.mockReturnValue([{} as any, mockFn()])
 
     render(
       <TestWrapper initialState={storeWithOrg}>
@@ -185,7 +186,7 @@ describe('ReportByGroupTab', () => {
       },
     ]
     mockGetDocs(attendances)
-    usePDF.mockReturnValue([{ url: 'url' } as any, jest.fn()])
+    usePDF.mockReturnValue([{ url: 'url' } as any, mockFn()])
     axiosMock.onGet(`/activities`).reply(200, groups)
     groups.forEach((g) => {
       axiosMock.onGet(new RegExp(`/students/byActivity/${g.id}`)).reply(200, students)
@@ -267,7 +268,7 @@ describe('ReportByGroupTab', () => {
       },
     ]
     mockGetDocs(attendances)
-    usePDF.mockReturnValue([{} as any, jest.fn()])
+    usePDF.mockReturnValue([{} as any, mockFn()])
     axiosMock.onGet(`/activities`).reply(200, groups)
     groups.forEach((g) => {
       axiosMock.onGet(new RegExp(`/students/byActivity/${g.id}`)).reply(200, students)

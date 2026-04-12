@@ -1,11 +1,12 @@
 import { fireEvent, render, screen } from '@testing-library/react'
 import { DatePicker } from './datePicker'
 import { TestWrapper } from 'utils/test'
+import { mockFn } from '@/utils/tests'
 
 describe('DatePicker', () => {
   const defaultProps = {
     defaultValue: new Date(),
-    onChange: jest.fn(),
+    onChange: mockFn(),
   }
   const setup = (props = {}) => {
     return render(

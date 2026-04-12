@@ -1,6 +1,7 @@
+import { ComponentProps } from 'react'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { ComponentProps } from 'react'
+import { mockFn } from '@/utils/tests'
 import { ListHeader } from './ListHeader'
 
 const item: ListHeaderProps['items'][number] = {
@@ -13,7 +14,7 @@ describe('ListHeader', () => {
     render(<ListHeader items={[item]} />)
   })
   it('should call sort callback', async () => {
-    const onSort = jest.fn()
+    const onSort = mockFn()
     render(<ListHeader items={[item]} onSort={onSort} />)
 
     await userEvent.click(screen.getByText(item.label?.toString() || ''))
@@ -21,7 +22,7 @@ describe('ListHeader', () => {
     expect(onSort).toHaveBeenCalled()
   })
   it('should call sort callback with appropriate argument', async () => {
-    const onSort = jest.fn()
+    const onSort = mockFn()
     const { rerender } = render(<ListHeader items={[item]} onSort={onSort} sortId="id" />)
 
     await userEvent.click(screen.getByText(item.label?.toString() || ''))

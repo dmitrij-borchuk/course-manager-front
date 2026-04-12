@@ -1,8 +1,8 @@
 import React from 'react'
 
-export const useParams = jest.fn()
+export const useParams = vi.fn()
 export const useHistory = () => ({
-  push: jest.fn(),
+  push: vi.fn(),
   location: {
     search: '',
   },
@@ -13,5 +13,5 @@ export const Link = React.forwardRef(({ children, ...props }, ref) => (
   </a>
 ))
 export const BrowserRouter = ({ children }) => <div>{children}</div>
-export const Switch = jest.fn()
-export const Route = jest.fn()
+export const Switch = vi.fn()
+export const Route = vi.fn()

@@ -1,6 +1,6 @@
 export const useHistory = () => ({
-  push: jest.fn(),
+  push: vi.fn(),
 })
 export const useLocation = () => ({
-  push: jest.fn(),
+  push: vi.fn(),
 })

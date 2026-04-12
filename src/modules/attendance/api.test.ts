@@ -1,6 +1,7 @@
+import { mockFn } from '@/utils/tests'
+import { asMock } from 'utils/test'
 import { fetchAttendancesForGroups } from './api'
 import * as collectionModule from '../../api/firebase/collections'
-import { asMock } from 'utils/test'
 
 jest.mock('../../api/firebase/collections')
 
@@ -8,12 +9,12 @@ const { makeOrgCollection } = asMock(collectionModule)
 describe('fetchAttendancesForGroups', function () {
   beforeEach(() => {
     makeOrgCollection.mockReturnValue({
-      query: jest.fn().mockResolvedValue([]),
-      delete: jest.fn(),
-      getAll: jest.fn(),
-      getById: jest.fn(),
-      queryMulti: jest.fn().mockResolvedValue([]),
-      save: jest.fn(),
+      query: mockFn().mockResolvedValue([]),
+      delete: mockFn(),
+      getAll: mockFn(),
+      getById: mockFn(),
+      queryMulti: mockFn().mockResolvedValue([]),
+      save: mockFn(),
     })
   })
   it('result should be cached and returned', async function () {

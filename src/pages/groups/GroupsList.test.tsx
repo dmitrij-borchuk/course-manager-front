@@ -4,14 +4,15 @@ import { useActivitiesData } from './GroupsList'
 import { asMock, TestWrapper } from 'utils/test'
 import * as attendanceApi from '../../modules/attendance/api'
 import * as activitiesApi from '../../modules/activities/api'
+import { mockFn } from '@/utils/tests'
 
 jest.mock('../../hooks/useOrgId')
 jest.mock('../../modules/attendance/api')
 jest.mock('../../modules/activities/api')
 jest.mock('modules/activities/activitiesFilteringContext')
 jest.mock('react-router-dom', () => ({
-  useParams: jest.fn(),
-  useHistory: jest.fn(),
+  useParams: mockFn(),
+  useHistory: mockFn(),
 }))
 
 const { fetchAttendancesForGroups } = asMock(attendanceApi)
@@ -42,8 +43,8 @@ describe('useActivitiesData', () => {
     } as any)
     useActivitiesFiltering.mockReturnValue({
       filter: { showArchived: false },
-      updateFilter: jest.fn(),
-      setOpenFilterDialog: jest.fn(),
+      updateFilter: mockFn(),
+      setOpenFilterDialog: mockFn(),
     })
     const { rerender } = renderHook(() => useActivitiesData(), { wrapper: TestWrapper })
     await waitFor(() => expect(fetchAttendancesForGroups).toHaveBeenCalledWith('orgId', ['1']))
@@ -79,8 +80,8 @@ describe('useActivitiesData', () => {
 
     useActivitiesFiltering.mockReturnValue({
       filter: { showArchived: true },
-      updateFilter: jest.fn(),
-      setOpenFilterDialog: jest.fn(),
+      updateFilter: mockFn(),
+      setOpenFilterDialog: mockFn(),
     })
     rerender()
     await waitFor(() => expect(fetchAttendancesForGroups).toHaveBeenCalledWith('orgId', ['1', '2']))

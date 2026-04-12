@@ -1,21 +1,22 @@
+import { AxiosHeaders } from 'axios'
 import { fireEvent, render, screen } from '@testing-library/react'
 import * as reactPdf from '@react-pdf/renderer'
 import userEvent from '@testing-library/user-event'
 import * as reportsApi from 'modules/reports/api'
+import { mockFn, mockModule } from '@/utils/tests'
 import { asMock, getAxiosMock, TestWrapper } from '../../utils/test'
 import { ReportByTagTab } from './ReportByTagTab'
-import { AxiosHeaders } from 'axios'
 
-jest.mock('modules/reports/api')
-jest.mock('react-router-dom', () => {
+mockModule('modules/reports/api')
+mockModule('react-router-dom', () => {
   return {
-    useParams: jest.fn(),
-    useHistory: jest.fn(),
+    useParams: mockFn(),
+    useHistory: mockFn(),
   }
 })
-jest.mock('@react-pdf/renderer', () => {
+mockModule('@react-pdf/renderer', () => {
   return {
-    usePDF: jest.fn(),
+    usePDF: mockFn(),
     Page: ({ children }: any) => <div>Page{children}</div>,
     Text: ({ children }: any) => <div data-testid="pdf-text">{children}</div>,
     View: ({ children }: any) => <div>View{children}</div>,
@@ -39,7 +40,7 @@ describe('ReportByTagTab', () => {
     useParams.mockReturnValue({
       orgId: 'orgId',
     })
-    usePDF.mockReturnValue([{ url: 'url' } as any, jest.fn()])
+    usePDF.mockReturnValue([{ url: 'url' } as any, mockFn()])
     axiosMock.onGet('/organizations').reply(200, [
       {
         id: 1,

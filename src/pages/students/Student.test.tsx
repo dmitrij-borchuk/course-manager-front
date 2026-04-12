@@ -2,12 +2,17 @@ import { render, screen, waitForElementToBeRemoved } from '@testing-library/reac
 import { getAxiosMock, mockGetDocs, mockUrlParams, TestWrapper } from '../../utils/test'
 import { createFirebaseMock } from '../../utils/tests/firebaseMock'
 import StudentPage from './Student'
+import { vi } from 'vitest'
 
-describe('Student', () => {
+vi.mock(import('firebase/firestore'))
+vi.mock(import('react-router-dom'))
+
+describe('Student', async () => {
   let getDocs!: ReturnType<typeof mockGetDocs>
-  const axiosMock = getAxiosMock()
+  const axiosMock = await getAxiosMock()
   beforeEach(() => {
     getDocs = mockGetDocs()
+    console.log('=-= 🚀 ~ getDocs:', getDocs)
   })
 
   afterEach(() => {

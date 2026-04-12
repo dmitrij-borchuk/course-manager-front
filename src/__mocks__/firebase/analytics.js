@@ -1,1 +1,1 @@
-export const getAnalytics = jest.fn()
+export const getAnalytics = vi.fn()

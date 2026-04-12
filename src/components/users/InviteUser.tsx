@@ -4,7 +4,7 @@ import { Container } from 'react-materialize'
 import { Header } from '../kit/header/Header'
 import { Input } from '../kit/input/Input'
 import { SubmitButton } from '../kit/buttons/SubmitButton'
-import { FormLayout } from '../kit/formLayout/FormLayout'
+import { FormLayout } from '@/templates/FormLayout'
 import { ExternalError, useFormWithError } from '../../hooks/useFormWithError'
 import { InviteForm } from '../../types/invite'
 

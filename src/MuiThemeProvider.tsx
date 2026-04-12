@@ -35,6 +35,13 @@ const theme = createTheme({
     fontFamily: "'Red Hat Display', sans-serif",
   },
   components: {
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: {
+          borderRadius: '12px',
+        },
+      },
+    },
     MuiPaper: {
       styleOverrides: {
         root: {

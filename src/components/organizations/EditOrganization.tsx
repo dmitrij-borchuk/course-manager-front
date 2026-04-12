@@ -1,11 +1,12 @@
 import React from 'react'
 import { FormattedMessage, useIntl } from 'react-intl'
-import { Container } from 'react-materialize'
 import { Input } from '../kit/input/Input'
 import { SubmitButton } from '../kit/buttons/SubmitButton'
-import { FormLayout } from '../kit/formLayout/FormLayout'
+import { FormLayout } from '@/templates/FormLayout'
 import { ExternalError, useFormWithError } from '../../hooks/useFormWithError'
 import { useUpdateInitialForm } from '../../hooks/useUpdateInitialForm'
+import { FormTextField } from '../organisms/form'
+import { Flex } from '@/atoms/layout'
 
 export type OrganizationForm = {
   key: string
@@ -31,7 +32,7 @@ export const EditOrganization: React.FC<Props> = ({
   error,
 }) => {
   const intl = useIntl()
-  const { control, handleSubmit, errors, setValue } = useFormWithError<OrganizationForm>(
+  const formUtils = useFormWithError<OrganizationForm>(
     {
       defaultValues: {
         key: '',
@@ -41,43 +42,41 @@ export const EditOrganization: React.FC<Props> = ({
     },
     error
   )
+  const { handleSubmit, setValue } = formUtils
 
   useUpdateInitialForm(setValue, initial)
 
   return (
     <div className={className}>
-      <Container className="px-4">
-        <FormLayout
-          header={
-            isEdit ? (
-              <FormattedMessage id="organizations.edit.title" />
-            ) : (
-              <FormattedMessage id="organizations.add.title" />
-            )
-          }
-          controls={<SubmitButton loading={loading} disabled={disabled} />}
-          onSubmit={handleSubmit(onSubmit)}
-        >
-          <Input
+      <FormLayout
+        header={
+          isEdit ? (
+            <FormattedMessage id="organizations.edit.title" />
+          ) : (
+            <FormattedMessage id="organizations.add.title" />
+          )
+        }
+        controls={<SubmitButton loading={loading} disabled={disabled} />}
+        onSubmit={handleSubmit(onSubmit)}
+        formUtils={formUtils}
+      >
+        <Flex column gap={2}>
+          <FormTextField
             id="key"
-            control={control}
             name="key"
-            label={`${intl.formatMessage({ id: 'common.form.id.label' })} *`}
-            rules={{ required: true }}
+            label={`${intl.formatMessage({ id: 'common.form.id.label' })}`}
+            required
             disabled={loading || disabled}
-            error={errors['key']?.message}
           />
-          <Input
+          <FormTextField
             id="name"
-            control={control}
             name="name"
-            label={`${intl.formatMessage({ id: 'common.form.name.label' })} *`}
-            rules={{ required: true }}
+            label={`${intl.formatMessage({ id: 'common.form.name.label' })}`}
+            required
             disabled={loading || disabled}
-            error={errors['name']?.message}
           />
-        </FormLayout>
-      </Container>
+        </Flex>
+      </FormLayout>
     </div>
   )
 }

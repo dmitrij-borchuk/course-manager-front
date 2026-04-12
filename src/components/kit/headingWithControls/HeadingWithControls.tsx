@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import EditIcon from '@mui/icons-material/Edit'
 import { DeleteIconWithDialog } from '../deleteIconWithDialog/DeleteIconWithDialog'
 import { Ellipsis } from '../ellipsis/Ellipsis'
-import { SectionHeader } from '../sectionHeader/SectionHeader'
+import { SectionHeader } from '@/molecules/layout'
 import IconButton from '@mui/material/IconButton'
 
 interface Props {

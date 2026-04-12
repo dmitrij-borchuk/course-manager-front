@@ -1,9 +1,17 @@
 import { TextInput, TextInputProps } from 'react-materialize'
-import { Controller } from 'react-hook-form'
+import { Control, Controller, FieldValues, RegisterOptions } from 'react-hook-form'
 
-type ControllerProps = React.ComponentProps<typeof Controller>
-type InputProps = TextInputProps & Pick<ControllerProps, 'control' | 'name' | 'defaultValue' | 'rules' | 'onFocus'>
-export function Input({ control, name, defaultValue, rules, onFocus, error, success, ...props }: InputProps) {
+type InputProps = TextInputProps & {
+  control: Control<any>
+  name: string
+  defaultValue?: any
+  rules?: RegisterOptions<FieldValues, string>
+}
+/**
+ *
+ * @deprecated This component is deprecated. Please use `FormTextField` instead, which is based on MUI and has better support for validation and error handling.
+ */
+export function Input({ control, name, defaultValue, rules, error, success, ...props }: InputProps) {
   const validationClass = error ? 'invalid' : success ? 'valid' : ''
 
   return (
@@ -12,9 +20,8 @@ export function Input({ control, name, defaultValue, rules, onFocus, error, succ
       name={name}
       defaultValue={defaultValue}
       rules={rules}
-      onFocus={onFocus}
-      render={(renderProps) => (
-        <TextInput inputClassName={validationClass} error={error} success={success} {...props} {...renderProps} />
+      render={({ field }) => (
+        <TextInput inputClassName={validationClass} error={error} success={success} {...props} {...field} />
       )}
     />
   )

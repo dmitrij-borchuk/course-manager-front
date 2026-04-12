@@ -29,7 +29,10 @@ export function GeneralPage(props: Props) {
           component="main"
           sx={{
             flexGrow: 1,
-            p: 3,
+            p: {
+              xs: 2,
+              md: 3,
+            },
             width: { md: `calc(100% - ${DRAWER_WIDTH}px)` },
             maxWidth: '100%',
             overflow: 'auto',

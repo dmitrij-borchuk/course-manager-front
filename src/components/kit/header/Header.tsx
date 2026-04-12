@@ -1,4 +1,5 @@
 import React from 'react'
+import { useQuery } from 'react-query'
 import { FormattedMessage } from 'react-intl'
 import { Link } from 'react-router-dom'
 import {
@@ -18,7 +19,8 @@ import CorporateFareIcon from '@mui/icons-material/CorporateFare'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import MenuIcon from '@mui/icons-material/Menu'
 import LogoutIcon from '@mui/icons-material/Logout'
-import { useAppSelector } from 'store/hooks'
+import { fetchCurrentProfile } from '@/modules/profiles/store/currentProfile'
+import { useAppDispatch, useAppSelector } from 'store/hooks'
 import { useNavBarContext } from 'components/layouts/NavBar'
 import { ROUTES } from '../../../constants'
 
@@ -42,7 +44,7 @@ export const Header = () => {
         </IconButton>
         <Box display="flex" sx={{ flexGrow: 1, color: 'white' }}>
           <FlexLink to="/">
-            <img src={`${process.env.PUBLIC_URL}/logoWithName.png`} alt="logo" />
+            <img src="/logoWithName.png" alt="logo" />
           </FlexLink>
         </Box>
         <ProfileButton />
@@ -52,7 +54,10 @@ export const Header = () => {
 }
 
 function ProfileButton() {
-  const profile = useAppSelector((state) => state.profiles.current.data)
+  const dispatch = useAppDispatch()
+  const currentOrgId = useAppSelector((state) => state.organizations.currentOrg.data?.id)
+  const profileQuery = useQuery(['currentProfile', currentOrgId], () => dispatch(fetchCurrentProfile()).unwrap())
+  const { data: profile } = profileQuery
   const { name = '' } = profile ?? {}
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)

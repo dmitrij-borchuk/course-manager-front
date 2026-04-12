@@ -5,7 +5,7 @@ import { Controller } from 'react-hook-form'
 import csv from 'csvtojson'
 import { SubmitButton } from '../../../components/kit/buttons/SubmitButton'
 import { useFormWithError } from '../../../hooks/useFormWithError'
-import { FormLayout } from '../../../components/kit/formLayout/FormLayout'
+import { FormLayout } from '@/templates/FormLayout'
 import { Input } from '../../../components/kit/input/Input'
 import { useToasts } from 'react-toast-notifications'
 import { StudentImport } from '../../../types/student'
@@ -107,7 +107,7 @@ export const StudentsImport = () => {
   }, [addToast, intl, previewData?.length, processed])
 
   useEffect(() => {
-    register('fileType')
+    register('fileType' as any)
   }, [register])
 
   return (
@@ -150,22 +150,19 @@ export const StudentsImport = () => {
           name="file"
           defaultValue={null}
           rules={{ required: true }}
-          render={({ onChange, value, ...renderProps }) => {
-            return (
-              <TextInput
-                type="file"
-                // @ts-ignore
-                accept={`.${fileType}`}
-                label={`${intl.formatMessage({ id: 'import.student.file.label' })} *`}
-                onChange={(e) => {
-                  const files = e.target.files || []
-                  const file = files[0]
-                  onChange(file)
-                }}
-                {...renderProps}
-              />
-            )
-          }}
+          render={({ field }) => (
+            <TextInput
+              type="file"
+              // @ts-ignore
+              accept={`.${fileType}`}
+              label={`${intl.formatMessage({ id: 'import.student.file.label' })} *`}
+              onChange={(e) => {
+                const files = e.target.files || []
+                field.onChange(files[0])
+              }}
+              name={field.name}
+            />
+          )}
         />
 
         {/* Name column */}
@@ -202,16 +199,14 @@ export const StudentsImport = () => {
           control={control}
           name="isMultipleTags"
           defaultValue={null}
-          render={({ onChange, value, ...renderProps }) => (
+          render={({ field }) => (
             <Checkbox
               label={intl.formatMessage({ id: 'import.student.tags.isMultiple.label' })}
-              onChange={(e: any) => {
-                onChange(!!e.target.checked)
-              }}
+              onChange={(e: any) => field.onChange(!!e.target.checked)}
               disabled={fileType === 'json'}
-              value={fileType === 'json' ? true : value && value.toString()}
-              checked={fileType === 'json' ? true : value && value.toString()}
-              {...renderProps}
+              value={fileType === 'json' ? true : field.value && field.value.toString()}
+              checked={fileType === 'json' ? true : field.value && field.value.toString()}
+              name={field.name}
             />
           )}
         />

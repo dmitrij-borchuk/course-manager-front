@@ -1,7 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { calcCurrentOrganization } from 'modules/organizations/store/currentOrg'
-import { fetchCurrentProfile } from 'modules/profiles/store/currentProfile'
-import { AppDispatch } from 'store'
+import { AppDispatch } from '@/store'
 import { initAuthUser } from './authSlice'
 
 const initialState: {
@@ -31,6 +30,5 @@ export const initiateApp = createAsyncThunk<void, void, { dispatch: AppDispatch 
   async (_, { dispatch }) => {
     await dispatch(initAuthUser())
     await dispatch(calcCurrentOrganization())
-    await dispatch(fetchCurrentProfile())
   }
 )

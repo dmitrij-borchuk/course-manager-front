@@ -6,7 +6,7 @@ import { ROUTES } from '../../constants'
 import { CollectionItemLink } from '../kit/collectionItemLink/CollectionItemLink'
 import { FabBtn } from '../kit/FabBtn/FabBtn'
 import { Header } from '../kit/header/Header'
-import { SectionHeader } from '../kit/sectionHeader/SectionHeader'
+import { SectionHeader } from '@/molecules/layout'
 import { SkeletonList } from '../kit/skeleton/SkeletonList'
 import { Text } from '../kit/text/Text'
 

@@ -3,11 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "craco start",
-    "build": "craco build",
-    "test": "craco test",
-    "test-coverage": "craco test --coverage --watchAll=false",
-    "serve-build": "serve ./build --single",
+    "start": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "serve-build": "vite preview --outDir build",
+    "test": "jest",
+    "test-coverage": "jest --coverage --watchAll=false",
     "firebase-emulator": "firebase emulators:start --import=./local-firebase-data --export-on-exit",
     "firebase-emulator:test": "firebase emulators:start --import=./test-firebase-data",
     "cypress": "cypress open",
@@ -15,7 +16,6 @@
     "lint": "eslint ./src/**/*.{tsx,ts}"
   },
   "dependencies": {
-    "@craco/craco": "^7.1.0",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
     "@loadable/component": "^5.14.1",
@@ -29,16 +29,11 @@
     "@testing-library/jest-dom": "^6.4.5",
     "@testing-library/react": "^15.0.7",
     "@testing-library/user-event": "^14.5.2",
-    "@types/jest": "^29.5.12",
-    "@types/node": "^12.0.0",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
-    "assert": "^2.0.0",
     "autoprefixer": "^9.8.6",
     "axios": "^1.7.2",
     "axios-mock-adapter": "^1.21.2",
-    "browserify-zlib": "^0.2.0",
-    "buffer": "^6.0.3",
     "constate": "^3.2.0",
     "cron-parser": "^3.5.0",
     "cross-env": "^7.0.3",
@@ -54,32 +49,26 @@
     "postcss": "^8.1.4",
     "postcss-flexbugs-fixes": "^5.0.2",
     "postcss-preset-env": "^7.7.2",
-    "process": "^0.11.10",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-helmet": "^6.1.0",
     "react-helmet-async": "^2.0.4",
-    "react-hook-form": "^6.14.2",
+    "react-hook-form": "^7.72.1",
     "react-intl": "^5.10.16",
     "react-materialize": "3.10.0",
     "react-query": "^3.39.3",
     "react-redux": "^9.1.2",
     "react-responsive-calendar": "^0.6.0",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "^5.0.1",
     "react-tiny-fab": "^4.0.4",
     "react-toast-notifications": "^2.5.1",
-    "stream-browserify": "^3.0.0",
     "tailwindcss": "^3.1.4",
-    "typescript": "^4.0.3",
-    "util": "^0.12.4",
     "uuid": "^9.0.0",
     "web-vitals": "^0.2.4"
   },
   "eslintConfig": {
     "extends": [
-      "react-app",
-      "react-app/jest"
+      "react-app"
     ],
     "rules": {
       "no-restricted-imports": [
@@ -116,32 +105,24 @@
     "@graphql-codegen/typescript": "1.20.0",
     "@graphql-codegen/typescript-operations": "1.17.13",
     "@graphql-codegen/typescript-react-apollo": "2.2.1",
+    "@types/jest": "^30.0.0",
     "@types/loadable__component": "^5.13.3",
+    "@types/node": "^20.19.39",
     "@types/react-helmet": "^6.1.5",
     "@types/react-router-dom": "^5.1.7",
     "@types/react-toast-notifications": "^2.4.0",
+    "@vitejs/plugin-react": "^6.0.1",
     "cypress": "^10.11.0",
     "cypress-firebase": "^2.0.0",
     "firebase-admin": "^10.0.2",
     "graphql-tag": "^2.11.0",
-    "serve": "^12.0.1"
-  },
-  "jest": {
-    "collectCoverageFrom": [
-      "src/**/*.{js,jsx,ts,tsx}",
-      "!src/api/**/*.{js,jsx,ts,tsx}",
-      "!src/types/**/*.{js,jsx,ts,tsx}",
-      "!src/intl/**/*.{js,jsx,ts,tsx}",
-      "!src/App.tsx",
-      "!src/Providers.tsx",
-      "!src/Routing.tsx",
-      "!src/index.tsx",
-      "!src/reportWebVitals.ts",
-      "!src/MuiThemeProvider.tsx"
-    ],
-    "transformIgnorePatterns": [
-      "node_modules/(?!axios)"
-    ]
+    "jest": "^30.3.0",
+    "jest-environment-jsdom": "^30.3.0",
+    "serve": "^12.0.1",
+    "ts-jest": "^29.4.9",
+    "typescript": "^5.9.3",
+    "vite": "^8.0.3",
+    "vite-plugin-node-polyfills": "^0.26.0"
   },
   "overrides": {
     "react-redux": {

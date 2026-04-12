@@ -20,7 +20,7 @@ import Toolbar from '@mui/material/Toolbar'
 import List from '@mui/material/List'
 import Box from '@mui/material/Box'
 import { useAccessManager } from 'hooks/useAccessManager'
-import { useAuthState } from 'store'
+import { useAuthState } from '@/store'
 import { DRAWER_WIDTH } from 'config'
 import { ROUTES } from '../../constants'
 

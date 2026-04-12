@@ -3,9 +3,9 @@ import { User as FBUser } from 'firebase/auth'
 import { login, logout, resetPassword } from '../api/firebase/auth'
 import { auth } from '../api/firebase'
 import { AppUser } from '../types/user'
-import { setUser } from '../utils/rollbar'
+// import { setUser } from '../utils/rollbar'
 import { setHeader } from '../api/request'
-import { registerUser } from 'api/users'
+import { registerUser, getProfile } from 'api/users'
 
 export function useAuthStore() {
   const [loading, setLoading] = useState(false)
@@ -21,7 +21,7 @@ export function useAuthStore() {
   useEffect(() => {
     const unsubscribe = auth.onIdTokenChanged(async (user) => {
       setCurrentUser(user)
-      setUser(user)
+      // setUser(user)
       if (user) {
         const token = await user.getIdToken()
         setHeader('authorization', token)
@@ -46,6 +46,7 @@ export function useAuthStore() {
       setLoading(true)
       try {
         const response = await login(...data)
+        await getProfile()
 
         return response
       } catch (error) {

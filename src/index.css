@@ -1,10 +1,11 @@
+@import 'materialize-css';
+@import 'react-tiny-fab/dist/styles.css';
+@import './App.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@import 'materialize-css';
-@import 'react-tiny-fab/dist/styles.css';
-@import './App.css';
 
 /* TODO: remove after Materialize dialogs will be moved to MUI */
 .modal-overlay {

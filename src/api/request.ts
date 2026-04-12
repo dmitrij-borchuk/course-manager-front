@@ -3,7 +3,7 @@ import axios, { AxiosError } from 'axios'
 // TODO: probably we don't need it
 const headers: Record<string, string | undefined> = {}
 const request = axios.create({
-  baseURL: process.env.REACT_APP_API_GATEWAY,
+  baseURL: import.meta.env.VITE_API_GATEWAY,
   headers: headers,
 })
 

@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 import { SubmitButton } from 'components/kit/buttons/SubmitButton'
 import { ROUTES } from '../../constants'
 import { Input } from '../kit/input/Input'
-import { SectionHeader } from '../kit/sectionHeader/SectionHeader'
+import { SectionHeader } from '@/molecules/layout'
 import './styles.css'
 
 // TODO: translations

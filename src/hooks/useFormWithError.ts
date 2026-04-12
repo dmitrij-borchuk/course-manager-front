@@ -1,15 +1,15 @@
 import { useEffect } from 'react'
-import { FieldName, FieldValues, useForm, UseFormOptions } from 'react-hook-form'
+import { FieldPath, FieldValues, useForm, UseFormProps } from 'react-hook-form'
 
-type ExternalFieldError<T> = {
-  field: FieldName<T>
+type ExternalFieldError<T extends FieldValues> = {
+  field: FieldPath<T>
   message: string
 }
-export type ExternalError<T> = {
+export type ExternalError<T extends FieldValues> = {
   fields: ExternalFieldError<T>[]
 }
-export function useFormWithError<TFieldValues extends FieldValues = FieldValues, TContext extends object = object>(
-  options: UseFormOptions<TFieldValues, TContext>,
+export function useFormWithError<TFieldValues extends FieldValues = FieldValues, TContext = object>(
+  options: UseFormProps<TFieldValues, TContext>,
   error?: ExternalError<TFieldValues>
 ) {
   const { setError, ...result } = useForm<TFieldValues, TContext>(options)

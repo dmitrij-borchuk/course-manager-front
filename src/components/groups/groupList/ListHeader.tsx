@@ -1,7 +1,7 @@
 import { FormattedMessage } from 'react-intl'
 import FilterAltIcon from '@mui/icons-material/FilterAlt'
 import { ResponsiveButtons } from 'components/kit/responsiveButtons/ResponsiveButtons'
-import { SectionHeader } from 'components/kit/sectionHeader/SectionHeader'
+import { SectionHeader } from '@/molecules/layout'
 
 type Props = {
   onFilterClick: () => void

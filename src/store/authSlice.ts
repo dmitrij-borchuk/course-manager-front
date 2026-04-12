@@ -38,7 +38,7 @@ export default authSlice.reducer
 export const { setAuthUser } = authSlice.actions
 
 export const listenForAuthUserChange = createAsyncThunk('auth/onChange', async (_, { dispatch }) => {
-  return auth.onIdTokenChanged(async (user) => {
+  auth.onIdTokenChanged(async (user) => {
     if (user) {
       const token = await user.getIdToken()
       setHeader('authorization', token)

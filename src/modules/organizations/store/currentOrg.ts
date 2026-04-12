@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { RootState } from 'store'
+import { RootState } from '@/store'
 import { Organization } from 'types/organization'
 import { fetchOrganizations } from './list'
 import storage from 'services/localStore'

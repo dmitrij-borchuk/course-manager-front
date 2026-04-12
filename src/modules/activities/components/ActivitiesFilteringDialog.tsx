@@ -44,31 +44,25 @@ function FilteringForm({ onSubmit = noop, onClose, initialValues }: FilteringFor
           <Controller
             control={form.control}
             name="showArchived"
-            label={`${intl.formatMessage({ id: 'common.date' })} *`}
-            render={({ value, ...renderProps }) => {
-              return (
-                <FormControlLabel
-                  sx={{
-                    width: '100%',
-                    justifyContent: 'space-between',
-                  }}
-                  control={
-                    <Switch
-                      checked={value}
-                      color="primary"
-                      // To remove MaterializeCSS styles
-                      classes={{ thumb: 'lever' }}
-                      {...renderProps}
-                      onChange={(v) => {
-                        renderProps.onChange(v.target.checked)
-                      }}
-                    />
-                  }
-                  labelPlacement="start"
-                  label={<FormattedMessage id="groups.filtering.showArchived.inputLabel" />}
-                />
-              )
-            }}
+            render={({ field }) => (
+              <FormControlLabel
+                sx={{
+                  width: '100%',
+                  justifyContent: 'space-between',
+                }}
+                control={
+                  <Switch
+                    checked={field.value}
+                    color="primary"
+                    // To remove MaterializeCSS styles
+                    classes={{ thumb: 'lever' }}
+                    onChange={(v) => field.onChange(v.target.checked)}
+                  />
+                }
+                labelPlacement="start"
+                label={<FormattedMessage id="groups.filtering.showArchived.inputLabel" />}
+              />
+            )}
           />
         </Box>
       </DialogContent>

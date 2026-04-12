@@ -12,7 +12,7 @@ import { OrganizationUser } from '../../types/user'
 import { noop } from '../../utils/common'
 import { SubmitButton } from '../kit/buttons/SubmitButton'
 import { Ellipsis } from '../kit/ellipsis/Ellipsis'
-import { FormLayout } from '../kit/formLayout/FormLayout'
+import { FormLayout } from '@/templates/FormLayout'
 import { HeadingWithControls } from '../kit/headingWithControls/HeadingWithControls'
 import { List } from '../kit/list/List'
 import { Text } from '../kit/text/Text'
@@ -50,7 +50,12 @@ export const AttendanceEditor = (props: Props) => {
     onDelete = noop,
   } = props
   const intl = useIntl()
-  const { control, handleSubmit, errors, watch } = useFormWithError<AttendanceForm>({
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    watch,
+  } = useFormWithError<AttendanceForm>({
     defaultValues: {
       ...attendance,
       group: attendance?.group || '',
@@ -108,50 +113,44 @@ export const AttendanceEditor = (props: Props) => {
           {/* TODO: move to component */}
           {/* Date */}
           <Controller
-            id="date"
             control={control}
             name="date"
-            label={`${intl.formatMessage({ id: 'common.date' })} *`}
             rules={{
               required: {
                 value: true,
                 message: 'Required',
               },
             }}
-            render={({ value, ...renderProps }) => {
-              return (
-                <DatePicker
-                  id="date"
-                  options={{
-                    autoClose: true,
-                    format: 'mmm dd, yyyy',
-                    defaultDate: value,
-                    setDefaultDate: true,
-                    maxDate: new Date(),
-                  }}
-                  // @ts-ignore
-                  label={`${intl.formatMessage({ id: 'common.date' })} *`}
-                  disabled={submitting}
-                  onChange={renderProps.onChange}
-                  name={renderProps.name}
-                />
-              )
-            }}
+            render={({ field }) => (
+              <DatePicker
+                id="date"
+                options={{
+                  autoClose: true,
+                  format: 'mmm dd, yyyy',
+                  defaultDate: field.value,
+                  setDefaultDate: true,
+                  maxDate: new Date(),
+                }}
+                // @ts-ignore
+                label={`${intl.formatMessage({ id: 'common.date' })} *`}
+                disabled={submitting}
+                onChange={field.onChange}
+                name={field.name}
+              />
+            )}
           />
         </div>
 
         <Controller
-          id="group"
           control={control}
           name="group"
-          label={`${intl.formatMessage({ id: 'attendance.groupSelector.placeholder' })} *`}
           rules={{
             required: {
               value: true,
               message: 'Required',
             },
           }}
-          render={({ ...renderProps }) => {
+          render={({ field }) => {
             const error = errors['group']?.message
             const validationClass = error ? 'invalid' : ''
 
@@ -174,9 +173,9 @@ export const AttendanceEditor = (props: Props) => {
                 }}
                 error={error}
                 className={validationClass}
-                onChange={renderProps.onChange}
-                value={renderProps.value}
-                name={renderProps.name}
+                onChange={field.onChange}
+                value={field.value}
+                name={field.name}
                 data-testid="group-selector"
                 label={intl.formatMessage({ id: 'attendance.groupSelector.placeholder' })}
               >

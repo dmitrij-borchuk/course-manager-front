@@ -5,7 +5,7 @@ import { DatePicker } from 'react-materialize'
 import { useFormWithError } from '../../hooks/useFormWithError'
 import { Schedule } from '../../types/Schedule'
 import { SubmitButton } from '../kit/buttons/SubmitButton'
-import { FormLayout } from '../kit/formLayout/FormLayout'
+import { FormLayout } from '@/templates/FormLayout'
 import { Message } from '../kit/message/Message'
 import { WeekdaySelector } from '../kit/weekdaySelector/WeekdaySelector'
 
@@ -29,7 +29,12 @@ export const EditSchedule: React.FC<Props> = ({
   onSubmit,
 }) => {
   const intl = useIntl()
-  const { control, handleSubmit, errors, setError } = useFormWithError<ScheduleFormData>({
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    setError,
+  } = useFormWithError<ScheduleFormData>({
     defaultValues: {
       cron: '0 12 * * *',
       ...initial,
@@ -68,62 +73,56 @@ export const EditSchedule: React.FC<Props> = ({
       >
         {/* Start date */}
         <Controller
-          id="start"
           control={control}
           name="start"
-          label={`${intl.formatMessage({ id: 'schedule.form.start' })} *`}
           rules={{
             required: {
               value: true,
               message: 'Required',
             },
           }}
-          render={({ value, ...renderProps }) => {
-            return (
-              <DatePicker
-                id="start"
-                options={{
-                  autoClose: true,
-                  format: 'mmm dd, yyyy',
-                  defaultDate: value,
-                  setDefaultDate: true,
-                }}
-                // @ts-ignore
-                label={`${intl.formatMessage({ id: 'schedule.form.start' })} *`}
-                disabled={loading || submitting}
-                {...renderProps}
-              />
-            )
-          }}
+          render={({ field }) => (
+            <DatePicker
+              id="start"
+              options={{
+                autoClose: true,
+                format: 'mmm dd, yyyy',
+                defaultDate: field.value,
+                setDefaultDate: true,
+              }}
+              // @ts-ignore
+              label={`${intl.formatMessage({ id: 'schedule.form.start' })} *`}
+              disabled={loading || submitting}
+              {...field}
+            />
+          )}
         />
         <div className="-mt-6">
           <Message type="error">{errors['start']?.message || <span>&nbsp;</span>}</Message>
         </div>
 
         <Controller
-          id="end"
           control={control}
           name="end"
-          label={`${intl.formatMessage({ id: 'schedule.form.end' })} *`}
           rules={{
             required: {
               value: true,
               message: 'Required',
             },
           }}
-          render={({ value, ...renderProps }) => (
+          render={({ field }) => (
             <DatePicker
               id="end"
               options={{
                 autoClose: true,
                 format: 'mmm dd, yyyy',
-                defaultDate: value,
+                defaultDate: field.value,
                 setDefaultDate: true,
               }}
               // @ts-ignore
               label={`${intl.formatMessage({ id: 'schedule.form.end' })} *`}
               disabled={loading || submitting}
-              {...renderProps}
+              {...field}
             />
           )}
         />
@@ -142,7 +141,7 @@ export const EditSchedule: React.FC<Props> = ({
                 value: /0 12 \* \* \d/,
               },
             }}
-            render={(renderProps) => <WeekdaySelector {...renderProps} />}
+            render={({ field }) => <WeekdaySelector {...field} />}
           />
           <div className="mt-3">
             <Message type="error">{errors['cron']?.message || <span>&nbsp;</span>}</Message>

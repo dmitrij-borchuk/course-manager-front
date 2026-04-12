@@ -24,6 +24,7 @@ export const CreateOrganizationPage = () => {
           ...data,
         })
         await dispatch(setCurrentOrganization(newOrg))
+        // To refresh profile with new org
         await dispatch(fetchCurrentProfile())
 
         history.push(`${ROUTES.ROOT}`)

@@ -5,7 +5,7 @@ import { InviteInfo } from 'types/organization'
 import { User } from 'types/user'
 import { Header } from '../kit/header/Header'
 import { SubmitButton } from '../kit/buttons/SubmitButton'
-import { SectionHeader } from '../kit/sectionHeader/SectionHeader'
+import { SectionHeader } from '@/molecules/layout'
 import { Text } from '../kit/text/Text'
 import { ROUTES } from '../../constants'
 import { Container, TextField } from '@mui/material'
@@ -69,7 +69,11 @@ interface ConfirmInviteFormProps {
 }
 const ConfirmInviteForm: React.FC<ConfirmInviteFormProps> = ({ disabled, onSubmit, loading = false, user }) => {
   const intl = useIntl()
-  const { handleSubmit, control, errors } = useForm<{ name: string }>({
+  const {
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm<{ name: string }>({
     defaultValues: {
       name: user?.name,
     },
@@ -87,7 +91,7 @@ const ConfirmInviteForm: React.FC<ConfirmInviteFormProps> = ({ disabled, onSubmi
                 message: intl.formatMessage({ id: 'common.form.required' }),
               },
             }}
-            render={(renderProps, state) => (
+            render={({ field, fieldState }) => (
               <TextField
                 label={<FormattedMessage id="common.name.label" />}
                 inputProps={{
@@ -95,9 +99,9 @@ const ConfirmInviteForm: React.FC<ConfirmInviteFormProps> = ({ disabled, onSubmi
                 }}
                 fullWidth
                 autoFocus
-                error={state.invalid}
+                error={fieldState.invalid}
                 helperText={errors.name?.message}
-                {...renderProps}
+                {...field}
               />
             )}
           />

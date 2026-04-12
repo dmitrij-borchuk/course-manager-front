@@ -4,9 +4,9 @@ import { Providers } from './Providers'
 import { Routing } from './Routing'
 import { listenForAuthUserChange } from 'store/authSlice'
 import { useAppDispatch } from 'store/hooks'
-import { updateConfiguration } from './utils/rollbar'
+// import { updateConfiguration } from './utils/rollbar'
 
-updateConfiguration()
+// updateConfiguration()
 
 function App() {
   return (

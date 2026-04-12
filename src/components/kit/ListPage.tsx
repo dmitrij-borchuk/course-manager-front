@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { Box } from '@mui/material'
 import { FilterField } from 'components/inputs/FilterField'
 import { FabBtn } from '../kit/FabBtn/FabBtn'
-import { SectionHeader } from '../kit/sectionHeader/SectionHeader'
+import { SectionHeader } from '@/molecules/layout'
 import { ListWithLinks, ListWithLinksProps } from './list/List'
 
 interface Props<T> {

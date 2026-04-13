@@ -1,12 +1,12 @@
 import React, { useCallback } from 'react'
 import { FormattedMessage, useIntl } from 'react-intl'
 import { Container } from 'react-materialize'
-import { Input } from '../kit/input/Input'
 import { SubmitButton } from '../kit/buttons/SubmitButton'
 import { FormLayout } from '@/templates/FormLayout'
 import { TagsEditor } from '../kit/tag/TagsEditor'
 import { ExternalError, useFormWithError } from '../../hooks/useFormWithError'
 import { useUpdateInitialForm } from '../../hooks/useUpdateInitialForm'
+import { FormTextField } from '../organisms/form'
 
 export type StudentForm = {
   name: string
@@ -32,7 +32,7 @@ export const EditStudent: React.FC<Props> = ({
   error,
 }) => {
   const intl = useIntl()
-  const { control, handleSubmit, errors, setValue, watch, register } = useFormWithError<StudentForm>(
+  const methods = useFormWithError<StudentForm>(
     {
       defaultValues: {
         name: '',
@@ -42,6 +42,7 @@ export const EditStudent: React.FC<Props> = ({
     },
     error
   )
+  const { control, handleSubmit, errors, setValue, watch, register } = methods
 
   const onTagsUpdate = useCallback(
     (newTags: string[]) => {
@@ -62,16 +63,15 @@ export const EditStudent: React.FC<Props> = ({
           header={isEdit ? <FormattedMessage id="students.edit.title" /> : <FormattedMessage id="students.add.title" />}
           controls={<SubmitButton loading={loading} disabled={disabled} />}
           onSubmit={handleSubmit(onSubmit)}
+          formUtils={methods}
         >
           {/* TODO: add autofocus */}
-          <Input
+          <FormTextField
             id="name"
-            control={control}
             name="name"
-            label={`${intl.formatMessage({ id: 'common.form.name.label' })} *`}
-            rules={{ required: true }}
+            label={`${intl.formatMessage({ id: 'common.form.name.label' })}`}
+            required
             disabled={loading || disabled}
-            error={errors['name']?.message}
           />
 
           <TagsEditor loading={loading} disabled={disabled} value={tags} onUpdate={onTagsUpdate} />

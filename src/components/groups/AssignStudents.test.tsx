@@ -3,7 +3,7 @@ import { ComponentProps } from 'react'
 import { getAxiosMock, mockOrgId, TestWrapper } from '../../utils/test'
 import { AssignStudents } from './AssignStudents'
 
-const axiosMock = getAxiosMock()
+const axiosMock = await getAxiosMock()
 
 describe('AssignStudents', () => {
   beforeEach(() => {

@@ -4,7 +4,7 @@ import { getAxiosMock, mockOrgId, TestWrapper } from '../../utils/test'
 import { TeachersList } from './TeachersList'
 
 describe('TeachersList', () => {
-  const axiosMock = getAxiosMock()
+  const axiosMock = await getAxiosMock()
   beforeEach(() => {
     axiosMock.onGet('/organizations').reply(200, [
       {

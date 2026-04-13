@@ -47,7 +47,7 @@ const { usePDF } = asMock(reactPdf)
 const { useParams } = jest.requireMock('react-router-dom')
 
 describe('ReportByGroupTab', () => {
-  const axiosMock = getAxiosMock()
+  const axiosMock = await getAxiosMock()
 
   beforeEach(() => {
     clearAttendanceByGroupCache()

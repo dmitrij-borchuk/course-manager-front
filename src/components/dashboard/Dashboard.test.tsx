@@ -5,7 +5,7 @@ import { Dashboard } from './Dashboard'
 
 describe('Dashboard', () => {
   test('Should show calendar', async () => {
-    const axiosMock = getAxiosMock()
+    const axiosMock = await getAxiosMock()
     axiosMock.onGet('/organizations').reply(200, [])
 
     mockOrgId('orgId')

@@ -34,7 +34,7 @@ const { getReportByTagRequest } = asMock(reportsApi)
 const { useParams } = jest.requireMock('react-router-dom')
 
 describe('ReportByTagTab', () => {
-  const axiosMock = getAxiosMock()
+  const axiosMock = await getAxiosMock()
 
   beforeEach(() => {
     useParams.mockReturnValue({

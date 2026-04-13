@@ -1,9 +1,13 @@
+import { vi } from 'vitest'
 import { fireEvent, render, screen } from '@testing-library/react'
 import { getAxiosMock, mockOrgId, TestWrapper } from '../../utils/test'
 import CreateStudent from './CreateStudent'
 
-describe('CreateStudent', () => {
-  const axiosMock = getAxiosMock()
+vi.mock('react-router-dom')
+vi.mock('react-router')
+
+describe('CreateStudent', async () => {
+  const axiosMock = await getAxiosMock()
 
   beforeEach(() => {
     mockOrgId('orgId')

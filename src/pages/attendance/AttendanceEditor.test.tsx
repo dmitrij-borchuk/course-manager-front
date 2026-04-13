@@ -25,7 +25,7 @@ const twoDaysInMs = 1000 * 60 * 60 * 24 * 2
 const oneDayInMs = 1000 * 60 * 60 * 24 * 1
 
 describe('AttendanceEditor', () => {
-  const axiosMock = getAxiosMock()
+  const axiosMock = await getAxiosMock()
 
   beforeEach(() => {
     useParams.mockReturnValue({

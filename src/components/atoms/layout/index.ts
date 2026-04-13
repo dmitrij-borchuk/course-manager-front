@@ -1,3 +1,3 @@
 export { Box, type BoxProps } from './Box'
 export { Flex, type FlexProps } from './Flex'
-export { default as Grid } from '@mui/material/Unstable_Grid2'
+export { default as Grid } from '@mui/material/Grid2'

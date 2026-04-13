@@ -1,8 +1,8 @@
 import { ComponentProps, useCallback, useState } from 'react'
 import { FormattedMessage, useIntl } from 'react-intl'
 import { useQuery } from 'react-query'
-import Grid from '@mui/material/Unstable_Grid2'
 import Box from '@mui/material/Box'
+import { Grid } from '@/atoms/layout'
 import { getReportByTagRequest } from 'modules/reports/api'
 import { DatePicker } from 'components/kit/inputs/datePicker'
 import { SortByField } from 'components/kit/SortByField'
@@ -31,7 +31,12 @@ export const ReportByTagTab = () => {
   return (
     <div>
       <Grid container spacing={2} pt={2}>
-        <Grid xs={12} md={6}>
+        <Grid
+          size={{
+            xs: 12,
+            md: 6,
+          }}
+        >
           <Box>
             <DatePicker
               fullWidth
@@ -41,7 +46,12 @@ export const ReportByTagTab = () => {
             />
           </Box>
         </Grid>
-        <Grid xs={12} md={6}>
+        <Grid
+          size={{
+            xs: 12,
+            md: 6,
+          }}
+        >
           <Box>
             <DatePicker
               fullWidth
@@ -55,12 +65,24 @@ export const ReportByTagTab = () => {
             />
           </Box>
         </Grid>
-        <Grid xs={12} md={6}>
+        <Grid
+          size={{
+            xs: 12,
+            md: 6,
+          }}
+        >
           <Box>
             <TagsEditor value={tags} onUpdate={onTagsUpdate} inputClassName="w-full" />
           </Box>
         </Grid>
-        <Grid xs={12} md={6} display="flex" alignItems="center">
+        <Grid
+          size={{
+            xs: 12,
+            md: 6,
+          }}
+          display="flex"
+          alignItems="center"
+        >
           <SortByField
             value={{ order, orderBy }}
             options={[

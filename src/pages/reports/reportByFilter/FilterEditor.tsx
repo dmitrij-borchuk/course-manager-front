@@ -1,10 +1,10 @@
+import { FormattedMessage } from 'react-intl'
 import ClearIcon from '@mui/icons-material/Clear'
-import Grid from '@mui/material/Unstable_Grid2'
 import { Box, Button, FormControl, IconButton, InputLabel, MenuItem, Select, Tooltip } from '@mui/material'
+import { Grid } from '@/atoms/layout'
 import { noop } from 'utils/common'
 import { Filter } from './types'
 import React from 'react'
-import { FormattedMessage } from 'react-intl'
 
 type Props<T> = {
   value: Filter<T>
@@ -28,8 +28,8 @@ export function FilterEditor<T = any>(props: Props<T>) {
 
   return (
     <Box display="flex" gap={2}>
-      <Grid container spacing={2} xs={12}>
-        <Grid xs={12} sm={4}>
+      <Grid container spacing={2} size={12}>
+        <Grid size={{ xs: 12, sm: 4 }}>
           <FormControl fullWidth>
             <InputLabel>
               <FormattedMessage id="reports.fieldInput.label" />
@@ -56,7 +56,7 @@ export function FilterEditor<T = any>(props: Props<T>) {
             </Select>
           </FormControl>
         </Grid>
-        <Grid xs={12} sm={4}>
+        <Grid size={{ xs: 12, sm: 4 }}>
           <FormControl fullWidth>
             <InputLabel>
               <FormattedMessage id="reports.operationInput.label" />
@@ -80,7 +80,7 @@ export function FilterEditor<T = any>(props: Props<T>) {
             </Select>
           </FormControl>
         </Grid>
-        <Grid xs={12} sm={4}>
+        <Grid size={{ xs: 12, sm: 4 }}>
           {ValueInput && (
             <ValueInput
               value={value.value}
@@ -94,7 +94,7 @@ export function FilterEditor<T = any>(props: Props<T>) {
           )}
         </Grid>
         <Grid
-          xs={12}
+          size={{ xs: 12 }}
           display={{
             sm: 'none',
           }}

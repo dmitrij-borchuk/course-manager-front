@@ -4,7 +4,6 @@ import { createFirebaseMock } from '../../utils/tests/firebaseMock'
 import StudentPage from './Student'
 import { vi } from 'vitest'
 
-vi.mock(import('firebase/firestore'))
 vi.mock(import('react-router-dom'))
 
 describe('Student', async () => {
@@ -12,7 +11,6 @@ describe('Student', async () => {
   const axiosMock = await getAxiosMock()
   beforeEach(() => {
     getDocs = mockGetDocs()
-    console.log('=-= 🚀 ~ getDocs:', getDocs)
   })
 
   afterEach(() => {

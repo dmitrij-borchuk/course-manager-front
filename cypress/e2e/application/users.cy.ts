@@ -56,7 +56,6 @@ describe.skip('Users', () => {
     const heading = cy.findByRole('heading', { name: /send the invitation link/i })
     heading.parent().within(() => {
       cy.findByRole('textbox').then((input) => {
-        console.log('=-= input.val()', input.val())
         const url = input.val() as string
         cy.wrap(url).as('inviteUrl')
       })

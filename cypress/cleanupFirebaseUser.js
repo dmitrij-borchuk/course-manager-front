@@ -6,9 +6,7 @@ import { getAuth } from 'firebase-admin/auth'
 
 // var admin = require('firebase-admin')
 
-// console.log('=-= start initializeApp')
 // const app = admin.initializeApp()
-// console.log('=-= finish initializeApp app')
 
 if (!process.env.email) console.error('no email provided')
 if (!process.env.projectId) console.error('no projectId provided')

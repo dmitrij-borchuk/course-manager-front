@@ -16,5 +16,3 @@ export const getDocs = vi.fn()
 export const getDoc = vi.fn()
 export const where = (...args) => args
 export const setDoc = vi.fn()
-
-console.log('=-= fb mock')

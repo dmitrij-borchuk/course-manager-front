@@ -19,3 +19,7 @@ vi.mock(import('axios'), async (importOriginal) => {
     mock,
   }
 })
+
+vi.mock('firebase/firestore')
+vi.mock('firebase/auth')
+vi.mock('firebase/analytics')

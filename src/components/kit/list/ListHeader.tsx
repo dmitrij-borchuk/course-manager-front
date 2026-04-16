@@ -1,7 +1,7 @@
 import { ReactNode, useCallback } from 'react'
 import { noop } from '../../../utils/common'
-import { IconButton } from '../buttons/IconButton'
 import { Text } from '../text/Text'
+import { SortButton } from '@/components/molecules/inputs'
 
 export const ListHeader = (props: {
   items: HeaderItem[]
@@ -31,13 +31,7 @@ export const ListHeader = (props: {
         >
           <Text size="12">{item.label}</Text>
           {/* {item.id === sortId && ( */}
-          <IconButton
-            icon="arrow_drop_down"
-            className={`transition-all transform ${sortOrder === 'asc' ? '' : 'rotate-180'} ${
-              item.id === sortId ? '' : 'scale-0'
-            }`}
-            style={{ width: item.id !== sortId ? '0px' : '36px' }}
-          />
+          <SortButton order={item.id !== sortId ? undefined : sortOrder} />
           {/* )} */}
         </div>
       ))}

@@ -8,6 +8,9 @@ export interface IconButtonProps extends ButtonProps {
   type?: 'round' | 'square'
   'data-testid'?: string
 }
+/**
+ * @deprecated Use `@/components/molecules/inputs/IconButton` instead.
+ */
 export const IconButton: React.FC<IconButtonProps> = ({ icon, size = 36, type = 'round', className, ...rest }) => {
   return (
     <Button

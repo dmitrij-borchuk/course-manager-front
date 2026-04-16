@@ -3,18 +3,18 @@ import { asMock } from 'utils/test'
 import { fetchAttendancesForGroups } from './api'
 import * as collectionModule from '../../api/firebase/collections'
 
-jest.mock('../../api/firebase/collections')
+vi.mock('../../api/firebase/collections')
 
 const { makeOrgCollection } = asMock(collectionModule)
 describe('fetchAttendancesForGroups', function () {
   beforeEach(() => {
     makeOrgCollection.mockReturnValue({
-      query: mockFn().mockResolvedValue([]),
-      delete: mockFn(),
-      getAll: mockFn(),
-      getById: mockFn(),
-      queryMulti: mockFn().mockResolvedValue([]),
-      save: mockFn(),
+      query: vi.fn().mockResolvedValue([]),
+      delete: vi.fn(),
+      getAll: vi.fn(),
+      getById: vi.fn(),
+      queryMulti: vi.fn().mockResolvedValue([]),
+      save: vi.fn(),
     })
   })
   it('result should be cached and returned', async function () {

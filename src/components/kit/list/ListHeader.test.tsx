@@ -14,7 +14,7 @@ describe('ListHeader', () => {
     render(<ListHeader items={[item]} />)
   })
   it('should call sort callback', async () => {
-    const onSort = mockFn()
+    const onSort = vi.fn()
     render(<ListHeader items={[item]} onSort={onSort} />)
 
     await userEvent.click(screen.getByText(item.label?.toString() || ''))
@@ -22,7 +22,7 @@ describe('ListHeader', () => {
     expect(onSort).toHaveBeenCalled()
   })
   it('should call sort callback with appropriate argument', async () => {
-    const onSort = mockFn()
+    const onSort = vi.fn()
     const { rerender } = render(<ListHeader items={[item]} onSort={onSort} sortId="id" />)
 
     await userEvent.click(screen.getByText(item.label?.toString() || ''))

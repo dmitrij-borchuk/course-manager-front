@@ -1,11 +1,11 @@
 import React from 'react'
 import { FormattedMessage, useIntl } from 'react-intl'
 import { Container } from 'react-materialize'
-import { Input } from '../kit/input/Input'
 import { SubmitButton } from '../kit/buttons/SubmitButton'
 import { FormLayout } from '@/templates/FormLayout'
 import { ExternalError, useFormWithError } from '../../hooks/useFormWithError'
 import { useUpdateInitialForm } from '../../hooks/useUpdateInitialForm'
+import { FormTextField } from '../organisms/form'
 
 export type GroupForm = {
   name: string
@@ -30,7 +30,7 @@ export const EditGroup: React.FC<Props> = ({
   error,
 }) => {
   const intl = useIntl()
-  const { control, handleSubmit, errors, setValue } = useFormWithError<GroupForm>(
+  const form = useFormWithError<GroupForm>(
     {
       defaultValues: {
         name: '',
@@ -39,6 +39,7 @@ export const EditGroup: React.FC<Props> = ({
     },
     error
   )
+  const { setValue } = form
 
   useUpdateInitialForm(setValue, initial)
 
@@ -48,16 +49,16 @@ export const EditGroup: React.FC<Props> = ({
         <FormLayout
           header={isEdit ? <FormattedMessage id="groups.edit.title" /> : <FormattedMessage id="groups.add.title" />}
           controls={<SubmitButton loading={loading} disabled={disabled} />}
-          onSubmit={handleSubmit(onSubmit)}
+          onSubmit={onSubmit}
+          formUtils={form}
         >
-          <Input
+          <FormTextField
             id="name"
-            control={control}
             name="name"
-            label={`${intl.formatMessage({ id: 'common.form.name.label' })} *`}
-            rules={{ required: true }}
+            label={`${intl.formatMessage({ id: 'common.form.name.label' })}`}
+            required
             disabled={loading || disabled}
-            error={errors['name']?.message}
+            fullWidth
           />
         </FormLayout>
       </Container>

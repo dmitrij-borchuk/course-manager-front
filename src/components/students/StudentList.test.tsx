@@ -1,9 +1,13 @@
+import { vi } from 'vitest'
 import { queryByTestId, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { StudentList } from './StudentList'
 import * as reactRouterDom from 'react-router-dom'
 import { asMock, TestWrapper } from '../../utils/test'
 import { Student } from '../../types/student'
+
+vi.mock('react-router-dom')
+vi.mock('react-router')
 
 const { useParams } = asMock(reactRouterDom)
 

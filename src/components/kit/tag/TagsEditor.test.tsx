@@ -16,7 +16,7 @@ describe('TagsEditor', () => {
     expect(input).toBeInTheDocument()
   })
   test('should call onUpdate', async () => {
-    const fn = mockFn()
+    const fn = vi.fn()
     render(
       <TestWrapper>
         <TagsEditor onUpdate={fn} />

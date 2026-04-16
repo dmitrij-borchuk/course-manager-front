@@ -6,8 +6,10 @@ import { AttendanceEditorPage } from './AttendanceEditor'
 import * as firestore from 'firebase/firestore'
 import { Attendance } from '../../types/attendance'
 
-jest.mock('react-materialize', () => ({
-  ...jest.requireActual('react-materialize'),
+vi.mock('react-router-dom')
+vi.mock('react-router')
+vi.mock('react-materialize', async () => ({
+  ...(await vi.importActual('react-materialize')),
   DatePicker: ({ label, onChange, ...props }: any) => (
     <label>
       {label}
@@ -24,7 +26,7 @@ const treeDaysInMs = 1000 * 60 * 60 * 24 * 3
 const twoDaysInMs = 1000 * 60 * 60 * 24 * 2
 const oneDayInMs = 1000 * 60 * 60 * 24 * 1
 
-describe('AttendanceEditor', () => {
+describe('AttendanceEditor', async () => {
   const axiosMock = await getAxiosMock()
 
   beforeEach(() => {

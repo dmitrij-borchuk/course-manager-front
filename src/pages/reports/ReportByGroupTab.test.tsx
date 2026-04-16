@@ -10,15 +10,15 @@ import { Student } from '../../types/student'
 import { Activity } from '../../types/activity'
 import { mockFn } from '@/utils/tests'
 
-jest.mock('react-router-dom', () => {
+vi.mock('react-router-dom', () => {
   return {
-    useParams: mockFn(),
-    useHistory: mockFn(),
+    useParams: vi.fn(),
+    useHistory: vi.fn(),
   }
 })
-jest.mock('@react-pdf/renderer', () => {
+vi.mock('@react-pdf/renderer', () => {
   return {
-    usePDF: mockFn(),
+    usePDF: vi.fn(),
     Page: ({ children }: any) => <div>Page{children}</div>,
     Text: ({ children }: any) => <div data-testid="pdf-text">{children}</div>,
     View: ({ children }: any) => <div>View{children}</div>,
@@ -30,8 +30,8 @@ jest.mock('@react-pdf/renderer', () => {
   }
 })
 
-jest.mock('react-materialize', () => ({
-  ...jest.requireActual('react-materialize'),
+vi.mock('react-materialize', async () => ({
+  ...(await vi.importActual('react-materialize')),
   DatePicker: ({ label, onChange, ...props }: any) => (
     <label>
       {label}
@@ -44,9 +44,9 @@ jest.mock('react-materialize', () => ({
 const { getDocs } = asMock(firestore)
 const { usePDF } = asMock(reactPdf)
 
-const { useParams } = jest.requireMock('react-router-dom')
+const { useParams } = await vi.importMock<typeof import('react-router-dom')>('react-router-dom')
 
-describe('ReportByGroupTab', () => {
+describe('ReportByGroupTab', async () => {
   const axiosMock = await getAxiosMock()
 
   beforeEach(() => {
@@ -55,7 +55,7 @@ describe('ReportByGroupTab', () => {
       orgId: 'orgId',
     })
     localStorage.clear()
-    usePDF.mockReturnValue([{ url: 'instance.url' } as any, mockFn()])
+    usePDF.mockReturnValue([{ url: 'instance.url' } as any, vi.fn()])
     axiosMock.onGet('/organizations').reply(200, [
       {
         id: 1,
@@ -75,7 +75,7 @@ describe('ReportByGroupTab', () => {
     groups.forEach((g) => {
       axiosMock.onGet(new RegExp(`/students/byActivity/${g.id}`)).reply(200, students)
     })
-    usePDF.mockReturnValue([{ url: 'instance.url' } as any, mockFn()])
+    usePDF.mockReturnValue([{ url: 'instance.url' } as any, vi.fn()])
 
     render(
       <TestWrapper initialState={storeWithOrg}>
@@ -106,7 +106,7 @@ describe('ReportByGroupTab', () => {
     groups.forEach((g) => {
       axiosMock.onGet(new RegExp(`/students/byActivity/${g.id}`)).reply(200, students)
     })
-    usePDF.mockReturnValue([{} as any, mockFn()])
+    usePDF.mockReturnValue([{} as any, vi.fn()])
 
     render(
       <TestWrapper initialState={storeWithOrg}>
@@ -186,7 +186,7 @@ describe('ReportByGroupTab', () => {
       },
     ]
     mockGetDocs(attendances)
-    usePDF.mockReturnValue([{ url: 'url' } as any, mockFn()])
+    usePDF.mockReturnValue([{ url: 'url' } as any, vi.fn()])
     axiosMock.onGet(`/activities`).reply(200, groups)
     groups.forEach((g) => {
       axiosMock.onGet(new RegExp(`/students/byActivity/${g.id}`)).reply(200, students)
@@ -268,7 +268,7 @@ describe('ReportByGroupTab', () => {
       },
     ]
     mockGetDocs(attendances)
-    usePDF.mockReturnValue([{} as any, mockFn()])
+    usePDF.mockReturnValue([{} as any, vi.fn()])
     axiosMock.onGet(`/activities`).reply(200, groups)
     groups.forEach((g) => {
       axiosMock.onGet(new RegExp(`/students/byActivity/${g.id}`)).reply(200, students)

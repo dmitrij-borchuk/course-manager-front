@@ -5,7 +5,7 @@ import { mockFn } from '@/utils/tests'
 
 describe('FilterField', () => {
   it('should call onChange', async () => {
-    const onChange = mockFn()
+    const onChange = vi.fn()
     render(
       <TestWrapper>
         <FilterField onChange={onChange} />
@@ -18,7 +18,7 @@ describe('FilterField', () => {
     expect(onChange).toHaveBeenCalledWith('some filter')
   })
   it('should be able to clear filter', async () => {
-    const onChange = mockFn()
+    const onChange = vi.fn()
     render(
       <TestWrapper>
         <FilterField onChange={onChange} />
@@ -34,7 +34,7 @@ describe('FilterField', () => {
     expect(onChange).toHaveBeenCalledWith('')
   })
   it('should call onDebouncedChange', async () => {
-    const onDebouncedChange = mockFn()
+    const onDebouncedChange = vi.fn()
     render(
       <TestWrapper>
         <FilterField onDebouncedChange={onDebouncedChange} />

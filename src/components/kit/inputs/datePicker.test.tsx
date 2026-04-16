@@ -6,7 +6,7 @@ import { mockFn } from '@/utils/tests'
 describe('DatePicker', () => {
   const defaultProps = {
     defaultValue: new Date(),
-    onChange: mockFn(),
+    onChange: vi.fn(),
   }
   const setup = (props = {}) => {
     return render(

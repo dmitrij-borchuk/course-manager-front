@@ -6,13 +6,13 @@ import * as attendanceApi from '../../modules/attendance/api'
 import * as activitiesApi from '../../modules/activities/api'
 import { mockFn } from '@/utils/tests'
 
-jest.mock('../../hooks/useOrgId')
-jest.mock('../../modules/attendance/api')
-jest.mock('../../modules/activities/api')
-jest.mock('modules/activities/activitiesFilteringContext')
-jest.mock('react-router-dom', () => ({
-  useParams: mockFn(),
-  useHistory: mockFn(),
+vi.mock('../../hooks/useOrgId')
+vi.mock('../../modules/attendance/api')
+vi.mock('../../modules/activities/api')
+vi.mock('modules/activities/activitiesFilteringContext')
+vi.mock('react-router-dom', () => ({
+  useParams: vi.fn(),
+  useHistory: vi.fn(),
 }))
 
 const { fetchAttendancesForGroups } = asMock(attendanceApi)
@@ -43,8 +43,8 @@ describe('useActivitiesData', () => {
     } as any)
     useActivitiesFiltering.mockReturnValue({
       filter: { showArchived: false },
-      updateFilter: mockFn(),
-      setOpenFilterDialog: mockFn(),
+      updateFilter: vi.fn(),
+      setOpenFilterDialog: vi.fn(),
     })
     const { rerender } = renderHook(() => useActivitiesData(), { wrapper: TestWrapper })
     await waitFor(() => expect(fetchAttendancesForGroups).toHaveBeenCalledWith('orgId', ['1']))
@@ -80,8 +80,8 @@ describe('useActivitiesData', () => {
 
     useActivitiesFiltering.mockReturnValue({
       filter: { showArchived: true },
-      updateFilter: mockFn(),
-      setOpenFilterDialog: mockFn(),
+      updateFilter: vi.fn(),
+      setOpenFilterDialog: vi.fn(),
     })
     rerender()
     await waitFor(() => expect(fetchAttendancesForGroups).toHaveBeenCalledWith('orgId', ['1', '2']))

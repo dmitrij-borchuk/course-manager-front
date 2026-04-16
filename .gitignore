@@ -32,3 +32,4 @@ serviceAccount.json
 cypress.env.json
 cypress/screenshots/
 cypress/videos/
+src/node_modules

@@ -2,6 +2,10 @@ import { fireEvent, render, screen, waitForElementToBeRemoved } from '@testing-l
 import { ComponentProps } from 'react'
 import { getAxiosMock, mockOrgId, TestWrapper } from '../../utils/test'
 import { AssignStudents } from './AssignStudents'
+import { vi } from 'vitest'
+
+vi.mock('react-router-dom')
+vi.mock('react-router')
 
 const axiosMock = await getAxiosMock()
 

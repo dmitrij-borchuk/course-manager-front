@@ -50,12 +50,7 @@ export const AttendanceEditor = (props: Props) => {
     onDelete = noop,
   } = props
   const intl = useIntl()
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-    watch,
-  } = useFormWithError<AttendanceForm>({
+  const form = useFormWithError<AttendanceForm>({
     defaultValues: {
       ...attendance,
       group: attendance?.group || '',
@@ -63,6 +58,11 @@ export const AttendanceEditor = (props: Props) => {
     },
     reValidateMode: 'onChange',
   })
+  const {
+    control,
+    formState: { errors },
+    watch,
+  } = form
   const [selected, setSelected] = useState<Dictionary<boolean>>({})
   const onSubmitInternal = useCallback(
     (data: AttendanceForm) => {
@@ -102,7 +102,8 @@ export const AttendanceEditor = (props: Props) => {
       />
       <FormLayout
         controls={<SubmitButton loading={submitting} disabled={submitting || studentsLoading || noStudents} />}
-        onSubmit={handleSubmit(onSubmitInternal)}
+        onSubmit={onSubmitInternal}
+        formUtils={form}
       >
         {/* Teacher */}
         <div className="mb-12">

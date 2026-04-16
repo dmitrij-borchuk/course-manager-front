@@ -3,20 +3,20 @@ import { fireEvent, render, screen } from '@testing-library/react'
 import * as reactPdf from '@react-pdf/renderer'
 import userEvent from '@testing-library/user-event'
 import * as reportsApi from 'modules/reports/api'
-import { mockFn, mockModule } from '@/utils/tests'
 import { asMock, getAxiosMock, TestWrapper } from '../../utils/test'
 import { ReportByTagTab } from './ReportByTagTab'
+import { vi } from 'vitest'
 
-mockModule('modules/reports/api')
-mockModule('react-router-dom', () => {
+vi.mock('modules/reports/api')
+vi.mock('react-router-dom', () => {
   return {
-    useParams: mockFn(),
-    useHistory: mockFn(),
+    useParams: vi.fn(),
+    useHistory: vi.fn(),
   }
 })
-mockModule('@react-pdf/renderer', () => {
+vi.mock('@react-pdf/renderer', () => {
   return {
-    usePDF: mockFn(),
+    usePDF: vi.fn(),
     Page: ({ children }: any) => <div>Page{children}</div>,
     Text: ({ children }: any) => <div data-testid="pdf-text">{children}</div>,
     View: ({ children }: any) => <div>View{children}</div>,
@@ -31,16 +31,16 @@ mockModule('@react-pdf/renderer', () => {
 const { usePDF } = asMock(reactPdf)
 const { getReportByTagRequest } = asMock(reportsApi)
 
-const { useParams } = jest.requireMock('react-router-dom')
+const { useParams } = await vi.importMock<typeof import('react-router-dom')>('react-router-dom')
 
-describe('ReportByTagTab', () => {
+describe('ReportByTagTab', async () => {
   const axiosMock = await getAxiosMock()
 
   beforeEach(() => {
     useParams.mockReturnValue({
       orgId: 'orgId',
     })
-    usePDF.mockReturnValue([{ url: 'url' } as any, mockFn()])
+    usePDF.mockReturnValue([{ url: 'url' } as any, vi.fn()])
     axiosMock.onGet('/organizations').reply(200, [
       {
         id: 1,

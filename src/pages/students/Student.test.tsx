@@ -53,7 +53,7 @@ describe('Student', async () => {
   })
 
   test.skip('should create an instance', async () => {
-    jest.setSystemTime(new Date('2020-04-01'))
+    vi.setSystemTime(new Date('2020-04-01'))
     mockUrlParams({ orgId: 'orgId', id: '1' })
     const fbMock = createFirebaseMock()
     axiosMock.onGet('/organizations').reply(200, [

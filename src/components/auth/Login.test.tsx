@@ -6,6 +6,10 @@ import messages from '../../intl/messagesEn'
 import { noop } from '../../utils/common'
 import { mockOrgId } from '../../utils/test'
 import { Login } from './Login'
+import { vi } from 'vitest'
+
+vi.mock('react-router-dom')
+vi.mock('react-router')
 
 describe('Login', () => {
   test('Should show register link when user is not in the organization scope', async () => {

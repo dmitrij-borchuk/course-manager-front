@@ -2,6 +2,10 @@ import { render, screen } from '@testing-library/react'
 import { ComponentProps } from 'react'
 import { getAxiosMock, mockOrgId, TestWrapper } from '../../utils/test'
 import { Dashboard } from './Dashboard'
+import { vi } from 'vitest'
+
+vi.mock('react-router-dom')
+vi.mock('react-router')
 
 describe('Dashboard', () => {
   test('Should show calendar', async () => {

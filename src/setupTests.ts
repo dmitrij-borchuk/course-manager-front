@@ -16,6 +16,7 @@ vi.mock(import('axios'), async (importOriginal) => {
   const mock = new MockAdapter(actual)
   return {
     default: actual,
+    ...actual,
     mock,
   }
 })

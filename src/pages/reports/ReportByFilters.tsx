@@ -25,16 +25,30 @@ export function ReportByFiltersTab() {
   const [fetch] = useReport(validFilters, tableConfig, range)
 
   return (
-    <Box mt={3}>
+    <Box
+      sx={{
+        mt: 3,
+      }}
+    >
       <Box>
         <Filters onFiltersChanged={(f) => setFilters(f)} onRageChanged={(v) => setRange(v)} range={range} />
       </Box>
-      <Box mt={2} display="flex" justifyContent="end">
+      <Box
+        sx={{
+          mt: 2,
+          display: 'flex',
+          justifyContent: 'end',
+        }}
+      >
         <Button variant="contained" onClick={() => fetch()}>
           <FormattedMessage id="reports.byFilters.generateBtn.label" />
         </Button>
       </Box>
-      <Box mt={2}>
+      <Box
+        sx={{
+          mt: 2,
+        }}
+      >
         <DataGrid
           sx={{ maxHeight: '600px' }}
           loading={isFetching}

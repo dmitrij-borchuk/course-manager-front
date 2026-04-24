@@ -120,7 +120,12 @@ export const ReportByGroupTab = () => {
           <option value="desc">{intl.formatMessage({ id: 'common.sort.desc' })}</option>
         </Select>
 
-        <Box display="flex" gap={2}>
+        <Box
+          sx={{
+            display: 'flex',
+            gap: 2,
+          }}
+        >
           <ReportBody
             attendances={attendancesForReport}
             group={group}

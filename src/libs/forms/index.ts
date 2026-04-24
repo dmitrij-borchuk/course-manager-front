@@ -1,3 +1,3 @@
-export { getErrorMessage } from './getErrorMessage';
-export { useRulesToDefaultMessage } from './useRulesToDefaultMessage';
-export * from './validation';
+export { getErrorMessage } from './getErrorMessage'
+export { useRulesToDefaultMessage } from './useRulesToDefaultMessage'
+export * from './validation'

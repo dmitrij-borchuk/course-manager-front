@@ -54,12 +54,15 @@ type FilterProps = {
 function Filter({ onFilter }: FilterProps) {
   return (
     <Box
-      width={{
-        xs: '100%',
-        sm: '50%',
-        md: '30%',
+      sx={{
+        width: {
+          xs: '100%',
+          sm: '50%',
+          md: '30%',
+        },
+
+        ml: 'auto',
       }}
-      ml="auto"
     >
       <FilterField onDebouncedChange={onFilter} />
     </Box>

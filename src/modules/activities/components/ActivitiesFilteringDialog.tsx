@@ -15,8 +15,12 @@ export function ActivitiesFilteringDialog({ open, onClose, onSave = noop, filter
       <DialogTitle>
         <FormattedMessage id="common.filter" />
       </DialogTitle>
-
-      <Box maxWidth="100%" width="100vw">
+      <Box
+        sx={{
+          maxWidth: '100%',
+          width: '100vw',
+        }}
+      >
         <FilteringForm onSubmit={onSave} onClose={onClose} initialValues={filter} />
       </Box>
     </Dialog>
@@ -40,7 +44,12 @@ function FilteringForm({ onSubmit = noop, onClose, initialValues }: FilteringFor
   return (
     <form onSubmit={form.handleSubmit(onSubmit)}>
       <DialogContent>
-        <Box width="100%" display="flex">
+        <Box
+          sx={{
+            width: '100%',
+            display: 'flex',
+          }}
+        >
           <Controller
             control={form.control}
             name="showArchived"
@@ -66,7 +75,6 @@ function FilteringForm({ onSubmit = noop, onClose, initialValues }: FilteringFor
           />
         </Box>
       </DialogContent>
-
       <DialogActions>
         <Button onClick={onClose}>
           <FormattedMessage id="common.dialog.btn.cancel" />

@@ -18,7 +18,14 @@ export function ProfileView({ profile, organization }: Props) {
           {profile.role} at {organization.name}
         </Typography>
 
-        <Box mt={2} display="flex" gap={2} flexDirection="column">
+        <Box
+          sx={{
+            mt: 2,
+            display: 'flex',
+            gap: 2,
+            flexDirection: 'column',
+          }}
+        >
           <Typography variant="h5">Your Groups</Typography>
           <Grid container spacing={2}>
             <ActivitiesList profile={profile} />
@@ -54,7 +61,15 @@ export function ActivitiesList({ profile }: ActivitiesListProps) {
 
   if (isLoading) {
     return (
-      <Box display="flex" justifyContent="center" alignItems="center" height={100} width="100%">
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: 100,
+          width: '100%',
+        }}
+      >
         <CircularProgress />
       </Box>
     )
@@ -62,7 +77,15 @@ export function ActivitiesList({ profile }: ActivitiesListProps) {
 
   if (data?.data.length === 0) {
     return (
-      <Box display="flex" justifyContent="center" alignItems="center" height={100} width="100%">
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: 100,
+          width: '100%',
+        }}
+      >
         <Typography variant="subtitle1" sx={{ opacity: 0.8 }}>
           Looks like you don't have groups assigned
         </Typography>
@@ -73,12 +96,19 @@ export function ActivitiesList({ profile }: ActivitiesListProps) {
   return (
     <>
       {data?.data.map((activity) => (
-        <Grid item xs={12} md={6} lg={4} key={activity.id}>
+        <Grid size={{ xs: 12, md: 6, lg: 4 }} key={activity.id}>
           <Paper sx={{ p: 2, height: '100%' }}>
             <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
               <Link to={`groups/${activity.id}`}>{activity.name}</Link>
             </Typography>
-            <Box display="flex" justifyContent="space-between" alignItems="center" gap={1}>
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                gap: 1,
+              }}
+            >
               <Typography variant="h6">Teacher</Typography>
               <Performer variant="body1" title={profile.name}>
                 <Link to={`teachers/${profile.id}`}>{profile.name}</Link>

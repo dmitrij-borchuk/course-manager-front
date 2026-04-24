@@ -1,14 +1,14 @@
-import { FieldErrors, FieldValues } from 'react-hook-form';
+import { FieldErrors, FieldValues } from 'react-hook-form'
 
 export function getErrorMessage<T extends FieldValues>(error?: FieldErrors<T>[string]): string {
   if (!error) {
-    return '';
+    return ''
   }
-  const message = error.message;
+  const message = error.message
 
   if (typeof message === 'string') {
-    return message;
+    return message
   }
 
-  return '';
+  return ''
 }

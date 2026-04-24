@@ -44,7 +44,12 @@ export const TeachersList: React.FC<Props> = ({ className = '', loading = false,
             </Text>
           )}
         </Ellipsis>
-        <Box display="flex" gap={2}>
+        <Box
+          sx={{
+            display: 'flex',
+            gap: 2,
+          }}
+        >
           <CapitalizedText type="body" color="textGray" className="m-0">
             {d.role}
           </CapitalizedText>
@@ -66,7 +71,13 @@ export const TeachersList: React.FC<Props> = ({ className = '', loading = false,
       loading={loading}
       itemLinkRoot={`${ROUTES.TEACHERS_ROOT}`}
       listHeader={
-        <Box display="flex" alignItems="center" justifyContent="space-between">
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}
+        >
           <FormattedMessage id="teachers.list.title" />
           {hasAccess('MANAGE_TEACHERS') && (
             <AddButton onClick={onInviteClick}>

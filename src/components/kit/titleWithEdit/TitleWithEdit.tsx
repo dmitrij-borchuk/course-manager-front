@@ -35,8 +35,8 @@ export const TitleWithEdit = ({
       value={newValue}
       disabled={submitting}
       variant="standard"
-      InputProps={{
-        inputProps: {
+      slotProps={{
+        input: {
           className: 'browser-default !text-4xl !py-0',
         },
       }}

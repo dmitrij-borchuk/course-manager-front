@@ -126,14 +126,22 @@ export function Filters(props: FiltersProps) {
         <Typography variant="subtitle2">Date range:</Typography>
         <DateRange onRageChanged={onRageChanged} range={range} />
       </Paper>
-
       <Paper sx={{ p: 2, pt: 1, mt: 2 }}>
         <Typography variant="subtitle2">Filters:</Typography>
 
-        <Box mt={1}>
+        <Box
+          sx={{
+            mt: 1,
+          }}
+        >
           <Stack spacing={2} divider={<Divider flexItem />}>
             {filters.length === 0 && (
-              <Box display="flex" justifyContent="center">
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                }}
+              >
                 <Typography>
                   <FormattedMessage id="reports.byFilters.emptyFilters" />
                 </Typography>
@@ -151,9 +159,14 @@ export function Filters(props: FiltersProps) {
             ))}
           </Stack>
         </Box>
-        <Box mt={2} mr={5}>
+        <Box
+          sx={{
+            mt: 2,
+            mr: 5,
+          }}
+        >
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={4}>
+            <Grid size={{ xs: 12, sm: 4 }}>
               <Tooltip title={<FormattedMessage id="reports.addFilterBtn.label" />}>
                 <Button fullWidth variant="outlined" onClick={() => addFilter()} size="large">
                   <AddIcon />
@@ -172,8 +185,11 @@ function TextValueInput(props: ValueInputProps) {
     <TextField
       label={<FormattedMessage id="reports.valueInput.label" />}
       fullWidth
-      inputProps={{
-        className: `browser-default`,
+      slotProps={{
+        input: {
+          // TODO: remove it when react-materialize will be removed
+          className: `browser-default`,
+        },
       }}
       value={props.value}
       onChange={(e) => props.onChange?.(e.target.value)}
@@ -228,7 +244,7 @@ function DateRange(props: DateRangeProps) {
 
   return (
     <Grid container spacing={2}>
-      <Grid item xs={12} md={6}>
+      <Grid size={{ xs: 12, md: 6 }}>
         <Box>
           <DatePicker
             fullWidth
@@ -240,7 +256,7 @@ function DateRange(props: DateRangeProps) {
           />
         </Box>
       </Grid>
-      <Grid item xs={12} md={6}>
+      <Grid size={{ xs: 12, md: 6 }}>
         <Box>
           <DatePicker
             fullWidth

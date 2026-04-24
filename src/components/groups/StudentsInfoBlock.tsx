@@ -2,7 +2,7 @@ import { useCallback, useMemo, useState } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { Button } from 'react-materialize'
 import { Link } from 'react-router-dom'
-import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline'
+import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutlined'
 import { CircularProgress, Typography } from '@mui/material'
 import IconButton from '@mui/material/IconButton'
 import Tooltip from '@mui/material/Tooltip'
@@ -64,7 +64,11 @@ export const StudentsInfoBlock = ({
           <AssignStudents
             group={group}
             trigger={
-              <Box ml={1}>
+              <Box
+                sx={{
+                  ml: 1,
+                }}
+              >
                 <IconButton>
                   <AddIcon />
                 </IconButton>
@@ -74,7 +78,6 @@ export const StudentsInfoBlock = ({
           />
         )}
       </div>
-
       {loadingGroups ? (
         <div className="flex justify-center">
           <CircularProgress />
@@ -84,7 +87,6 @@ export const StudentsInfoBlock = ({
       ) : (
         <NoStudentsInfoBlock group={group} />
       )}
-
       <UnassignDialog
         activity={group}
         participant={participantToRemove}
@@ -139,7 +141,13 @@ const StudentWithAttendance = ({ data, attendanceRate, onRemoveClick = noop }: S
           <Link to={`${ROUTES.STUDENTS_ROOT}/${data.id}`}>{data.name}</Link>
         </Ellipsis>
       </div>
-      <Box display="flex" alignItems="center" gap={2}>
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 2,
+        }}
+      >
         {/* TODO: add loading */}
         {attendanceRate !== undefined && <AttendanceRateBadge value={attendanceRate} />}
 

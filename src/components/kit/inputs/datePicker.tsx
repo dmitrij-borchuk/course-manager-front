@@ -23,9 +23,11 @@ export function DatePicker({ defaultValue, value, onChange, fullWidth, ...props 
         textField: {
           variant: 'standard',
           fullWidth,
-          inputProps: {
-            // TODO: remove when materialize-css will be replaced
-            className: `browser-default`,
+          slotProps: {
+            input: {
+              // TODO: remove when materialize-css will be replaced
+              className: `browser-default`,
+            },
           },
         },
       }}

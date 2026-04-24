@@ -38,9 +38,12 @@ export const TagsEditor = ({ disabled, loading, error, value = emptyArray, onUpd
           renderInput={(params) => (
             <TextField
               {...params}
-              inputProps={{
-                ...params.inputProps,
-                className: `${params.inputProps.className} ${inputClassName} browser-default`,
+              slotProps={{
+                input: {
+                  ...params.slotProps.input,
+                  // TODO: remove it when react-materialize will be removed
+                  className: `${params.slotProps.input.className} browser-default`,
+                },
               }}
               variant="standard"
               label={<FormattedMessage id="common.form.tags.label" />}

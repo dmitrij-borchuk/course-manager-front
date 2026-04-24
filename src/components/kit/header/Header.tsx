@@ -42,7 +42,13 @@ export const Header = () => {
         >
           <MenuIcon />
         </IconButton>
-        <Box display="flex" sx={{ flexGrow: 1, color: 'white' }}>
+        <Box
+          sx={{
+            display: 'flex',
+            flexGrow: 1,
+            color: 'white',
+          }}
+        >
           <FlexLink to="/">
             <img src="/logoWithName.png" alt="logo" />
           </FlexLink>
@@ -84,8 +90,10 @@ function ProfileButton() {
         anchorEl={anchorEl}
         open={open}
         onClose={handleClose}
-        MenuListProps={{
-          'aria-labelledby': 'basic-button',
+        slotProps={{
+          list: {
+            'aria-labelledby': 'basic-button',
+          },
         }}
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}

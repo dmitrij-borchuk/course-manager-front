@@ -38,7 +38,11 @@ export function DetailsByActivityAndParticipant({ activityId, participantId }: P
       <Typography variant="h5" color="GrayText">
         <Ellipsis>{activityName}</Ellipsis>
       </Typography>
-      <Box mt={3}>
+      <Box
+        sx={{
+          mt: 3,
+        }}
+      >
         <AttendanceDetails participant={participantResp.data} activityId={activityId} />
       </Box>
     </>

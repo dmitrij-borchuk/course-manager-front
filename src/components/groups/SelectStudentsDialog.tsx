@@ -147,9 +147,12 @@ function ParticipantsSelector(props: ParticipantsSelectorProps) {
         renderInput={(params) => (
           <TextField
             {...params}
-            inputProps={{
-              ...params.inputProps,
-              className: `${params.inputProps.className} browser-default`,
+            slotProps={{
+              input: {
+                ...params.slotProps.input,
+                // TODO: remove it when react-materialize will be removed
+                className: `${params.slotProps.input.className} browser-default`,
+              },
             }}
             variant="standard"
             label={<FormattedMessage id="groups.assignStudents.namePlaceholder" />}

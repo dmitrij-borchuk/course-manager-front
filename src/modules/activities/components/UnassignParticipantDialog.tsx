@@ -49,7 +49,11 @@ export function UnassignDialog({ activity, participant, onCancel, onDone }: Unas
             />
           </DialogTitle>
           <DialogContent>
-            <Box pt={2}>
+            <Box
+              sx={{
+                pt: 2,
+              }}
+            >
               <TextField
                 label={<FormattedMessage id="groups.unassignStudents.comment.title" />}
                 onChange={(e) => setReason(e.target.value)}

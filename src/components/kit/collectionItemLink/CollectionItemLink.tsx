@@ -6,7 +6,13 @@ export const CollectionItemLink: React.FC<LinkProps> = ({ children, className, .
   const theme = useTheme()
   return (
     <Link className={`collection-item ${className}`} {...props}>
-      <Box color={theme.palette.text.primary}>{children}</Box>
+      <Box
+        sx={{
+          color: theme.palette.text.primary,
+        }}
+      >
+        {children}
+      </Box>
     </Link>
   )
 }

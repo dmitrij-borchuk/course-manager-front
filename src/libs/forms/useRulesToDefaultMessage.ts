@@ -1,8 +1,8 @@
-import { FieldValues, Path, RegisterOptions } from 'react-hook-form';
-import { useIntl } from 'react-intl';
+import { FieldValues, Path, RegisterOptions } from 'react-hook-form'
+import { useIntl } from 'react-intl'
 
 export function useRulesToDefaultMessage<T extends FieldValues>(options?: RegisterOptions<T, Path<T>>) {
-  const intl = useIntl();
+  const intl = useIntl()
 
   const maxLength =
     typeof options?.maxLength === 'number'
@@ -12,7 +12,7 @@ export function useRulesToDefaultMessage<T extends FieldValues>(options?: Regist
             message: intl.formatMessage({ id: 'forms.maxLengthError' }, { number: options.maxLength }),
           },
         }
-      : {};
+      : {}
   const minLength =
     typeof options?.minLength === 'number'
       ? {
@@ -21,11 +21,11 @@ export function useRulesToDefaultMessage<T extends FieldValues>(options?: Regist
             message: intl.formatMessage({ id: 'forms.minLengthError' }, { number: options.minLength }),
           },
         }
-      : {};
+      : {}
 
   return {
     ...options,
     ...maxLength,
     ...minLength,
-  };
+  }
 }

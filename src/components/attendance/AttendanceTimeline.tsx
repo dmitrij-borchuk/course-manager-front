@@ -27,9 +27,15 @@ export const AttendanceTimeLine: React.FC<Props> = ({ className = '', items = []
     <div className={`${className} mt-3`}>
       {items.map((item) => (
         <Box key={item.date.toISOString()}>
-          <Box display="flex" flexDirection={{ xs: 'column', sm: 'row' }} gap={2.5}>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: { xs: 'column', sm: 'row' },
+              gap: 2.5,
+            }}
+          >
             <AttendanceDateBlock date={item.date} />
-            <Grid container width="100%" spacing={1} m={0}>
+            <Grid container sx={{ width: '100%', margin: 0 }} spacing={1}>
               {item.items.map((item) => (
                 <Grid
                   key={item.id}
@@ -46,7 +52,11 @@ export const AttendanceTimeLine: React.FC<Props> = ({ className = '', items = []
               ))}
             </Grid>
           </Box>
-          <Box my={2.5}>
+          <Box
+            sx={{
+              my: 2.5,
+            }}
+          >
             <Divider />
           </Box>
         </Box>

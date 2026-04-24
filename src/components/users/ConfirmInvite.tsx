@@ -94,8 +94,10 @@ const ConfirmInviteForm: React.FC<ConfirmInviteFormProps> = ({ disabled, onSubmi
             render={({ field, fieldState }) => (
               <TextField
                 label={<FormattedMessage id="common.name.label" />}
-                inputProps={{
-                  className: `browser-default`,
+                slotProps={{
+                  input: {
+                    className: `browser-default`,
+                  },
                 }}
                 fullWidth
                 autoFocus

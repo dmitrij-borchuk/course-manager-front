@@ -14,13 +14,23 @@ export function SettingsPage() {
   return (
     <>
       <GeneralPage title="Settings">
-        <Box display="flex" flexDirection="column" gap={2}>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 2,
+          }}
+        >
           <Alert severity="info">
             <FormattedMessage id="settings.apiKey.info" />
           </Alert>
           <TextField
             label={<FormattedMessage id="settings.apiKey.keyField.label" />}
-            InputProps={{ readOnly: true }}
+            slotProps={{
+              input: {
+                readOnly: true,
+              },
+            }}
             minRows={2}
             value={data?.data ?? ''}
             multiline

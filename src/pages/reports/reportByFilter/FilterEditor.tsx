@@ -27,7 +27,12 @@ export function FilterEditor<T = any>(props: Props<T>) {
   const ValueInput = currentField?.Input
 
   return (
-    <Box display="flex" gap={2}>
+    <Box
+      sx={{
+        display: 'flex',
+        gap: 2,
+      }}
+    >
       <Grid container spacing={2} size={12}>
         <Grid size={{ xs: 12, sm: 4 }}>
           <FormControl fullWidth>
@@ -95,8 +100,10 @@ export function FilterEditor<T = any>(props: Props<T>) {
         </Grid>
         <Grid
           size={{ xs: 12 }}
-          display={{
-            sm: 'none',
+          sx={{
+            display: {
+              sm: 'none',
+            },
           }}
         >
           <Button variant="outlined" color="error" startIcon={<ClearIcon />} onClick={() => onRemove(value)} fullWidth>
@@ -105,11 +112,14 @@ export function FilterEditor<T = any>(props: Props<T>) {
         </Grid>
       </Grid>
       <Box
-        display={{
-          xs: 'none',
-          sm: 'flex',
+        sx={{
+          display: {
+            xs: 'none',
+            sm: 'flex',
+          },
+
+          alignItems: 'center',
         }}
-        alignItems={'center'}
       >
         <Tooltip title="Remove filter">
           <IconButton aria-label="delete" onClick={() => onRemove(value)}>

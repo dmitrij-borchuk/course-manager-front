@@ -24,13 +24,18 @@ export const Reports = () => {
       <SectionHeader>
         <FormattedMessage id="reports.header" />
       </SectionHeader>
-
       <Tabs value={value} onChange={handleChange} aria-label="report tabs">
         <WideTab label={<FormattedMessage id="reports.tabs.byTag" />} {...a11yProps(0)} />
         <WideTab label={<FormattedMessage id="reports.tabs.byGroup" />} {...a11yProps(1)} />
         <WideTab
           label={
-            <Box display="flex" alignItems="center" gap={2}>
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 2,
+              }}
+            >
               <FormattedMessage id="reports.tabs.byFilters" />
               <Tooltip title={<FormattedMessage id="reports.tabs.byFilters.iconTitle" />}>
                 <ScienceIcon />
@@ -40,7 +45,6 @@ export const Reports = () => {
           {...a11yProps(2)}
         />
       </Tabs>
-
       <CustomTabPanel value={value} index={0}>
         <ReportByTagTab />
       </CustomTabPanel>

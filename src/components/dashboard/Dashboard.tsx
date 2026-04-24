@@ -22,8 +22,20 @@ export const Dashboard: React.FC<Props> = ({ items, loading = false, onLoadMore 
   }, [history])
 
   return (
-    <Box display="flex" flexDirection="column" height="100%">
-      <Box display="flex" alignItems="center" justifyContent="space-between">
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+      }}
+    >
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        }}
+      >
         <SectionHeader>
           <FormattedMessage id="header.nav.dashboard" />
         </SectionHeader>
@@ -32,7 +44,14 @@ export const Dashboard: React.FC<Props> = ({ items, loading = false, onLoadMore 
         </AddButton>
       </Box>
       {/* Negative n=margin to push scroll bar to the edge */}
-      <Box height="100%" overflow="auto" sx={{ mx: '-24px', px: '24px' }}>
+      <Box
+        sx={{
+          height: '100%',
+          overflow: 'auto',
+          mx: '-24px',
+          px: '24px',
+        }}
+      >
         <AttendanceTimeLine items={items} />
         <div className="flex justify-center pt-7 pb-7">
           {loading && <CircularProgress />}

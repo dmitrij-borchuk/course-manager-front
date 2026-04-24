@@ -76,7 +76,11 @@ const GroupsInfoBlock = ({ teacherId, attendanceRates, teachersGroups = [] }: Gr
           <FormattedMessage id="groups.list.title" />
         </Typography>
 
-        <Box display="flex">
+        <Box
+          sx={{
+            display: 'flex',
+          }}
+        >
           <ResponsiveButtons
             items={[
               {
@@ -98,7 +102,6 @@ const GroupsInfoBlock = ({ teacherId, attendanceRates, teachersGroups = [] }: Gr
           )}
         </Box>
       </div>
-
       {!!teachersGroups?.length ? (
         <List items={teachersGroups} renderItem={renderItem} />
       ) : (

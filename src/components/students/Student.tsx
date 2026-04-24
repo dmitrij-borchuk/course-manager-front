@@ -30,7 +30,6 @@ export const Student: React.FC<Props> = ({ className = '', data, onDelete }) => 
           onSubmit: onDelete,
         }}
       />
-
       {tags?.map((t, i) => (
         <Tag
           key={t}
@@ -41,12 +40,14 @@ export const Student: React.FC<Props> = ({ className = '', data, onDelete }) => 
           {t}
         </Tag>
       ))}
-
       <div className="mt-6">
         <GroupsInfoBlock student={data} />
       </div>
-
-      <Box mt={2}>
+      <Box
+        sx={{
+          mt: 2,
+        }}
+      >
         <ParticipationTimeline outerId={data.outerId} participantId={data.id} />
       </Box>
     </div>

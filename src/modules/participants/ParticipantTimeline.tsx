@@ -35,7 +35,6 @@ export function ParticipationTimeline({ participantId, outerId }: Props) {
   return (
     <>
       <Alert severity="warning">The timeline is a prototype!</Alert>
-
       <Timeline>
         {timeline.map((d, i) => (
           <TimelineItem key={d.date.getTime()}>
@@ -47,10 +46,18 @@ export function ParticipationTimeline({ participantId, outerId }: Props) {
               {i !== timeline.length - 1 && <TimelineConnector />}
             </TimelineSeparator>
             <TimelineContent>
-              <Box display="flex">
+              <Box
+                sx={{
+                  display: 'flex',
+                }}
+              >
                 <Card>
                   <CardContent>
-                    <Box display="flex">
+                    <Box
+                      sx={{
+                        display: 'flex',
+                      }}
+                    >
                       {/* TODO: translation */}
                       {/* TODO: add link to group */}
                       {/* TODO: add link to user */}
@@ -59,17 +66,39 @@ export function ParticipationTimeline({ participantId, outerId }: Props) {
                           {d.type === 'assign' ? 'Assigned to' : 'Unassigned from'} "{d.activity.name}"
                         </Box>
                         {d.type === 'unassign' && (
-                          <Box display="flex" gap={2}>
-                            Reason: {d.reason ? d.reason : <Box color="gray">---</Box>}
+                          <Box
+                            sx={{
+                              display: 'flex',
+                              gap: 2,
+                            }}
+                          >
+                            Reason:{' '}
+                            {d.reason ? (
+                              d.reason
+                            ) : (
+                              <Box
+                                sx={{
+                                  color: 'gray',
+                                }}
+                              >
+                                ---
+                              </Box>
+                            )}
                           </Box>
                         )}
                         {(d.type === 'unassign' || d.isActive) && (
-                          <Box display="flex">
+                          <Box
+                            sx={{
+                              display: 'flex',
+                            }}
+                          >
                             <Box>Attendance rate:</Box>
                             <AttendanceRateBadge
                               value={attendanceRates[d.activity.id] || 0}
                               BoxProps={{
-                                ml: 1,
+                                sx: {
+                                  ml: 1,
+                                },
                               }}
                             />
                           </Box>

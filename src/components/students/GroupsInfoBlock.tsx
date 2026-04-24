@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { Link, useParams } from 'react-router-dom'
 import { Button, CircularProgress, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material'
-import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline'
+import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutlined'
 import FilterAltIcon from '@mui/icons-material/FilterAlt'
 import IconButton from '@mui/material/IconButton'
 import AddIcon from '@mui/icons-material/Add'
@@ -38,7 +38,11 @@ export const GroupsInfoBlock = ({ student }: Props) => {
           <FormattedMessage id="groups.list.title" />
         </Typography>
 
-        <Box display="flex">
+        <Box
+          sx={{
+            display: 'flex',
+          }}
+        >
           <ResponsiveButtons
             items={[
               {
@@ -56,7 +60,11 @@ export const GroupsInfoBlock = ({ student }: Props) => {
               student={student}
               initialGroups={groups}
               trigger={
-                <Box ml={1}>
+                <Box
+                  sx={{
+                    ml: 1,
+                  }}
+                >
                   <IconButton>
                     <AddIcon />
                   </IconButton>
@@ -67,7 +75,6 @@ export const GroupsInfoBlock = ({ student }: Props) => {
           )}
         </Box>
       </div>
-
       {loadingGroups ? (
         <div className="flex justify-center">
           <CircularProgress />
@@ -82,7 +89,6 @@ export const GroupsInfoBlock = ({ student }: Props) => {
       ) : (
         <NoGroupsInfoBlock student={student} onDone={reload} />
       )}
-
       <UnassignDialog
         activity={activityToUnassign}
         participant={student}

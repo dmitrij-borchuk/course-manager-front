@@ -20,10 +20,13 @@ export function GeneralPage(props: Props) {
           {TITLE_POSTFIX}
         </title>
       </Helmet>
-
       <Header />
-
-      <Box display="flex" height="100%">
+      <Box
+        sx={{
+          display: 'flex',
+          height: '100%',
+        }}
+      >
         <NavBar />
         <Box
           component="main"

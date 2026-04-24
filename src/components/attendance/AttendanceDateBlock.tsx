@@ -9,12 +9,20 @@ export const AttendanceDateBlock: React.FC<Props> = ({ date }) => {
   return (
     <DateBlockContainer>
       <Box
-        display="flex"
-        flexDirection={{ xs: 'row', sm: 'column' }}
-        alignItems={{ xs: 'center', sm: 'end' }}
-        justifyContent={{ xs: 'space-between', sm: 'start' }}
+        sx={{
+          display: 'flex',
+          flexDirection: { xs: 'row', sm: 'column' },
+          alignItems: { xs: 'center', sm: 'end' },
+          justifyContent: { xs: 'space-between', sm: 'start' },
+        }}
       >
-        <Box display="flex" flexDirection={{ xs: 'row', sm: 'column' }} alignItems={{ xs: 'center', sm: 'end' }}>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: { xs: 'row', sm: 'column' },
+            alignItems: { xs: 'center', sm: 'end' },
+          }}
+        >
           <PaperTypography variant="h6">
             <FormattedDate value={date} month="short" />
           </PaperTypography>

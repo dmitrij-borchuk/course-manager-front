@@ -40,7 +40,13 @@ export function DashboardContent() {
 
   return (
     <>
-      <Box display="flex" height="calc(100% - 64px)" flexDirection="column">
+      <Box
+        sx={{
+          display: 'flex',
+          height: 'calc(100% - 64px)',
+          flexDirection: 'column',
+        }}
+      >
         <Dashboard items={timelineData} loading={loading} onLoadMore={loadMore} />
       </Box>
     </>

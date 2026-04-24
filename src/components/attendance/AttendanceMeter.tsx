@@ -19,11 +19,22 @@ export const AttendanceMeter: React.FC<Props> = ({ activity, performer, rate = 0
 
   return (
     <MeterContainer elevation={4} hoverShadow={7}>
-      <Box display="flex" justifyContent="space-between" alignItems="center">
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+        }}
+      >
         <EllipsisTypography variant="h6" title={activity.name}>
           <CardLink to={`${ROUTES.GROUPS_ROOT}/${activity.id}`}>{activity.name}</CardLink>
         </EllipsisTypography>
-        <Box display="flex" alignItems="center">
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+          }}
+        >
           <AttendanceRateBadge value={rate} />
           <Box className="editBtn">
             <IconButton size="small">
@@ -32,8 +43,15 @@ export const AttendanceMeter: React.FC<Props> = ({ activity, performer, rate = 0
           </Box>
         </Box>
       </Box>
-      <Box display="flex" flexDirection="column" gap={2.5} mt={2}>
-        <InfoItem gap={1}>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 2.5,
+          mt: 2,
+        }}
+      >
+        <InfoItem sx={{ gap: 1 }}>
           <Typography>
             <FormattedMessage id="groups.teacher.title" />
           </Typography>
@@ -43,7 +61,7 @@ export const AttendanceMeter: React.FC<Props> = ({ activity, performer, rate = 0
             </BoldTypography>
           )}
         </InfoItem>
-        <InfoItem gap={1}>
+        <InfoItem sx={{ gap: 1 }}>
           <Typography>
             <FormattedMessage id="common.students" />
           </Typography>
@@ -62,7 +80,9 @@ const MeterContainer = styled(Paper, {
   padding: ${({ theme }) => theme.spacing(2.5)};
   .editBtn {
     width: 0px;
-    transition: width 0.2s, opacity 0.2s;
+    transition:
+      width 0.2s,
+      opacity 0.2s;
     opacity: 0;
     position: relative;
     display: flex;

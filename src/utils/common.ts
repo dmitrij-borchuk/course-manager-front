@@ -11,14 +11,17 @@ function getValue<T>(o: T, selector: Selector<T>) {
 }
 
 export function groupBy<T>(xs: T[], selector: Selector<T>) {
-  return xs.reduce(function (rv, x) {
-    const value = getValue(x, selector)
-    if (typeof value === 'string' || typeof value === 'number') {
-      ;(rv[value] = rv[value] || []).push(x)
+  return xs.reduce(
+    function (rv, x) {
+      const value = getValue(x, selector)
+      if (typeof value === 'string' || typeof value === 'number') {
+        ;(rv[value] = rv[value] || []).push(x)
+        return rv
+      }
       return rv
-    }
-    return rv
-  }, {} as Record<string | number, T[]>)
+    },
+    {} as Record<string | number, T[]>
+  )
 }
 
 export function noop() {}
@@ -81,7 +84,7 @@ export function useDebounceFn<T extends (...args: any[]) => any>(fn: T, delay: n
 }
 
 function debounce<T extends (...args: any[]) => any>(fn: T, delay: number) {
-  let timeout: NodeJS.Timeout
+  let timeout: number
   return (...args: Parameters<T>) => {
     clearTimeout(timeout)
     timeout = setTimeout(() => fn(...args), delay)

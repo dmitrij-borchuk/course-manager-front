@@ -7,7 +7,13 @@ interface Props {
 }
 export const SectionHeader: React.FC<Props> = ({ children, className = '' }) => {
   return (
-    <Typography variant="h5" className={className} fontWeight="bold">
+    <Typography
+      variant="h5"
+      className={className}
+      sx={{
+        fontWeight: 'bold',
+      }}
+    >
       {children}
     </Typography>
   )

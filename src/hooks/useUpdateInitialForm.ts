@@ -4,8 +4,8 @@ export function useUpdateInitialForm<T, K extends keyof T>(setValue: (key: K, va
   useEffect(() => {
     for (const key in initial) {
       if (Object.prototype.hasOwnProperty.call(initial, key)) {
-        const element = initial[(key as unknown) as K]
-        setValue((key as unknown) as K, element)
+        const element = initial[key as unknown as K]
+        setValue(key as unknown as K, element)
       }
     }
   }, [initial, setValue])

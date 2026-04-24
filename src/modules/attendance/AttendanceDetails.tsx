@@ -71,7 +71,13 @@ export function AttendanceDetails({ participant, activityId }: Props) {
           <FormattedMessage id="calendar.previousBtn.label" />
         </Button>
         {viewType === ViewType.DESKTOP && (
-          <Box display="flex" justifyContent="center" mb={3}>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              mb: 3,
+            }}
+          >
             <Typography variant="h4">
               <FormattedDate value={date} month="long" />{' '}
               {!isCurrentYear && <FormattedDate value={date} year="numeric" />}
@@ -82,7 +88,6 @@ export function AttendanceDetails({ participant, activityId }: Props) {
           <FormattedMessage id="calendar.nextBtn.label" />
         </Button>
       </div>
-
       <ResponsiveCalendar
         date={date}
         withWeekDays
@@ -122,10 +127,13 @@ function CalendarCell({ date, isMobile, attendancesByDate, participantOuterId }:
           xs: 'column',
           sm: 'row',
         }}
-        alignItems="center"
-        height={{
-          xs: '75px',
-          sm: '100px',
+        sx={{
+          alignItems: 'center',
+
+          height: {
+            xs: '75px',
+            sm: '100px',
+          },
         }}
       >
         <div className="flex flex-col items-center w-12">
@@ -149,7 +157,7 @@ function CalendarCell({ date, isMobile, attendancesByDate, participantOuterId }:
 
         {hasClasses && <AttendanceIndicator attended={attended} />}
       </Stack>
-      <Divider light />
+      <Divider />
     </Box>
   )
 }

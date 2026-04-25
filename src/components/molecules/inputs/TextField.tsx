@@ -9,12 +9,13 @@ export function TextField({ helperText, ...props }: TextFieldProps) {
     <MuiTextField
       {...props}
       slotProps={{
+        ...props.slotProps,
         formHelperText: {
           ...props.slotProps?.formHelperText,
           component: 'div' as React.ElementType,
         },
-        input: {
-          ...props.slotProps?.input,
+        htmlInput: {
+          ...props.slotProps?.htmlInput,
           // TODO: remove it when react-materialize will be removed
           className: ` browser-default`,
         },

@@ -5,6 +5,7 @@ import './styles.css'
 interface Props extends ButtonProps {
   loading?: boolean
 }
+// TODO: loading button
 export const ButtonWithLoader: React.FC<Props> = ({ loading = false, children, disabled, className, ...rest }) => {
   return (
     <Button variant="contained" disabled={disabled || loading} className={`button-with-loading ${className}`} {...rest}>

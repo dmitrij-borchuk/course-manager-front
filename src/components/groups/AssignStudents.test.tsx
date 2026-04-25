@@ -1,8 +1,9 @@
-import { fireEvent, render, screen, waitForElementToBeRemoved } from '@testing-library/react'
 import { ComponentProps } from 'react'
+import { vi } from 'vitest'
+import { fireEvent, render, screen, waitForElementToBeRemoved } from '@testing-library/react'
+import { Button } from '@/moleculesinputs'
 import { getAxiosMock, mockOrgId, TestWrapper } from '../../utils/test'
 import { AssignStudents } from './AssignStudents'
-import { vi } from 'vitest'
 
 vi.mock('react-router-dom')
 vi.mock('react-router')
@@ -83,7 +84,7 @@ function queryChip(label: string) {
 
 async function selectItem(name: string, opt?: { disableCheck?: boolean }) {
   const { disableCheck } = opt || {}
-  const openBtn = await screen.findByRole('button', { name: 'Open' })
+  const openBtn = await screen.findByRole('button', { name: /Open/ })
   fireEvent.click(openBtn)
   const itemToSelect = await screen.findByRole('option', { name: name })
   fireEvent.click(itemToSelect)

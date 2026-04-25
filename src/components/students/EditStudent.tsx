@@ -6,7 +6,7 @@ import { FormLayout } from '@/templates/FormLayout'
 import { TagsEditor } from '../kit/tag/TagsEditor'
 import { ExternalError, useFormWithError } from '../../hooks/useFormWithError'
 import { useUpdateInitialForm } from '../../hooks/useUpdateInitialForm'
-import { FormTextField } from '../organisms/form'
+import { FormTextField } from '@/organisms/form'
 
 export type StudentForm = {
   name: string

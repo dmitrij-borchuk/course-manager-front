@@ -1,11 +1,9 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { FormattedMessage, useIntl } from 'react-intl'
-import { Button } from 'react-materialize'
 import { Link } from 'react-router-dom'
 import Icon from '@mui/material/Icon'
 import Dialog from '@mui/material/Dialog'
 import Tooltip from '@mui/material/Tooltip'
-import TextField from '@mui/material/TextField'
 import IconButton from '@mui/material/IconButton'
 import DialogTitle from '@mui/material/DialogTitle'
 import { useTheme } from '@mui/material/styles'
@@ -13,6 +11,7 @@ import Autocomplete from '@mui/material/Autocomplete'
 import DialogContent from '@mui/material/DialogContent'
 import DialogActions from '@mui/material/DialogActions'
 import useMediaQuery from '@mui/material/useMediaQuery'
+import { Button, TextField } from '@/molecules/inputs'
 import { useStudentsOfGroupState, useStudentsState } from '@/store'
 import { ButtonWithLoader } from '../kit/buttons/ButtonWithLoader'
 import { Student } from '../../types/student'
@@ -96,10 +95,11 @@ function DialogInternal(props: DialogInternalProps) {
         <AddNewItemBtn group={groupId} />
       </DialogTitle>
       <DialogContent>
+        {/* TODO: fix underline */}
         <ParticipantsSelector options={notAssignedParticipants} value={selected} onChange={setSelected} />
       </DialogContent>
       <DialogActions>
-        <Button flat disabled={submitting} onClick={onClose}>
+        <Button disabled={submitting} onClick={onClose}>
           <FormattedMessage id="common.dialog.btn.cancel" />
         </Button>
 
@@ -147,14 +147,6 @@ function ParticipantsSelector(props: ParticipantsSelectorProps) {
         renderInput={(params) => (
           <TextField
             {...params}
-            slotProps={{
-              input: {
-                ...params.slotProps.input,
-                // TODO: remove it when react-materialize will be removed
-                className: `${params.slotProps.input.className} browser-default`,
-              },
-            }}
-            variant="standard"
             label={<FormattedMessage id="groups.assignStudents.namePlaceholder" />}
             placeholder={intl.formatMessage({ id: 'groups.assignStudents.moreNamePlaceholder' })}
           />

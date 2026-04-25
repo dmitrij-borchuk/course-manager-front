@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { FormattedMessage, useIntl } from 'react-intl'
-import TextField from '@mui/material/TextField'
 import Autocomplete from '@mui/material/Autocomplete'
+import { TextField } from '@/molecules/inputs'
 
 interface Props {
   loading?: boolean
@@ -11,6 +11,7 @@ interface Props {
   onUpdate?: (value: string[]) => void
   inputClassName?: string
 }
+// TODO: fix it, tags are not saved
 export const TagsEditor = ({ disabled, loading, error, value = emptyArray, onUpdate, inputClassName }: Props) => {
   const intl = useIntl()
   const [selected, setSelected] = useState<string[]>(value)
@@ -38,14 +39,6 @@ export const TagsEditor = ({ disabled, loading, error, value = emptyArray, onUpd
           renderInput={(params) => (
             <TextField
               {...params}
-              slotProps={{
-                input: {
-                  ...params.slotProps.input,
-                  // TODO: remove it when react-materialize will be removed
-                  className: `${params.slotProps.input.className} browser-default`,
-                },
-              }}
-              variant="standard"
               label={<FormattedMessage id="common.form.tags.label" />}
               placeholder={intl.formatMessage({ id: 'common.form.newTag.label' })}
               error={!!error}

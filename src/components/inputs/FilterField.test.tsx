@@ -1,7 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react'
 import { TestWrapper } from 'utils/test'
 import { FilterField } from './FilterField'
-import { mockFn } from '@/utils/tests'
 
 describe('FilterField', () => {
   it('should call onChange', async () => {

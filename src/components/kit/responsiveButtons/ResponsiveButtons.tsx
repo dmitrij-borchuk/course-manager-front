@@ -1,4 +1,4 @@
-import { MoreHoriz } from '@mui/icons-material'
+import MoreHoriz from '@mui/icons-material/MoreHoriz'
 import {
   Button,
   ButtonProps,

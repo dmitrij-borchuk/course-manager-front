@@ -1,4 +1,3 @@
-import { mockFn } from '@/utils/tests'
 import { asMock } from 'utils/test'
 import { fetchAttendancesForGroups } from './api'
 import * as collectionModule from '../../api/firebase/collections'

@@ -4,7 +4,6 @@ import { useActivitiesData } from './GroupsList'
 import { asMock, TestWrapper } from 'utils/test'
 import * as attendanceApi from '../../modules/attendance/api'
 import * as activitiesApi from '../../modules/activities/api'
-import { mockFn } from '@/utils/tests'
 
 vi.mock('../../hooks/useOrgId')
 vi.mock('../../modules/attendance/api')

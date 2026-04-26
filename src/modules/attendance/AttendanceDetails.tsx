@@ -17,7 +17,8 @@ import { ParticipationRecord } from 'modules/activities/api'
 import { getAttendanceStatisticOfParticipant } from 'services/attendances'
 import { Student } from 'types/student'
 import { isWeekend } from 'utils/date'
-import { ArrowBackIosNew, ArrowForwardIos } from '@mui/icons-material'
+import ArrowBackIosNew from '@mui/icons-material/ArrowBackIosNew'
+import ArrowForwardIos from '@mui/icons-material/ArrowForwardIos'
 
 type Props = {
   participant: Student

@@ -1,7 +1,6 @@
 import { ComponentProps } from 'react'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { mockFn } from '@/utils/tests'
 import { ListHeader } from './ListHeader'
 
 const item: ListHeaderProps['items'][number] = {

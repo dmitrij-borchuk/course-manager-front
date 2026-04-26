@@ -2,7 +2,6 @@ import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '../../../utils/test'
 import { TagsEditor } from './TagsEditor'
-import { mockFn } from '@/utils/tests'
 
 describe('TagsEditor', () => {
   test('should not fail', async () => {

@@ -1,4 +1,4 @@
-import { render, screen, waitForElementToBeRemoved } from '@testing-library/react'
+import { act, render, screen, waitForElementToBeRemoved } from '@testing-library/react'
 import { getAxiosMock, mockGetDocs, mockUrlParams, TestWrapper } from '../../utils/test'
 import { createFirebaseMock } from '../../utils/tests/firebaseMock'
 import StudentPage from './Student'
@@ -19,32 +19,34 @@ describe('Student', async () => {
 
   test('should omit attendance without student in calculation', async () => {
     makeDefaultMock()
-    render(
-      <TestWrapper
-        initialState={{
-          organizations: {
-            list: {
-              loading: false,
-              data: [
-                {
+    await act(async () => {
+      await render(
+        <TestWrapper
+          initialState={{
+            organizations: {
+              list: {
+                loading: false,
+                data: [
+                  {
+                    id: 1,
+                    key: 'orgId',
+                  },
+                ],
+              },
+              currentOrg: {
+                loading: false,
+                data: {
                   id: 1,
                   key: 'orgId',
                 },
-              ],
-            },
-            currentOrg: {
-              loading: false,
-              data: {
-                id: 1,
-                key: 'orgId',
               },
             },
-          },
-        }}
-      >
-        <StudentPage />
-      </TestWrapper>
-    )
+          }}
+        >
+          <StudentPage />
+        </TestWrapper>
+      )
+    })
 
     await screen.findByText('studentName')
     const rates = await screen.findAllByTestId('attendance-rate-badge')

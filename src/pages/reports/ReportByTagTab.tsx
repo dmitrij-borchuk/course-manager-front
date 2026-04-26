@@ -30,7 +30,7 @@ export const ReportByTagTab = () => {
 
   return (
     <div>
-      <Grid container spacing={2} pt={2}>
+      <Grid container spacing={2} sx={{ pt: 2 }}>
         <Grid
           size={{
             xs: 12,
@@ -80,8 +80,10 @@ export const ReportByTagTab = () => {
             xs: 12,
             md: 6,
           }}
-          display="flex"
-          alignItems="center"
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+          }}
         >
           <SortByField
             value={{ order, orderBy }}

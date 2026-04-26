@@ -21,10 +21,9 @@ export function DatePicker({ defaultValue, value, onChange, fullWidth, ...props 
       onChange={(date) => onChange?.(date?.toDate() ?? null)}
       slotProps={{
         textField: {
-          variant: 'standard',
           fullWidth,
           slotProps: {
-            input: {
+            htmlInput: {
               // TODO: remove when materialize-css will be replaced
               className: `browser-default`,
             },

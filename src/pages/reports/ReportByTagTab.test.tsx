@@ -1,11 +1,12 @@
 import { AxiosHeaders } from 'axios'
-import { fireEvent, render, screen } from '@testing-library/react'
+import { act, fireEvent, render, screen } from '@testing-library/react'
 import * as reactPdf from '@react-pdf/renderer'
 import userEvent from '@testing-library/user-event'
+import { vi } from 'vitest'
 import * as reportsApi from 'modules/reports/api'
+import { getDatePickerInputByLabel } from '@/libs/tests'
 import { asMock, getAxiosMock, TestWrapper } from '../../utils/test'
 import { ReportByTagTab } from './ReportByTagTab'
-import { vi } from 'vitest'
 
 vi.mock('modules/reports/api')
 vi.mock('react-router-dom', () => {
@@ -143,11 +144,13 @@ describe('ReportByTagTab', async () => {
       </TestWrapper>
     )
 
-    const datePickerFrom = await screen.findByRole<HTMLInputElement>('textbox', { name: /From/i })
+    const datePickerFrom = await getDatePickerInputByLabel(/From/)
     fireEvent.change(datePickerFrom, { target: { value: '05/20/2022' } })
 
-    const datePickerTo = await screen.findByRole<HTMLInputElement>('textbox', { name: /To/i })
-    fireEvent.change(datePickerTo, { target: { value: '05/22/2022' } })
+    await act(async () => {
+      const datePickerTo = await getDatePickerInputByLabel('To *')
+      fireEvent.change(datePickerTo, { target: { value: '05/22/2022' } })
+    })
 
     const tagsEditorInput = await screen.findByLabelText('Tags')
     await userEvent.type(tagsEditorInput, 'Lviv{enter}')

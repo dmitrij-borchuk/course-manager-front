@@ -1,14 +1,14 @@
-import { render, screen, waitFor } from '@testing-library/react'
+import { act, render, screen, waitFor } from '@testing-library/react'
 import * as firestore from 'firebase/firestore'
 import * as reactPdf from '@react-pdf/renderer'
 import userEvent from '@testing-library/user-event'
-import { asMock, getAxiosMock, getFirebaseSnapshotFromArray, TestWrapper } from '../../utils/test'
+import { updateDate } from '@/libs/tests'
 import { clearAttendanceByGroupCache } from 'modules/attendance/api'
+import { asMock, getAxiosMock, getFirebaseSnapshotFromArray, TestWrapper } from '../../utils/test'
 import { ReportByGroupTab } from './ReportByGroupTab'
 import { Attendance } from '../../types/attendance'
 import { Student } from '../../types/student'
 import { Activity } from '../../types/activity'
-import { mockFn } from '@/utils/tests'
 
 vi.mock('react-router-dom', () => {
   return {
@@ -274,16 +274,16 @@ describe('ReportByGroupTab', async () => {
       axiosMock.onGet(new RegExp(`/students/byActivity/${g.id}`)).reply(200, students)
     })
 
-    render(
-      <TestWrapper initialState={storeWithOrg}>
-        <ReportByGroupTab />
-      </TestWrapper>
-    )
+    await act(async () => {
+      await render(
+        <TestWrapper initialState={storeWithOrg}>
+          <ReportByGroupTab />
+        </TestWrapper>
+      )
+    })
 
-    const datePickerFrom = await screen.findByLabelText(/From/i)
-    await userEvent.type(datePickerFrom, `${new Date('Wed May 17 2022 19:00:00').toLocaleDateString()}`)
-    const datePickerTo = await screen.findByLabelText(/To/i)
-    await userEvent.type(datePickerTo, `${new Date('Wed May 22 2022 19:00:00').toLocaleDateString()}`)
+    await updateDate(/From/i, '05/17/2022')
+    await updateDate(/To/i, '05/22/2022')
 
     await waitForPdfRender()
 

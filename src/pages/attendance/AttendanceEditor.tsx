@@ -83,6 +83,7 @@ export const AttendanceEditorPage = () => {
           autoDismiss: true,
         })
         history.push(`/`)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
         addToast(error.message, {
           appearance: 'error',
@@ -117,6 +118,7 @@ export const AttendanceEditorPage = () => {
       // TODO: cleanup
       try {
         await fetchAttendance(orgKey, id)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
         addToast(error.message, {
           appearance: 'error',

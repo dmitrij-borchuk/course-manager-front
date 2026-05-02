@@ -102,7 +102,7 @@ const GroupsInfoBlock = ({ teacherId, attendanceRates, teachersGroups = [] }: Gr
           )}
         </Box>
       </div>
-      {!!teachersGroups?.length ? (
+      {teachersGroups?.length > 0 ? (
         <List items={teachersGroups} renderItem={renderItem} />
       ) : (
         <NoGroupsInfoBlock teacherId={teacherId} />
@@ -155,5 +155,6 @@ const GroupWithAttendance = ({ group, attendanceRate }: GroupWithAttendanceProps
 }
 
 function getGroupItemRender(attendances: Dictionary<number>) {
+  // eslint-disable-next-line react/display-name
   return (data: Activity) => <GroupWithAttendance key={data.id} group={data} attendanceRate={attendances[data.id]} />
 }

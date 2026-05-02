@@ -9,12 +9,12 @@ export async function createUser(data: NewUser) {
 
 export function useCreateUser() {
   const [loading, setLoading] = useState(false)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const createUser = useCallback(async (data: any) => {
     // let res!: ReturnType<typeof createUserRequest>
     setLoading(true)
     try {
       return await createUserRequest(data)
-    } catch (error) {
     } finally {
       setLoading(false)
     }

@@ -1,6 +1,6 @@
 export function datesInRange(start: Date, end: Date, steps = 1) {
   const dateArray: Date[] = []
-  let currentDate = new Date(start)
+  const currentDate = new Date(start)
 
   while (currentDate <= end) {
     dateArray.push(new Date(currentDate))

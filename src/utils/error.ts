@@ -7,6 +7,7 @@ type FirebaseError = Error & {
   name: 'FirebaseError'
   code: string
 }
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function isFirebaseError(error: any): error is FirebaseError {
   return error.name === 'FirebaseError'
 }
@@ -22,7 +23,7 @@ export function useDefaultErrorHandler() {
   const { addToast } = useToasts()
 
   return (error: unknown) => {
-    let serverError: AxiosError | null = null
+    const serverError: AxiosError | null = null
     if (isAxiosError<string>(error)) {
       addToast(error.response?.data, {
         appearance: 'error',

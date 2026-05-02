@@ -55,6 +55,7 @@ export const useStudentsOfGroupState = studentsOfGroup
 export const useOrganizationsState = organizations
 export const useUsersState = users
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function makeStore(initialState?: Record<any, any>) {
   return configureStore({
     reducer: {

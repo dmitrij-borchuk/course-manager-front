@@ -6,6 +6,7 @@ import { ButtonWithLoader } from '../buttons/ButtonWithLoader'
 import { TinyPreloader } from '../TinyPreloader/TinyPreloader'
 import { List } from '../list/List'
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Accessor<T> = keyof T | ((data: T) => any)
 
 interface PropsBase<T> {
@@ -39,7 +40,6 @@ export function SelectDialog<T extends { id: string | number }>({
   labelProp,
   onCloseStart,
   initial,
-  ...rest
 }: PropsSingle<T> | PropsMulti<T>) {
   const [submitting, setSubmitting] = useState(false)
   const initialArray = useMemo(() => {
@@ -58,11 +58,14 @@ export function SelectDialog<T extends { id: string | number }>({
       setSubmitting(true)
       try {
         if (multiSelect) {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           await onSubmit(selected as any)
         } else {
           setSelectedLoading(item)
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           await onSubmit(item as any)
         }
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (error) {
         // TODO: error handling
       }

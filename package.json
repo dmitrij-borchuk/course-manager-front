@@ -13,11 +13,12 @@
     "firebase-emulator:test": "firebase emulators:start --import=./test-firebase-data",
     "cypress": "cypress open",
     "e2e": "cypress run --browser chrome",
-    "lint": "eslint ./src/**/*.{tsx,ts}"
+    "lint": "eslint"
   },
   "dependencies": {
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
+    "@eslint/js": "^10.0.1",
     "@loadable/component": "^5.14.1",
     "@mui/icons-material": "^9.0.0",
     "@mui/lab": "^9.0.0-beta.2",
@@ -39,9 +40,13 @@
     "cross-env": "^7.0.3",
     "csvtojson": "^2.0.10",
     "dayjs": "^1.11.11",
+    "eslint": "^9.39.4",
+    "eslint-plugin-react": "^7.37.5",
     "firebase": "^9.3.0",
     "firebase-tools": "^9.22.0",
+    "globals": "^17.5.0",
     "graphql": "^15.4.0",
+    "jiti": "^2.6.1",
     "materialize-css": "1.0.0",
     "nanoid": "^3.1.28",
     "notistack": "^3.0.1",
@@ -63,23 +68,9 @@
     "react-tiny-fab": "^4.0.4",
     "react-toast-notifications": "^2.5.1",
     "tailwindcss": "^3.1.4",
+    "typescript-eslint": "^8.59.0",
     "uuid": "^9.0.0",
     "web-vitals": "^0.2.4"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app"
-    ],
-    "rules": {
-      "no-restricted-imports": [
-        "error",
-        {
-          "patterns": [
-            "@mui/*/*/*"
-          ]
-        }
-      ]
-    }
   },
   "browserslist": {
     "production": [

@@ -94,6 +94,7 @@ function useAttendance() {
         } else {
           await fetchAttendancesForTeacher(orgKey, organizationUser.outerId, fromDate, toDate)
         }
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
         addToast(error.message, {
           appearance: 'error',

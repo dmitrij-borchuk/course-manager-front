@@ -49,8 +49,6 @@ export function useAuthStore() {
         await getProfile()
 
         return response
-      } catch (error) {
-        throw error
       } finally {
         setLoading(false)
       }
@@ -65,8 +63,6 @@ export function useAuthStore() {
         }
 
         return response.data
-      } catch (error) {
-        throw error
       } finally {
         setLoading(false)
       }

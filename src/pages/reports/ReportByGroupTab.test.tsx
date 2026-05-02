@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { act, render, screen, waitFor } from '@testing-library/react'
 import * as firestore from 'firebase/firestore'
 import * as reactPdf from '@react-pdf/renderer'

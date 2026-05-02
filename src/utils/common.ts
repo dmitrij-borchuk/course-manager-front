@@ -74,6 +74,7 @@ export function useDebounce<T>(value: T, delay: number) {
   return debouncedValue
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function useDebounceFn<T extends (...args: any[]) => any>(fn: T, delay: number) {
   const [debouncedFn, setDebouncedFn] = useState(() => debounce(fn, delay))
   useEffect(() => {
@@ -83,6 +84,7 @@ export function useDebounceFn<T extends (...args: any[]) => any>(fn: T, delay: n
   return debouncedFn
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function debounce<T extends (...args: any[]) => any>(fn: T, delay: number) {
   let timeout: number
   return (...args: Parameters<T>) => {

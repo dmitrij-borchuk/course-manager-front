@@ -33,6 +33,7 @@ export const ConfirmInvitePage = () => {
         await dispatch(calcCurrentOrganization())
 
         history.push(`/`)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
         showError(error?.response?.data?.message || error?.response?.data || error.message)
       }

@@ -105,6 +105,7 @@ const columns: GridColDef[] = [
   },
   {
     field: 'groups',
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     renderCell: ({ row }: any) => {
       return <EllipsisCell>{row.activityName}</EllipsisCell>
     },
@@ -114,6 +115,7 @@ const columns: GridColDef[] = [
   },
   {
     field: 'performer',
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     renderCell: ({ row }: any) => {
       return <EllipsisCell>{row.performerName}</EllipsisCell>
     },

@@ -55,6 +55,7 @@ export const StudentsImport = () => {
             })
           )
         }
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
         addToast(error.message, {
           appearance: 'error',
@@ -82,6 +83,7 @@ export const StudentsImport = () => {
 
         processStudent(element)
       }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       addToast(error.message, {
         appearance: 'error',

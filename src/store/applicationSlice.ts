@@ -14,7 +14,7 @@ export const applicationSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(initiateApp.fulfilled, (state, action) => {
+    builder.addCase(initiateApp.fulfilled, (state) => {
       state.initiated = true
     })
     builder.addCase(initiateApp.rejected, (state) => {

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { DocumentSnapshot, QuerySnapshot } from 'firebase/firestore'
 import * as firestore from 'firebase/firestore'
 import { asMock } from '../test'

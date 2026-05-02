@@ -42,7 +42,7 @@ export const EditStudent: React.FC<Props> = ({
     },
     error
   )
-  const { control, handleSubmit, errors, setValue, watch, register } = methods
+  const { handleSubmit, setValue, watch, register } = methods
 
   const onTagsUpdate = useCallback(
     (newTags: string[]) => {

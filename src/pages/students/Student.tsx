@@ -7,7 +7,7 @@ import { Student } from '../../components/students/Student'
 // TODO: Add 404 state
 export const StudentPage = () => {
   const history = useHistory()
-  let { id: idStr } = useParams<{ id: string }>()
+  const { id: idStr } = useParams<{ id: string }>()
   const id = parseInt(idStr)
 
   const { fetchStudent, studentsById, deleteStudent } = useStudentsState()

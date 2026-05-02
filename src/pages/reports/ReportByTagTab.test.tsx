@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { AxiosHeaders } from 'axios'
 import { act, fireEvent, render, screen } from '@testing-library/react'
 import * as reactPdf from '@react-pdf/renderer'

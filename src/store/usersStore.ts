@@ -39,6 +39,7 @@ export default function useUsersStore() {
         })
         setSubmitting(false)
         return result
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
         setError(error)
         setSubmitting(false)
@@ -50,6 +51,7 @@ export default function useUsersStore() {
       try {
         await confirmInvitation(token, name)
         setSubmitting(false)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
         setError(error)
         setSubmitting(false)

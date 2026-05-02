@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useMemo } from 'react'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
@@ -127,7 +128,7 @@ export function mockUrlParams(data: Record<string, string>) {
 
 export async function getAxiosMock() {
   const a = await import('axios')
-  // @ts-ignore
+  // @ts-expect-error mock doesn't exist in the axios, AxiosMockAdapter adds it
   return a.mock as AxiosMockAdapter
 }
 

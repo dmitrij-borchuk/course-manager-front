@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-object-type */
 import loadable from '@loadable/component'
 import { Loader } from '../../components/kit/loader/Loader'
 

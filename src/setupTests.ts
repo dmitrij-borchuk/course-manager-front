@@ -11,6 +11,7 @@ import MockAdapter from 'axios-mock-adapter'
 window.IntersectionObserver = MockIntersectionObserver
 
 vi.mock(import('axios'), async (importOriginal) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const actual: any = await importOriginal()
   // const axios: any = await import('axios')
   const mock = new MockAdapter(actual)

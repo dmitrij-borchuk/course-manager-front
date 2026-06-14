@@ -16,7 +16,7 @@ import { GeneralPage } from 'components/layouts/GeneralPage'
 // TODO: Add loading skeleton
 export const TeacherPage = () => {
   const { filter } = useActivitiesFiltering()
-  let { id: idStr } = useParams<{ id: string }>()
+  const { id: idStr } = useParams<{ id: string }>()
   const id = parseInt(idStr)
 
   const query = useQuery(['profile', id], () => getProfileRequest(id))

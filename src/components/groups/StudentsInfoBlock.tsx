@@ -168,12 +168,14 @@ const StudentWithAttendance = ({ data, attendanceRate, onRemoveClick = noop }: S
 }
 
 function getStudentItemRender(attendances: Dictionary<{ rate: number }>, onRemoveClick?: (id: number) => void) {
-  return (data: Student) => (
-    <StudentWithAttendance
-      key={data.id}
-      data={data}
-      attendanceRate={attendances?.[data.outerId]?.rate}
-      onRemoveClick={onRemoveClick}
-    />
-  )
+  return function StudentItem(data: Student) {
+    return (
+      <StudentWithAttendance
+        key={data.id}
+        data={data}
+        attendanceRate={attendances?.[data.outerId]?.rate}
+        onRemoveClick={onRemoveClick}
+      />
+    )
+  }
 }

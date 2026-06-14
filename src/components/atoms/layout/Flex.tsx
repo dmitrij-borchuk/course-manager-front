@@ -5,9 +5,10 @@ export type FlexProps = MuiBoxProps & {
   justifyCenter?: boolean
   alignCenter?: boolean
   column?: boolean
+  gap?: number | string
 }
 export const Flex = forwardRef<unknown, FlexProps>(function Flex(
-  { justifyCenter, alignCenter, column, ...props },
+  { justifyCenter, alignCenter, column, gap, ...props },
   ref
 ) {
   return (
@@ -21,6 +22,7 @@ export const Flex = forwardRef<unknown, FlexProps>(function Flex(
           justifyContent: justifyCenter ? 'center' : undefined,
           alignItems: alignCenter ? 'center' : undefined,
           flexDirection: column ? 'column' : undefined,
+          gap,
         },
         ...(Array.isArray(props.sx) ? props.sx : [props.sx]),
       ]}

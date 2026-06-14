@@ -39,6 +39,7 @@ describe('useActivitiesData', () => {
           updatedBy: 1,
         },
       ],
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } as any)
     useActivitiesFiltering.mockReturnValue({
       filter: { showArchived: false },
@@ -75,6 +76,7 @@ describe('useActivitiesData', () => {
           updatedBy: 2,
         },
       ],
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } as any)
 
     useActivitiesFiltering.mockReturnValue({

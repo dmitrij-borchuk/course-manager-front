@@ -24,6 +24,7 @@ export const StudentsImport = () => {
   const { control, handleSubmit, setValue, watch, register } = useFormWithError<ImportStudentsForm>({
     defaultValues: {
       fileType: 'json',
+      // @ts-expect-error for the form we cant use `null` but an empty string, need to fix typing for the form
       file: '',
       nameColumn: '',
       tagsColumn: '',
@@ -109,6 +110,7 @@ export const StudentsImport = () => {
   }, [addToast, intl, previewData?.length, processed])
 
   useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     register('fileType' as any)
   }, [register])
 
@@ -116,7 +118,13 @@ export const StudentsImport = () => {
     <Container className="px-4">
       <FormLayout
         header={<FormattedMessage id="import.student.header" />}
-        controls={<SubmitButton loading={loading} children={<FormattedMessage id="import.form.read" />} />}
+        controls={
+          <SubmitButton loading={loading}>
+            <FormattedMessage id="import.form.read" />
+          </SubmitButton>
+        }
+        // TODO: fix typing, maybe we have an error here
+        // @ts-expect-error onSubmit typing is wrong need to fix it in the form
         onSubmit={handleSubmit(onSubmit)}
       >
         {/* File type */}
@@ -155,7 +163,7 @@ export const StudentsImport = () => {
           render={({ field }) => (
             <TextInput
               type="file"
-              // @ts-ignore
+              // @ts-expect-error accept is missing in typings
               accept={`.${fileType}`}
               label={`${intl.formatMessage({ id: 'import.student.file.label' })} *`}
               onChange={(e) => {
@@ -170,6 +178,7 @@ export const StudentsImport = () => {
         {/* Name column */}
         <Input
           id="nameColumn"
+          // @ts-expect-error TODO: fix typing
           control={control}
           name="nameColumn"
           label={`${intl.formatMessage({ id: 'import.student.name.label' })} *`}
@@ -180,6 +189,7 @@ export const StudentsImport = () => {
         {/* Email column */}
         <Input
           id="emailColumn"
+          // @ts-expect-error TODO: fix typing
           control={control}
           name="emailColumn"
           label={`${intl.formatMessage({ id: 'import.student.email.label' })}`}
@@ -189,6 +199,7 @@ export const StudentsImport = () => {
         {/* Tags column */}
         <Input
           id="tagsColumn"
+          // @ts-expect-error TODO: fix typing
           control={control}
           name="tagsColumn"
           label={`${intl.formatMessage({ id: 'import.student.tags.label' })} *`}
@@ -200,14 +211,16 @@ export const StudentsImport = () => {
         <Controller
           control={control}
           name="isMultipleTags"
-          defaultValue={null}
+          defaultValue={false}
           render={({ field }) => (
             <Checkbox
               label={intl.formatMessage({ id: 'import.student.tags.isMultiple.label' })}
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               onChange={(e: any) => field.onChange(!!e.target.checked)}
               disabled={fileType === 'json'}
-              value={fileType === 'json' ? true : field.value && field.value.toString()}
-              checked={fileType === 'json' ? true : field.value && field.value.toString()}
+              value={fileType === 'json' ? 'true' : field.value.toString()}
+              checked={fileType === 'json' ? true : field.value}
+              // @ts-expect-error TODO: fix typing
               name={field.name}
             />
           )}
@@ -236,7 +249,7 @@ export const StudentsImport = () => {
             </thead>
             <tbody>
               {previewData.map((d) => (
-                <tr>
+                <tr key={d.outerId}>
                   <td>{d.name}</td>
                   <td>{d.email}</td>
                   <td>{d.tags?.join(',')}</td>
@@ -247,15 +260,9 @@ export const StudentsImport = () => {
 
           {/* Submit the result */}
           <div className="flex justify-end mt-4">
-            <SubmitButton
-              loading={loading}
-              children={
-                <>
-                  <FormattedMessage id="common.submitLabel" /> {processedEl}
-                </>
-              }
-              onSubmit={onSaveList}
-            />
+            <SubmitButton loading={loading} onSubmit={onSaveList}>
+              <FormattedMessage id="common.submitLabel" /> {processedEl}
+            </SubmitButton>
           </div>
         </div>
       )}
@@ -276,6 +283,7 @@ interface ImportStudentsForm {
 
 const fileTypes = ['json', 'csv']
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function fromFileToJson(type: string, data: string): Promise<any[]> {
   if (type === 'csv') {
     return await csv().fromString(data)
@@ -291,9 +299,11 @@ interface Config {
   emailColumn: string
   isMultipleTags: boolean
 }
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function fromJsonToData(type: string, data: any, config: Config): StudentImport[] {
   const { isMultipleTags, nameColumn, tagsColumn, emailColumn } = config
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return data.map((item: any) => ({
     name: item[nameColumn],
     tags: type === 'csv' ? parseCsvTags(item[tagsColumn], isMultipleTags) : item[tagsColumn],

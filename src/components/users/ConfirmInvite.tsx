@@ -46,7 +46,7 @@ export const ConfirmInvite: React.FC<Props> = ({
               <FormattedMessage id="users.invite.confirmation.needLogin" />
             </Text>
             <Button
-              // @ts-expect-error
+              // @ts-expect-error TODO: fix typing
               href={`${ROUTES.LOGIN}`}
               node="a"
             >

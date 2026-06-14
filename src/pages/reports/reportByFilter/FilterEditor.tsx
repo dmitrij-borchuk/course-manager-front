@@ -20,6 +20,7 @@ type Props<T> = {
     }[]
   }[]
 }
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function FilterEditor<T = any>(props: Props<T>) {
   const { onChange = noop, onRemove = noop, value, fields } = props
   const currentField = fields.find((f) => f.id === value.field)
@@ -133,4 +134,5 @@ export function FilterEditor<T = any>(props: Props<T>) {
 
 export type ValueInput = React.ComponentType<ValueInputProps>
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type ValueInputProps = { value?: any; onChange?: (value: any) => void }

@@ -9,14 +9,13 @@ interface Props {
   error?: string
   value?: string[]
   onUpdate?: (value: string[]) => void
-  inputClassName?: string
 }
 // TODO: fix it, tags are not saved
-export const TagsEditor = ({ disabled, loading, error, value = emptyArray, onUpdate, inputClassName }: Props) => {
+export const TagsEditor = ({ disabled, loading, error, value = emptyArray, onUpdate }: Props) => {
   const intl = useIntl()
   const [selected, setSelected] = useState<string[]>(value)
   useEffect(() => {
-    onUpdate && onUpdate(selected)
+    onUpdate?.(selected)
   }, [onUpdate, selected])
 
   return (

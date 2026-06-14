@@ -38,7 +38,9 @@ export const EditSchedule: React.FC<Props> = ({
     defaultValues: {
       cron: '0 12 * * *',
       ...initial,
+      // @ts-expect-error TODO: fix this
       start: initial?.start ? new Date(initial.start) : '',
+      // @ts-expect-error TODO: fix this
       end: initial?.end ? new Date(initial.end) : '',
     },
     reValidateMode: 'onChange',
@@ -51,6 +53,7 @@ export const EditSchedule: React.FC<Props> = ({
         if (error instanceof Error) {
           setError('start', {
             message: error.message,
+            // @ts-expect-error TODO: fix this
             shouldFocus: true,
           })
           return
@@ -69,6 +72,7 @@ export const EditSchedule: React.FC<Props> = ({
       <FormLayout
         header={<FormattedMessage id="schedule.form.title" />}
         controls={<SubmitButton loading={submitting} disabled={loading} />}
+        // @ts-expect-error todo: fix this
         onSubmit={handleSubmit(onLocalSubmit)}
       >
         {/* Start date */}
@@ -90,7 +94,7 @@ export const EditSchedule: React.FC<Props> = ({
                 defaultDate: field.value,
                 setDefaultDate: true,
               }}
-              // @ts-ignore
+              // @ts-expect-error TODO: fix this
               label={`${intl.formatMessage({ id: 'schedule.form.start' })} *`}
               disabled={loading || submitting}
               {...field}
@@ -119,7 +123,7 @@ export const EditSchedule: React.FC<Props> = ({
                 defaultDate: field.value,
                 setDefaultDate: true,
               }}
-              // @ts-ignore
+              // @ts-expect-error TODO: fix this
               label={`${intl.formatMessage({ id: 'schedule.form.end' })} *`}
               disabled={loading || submitting}
               {...field}

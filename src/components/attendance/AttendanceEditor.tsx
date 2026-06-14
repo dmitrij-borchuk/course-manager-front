@@ -132,7 +132,7 @@ export const AttendanceEditor = (props: Props) => {
                   setDefaultDate: true,
                   maxDate: new Date(),
                 }}
-                // @ts-ignore
+                // @ts-expect-error TODO: fix this
                 label={`${intl.formatMessage({ id: 'common.date' })} *`}
                 disabled={submitting}
                 onChange={field.onChange}
@@ -222,36 +222,37 @@ const StudentsSelector = ({ students, onChange = noop, initialSelected }: Studen
     setSelected((d) => ({ ...d, [outerId]: value }))
   }, [])
   const renderItem = useMemo(
-    () => (s: Student) => {
-      return (
-        <div
-          key={s.outerId}
-          className="collection-item flex justify-between items-center cursor-pointer"
-          onClick={() => onClick(s.outerId, !selected[s.outerId])}
-        >
-          <Ellipsis className="color-secondary">{s.name}</Ellipsis>
-          {selected[s.outerId] && (
-            <div className="-my-3 -mr-5 flex color-secondary">
-              <Icon center className="text-5xl">
-                check_circle
-              </Icon>
-            </div>
-          )}
-          {!selected[s.outerId] && (
-            <div className="-my-3 -mr-5 flex color-text-gray">
-              <Icon center className="text-5xl">
-                radio_button_unchecked
-              </Icon>
-            </div>
-          )}
-        </div>
-      )
-    },
+    () =>
+      function ListItem(s: Student) {
+        return (
+          <div
+            key={s.outerId}
+            className="collection-item flex justify-between items-center cursor-pointer"
+            onClick={() => onClick(s.outerId, !selected[s.outerId])}
+          >
+            <Ellipsis className="color-secondary">{s.name}</Ellipsis>
+            {selected[s.outerId] && (
+              <div className="-my-3 -mr-5 flex color-secondary">
+                <Icon center className="text-5xl">
+                  check_circle
+                </Icon>
+              </div>
+            )}
+            {!selected[s.outerId] && (
+              <div className="-my-3 -mr-5 flex color-text-gray">
+                <Icon center className="text-5xl">
+                  radio_button_unchecked
+                </Icon>
+              </div>
+            )}
+          </div>
+        )
+      },
     [onClick, selected]
   )
 
   useEffect(() => {
-    setSelected((selected) => {
+    setSelected(() => {
       const newSelected: Record<string, boolean> = {}
       students.forEach((s) => {
         newSelected[s.outerId] = !!(initialSelected && initialSelected[s.outerId])

@@ -77,7 +77,9 @@ function DialogInternal(props: DialogInternalProps) {
   const submit = useCallback(async () => {
     setSubmitting(true)
     try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       await onSubmit(selected as any)
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       // TODO: error handling
     }

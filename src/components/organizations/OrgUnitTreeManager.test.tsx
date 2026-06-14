@@ -9,13 +9,22 @@ const mockedApi = api as jest.Mocked<typeof api>
 const emptyTree = { data: [] }
 const treeWithRoot = {
   data: [
-    { id: 'unit-1', name: 'Engineering', parentId: null, sortOrder: 0, archivedAt: null, organizationId: 1, children: [] },
+    {
+      id: 'unit-1',
+      name: 'Engineering',
+      parentId: null,
+      sortOrder: 0,
+      archivedAt: null,
+      organizationId: 1,
+      children: [],
+    },
   ],
 }
 
 describe('OrgUnitTreeManager', () => {
   beforeEach(() => {
     jest.clearAllMocks()
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     mockedApi.getOrgUnitTreeRequest.mockResolvedValue(emptyTree as any)
   })
 
@@ -30,6 +39,7 @@ describe('OrgUnitTreeManager', () => {
   })
 
   it('shows units when tree loads', async () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     mockedApi.getOrgUnitTreeRequest.mockResolvedValue(treeWithRoot as any)
     render(<OrgUnitTreeManager />)
     await waitFor(() => screen.getByText('Engineering'))
@@ -43,9 +53,12 @@ describe('OrgUnitTreeManager', () => {
   })
 
   it('creates a new root unit and reloads the tree', async () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     mockedApi.createOrgUnitRequest.mockResolvedValue({ data: {} } as any)
     mockedApi.getOrgUnitTreeRequest
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .mockResolvedValueOnce(emptyTree as any)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .mockResolvedValueOnce(treeWithRoot as any)
 
     render(<OrgUnitTreeManager />)
@@ -54,9 +67,11 @@ describe('OrgUnitTreeManager', () => {
     fireEvent.change(screen.getByLabelText(/unit name/i), { target: { value: 'Engineering' } })
     fireEvent.click(screen.getByRole('button', { name: /create/i }))
 
-    await waitFor(() => expect(mockedApi.createOrgUnitRequest).toHaveBeenCalledWith({
-      name: 'Engineering',
-      parentId: null,
-    }))
+    await waitFor(() =>
+      expect(mockedApi.createOrgUnitRequest).toHaveBeenCalledWith({
+        name: 'Engineering',
+        parentId: null,
+      })
+    )
   })
 })

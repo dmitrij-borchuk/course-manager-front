@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-expressions */
 var _rollbarConfig = {
   accessToken: '945056eecfb6404c860ec8d8497b6590',
   captureUncaught: true,
@@ -12,21 +11,21 @@ var _rollbarConfig = {
   function e(n) {
     if (o[n]) return o[n].exports
     var t = (o[n] = { exports: {}, id: n, loaded: !1 })
-    return r[n].call(t.exports, t, t.exports, e), (t.loaded = !0), t.exports
+    return (r[n].call(t.exports, t, t.exports, e), (t.loaded = !0), t.exports)
   }
   var o = {}
-  return (e.m = r), (e.c = o), (e.p = ''), e(0)
+  return ((e.m = r), (e.c = o), (e.p = ''), e(0))
 })([
   function (r, e, o) {
     var n = o(1),
       t = o(4)
-    ;(_rollbarConfig = _rollbarConfig || {}),
+    ;((_rollbarConfig = _rollbarConfig || {}),
       (_rollbarConfig.rollbarJsUrl =
         _rollbarConfig.rollbarJsUrl || 'https://cdnjs.cloudflare.com/ajax/libs/rollbar.js/2.24.0/rollbar.min.js'),
-      (_rollbarConfig.async = void 0 === _rollbarConfig.async || _rollbarConfig.async)
+      (_rollbarConfig.async = void 0 === _rollbarConfig.async || _rollbarConfig.async))
     var a = n.setupShim(window, _rollbarConfig),
       l = t(_rollbarConfig)
-    ;(window.rollbar = n.Rollbar), a.loadFull(window, document, !_rollbarConfig.async, _rollbarConfig, l)
+    ;((window.rollbar = n.Rollbar), a.loadFull(window, document, !_rollbarConfig.async, _rollbarConfig, l))
   },
   function (r, e, o) {
     function n(r) {
@@ -41,23 +40,25 @@ var _rollbarConfig = {
       }
     }
     function t(r, e) {
-      ;(this.options = r), (this._rollbarOldOnError = null)
+      ;((this.options = r), (this._rollbarOldOnError = null))
       var o = s++
-      ;(this.shimId = function () {
+      ;((this.shimId = function () {
         return o
       }),
-        'undefined' != typeof window && window._rollbarShims && (window._rollbarShims[o] = { handler: e, messages: [] })
+        'undefined' != typeof window &&
+          window._rollbarShims &&
+          (window._rollbarShims[o] = { handler: e, messages: [] }))
     }
     function a(r, e) {
       if (r) {
         var o = e.globalAlias || 'Rollbar'
         if ('object' == typeof r[o]) return r[o]
-        ;(r._rollbarShims = {}), (r._rollbarWrappedError = null)
+        ;((r._rollbarShims = {}), (r._rollbarWrappedError = null))
         var t = new p(e)
         return n(function () {
-          e.captureUncaught &&
+          ;(e.captureUncaught &&
             ((t._rollbarOldOnError = r.onerror), i.captureUncaughtExceptions(r, t, !0), i.wrapGlobals(r, t, !0)),
-            e.captureUnhandledRejections && i.captureUnhandledRejections(r, t, !0)
+            e.captureUnhandledRejections && i.captureUnhandledRejections(r, t, !0))
           var n = e.autoInstrument
           return (
             e.enabled !== !1 &&
@@ -86,7 +87,7 @@ var _rollbarConfig = {
         return new t(r, e)
       },
       p = d.bind(null, c)
-    ;(t.prototype.loadFull = function (r, e, o, t, a) {
+    ;((t.prototype.loadFull = function (r, e, o, t, a) {
       var l = function () {
           var e
           if (void 0 === r._rollbarDidLoad) {
@@ -105,7 +106,7 @@ var _rollbarConfig = {
         s = e.createElement('script'),
         d = e.getElementsByTagName('script')[0],
         c = d.parentNode
-      ;(s.crossOrigin = ''),
+      ;((s.crossOrigin = ''),
         (s.src = t.rollbarJsUrl),
         o || (s.async = !0),
         (s.onload = s.onreadystatechange =
@@ -115,10 +116,10 @@ var _rollbarConfig = {
               try {
                 c.removeChild(s)
               } catch (r) {}
-              ;(i = !0), l()
+              ;((i = !0), l())
             }
           })),
-        c.insertBefore(s, d)
+        c.insertBefore(s, d))
     }),
       (t.prototype.wrap = function (r, e, o) {
         try {
@@ -143,12 +144,12 @@ var _rollbarConfig = {
               } catch (o) {
                 var e = o
                 throw (
-                  (e &&
+                  e &&
                     ('string' == typeof e && (e = new String(e)),
                     (e._rollbarContext = n() || {}),
                     (e._rollbarContext._wrappedSource = r.toString()),
                     (window._rollbarWrappedError = e)),
-                  e)
+                  e
                 )
               }
             }),
@@ -160,7 +161,7 @@ var _rollbarConfig = {
         } catch (e) {
           return r
         }
-      })
+      }))
     for (
       var u =
           'log,debug,info,warn,warning,error,critical,global,configure,handleUncaughtException,handleUnhandledRejection,captureEvent,captureDomContentLoaded,captureLoad'.split(
@@ -184,16 +185,16 @@ var _rollbarConfig = {
           var o = Array.prototype.slice.call(arguments, 0)
           n(r, e, t, o)
         }
-        ;(a.belongsToShim = o), (r.onerror = a)
+        ;((a.belongsToShim = o), (r.onerror = a))
       }
     }
     function n(r, e, o, n) {
-      r._rollbarWrappedError &&
+      ;(r._rollbarWrappedError &&
         (n[4] || (n[4] = r._rollbarWrappedError),
         n[5] || (n[5] = r._rollbarWrappedError._rollbarContext),
         (r._rollbarWrappedError = null)),
         e.handleUncaughtException.apply(e, n),
-        o && o.apply(r, n)
+        o && o.apply(r, n))
     }
     function t(r, e, o) {
       if (r) {
@@ -213,14 +214,14 @@ var _rollbarConfig = {
             n = '[unhandledrejection] error getting `promise` from event'
           }
           try {
-            ;(t = r.detail), !o && t && ((o = t.reason), (n = t.promise))
+            ;((t = r.detail), !o && t && ((o = t.reason), (n = t.promise)))
           } catch (r) {
             t = '[unhandledrejection] error getting `detail` from event'
           }
-          o || (o = '[unhandledrejection] error getting `reason` from event'),
-            e && e.handleUnhandledRejection && e.handleUnhandledRejection(o, n)
+          ;(o || (o = '[unhandledrejection] error getting `reason` from event'),
+            e && e.handleUnhandledRejection && e.handleUnhandledRejection(o, n))
         }
-        ;(n.belongsToShim = o), (r._rollbarURH = n), r.addEventListener('unhandledrejection', n)
+        ;((n.belongsToShim = o), (r._rollbarURH = n), r.addEventListener('unhandledrejection', n))
       }
     }
     function a(r, e, o) {
@@ -231,7 +232,7 @@ var _rollbarConfig = {
             'EventTarget,Window,Node,ApplicationCache,AudioTrackList,ChannelMergerNode,CryptoOperation,EventSource,FileReader,HTMLUnknownElement,IDBDatabase,IDBRequest,IDBTransaction,KeyOperation,MediaController,MessagePort,ModalWindow,Notification,SVGElementInstance,Screen,TextTrack,TextTrackCue,TextTrackList,WebSocket,WebSocketWorker,Worker,XMLHttpRequest,XMLHttpRequestEventTarget,XMLHttpRequestUpload'.split(
               ','
             )
-        for (n = 0; n < a.length; ++n) (t = a[n]), r[t] && r[t].prototype && l(e, r[t].prototype, o)
+        for (n = 0; n < a.length; ++n) ((t = a[n]), r[t] && r[t].prototype && l(e, r[t].prototype, o))
       }
     }
     function l(r, e, o) {
@@ -240,19 +241,19 @@ var _rollbarConfig = {
         var t = function (e, o, t) {
           n.call(this, e, r.wrap(o), t)
         }
-        ;(t._rollbarOldAdd = n), (t.belongsToShim = o), (e.addEventListener = t)
+        ;((t._rollbarOldAdd = n), (t.belongsToShim = o), (e.addEventListener = t))
         for (var a = e.removeEventListener; a._rollbarOldRemove && a.belongsToShim; ) a = a._rollbarOldRemove
         var l = function (r, e, o) {
           a.call(this, r, (e && e._rollbar_wrapped) || e, o)
         }
-        ;(l._rollbarOldRemove = a), (l.belongsToShim = o), (e.removeEventListener = l)
+        ;((l._rollbarOldRemove = a), (l.belongsToShim = o), (e.removeEventListener = l))
       }
     }
     r.exports = { captureUncaughtExceptions: o, captureUnhandledRejections: t, wrapGlobals: a }
   },
   function (r, e) {
     function o(r, e) {
-      ;(this.impl = r(e, this)), (this.options = e), n(o.prototype)
+      ;((this.impl = r(e, this)), (this.options = e), n(o.prototype))
     }
     function n(r) {
       for (
@@ -272,19 +273,19 @@ var _rollbarConfig = {
       )
         r[o[n]] = e(o[n])
     }
-    ;(o.prototype._swapAndProcessMessages = function (r, e) {
+    ;((o.prototype._swapAndProcessMessages = function (r, e) {
       this.impl = r(this.options)
       for (var o, n, t; (o = e.shift()); )
-        (n = o.method),
+        ((n = o.method),
           (t = o.args),
           this[n] &&
             'function' == typeof this[n] &&
             ('captureDomContentLoaded' === n || 'captureLoad' === n
               ? this[n].apply(this, [t[0], o.ts])
-              : this[n].apply(this, t))
+              : this[n].apply(this, t)))
       return this
     }),
-      (r.exports = o)
+      (r.exports = o))
   },
   function (r, e) {
     r.exports = function (r) {
@@ -301,10 +302,9 @@ var _rollbarConfig = {
               },
               i = 0;
             (o = window._rollbarShims[i++]);
-
           )
-            n || (n = o.handler), o.handler._swapAndProcessMessages(l, o.messages)
-          ;(window[t] = n), (window._rollbarInitialized = !0)
+            (n || (n = o.handler), o.handler._swapAndProcessMessages(l, o.messages))
+          ;((window[t] = n), (window._rollbarInitialized = !0))
         }
       }
     }

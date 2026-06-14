@@ -198,7 +198,7 @@ function TextValueInput(props: ValueInputProps) {
 }
 
 function useMultiSelectValueInput(options: MultiSelectValueInputProps['options']) {
-  return (props: ValueInputProps) => {
+  return function MultiSelectValueInputWithOptions(props: ValueInputProps) {
     return <MultiSelectValueInput options={options} {...props} />
   }
 }

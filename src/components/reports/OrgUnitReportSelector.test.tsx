@@ -14,18 +14,12 @@ const units = [
 describe('OrgUnitReportSelector', () => {
   beforeEach(() => {
     jest.clearAllMocks()
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     mockedApi.getOrgUnitsRequest.mockResolvedValue({ data: units } as any)
   })
 
   it('renders unit options from API', async () => {
-    render(
-      <OrgUnitReportSelector
-        value=""
-        includeDescendants={false}
-        onChange={jest.fn()}
-        disabled={false}
-      />
-    )
+    render(<OrgUnitReportSelector value="" includeDescendants={false} onChange={jest.fn()} disabled={false} />)
     await waitFor(() => {
       expect(screen.getByRole('option', { name: 'Engineering' })).toBeInTheDocument()
       expect(screen.getByRole('option', { name: 'Sales' })).toBeInTheDocument()
@@ -33,26 +27,12 @@ describe('OrgUnitReportSelector', () => {
   })
 
   it('shows includeDescendants checkbox when a unit is selected', async () => {
-    render(
-      <OrgUnitReportSelector
-        value="unit-1"
-        includeDescendants={false}
-        onChange={jest.fn()}
-        disabled={false}
-      />
-    )
+    render(<OrgUnitReportSelector value="unit-1" includeDescendants={false} onChange={jest.fn()} disabled={false} />)
     await waitFor(() => screen.getByLabelText(/include sub-units/i))
   })
 
   it('does not show includeDescendants checkbox when no unit is selected', async () => {
-    render(
-      <OrgUnitReportSelector
-        value=""
-        includeDescendants={false}
-        onChange={jest.fn()}
-        disabled={false}
-      />
-    )
+    render(<OrgUnitReportSelector value="" includeDescendants={false} onChange={jest.fn()} disabled={false} />)
     await waitFor(() => units) // wait for load
     expect(screen.queryByLabelText(/include sub-units/i)).toBeNull()
   })

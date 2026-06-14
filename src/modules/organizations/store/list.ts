@@ -30,7 +30,7 @@ export const organizationsListSlice = createSlice({
 
 export default organizationsListSlice.reducer
 
-export const fetchOrganizations = createAsyncThunk('organizations/fetchAll', async (_: void, thunkAPI) => {
+export const fetchOrganizations = createAsyncThunk('organizations/fetchAll', async () => {
   const response = await getUserOrganizations()
   return response.data
 })

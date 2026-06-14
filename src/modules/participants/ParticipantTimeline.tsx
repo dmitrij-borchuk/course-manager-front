@@ -63,7 +63,7 @@ export function ParticipationTimeline({ participantId, outerId }: Props) {
                       {/* TODO: add link to user */}
                       <Stack>
                         <Box>
-                          {d.type === 'assign' ? 'Assigned to' : 'Unassigned from'} "{d.activity.name}"
+                          {d.type === 'assign' ? 'Assigned to' : 'Unassigned from'} &quot;{d.activity.name}&quot;
                         </Box>
                         {d.type === 'unassign' && (
                           <Box
@@ -118,7 +118,7 @@ export function ParticipationTimeline({ participantId, outerId }: Props) {
 
 function convertToTimeline(participationRecords: ParticipationRecord[]) {
   const timeline = participationRecords
-    .reduce<TimelineDataItem[]>((acc, d, i) => {
+    .reduce<TimelineDataItem[]>((acc, d) => {
       const assign: TimelineDataItem = {
         type: 'assign',
         activity: d.activity,

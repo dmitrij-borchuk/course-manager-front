@@ -7,13 +7,7 @@ type Props = {
   unitName: string
 }
 
-function MembershipRow({
-  membership,
-  onEnd,
-}: {
-  membership: OrgUnitMembership
-  onEnd: (id: string) => Promise<void>
-}) {
+function MembershipRow({ membership, onEnd }: { membership: OrgUnitMembership; onEnd: (id: string) => Promise<void> }) {
   const [isBusy, setIsBusy] = useState(false)
 
   const handleEnd = async () => {
@@ -36,8 +30,7 @@ function MembershipRow({
 }
 
 export function UnitMembershipPanel({ unitId, unitName }: Props) {
-  const { memberships, isLoading, error, addMember, endMember, reload } =
-    useUnitMemberships(unitId)
+  const { memberships, isLoading, error, addMember, endMember, reload } = useUnitMemberships(unitId)
   const [participantIdInput, setParticipantIdInput] = useState('')
   const [addError, setAddError] = useState<string | null>(null)
   const [isBusy, setIsBusy] = useState(false)
@@ -50,6 +43,7 @@ export function UnitMembershipPanel({ unitId, unitName }: Props) {
     try {
       await addMember(id)
       setParticipantIdInput('')
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       setAddError(err?.response?.data?.error ?? 'Failed to add member.')
     } finally {

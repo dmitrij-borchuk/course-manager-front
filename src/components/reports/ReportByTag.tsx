@@ -65,7 +65,6 @@ export const ReportByTag = ({ tags, reportRecords, loading = false }: Props) => 
         )}
         <BlobProvider document={document}>
           {({ url }) => (
-            // eslint-disable-next-line jsx-a11y/anchor-is-valid, jsx-a11y/no-redundant-roles
             <a
               href={!loading && url ? url : undefined}
               target="_blank"

@@ -20,6 +20,7 @@ export function FilterField({ onChange, onDebouncedChange = noop }: Props) {
     [onChange, onDebouncedChangeCallback]
   )
   const clearFilter: React.MouseEventHandler<HTMLButtonElement> = useCallback(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     (e) => {
       setFilterTerm('')
       onChange?.('')

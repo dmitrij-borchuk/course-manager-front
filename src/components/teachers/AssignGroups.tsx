@@ -56,6 +56,7 @@ export const AssignGroups = ({ teacherId, onDone = noop, trigger, teachersGroups
           appearance: 'success',
           autoDismiss: true,
         })
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
         addToast(error.message, {
           appearance: 'error',

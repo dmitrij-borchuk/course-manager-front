@@ -5,6 +5,7 @@ import { SortButton } from '@/components/molecules/inputs'
 
 export const ListHeader = (props: {
   items: HeaderItem[]
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onSort?: (id: any, order: SortOrder) => void
   sortOrder?: SortOrder
   sortId?: string

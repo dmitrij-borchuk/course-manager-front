@@ -12,7 +12,7 @@ export const EditStudentPage = () => {
   const history = useHistory()
   const org = useCurrentOrg()
   const orgId = org?.id
-  let { id: idStr } = useParams<{ id: string }>()
+  const { id: idStr } = useParams<{ id: string }>()
   const id = parseInt(idStr)
   const { fetchStudent, editStudent, fetching, submitting, studentsById } = useStudentsState()
   const { addToast } = useToasts()

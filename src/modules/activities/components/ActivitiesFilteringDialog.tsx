@@ -1,5 +1,5 @@
 import { Controller, useForm } from 'react-hook-form'
-import { FormattedMessage, useIntl } from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControlLabel, Switch } from '@mui/material'
 import { noop } from 'utils/common'
 
@@ -36,7 +36,6 @@ type FilteringFormProps = {
   initialValues?: ActivitiesFilteringFormValues
 }
 function FilteringForm({ onSubmit = noop, onClose, initialValues }: FilteringFormProps) {
-  const intl = useIntl()
   const form = useForm<ActivitiesFilteringFormValues>({
     defaultValues: initialValues,
   })

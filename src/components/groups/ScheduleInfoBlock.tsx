@@ -6,6 +6,7 @@ import { IconButton } from '../kit/buttons/IconButton'
 import { Text } from '../kit/text/Text'
 
 interface Props {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   group: any
 }
 export const ScheduleInfoBlock = ({ group }: Props) => {

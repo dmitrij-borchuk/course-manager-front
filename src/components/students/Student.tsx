@@ -30,7 +30,7 @@ export const Student: React.FC<Props> = ({ className = '', data, onDelete }) => 
           onSubmit: onDelete,
         }}
       />
-      {tags?.map((t, i) => (
+      {tags?.map((t) => (
         <Tag
           key={t}
           className="mr-1"

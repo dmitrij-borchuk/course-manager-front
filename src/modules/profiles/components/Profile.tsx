@@ -87,7 +87,7 @@ export function ActivitiesList({ profile }: ActivitiesListProps) {
         }}
       >
         <Typography variant="subtitle1" sx={{ opacity: 0.8 }}>
-          Looks like you don't have groups assigned
+          Looks like you don&apos;t have groups assigned
         </Typography>
       </Box>
     )

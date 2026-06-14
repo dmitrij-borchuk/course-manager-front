@@ -10,13 +10,15 @@ vi.mock('react-router-dom')
 vi.mock('react-router')
 vi.mock('react-materialize', async () => ({
   ...(await vi.importActual('react-materialize')),
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   DatePicker: ({ label, onChange, ...props }: any) => (
     <label>
       {label}
       <input onChange={(e) => onChange(new Date(e.currentTarget.value))} {...props} />
     </label>
   ),
-  Button: ({ flat, ...props }: any) => <button {...props} />,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  Button: ({ ...props }: any) => <button {...props} />,
 }))
 
 const { useParams } = asMock(reactRouterDom)
@@ -172,7 +174,6 @@ describe('AttendanceEditor', async () => {
     expect(req.length).toBeGreaterThan(0)
 
     const groupSelect = await screen.findByTestId('group-selector')
-    // eslint-disable-next-line testing-library/no-node-access
     const options = groupSelect.querySelectorAll('option')
     const optArray = Array.from(options)
     expect(optArray.map((o) => o.textContent)).toContain('Group 1')

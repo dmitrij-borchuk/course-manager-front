@@ -21,6 +21,7 @@ export const SchedulePage = () => {
   // const schedule = group?.schedules && group?.schedules[0]
   // TODO: loading
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const onSubmit = useCallback(async (data: ScheduleFormData) => {
     // TODO
     // if (!groupId) {

@@ -62,7 +62,6 @@ export const ReportByGroup = ({ group, attendances, students, order, loading, fr
       )}
       <BlobProvider document={document}>
         {({ url }) => (
-          // eslint-disable-next-line jsx-a11y/anchor-is-valid, jsx-a11y/no-redundant-roles
           <a
             href={!loading && url ? url : undefined}
             target="_blank"

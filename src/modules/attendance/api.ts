@@ -46,5 +46,6 @@ export async function fetchAttendances(
     config.push(['group', '==', params.activity])
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return collection.queryMulti(config as any)
 }

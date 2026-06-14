@@ -3,7 +3,6 @@ import { useIntl } from 'react-intl'
 import { useRulesToDefaultMessage, getErrorMessage } from '@/libs/forms'
 import { Select, type SelectProps } from '@/molecules/inputs'
 // import { TooltipNote } from '@/atoms/dataDisplay';
-import { Box } from '@/atoms/layout'
 
 type FormSelectProps<T extends FieldValues> = Omit<SelectProps<T>, 'value' | 'onChange'> & {
   name: Path<T>
@@ -20,7 +19,6 @@ export function FormSelect<T extends FieldValues>({
   requiredMessage,
   registerOptions,
   fullWidth,
-  toolTipLabel,
   onChange,
   ...props
 }: FormSelectProps<T>) {
@@ -52,6 +50,7 @@ export function FormSelect<T extends FieldValues>({
             helperText={getErrorMessage(error)}
             onChange={(event) => {
               onChangeForm(event)
+              // @ts-expect-error todo: fix this
               onChange?.(event.target.value, event)
             }}
             {...field}

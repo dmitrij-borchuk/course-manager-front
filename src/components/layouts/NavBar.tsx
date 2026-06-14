@@ -179,6 +179,7 @@ const AppDrawer = styled(Drawer)`
 
 export const navBarContext = React.createContext({
   open: false,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   toggle: (value?: boolean) => {},
 })
 

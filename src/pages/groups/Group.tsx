@@ -9,7 +9,7 @@ import { useAttendanceRateByStudent } from '../../hooks/useAttendanceRate'
 import { ROUTES } from '../../constants'
 
 export const GroupPage = () => {
-  let params = useParams<{ id: string }>()
+  const params = useParams<{ id: string }>()
   const id = parseInt(params.id, 10)
   const { deleteGroup, closeGroup } = useGroupsState()
   const {

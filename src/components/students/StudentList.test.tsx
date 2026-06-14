@@ -82,7 +82,6 @@ describe('StudentList', () => {
     const items = await screen.findAllByTestId('list-link-item')
     expect(items).toHaveLength(3)
 
-    // eslint-disable-next-line testing-library/prefer-screen-queries
     const badges = items.map((i) => queryByTestId(i, 'attendance-rate-badge'))
     expect(badges[0]).toBe(null)
     expect(badges[1]?.textContent).toBe('0%')

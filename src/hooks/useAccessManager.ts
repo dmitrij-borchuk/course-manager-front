@@ -1,6 +1,7 @@
 import { useCallback, useMemo } from 'react'
 import { useCurrentOrg } from './useCurrentOrg'
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const ACTIONS = ['MANAGE_TEACHERS', 'MANAGE_GROUPS', 'MANAGE_STUDENTS', 'VIEW_REPORTS', 'VIEW_SETTINGS'] as const
 export type ActionType = (typeof ACTIONS)[number]
 const rolesToActionsMap: Record<string, ActionType[]> = {

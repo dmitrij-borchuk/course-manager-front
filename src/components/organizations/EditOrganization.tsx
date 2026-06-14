@@ -1,6 +1,5 @@
 import React from 'react'
 import { FormattedMessage, useIntl } from 'react-intl'
-import { Input } from '../kit/input/Input'
 import { SubmitButton } from '../kit/buttons/SubmitButton'
 import { FormLayout } from '@/templates/FormLayout'
 import { ExternalError, useFormWithError } from '../../hooks/useFormWithError'
@@ -57,6 +56,7 @@ export const EditOrganization: React.FC<Props> = ({
           )
         }
         controls={<SubmitButton loading={loading} disabled={disabled} />}
+        // @ts-expect-error todo: fix this
         onSubmit={handleSubmit(onSubmit)}
         formUtils={formUtils}
       >

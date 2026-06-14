@@ -1,7 +1,6 @@
 import { ComponentProps } from 'react'
 import { vi } from 'vitest'
 import { fireEvent, render, screen, waitForElementToBeRemoved } from '@testing-library/react'
-import { Button } from '@/moleculesinputs'
 import { getAxiosMock, mockOrgId, TestWrapper } from '../../utils/test'
 import { AssignStudents } from './AssignStudents'
 

@@ -66,12 +66,14 @@ function renderLinkItem<T extends { id: string | number }>(
   itemLinkRoot: string,
   renderItem?: (data: T) => JSX.Element
 ) {
-  return (data: T) => (
-    <CollectionItemLink key={data.id} to={`${itemLinkRoot}/${data.id}`} data-testid="list-link-item">
-      {/* @ts-expect-error */}
-      <Ellipsis>{renderItem ? renderItem(data) : data[labelProp]}</Ellipsis>
-    </CollectionItemLink>
-  )
+  return function CollectionItemLinkWithData(data: T) {
+    return (
+      <CollectionItemLink key={data.id} to={`${itemLinkRoot}/${data.id}`} data-testid="list-link-item">
+        {/* @ts-expect-error TODO: fix this */}
+        <Ellipsis>{renderItem ? renderItem(data) : data[labelProp]}</Ellipsis>
+      </CollectionItemLink>
+    )
+  }
 }
 
 type HeaderProps = ComponentProps<typeof ListHeader>

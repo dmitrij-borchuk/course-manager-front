@@ -8,8 +8,6 @@ import { User, getAuth } from 'firebase/auth'
 import { initializeFirestore } from 'firebase/firestore'
 import { isProduction } from '../../config'
 
-const win = window as any
-
 // TODO: Replace the following with your app's Firebase project configuration
 // For Firebase JavaScript SDK v7.20.0 and later, `measurementId` is an optional field
 const firebaseConfig = {
@@ -30,10 +28,7 @@ export default firebaseApp
 
 export const auth = getAuth(firebaseApp)
 
-export const db = initializeFirestore(firebaseApp, {
-  // Needed for Firestore support in Cypress (see https://github.com/cypress-io/cypress/issues/6350)
-  experimentalForceLongPolling: !!win.Cypress,
-})
+export const db = initializeFirestore(firebaseApp, {})
 
 export async function getFbUser() {
   return new Promise<User | null>((resolve) => {

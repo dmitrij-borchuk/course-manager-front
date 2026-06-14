@@ -32,7 +32,6 @@ export function UnassignDialog({ activity, participant, onCancel, onDone }: Unas
         } else {
           showError('An unknown error occurred')
         }
-      } finally {
       }
     },
     [onDone, showError, showSuccess, unassignMutation]

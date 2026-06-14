@@ -66,7 +66,7 @@ const LazyLoading = ({ loadMore, children }: { loadMore: () => void; children?: 
   const containerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    const observer = new IntersectionObserver((entries, observer) => {
+    const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           loadMore()

@@ -32,6 +32,7 @@ export function setHeader(key: string, value?: string) {
 
 export default request
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function isAxiosError<T = unknown>(error: any): error is AxiosError<T> {
   return error.isAxiosError
 }

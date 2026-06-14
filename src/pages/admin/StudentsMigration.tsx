@@ -10,6 +10,7 @@ export const StudentsMigration = () => {
     try {
       const result = await migrate()
       showSuccess(result.data)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       showError(error.message)
     }

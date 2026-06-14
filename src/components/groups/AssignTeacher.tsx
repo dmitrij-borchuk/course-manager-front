@@ -60,6 +60,7 @@ export const AssignTeacherDialog = ({ group, onDone = noop, onClose, open }: Ass
           appearance: 'success',
           autoDismiss: true,
         })
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
         addToast(error.message, {
           appearance: 'error',

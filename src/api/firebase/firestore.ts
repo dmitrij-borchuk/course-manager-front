@@ -9,7 +9,6 @@ import {
   doc,
   getDoc,
   setDoc,
-  FirestoreDataConverter,
   QueryDocumentSnapshot,
   SnapshotOptions,
   PartialWithFieldValue,
@@ -48,7 +47,7 @@ function getIdentityConverter<T extends { id: string }>() {
   }
 }
 
-export function collection<T extends { id: string }>(name: string, converter?: FirestoreDataConverter<T>) {
+export function collection<T extends { id: string }>(name: string) {
   const collection = fsCollection(db, name)
 
   return {
@@ -80,7 +79,7 @@ export function collection<T extends { id: string }>(name: string, converter?: F
 
       return getItemFromDoc<T>(docSnap)
     },
-    save: async (data: PartialWithFieldValue<T>, options = { merge: true }) => {
+    save: async (data: PartialWithFieldValue<T>) => {
       const docRef = doc(db, name, data.id as string).withConverter(getIdentityConverter<T>())
       await setDoc(docRef, data, { merge: true })
       const docSnap = await getDoc(docRef)

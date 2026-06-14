@@ -41,7 +41,6 @@ export const ConfirmationDialogBase = ({
     setLoading(true)
     try {
       await onSubmit()
-    } catch (error) {
     } finally {
       setLoading(false)
     }

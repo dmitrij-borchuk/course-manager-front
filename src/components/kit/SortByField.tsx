@@ -83,7 +83,7 @@ export function SortByField({ onChange, value, options = [] }: Props) {
             <Paper>
               <ClickAwayListener onClickAway={handleClose}>
                 <MenuList id="split-button-menu" autoFocusItem>
-                  {options.map((option, index) => (
+                  {options.map((option) => (
                     <MenuItem
                       key={option.value}
                       selected={option.value === value.orderBy}

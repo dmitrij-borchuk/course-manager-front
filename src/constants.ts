@@ -49,6 +49,9 @@ export const ROUTES = {
   ORGANIZATIONS_ROOT: '/organizations',
   ORGANIZATIONS_ADD: '/organizations/add',
 
+  // Organizational Tree
+  ORG_TREE: '/admin/organizational-tree',
+
   LOGOUT: '/logout',
 
   MY_WORK: '/my-work',

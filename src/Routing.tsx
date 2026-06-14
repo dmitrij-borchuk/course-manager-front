@@ -31,6 +31,7 @@ import { ConfirmInvitePage } from './pages/users/ConfirmInvite'
 import { StudentImportPageLoadable } from './pages/import/students'
 import { ReportsPageLoadable } from './pages/reports'
 import { AdminBackupPageLoadable, AdminPageLoadable } from './pages/admin'
+import { OrganizationalTreePage } from './pages/admin/OrganizationalTreePage'
 import { ProfilePage } from 'pages/profile/ProfilePage'
 import { SettingsPage } from 'modules/settings/components/SettingsPage'
 import { withGeneralPageLayout } from 'hocs/withGeneralPageLayout'
@@ -60,13 +61,14 @@ const AdminPage = () => (
     <AdminPageLoadable />
   </>
 )
+const OrgTreePage = withGeneralPageLayout(OrganizationalTreePage, 'Organizational Tree')
 const BackupPage = () => (
   <>
     <AdminBackupPageLoadable />
   </>
 )
 
-export const Routing = React.memo(function () {
+export const Routing = React.memo(function Routing() {
   return (
     <Switch>
       {/* Default auth flow */}
@@ -87,6 +89,7 @@ export const Routing = React.memo(function () {
 
       {/* Admin */}
       <AuthGuardedRoute component={BackupPage} path="/admin/backup" exact />
+      <AuthGuardedRoute component={OrgTreePage} path={ROUTES.ORG_TREE} exact />
       <AuthGuardedRoute component={AdminPage} path="/admin" exact />
 
       <Route component={ConfirmInvitePage} path="/invite/confirm/:token" exact />

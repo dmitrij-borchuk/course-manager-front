@@ -3,8 +3,8 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { OrgUnitTreeManager } from 'components/organizations/OrgUnitTreeManager'
 import * as api from 'api/organizationUnits'
 
-jest.mock('api/organizationUnits')
-const mockedApi = api as jest.Mocked<typeof api>
+vi.mock('api/organizationUnits')
+const mockedApi = api as import("vitest").Mocked<typeof api>
 
 const emptyTree = { data: [] }
 const treeWithRoot = {
@@ -23,7 +23,7 @@ const treeWithRoot = {
 
 describe('OrgUnitTreeManager', () => {
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     mockedApi.getOrgUnitTreeRequest.mockResolvedValue(emptyTree as any)
   })

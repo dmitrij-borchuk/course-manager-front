@@ -10,6 +10,7 @@ import { getProfilesRequest } from 'modules/profiles/api'
 // TODO: rename to ProfilesListPage
 export const TeachersListPage = () => {
   const query = useQuery('profiles', () => getProfilesRequest(), {
+    refetchOnWindowFocus: false,
     onError: (error: Error) => {
       addToast(error.message, {
         appearance: 'error',

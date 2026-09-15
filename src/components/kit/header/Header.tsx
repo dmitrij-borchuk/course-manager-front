@@ -62,7 +62,9 @@ export const Header = () => {
 function ProfileButton() {
   const dispatch = useAppDispatch()
   const currentOrgId = useAppSelector((state) => state.organizations.currentOrg.data?.id)
-  const profileQuery = useQuery(['currentProfile', currentOrgId], () => dispatch(fetchCurrentProfile()).unwrap())
+  const profileQuery = useQuery(['currentProfile', currentOrgId], () => dispatch(fetchCurrentProfile()).unwrap(), {
+    refetchOnWindowFocus: false,
+  })
   const { data: profile } = profileQuery
   const { name = '' } = profile ?? {}
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)

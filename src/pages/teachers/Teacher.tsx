@@ -19,7 +19,9 @@ export const TeacherPage = () => {
   const { id: idStr } = useParams<{ id: string }>()
   const id = parseInt(idStr)
 
-  const query = useQuery(['profile', id], () => getProfileRequest(id))
+  const query = useQuery(['profile', id], () => getProfileRequest(id), {
+    refetchOnWindowFocus: false,
+  })
   const teacher = query.data?.data
   const fetching = query.isLoading
 

@@ -27,6 +27,9 @@ export const ResetPassword: React.FC<Props> = ({ onSubmit, loading = false }) =>
   return (
     <Container>
       <div className="auth-form-wrapper m-auto">
+        <div className="flex justify-center mb-8">
+          <img src="/logoWithName.png" alt="Checkinizer Logo" className="h-12" />
+        </div>
         {/* TODO: translate */}
         <SectionHeader>Reset Password</SectionHeader>
         <form onSubmit={handleSubmit(onSubmit)}>

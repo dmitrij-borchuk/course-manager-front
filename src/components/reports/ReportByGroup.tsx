@@ -65,7 +65,7 @@ export const ReportByGroup = ({ group, attendances, students, order, loading, fr
           <a
             href={!loading && url ? url : undefined}
             target="_blank"
-            rel="noreferrer"
+            rel="noopener noreferrer"
             className="self-center"
             aria-disabled={loading}
             role="link"

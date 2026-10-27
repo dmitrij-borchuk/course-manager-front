@@ -52,9 +52,7 @@ export const EditSchedule: React.FC<Props> = ({
       } catch (error) {
         if (error instanceof Error) {
                     setError('start', {
-            message: error.message === 'schedule.error.startDateLater'
-              ? intl.formatMessage({ id: 'schedule.error.startDateLater' })
-              : error.message,
+            message: intl.formatMessage({ id: error.message, defaultMessage: error.message }),
             // @ts-expect-error TODO: fix this
             shouldFocus: true,
           })

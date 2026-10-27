@@ -7,3 +7,7 @@ This is a frontend part of the Checkinizer project.
 - Use Material UI (@mui/material) for components.
 - Use @mui/system and styled component for any markup.
 - Wrap any 3-rd party component or library with local wrapper so we can easily update it later if needed.
+<!-- This rule is temporary, until we remove react-materialize completely -->
+- Don't use `react-materialize`
+<!-- This rule is temporary, until we remove tailwindcss completely -->
+- Don't use `tailwindcss`

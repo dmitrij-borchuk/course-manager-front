@@ -77,8 +77,8 @@ export const AssignGroupsSelector = ({
     },
     [addGroupToStudent, addToast, onDone, student]
   )
-  const initialIds = initialGroups?.map((g) => g.id) || []
-  const itemsToShow = groups.filter((g) => !initialIds.includes(g.id))
+  const initialIds = new Set(initialGroups?.map((g) => g.id) || [])
+  const itemsToShow = groups.filter((g) => !initialIds.has(g.id))
 
   useEffect(() => {
     fetchGroups()

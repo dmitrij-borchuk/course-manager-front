@@ -119,11 +119,20 @@ function getRateOfClass(attendance: Attendance) {
 }
 
 function getRateOfStudent(studentId: string, attendances: Attendance[]) {
-  const attendancesWithStudent = attendances.filter((a) => typeof a.attended[studentId] !== 'undefined')
-  const values = attendancesWithStudent.map((a) => a.attended[studentId])
-  const attended = values.filter((v) => !!v).length
+  let total = 0
+  let attended = 0
 
-  return attended / values.length
+  for (let i = 0; i < attendances.length; i++) {
+    const val = attendances[i].attended[studentId]
+    if (val !== undefined) {
+      total++
+      if (val) {
+        attended++
+      }
+    }
+  }
+
+  return attended / total
 }
 
 function getAverage(values: number[]) {

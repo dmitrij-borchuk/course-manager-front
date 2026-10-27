@@ -5,6 +5,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import { ButtonWithLoader } from '../buttons/ButtonWithLoader'
 import { TinyPreloader } from '../TinyPreloader/TinyPreloader'
 import { List } from '../list/List'
+import { useDefaultErrorHandler } from '../../../utils/error'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Accessor<T> = keyof T | ((data: T) => any)
@@ -41,6 +42,7 @@ export function SelectDialog<T extends { id: string | number }>({
   onCloseStart,
   initial,
 }: PropsSingle<T> | PropsMulti<T>) {
+  const handleError = useDefaultErrorHandler()
   const [submitting, setSubmitting] = useState(false)
   const initialArray = useMemo(() => {
     if (!initial) {
@@ -65,13 +67,12 @@ export function SelectDialog<T extends { id: string | number }>({
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           await onSubmit(item as any)
         }
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (error) {
-        // TODO: error handling
+        handleError(error)
       }
       setSubmitting(false)
     },
-    [multiSelect, onSubmit, selected]
+    [multiSelect, onSubmit, selected, handleError]
   )
   const onSelect = useCallback(
     async (item: T) => {
@@ -104,9 +105,9 @@ export function SelectDialog<T extends { id: string | number }>({
       const isSelected = !!selected.find((s) => s.id === d.id)
 
       return (
-        <div key={d.id} className="collection-item flex justify-between" onClick={() => onSelect(d)}>
+        <div key={d.id} className="collection-item flex justify-between cursor-pointer" onClick={() => onSelect(d)}>
           <div className="overflow-ellipsis overflow-hidden">{label}</div>
-          {selectedLoading === d && <TinyPreloader />}
+          {selectedLoading?.id === d.id && <TinyPreloader />}
           {isSelected && (
             <div className="ml-2 flex h-5">
               <CheckCircleIcon />
@@ -117,8 +118,6 @@ export function SelectDialog<T extends { id: string | number }>({
     },
     [labelProp, onSelect, selected, selectedLoading]
   )
-  // TODO: add loading for the !multiSelect
-  // TODO: add cursor pinter
   // TODO: use mui
 
   return (

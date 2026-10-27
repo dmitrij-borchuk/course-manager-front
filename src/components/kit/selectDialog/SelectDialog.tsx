@@ -104,7 +104,7 @@ export function SelectDialog<T extends { id: string | number }>({
       const isSelected = !!selected.find((s) => s.id === d.id)
 
       return (
-        <div key={d.id} className="collection-item flex justify-between" onClick={() => onSelect(d)}>
+        <div key={d.id} className="collection-item flex justify-between cursor-pointer" onClick={() => onSelect(d)}>
           <div className="overflow-ellipsis overflow-hidden">{label}</div>
           {selectedLoading === d && <TinyPreloader />}
           {isSelected && (

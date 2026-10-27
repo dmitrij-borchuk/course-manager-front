@@ -68,7 +68,7 @@ export const ReportByTag = ({ tags, reportRecords, loading = false }: Props) => 
             <a
               href={!loading && url ? url : undefined}
               target="_blank"
-              rel="noreferrer"
+              rel="noopener noreferrer"
               className="self-center"
               aria-disabled={loading}
               role="link"

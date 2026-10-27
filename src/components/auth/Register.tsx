@@ -33,6 +33,9 @@ export const Register: React.FC<Props> = ({ onSubmit, loading = false }) => {
   return (
     <Container>
       <div className="auth-form-wrapper m-auto">
+        <div className="flex justify-center mb-8">
+          <img src="/logoWithName.svg" alt="Checkinizer Logo" className="w-full" />
+        </div>
         <SectionHeader>
           <FormattedMessage id="auth.register.title" />
         </SectionHeader>

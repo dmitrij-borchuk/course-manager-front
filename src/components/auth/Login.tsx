@@ -32,6 +32,9 @@ export const Login: React.FC<Props> = ({ onSubmit, loading = false }) => {
   return (
     <Container>
       <div className="auth-form-wrapper m-auto">
+        <div className="flex justify-center mb-8">
+          <img src="/logoWithName.svg" alt="Checkinizer Logo" className="w-full" />
+        </div>
         {/* TODO: translate */}
         <SectionHeader>Login</SectionHeader>
         <form onSubmit={handleSubmit(onSubmit)}>

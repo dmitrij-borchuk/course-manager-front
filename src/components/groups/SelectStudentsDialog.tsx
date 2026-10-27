@@ -61,8 +61,8 @@ function DialogInternal(props: DialogInternalProps) {
     // TODO: should use new API
     studentsOfGroup,
   } = useStudentsOfGroupState()
-  const assignedIds = studentsOfGroup?.map((s) => s.id) ?? []
-  const notAssignedParticipants = students.filter((student) => !assignedIds.includes(student.id))
+  const assignedIds = useMemo(() => new Set(studentsOfGroup?.map((s) => s.id) ?? []), [studentsOfGroup])
+  const notAssignedParticipants = useMemo(() => students.filter((student) => !assignedIds.has(student.id)), [students, assignedIds])
 
   const initialArray = useMemo(() => {
     if (!initial) {

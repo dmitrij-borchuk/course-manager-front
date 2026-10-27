@@ -50,7 +50,7 @@ export const Header = () => {
           }}
         >
           <FlexLink to="/">
-            <img src="/logoWithName.png" alt="logo" />
+            <img src="/logoWithName.svg" alt="logo" />
           </FlexLink>
         </Box>
         <ProfileButton />

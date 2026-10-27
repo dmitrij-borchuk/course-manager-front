@@ -131,6 +131,7 @@ export const messages = {
   'schedule.form.start': 'Start date',
   'schedule.form.end': 'End date',
   'schedule.form.cron.required': 'Please select at least one day',
+  'schedule.error.startDateLater': 'Start date is bigger than end date',
 
   'profile.user.noName': 'No name',
   'profile.user.nameChanged': 'Name has been changed successfully',

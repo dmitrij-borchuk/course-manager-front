@@ -47,7 +47,7 @@
     "globals": "^17.5.0",
     "graphql": "^15.4.0",
     "immer": "^9.0.21",
-    "jiti": "^2.6.1",
+    "jiti": "^2.7.0",
     "materialize-css": "1.0.0",
     "mdn-data": "^2.36.0",
     "nanoid": "^3.1.28",

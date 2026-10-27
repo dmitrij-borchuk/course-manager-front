@@ -2,6 +2,7 @@ import React, { useCallback } from 'react'
 import { Controller } from 'react-hook-form'
 import { FormattedMessage, useIntl } from 'react-intl'
 import { DatePicker } from 'react-materialize'
+import dayjs from 'dayjs'
 import { useFormWithError } from '../../hooks/useFormWithError'
 import { Schedule } from '../../types/Schedule'
 import { SubmitButton } from '../kit/buttons/SubmitButton'
@@ -34,6 +35,7 @@ export const EditSchedule: React.FC<Props> = ({
     handleSubmit,
     formState: { errors },
     setError,
+    getValues,
   } = useFormWithError<ScheduleFormData>({
     defaultValues: {
       cron: '0 12 * * *',
@@ -86,6 +88,13 @@ export const EditSchedule: React.FC<Props> = ({
               value: true,
               message: 'Required',
             },
+            validate: (value) => {
+              const end = getValues('end')
+              if (value && end && dayjs(value).isAfter(dayjs(end))) {
+                return intl.formatMessage({ id: 'schedule.form.error.startBeforeEnd' })
+              }
+              return true
+            },
           }}
           render={({ field }) => (
             <DatePicker
@@ -114,6 +123,13 @@ export const EditSchedule: React.FC<Props> = ({
             required: {
               value: true,
               message: 'Required',
+            },
+            validate: (value) => {
+              const start = getValues('start')
+              if (start && value && dayjs(start).isAfter(dayjs(value))) {
+                return intl.formatMessage({ id: 'schedule.form.error.startBeforeEnd' })
+              }
+              return true
             },
           }}
           render={({ field }) => (

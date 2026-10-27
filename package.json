@@ -21,6 +21,7 @@
     "@mui/icons-material": "^9.0.0",
     "@mui/lab": "^9.0.0-beta.2",
     "@mui/material": "^9.0.0",
+    "@mui/system": "^9.5.0",
     "@mui/x-data-grid": "^9.0.2",
     "@mui/x-date-pickers": "^9.0.2",
     "@react-pdf/renderer": "^2.3.0",
@@ -100,7 +101,7 @@
     "@types/react-helmet": "^6.1.5",
     "@types/react-router-dom": "^5.1.7",
     "@types/react-toast-notifications": "^2.4.0",
-    "@vitejs/plugin-react": "^6.0.1",
+    "@vitejs/plugin-react": "^6.1.2",
     "firebase-admin": "^10.0.2",
     "graphql-tag": "^2.11.0",
     "jest": "^30.3.0",
@@ -109,9 +110,9 @@
     "serve": "^12.0.1",
     "ts-jest": "^29.4.9",
     "typescript": "^5.9.3",
-    "vite": "^8.0.3",
+    "vite": "^8.3.4",
     "vite-plugin-node-polyfills": "^0.26.0",
-    "vitest": "^4.1.4"
+    "vitest": "^4.1.11"
   },
   "overrides": {
     "react-toast-notifications": {

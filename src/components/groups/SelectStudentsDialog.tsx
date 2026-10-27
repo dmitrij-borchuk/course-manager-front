@@ -11,7 +11,6 @@ import Autocomplete from '@mui/material/Autocomplete'
 import DialogContent from '@mui/material/DialogContent'
 import DialogActions from '@mui/material/DialogActions'
 import useMediaQuery from '@mui/material/useMediaQuery'
-import { useToasts } from 'react-toast-notifications'
 import { Button, TextField } from '@/molecules/inputs'
 import { useStudentsOfGroupState, useStudentsState } from '@/store'
 import { ButtonWithLoader } from '../kit/buttons/ButtonWithLoader'
@@ -58,13 +57,12 @@ function DialogInternal(props: DialogInternalProps) {
   const { onSubmit, header, onClose, initial, groupId } = props
   const [submitting, setSubmitting] = useState(false)
   const { students, fetchStudents } = useStudentsState()
-  const { addToast } = useToasts()
   const {
     // TODO: should use new API
     studentsOfGroup,
   } = useStudentsOfGroupState()
-  const assignedIds = useMemo(() => new Set(studentsOfGroup?.map((s) => s.id) ?? []), [studentsOfGroup])
-  const notAssignedParticipants = useMemo(() => students.filter((student) => !assignedIds.has(student.id)), [students, assignedIds])
+  const assignedIds = studentsOfGroup?.map((s) => s.id) ?? []
+  const notAssignedParticipants = students.filter((student) => !assignedIds.includes(student.id))
 
   const initialArray = useMemo(() => {
     if (!initial) {
@@ -81,16 +79,12 @@ function DialogInternal(props: DialogInternalProps) {
     try {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       await onSubmit(selected as any)
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
-      if (error instanceof Error) {
-        addToast(error.message, {
-          appearance: 'error',
-          autoDismiss: true,
-        })
-      }
+      // TODO: error handling
     }
     setSubmitting(false)
-  }, [onSubmit, selected, addToast])
+  }, [onSubmit, selected])
 
   useEffect(() => {
     fetchStudents()

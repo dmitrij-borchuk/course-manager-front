@@ -105,9 +105,9 @@ export function SelectDialog<T extends { id: string | number }>({
       const isSelected = !!selected.find((s) => s.id === d.id)
 
       return (
-        <div key={d.id} className="collection-item flex justify-between cursor-pointer" onClick={() => onSelect(d)}>
+        <div key={d.id} className="collection-item flex justify-between" onClick={() => onSelect(d)}>
           <div className="overflow-ellipsis overflow-hidden">{label}</div>
-          {selectedLoading?.id === d.id && <TinyPreloader />}
+          {selectedLoading === d && <TinyPreloader />}
           {isSelected && (
             <div className="ml-2 flex h-5">
               <CheckCircleIcon />
@@ -118,6 +118,8 @@ export function SelectDialog<T extends { id: string | number }>({
     },
     [labelProp, onSelect, selected, selectedLoading]
   )
+  // TODO: add loading for the !multiSelect
+  // TODO: add cursor pinter
   // TODO: use mui
 
   return (

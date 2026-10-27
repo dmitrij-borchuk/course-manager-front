@@ -51,8 +51,10 @@ export const EditSchedule: React.FC<Props> = ({
         await onSubmit(d)
       } catch (error) {
         if (error instanceof Error) {
+          const isMessageId = error.message.includes('.')
+          const message = isMessageId ? intl.formatMessage({ id: error.message as "schedule.form.error.startDate" }) : error.message
           setError('start', {
-            message: error.message,
+            message: message,
             // @ts-expect-error TODO: fix this
             shouldFocus: true,
           })

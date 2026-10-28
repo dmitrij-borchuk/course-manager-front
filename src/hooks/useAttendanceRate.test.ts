@@ -1,7 +1,7 @@
 import { renderHook } from '@testing-library/react'
-import { useAttendanceRateByGroups, useStudentAttendanceRateByGroups, useAttendanceRateByTeacher, useAttendanceRateByStudent } from '../useAttendanceRate'
-import { Activity } from '../../types/activity'
-import { Attendance } from '../../types/attendance'
+import { useAttendanceRateByGroups, useStudentAttendanceRateByGroups, useAttendanceRateByTeacher, useAttendanceRateByStudent } from './useAttendanceRate'
+import { Activity } from '../types/activity'
+import { Attendance } from '../types/attendance'
 
 describe('useAttendanceRate', () => {
   const groups: Activity[] = [

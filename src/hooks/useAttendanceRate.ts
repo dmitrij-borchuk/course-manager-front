@@ -13,7 +13,7 @@ export function useAttendanceRateByGroups(groups: Activity[], attendances: Atten
         const classesRates = attendancesOfGroup.map((a) => getRateOfClass(a))
         const rate = getAverage(classesRates)
 
-        if (!rate) {
+        if (rate === null) {
           return acc
         }
 
@@ -67,7 +67,7 @@ export function useAttendanceRateByTeacher(attendances: Attendance[]) {
         const classesRates = attendances.map((a) => getRateOfClass(a))
         const rate = getAverage(classesRates)
 
-        if (!rate) {
+        if (rate === null) {
           return acc
         }
 

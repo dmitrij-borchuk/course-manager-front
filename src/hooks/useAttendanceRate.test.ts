@@ -22,7 +22,7 @@ describe('useAttendanceRate', () => {
       expect(result.current).toEqual({})
     })
 
-    it('returns null if there are no attendances for the group', () => {
+    it('returns empty object if there are no attendances for the group', () => {
       const { result } = renderHook(() => useAttendanceRateByGroups(groups, []))
       expect(result.current).toEqual({})
     })
@@ -37,7 +37,7 @@ describe('useAttendanceRate', () => {
       // g3 class 1: 0/0 = NaN
       // g3 average = NaN (but getRateOfClass will return NaN, then getAverage returns NaN, which is falsy or null) - let's focus on 0 first
       expect(result.current[1]).toBe(0.75)
-      expect(result.current[2]).toBe(0) // This fails currently due to `if (!rate)`
+      expect(result.current[2]).toBe(0)
     })
   })
 
@@ -77,7 +77,7 @@ describe('useAttendanceRate', () => {
       // t1 classes: 1/2 (0.5), 2/2 (1.0). Average = 0.75
       // t2 classes: 0/2 (0). Average = 0
       expect(result.current['t1']).toBe(0.75)
-      expect(result.current['t2']).toBe(0) // Fails currently
+      expect(result.current['t2']).toBe(0)
     })
   })
 

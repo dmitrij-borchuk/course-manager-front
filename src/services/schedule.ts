@@ -4,7 +4,7 @@ import { NewScheduleParsed, ScheduleParsed } from '../types/Schedule'
 export function createSchedule(data: NewScheduleParsed) {
   if (data.start > data.end) {
     // TODO: intl
-    throw new Error('schedule.form.error.startDate')
+    throw new Error('schedule.error.startDateLater')
   }
 
   return createScheduleRequest({
@@ -17,7 +17,7 @@ export function createSchedule(data: NewScheduleParsed) {
 export function editSchedule(data: ScheduleParsed) {
   if (data.start > data.end) {
     // TODO: intl
-    throw new Error('schedule.form.error.startDate')
+    throw new Error('schedule.error.startDateLater')
   }
 
   return editScheduleRequest({

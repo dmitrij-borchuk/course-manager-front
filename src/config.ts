@@ -12,3 +12,5 @@ export type Role = keyof typeof ROLES
 export const APP_NAME_TITLE = 'Checkinizer'
 export const TITLE_POSTFIX = ` | ${APP_NAME_TITLE}`
 export const DRAWER_WIDTH = 240
+export const PDF_CREATOR = 'Checkinizer'
+export const PDF_PRODUCER = 'Checkinizer'

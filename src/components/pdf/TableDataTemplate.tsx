@@ -1,4 +1,5 @@
 import { Page, Text, View, Document, StyleSheet } from '@react-pdf/renderer'
+import { PDF_CREATOR, PDF_PRODUCER } from '../../config'
 
 type PDFTemplateProps = {
   title: string
@@ -11,8 +12,7 @@ type PDFTemplateProps = {
   }[]
 }
 export const TableDataTemplate = ({ title, heading, rows, columns }: PDFTemplateProps) => (
-  // TODO: move `creator` and `producer` to the config
-  <Document creator="Checkinizer" producer="Checkinizer" title={title}>
+  <Document creator={PDF_CREATOR} producer={PDF_PRODUCER} title={title}>
     <Page size="A4" style={[styles.page]}>
       <View style={[styles.header]} fixed>
         <Text>{heading}</Text>

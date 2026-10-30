@@ -6,6 +6,12 @@
       "sourceType": "autoskills-registry",
       "computedHash": "bffe3d08cfe92ebad63699f74ce29e35c19850ebfbf474c1463183cfe34d6a09"
     },
+    "asd-ste100": {
+      "source": "danyuchn/asd-ste100-skill",
+      "sourceType": "github",
+      "skillPath": "SKILL.md",
+      "computedHash": "8a576f609e2f5edddb5c0c919ecf7d68ec64a243e3995f6e847e32fb3d32d684"
+    },
     "composition-patterns": {
       "source": "vercel-labs/agent-skills",
       "sourceType": "autoskills-registry",
@@ -15,6 +21,12 @@
       "source": "anthropics/skills",
       "sourceType": "autoskills-registry",
       "computedHash": "82fb11a63fb1e35ee2469516ed02d54695f783115b1540c0e783197af4240a3a"
+    },
+    "i-have-adhd": {
+      "source": "ayghri/i-have-adhd",
+      "sourceType": "github",
+      "skillPath": "skills/i-have-adhd/SKILL.md",
+      "computedHash": "e12ff08dfe4b5baae7065c2f05a5738b8a55f3ccbed82ba45f5496c8e83b2a25"
     },
     "react-best-practices": {
       "source": "vercel-labs/agent-skills",

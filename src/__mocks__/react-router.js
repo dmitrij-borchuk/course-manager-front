@@ -1,6 +1,8 @@
-export const useHistory = () => ({
+export const useHistory = vi.fn(() => ({
   push: vi.fn(),
-})
-export const useLocation = () => ({
+  replace: vi.fn(),
+}))
+export const useLocation = vi.fn(() => ({
+  search: '',
   push: vi.fn(),
-})
+}))

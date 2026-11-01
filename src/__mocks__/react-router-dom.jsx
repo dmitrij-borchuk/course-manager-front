@@ -1,12 +1,16 @@
 import React from 'react'
 
 export const useParams = vi.fn()
-export const useHistory = () => ({
+export const useHistory = vi.fn(() => ({
   push: vi.fn(),
+  replace: vi.fn(),
   location: {
     search: '',
   },
-})
+}))
+export const useLocation = vi.fn(() => ({
+  search: '',
+}))
 export const Link = React.forwardRef(({ children, ...props }, ref) => (
   <a ref={ref} {...props}>
     {children}

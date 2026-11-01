@@ -1,4 +1,5 @@
 import { useNotification } from 'hooks/useNotification'
+import { useQuery } from 'hooks/useQuery'
 import { useEffect, useMemo } from 'react'
 import { useAttendancesForGroups } from 'store/attendancesStore'
 import { useGroups } from 'store/groupsStore'
@@ -8,6 +9,8 @@ import { useStudentsState } from '../../store'
 
 export const StudentListPage = () => {
   const { fetchStudents, students, fetching } = useStudentsState()
+  const query = useQuery()
+  const filter = query.get('filter') ?? ''
   // TODO: need to add pagination and filtering,
   // but it's not implemented on the backend yet
   const groupsQuery = useGroups({
@@ -21,14 +24,14 @@ export const StudentListPage = () => {
   const { showError } = useNotification()
 
   useEffect(() => {
-    fetchStudents().catch((error) => {
+    fetchStudents(filter).catch((error) => {
       if (error instanceof Error) {
         showError(error.message)
       } else {
         showError('An unknown error occurred')
       }
     })
-  }, [fetchStudents, showError])
+  }, [fetchStudents, filter, showError])
 
   return (
     <>

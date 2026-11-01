@@ -27,10 +27,10 @@ export default function useStudentsStore(initial: InitialStudentsState = {}) {
     studentsById,
     fetching,
     submitting: submittingSemaphore > 0,
-    fetchStudents: useCallback(async () => {
+    fetchStudents: useCallback(async (filter = '') => {
       try {
         setFetching(true)
-        const resp = await fetchStudents()
+        const resp = await fetchStudents(filter)
         const studentsById = new Map(resp.data.map((item) => [item.id, item]))
         setStudentsById(studentsById)
         setFetching(false)

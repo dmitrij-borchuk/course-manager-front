@@ -1,19 +1,18 @@
-import { useCallback, useState } from 'react'
+import { useCallback } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { FormControl, IconButton, Input, InputAdornment, InputLabel } from '@mui/material'
 import ClearIcon from '@mui/icons-material/Clear'
 import { noop, useDebounceFn } from 'utils/common'
 
 type Props = {
+  value?: string
   onChange?: (value: string) => void
   onDebouncedChange?: (value: string) => void
 }
-export function FilterField({ onChange, onDebouncedChange = noop }: Props) {
-  const [filterTerm, setFilterTerm] = useState('')
+export function FilterField({ value = '', onChange, onDebouncedChange = noop }: Props) {
   const onDebouncedChangeCallback = useDebounceFn(onDebouncedChange, 300)
   const onFilter: React.ChangeEventHandler<HTMLTextAreaElement> = useCallback(
     (e) => {
-      setFilterTerm(e.target.value)
       onChange?.(e.target.value)
       onDebouncedChangeCallback(e.target.value)
     },
@@ -22,7 +21,6 @@ export function FilterField({ onChange, onDebouncedChange = noop }: Props) {
   const clearFilter: React.MouseEventHandler<HTMLButtonElement> = useCallback(
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     (e) => {
-      setFilterTerm('')
       onChange?.('')
       onDebouncedChangeCallback('')
     },
@@ -41,11 +39,11 @@ export function FilterField({ onChange, onDebouncedChange = noop }: Props) {
           className: `browser-default`,
         }}
         fullWidth
-        value={filterTerm}
+        value={value}
         endAdornment={
           <InputAdornment position="end">
             <IconButton aria-label="clear filter" onClick={clearFilter} edge="end">
-              {filterTerm.length > 0 && <ClearIcon />}
+              {value.length > 0 && <ClearIcon />}
             </IconButton>
           </InputAdornment>
         }

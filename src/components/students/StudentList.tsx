@@ -64,10 +64,6 @@ export const StudentList: React.FC<Props> = ({ className = '', loading = false, 
         onSort,
         sortOrder,
       }}
-      filter={{
-        predicate: (item: TableContentItem, filterTerm: string) =>
-          item.name.toLowerCase().includes(filterTerm.toLowerCase()),
-      }}
     />
   )
 }

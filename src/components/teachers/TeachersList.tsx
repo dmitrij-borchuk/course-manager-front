@@ -97,16 +97,8 @@ export const TeachersList: React.FC<Props> = ({ className = '', loading = false,
         onSort,
         sortOrder,
       }}
-      filter={{
-        predicate: usersFilteringPredicate,
-      }}
     />
   )
-}
-
-function usersFilteringPredicate(item: TableContentItem, filterTerm: string) {
-  if (filterTerm === '') return true
-  return item.name ? item.name.toLowerCase().includes(filterTerm.toLowerCase()) : false
 }
 
 type TableContentItem = {

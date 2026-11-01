@@ -4,6 +4,7 @@ import { getAxiosMock, mockOrgId, TestWrapper } from '../../utils/test'
 import { TeachersList } from './TeachersList'
 
 vi.mock('react-router-dom')
+vi.mock('react-router')
 describe('TeachersList', async () => {
   const axiosMock = await getAxiosMock()
   beforeEach(() => {

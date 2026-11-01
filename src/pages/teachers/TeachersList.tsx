@@ -1,15 +1,17 @@
 import { useMemo } from 'react'
 import { useToasts } from 'react-toast-notifications'
+import { useQuery as useReactQuery } from 'react-query'
 import { useGroups } from 'store/groupsStore'
 import { useAttendancesForGroups } from 'store/attendancesStore'
+import { getProfilesRequest } from 'modules/profiles/api'
+import { useQuery } from 'hooks/useQuery'
+import { Profile } from 'types/profile'
 import { TeachersList } from '../../components/teachers/TeachersList'
 import { useAttendanceRateByTeacher } from '../../hooks/useAttendanceRate'
-import { useQuery } from 'react-query'
-import { getProfilesRequest } from 'modules/profiles/api'
 
 // TODO: rename to ProfilesListPage
 export const TeachersListPage = () => {
-  const query = useQuery('profiles', () => getProfilesRequest(), {
+  const query = useReactQuery('profiles', () => getProfilesRequest(), {
     refetchOnWindowFocus: false,
     onError: (error: Error) => {
       addToast(error.message, {
@@ -21,12 +23,15 @@ export const TeachersListPage = () => {
   const profiles = query.data?.data
   const fetching = query.isLoading
   const { addToast } = useToasts()
+  const filter = useQuery().get('filter') ?? ''
   const processed = useMemo(() => {
-    return profiles?.map((p) => ({
-      ...p,
-      outerId: p.user.outerId,
-    }))
-  }, [profiles])
+    return profiles
+      ?.map((p) => ({
+        ...p,
+        outerId: p.user.outerId,
+      }))
+      .filter((p) => usersFilteringPredicate(p, filter))
+  }, [profiles, filter])
 
   // TODO: need to add pagination and filtering,
   // but it's not implemented on the backend yet
@@ -44,4 +49,9 @@ export const TeachersListPage = () => {
       <TeachersList items={processed} loading={fetching} attendanceRates={rateByTeacher} />
     </>
   )
+}
+
+function usersFilteringPredicate(item: Profile, filterTerm: string) {
+  if (filterTerm === '') return true
+  return item.name ? item.name.toLowerCase().includes(filterTerm.toLowerCase()) : false
 }

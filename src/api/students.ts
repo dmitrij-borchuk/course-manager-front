@@ -5,8 +5,12 @@ export function migrateStudents() {
   return request.post<string>('/students/migrate')
 }
 
-export function fetchStudents() {
-  return request.get<Student[]>(`/students`)
+export function fetchStudents(filter = '') {
+  return request.get<Student[]>(`/students`, {
+    params: {
+      filter,
+    }
+  })
 }
 
 export function deleteStudent(id: number) {

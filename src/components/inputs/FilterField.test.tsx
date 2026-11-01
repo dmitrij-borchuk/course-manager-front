@@ -3,6 +3,16 @@ import { TestWrapper } from 'utils/test'
 import { FilterField } from './FilterField'
 
 describe('FilterField', () => {
+  it('should initialize with provided value', async () => {
+    render(
+      <TestWrapper>
+        <FilterField value="initial filter" />
+      </TestWrapper>
+    )
+
+    const input = await screen.findByLabelText('Filter')
+    expect(input).toHaveValue('initial filter')
+  })
   it('should call onChange', async () => {
     const onChange = vi.fn()
     render(
@@ -20,16 +30,13 @@ describe('FilterField', () => {
     const onChange = vi.fn()
     render(
       <TestWrapper>
-        <FilterField onChange={onChange} />
+        <FilterField value="some filter" onChange={onChange} />
       </TestWrapper>
     )
 
-    const input = await screen.findByLabelText('Filter')
-    fireEvent.change(input, { target: { value: 'some filter' } })
-    expect(onChange).toHaveBeenCalledWith('some filter')
     await (await screen.findByLabelText(/clear filter/)).click()
 
-    expect(onChange).toHaveBeenCalledTimes(2)
+    expect(onChange).toHaveBeenCalledTimes(1)
     expect(onChange).toHaveBeenCalledWith('')
   })
   it('should call onDebouncedChange', async () => {

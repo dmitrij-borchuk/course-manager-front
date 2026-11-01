@@ -33,22 +33,22 @@ export const AssignGroups = ({ teacherId, onDone = noop, trigger, teachersGroups
           teachersGroups.map((g) => g.id),
           data.map((g) => g.id)
         )
-        for (let index = 0; index < removed.length; index++) {
-          await mutation.mutateAsync({
-            id: removed[index],
-            data: {
-              performerId: null,
-            },
-          })
-        }
-        for (let index = 0; index < added.length; index++) {
-          await mutation.mutateAsync({
-            id: added[index],
-            data: {
-              performerId: teacherId,
-            },
-          })
-        }
+        await Promise.all(
+          removed.map((id) =>
+            mutation.mutateAsync({
+              id,
+              data: { performerId: null },
+            })
+          )
+        )
+        await Promise.all(
+          added.map((id) =>
+            mutation.mutateAsync({
+              id,
+              data: { performerId: teacherId },
+            })
+          )
+        )
         toggler.off()
         onDone()
 
